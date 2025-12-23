@@ -18,65 +18,76 @@ const Navbar = () => {
   const toggleMenu = () => setIsOpen(!isOpen);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
-      <nav className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          {/* === LOGO === */}
-          <Link to="/" className="text-xl md:text-2xl font-bold text-gray-900">
-            Haikal Mumtaz
-          </Link>
+    <>
+      {/* === FLOATING GLASS NAVBAR === */}
+      <motion.header
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-fit"
+      >
+        <nav className="backdrop-blur-md bg-black/30 border border-white/10 rounded-full px-6 py-3 shadow-lg shadow-black/20">
+          <div className="flex items-center gap-8">
+            {/* === LOGO === */}
+            <Link to="/" className="text-xl font-bold tracking-tight text-white">
+              Haikal.
+            </Link>
 
-          {/* === DESKTOP MENU === */}
-          <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                className="text-gray-700 hover:text-gray-900 transition-colors font-medium"
-              >
-                {link.name}
-              </Link>
-            ))}
-          </div>
+            {/* === DESKTOP MENU === */}
+            <div className="hidden md:flex items-center gap-6">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  className="text-sm font-medium text-gray-300 hover:text-transparent hover:bg-gradient-to-r hover:from-cyan-400 hover:to-purple-500 hover:bg-clip-text transition-all duration-300"
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </div>
 
-          {/* === MOBILE MENU BUTTON === */}
-          <button
-            onClick={toggleMenu}
-            className="md:hidden p-2 text-gray-700 hover:text-gray-900"
-            aria-label="Toggle menu"
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-
-        {/* === MOBILE MENU === */}
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-              className="md:hidden overflow-hidden"
+            {/* === MOBILE MENU BUTTON === */}
+            <button
+              onClick={toggleMenu}
+              className="md:hidden p-2 text-gray-300 hover:text-white transition-colors"
+              aria-label="Toggle menu"
             >
-              <div className="flex flex-col gap-4 pt-4 pb-2">
+              {isOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
+        </nav>
+      </motion.header>
+
+      {/* === MOBILE MENU DROPDOWN === */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="fixed top-24 left-1/2 -translate-x-1/2 z-40 w-[90%] max-w-sm md:hidden"
+          >
+            <div className="backdrop-blur-md bg-black/30 border border-white/10 rounded-3xl px-6 py-4 shadow-lg shadow-black/20">
+              <div className="flex flex-col gap-4">
                 {navLinks.map((link) => (
                   <Link
                     key={link.name}
                     to={link.path}
                     onClick={toggleMenu}
-                    className="text-gray-700 hover:text-gray-900 transition-colors font-medium py-2"
+                    className="text-base font-medium text-gray-300 hover:text-transparent hover:bg-gradient-to-r hover:from-cyan-400 hover:to-purple-500 hover:bg-clip-text transition-all duration-300 py-2"
                   >
                     {link.name}
                   </Link>
                 ))}
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </nav>
-    </header>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
 export default Navbar;
+
