@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import About from './pages/About';
 import Portfolio from './pages/Portfolio';
+import Achievements from './pages/Achievements';
 
 /* === LAYOUT === */
 const Layout = () => {
@@ -28,6 +29,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
           <Route path="portfolio" element={<Portfolio />} />
+          <Route path="achievements" element={<Achievements />} />
         </Route>
       </Routes>
     </BrowserRouter>
