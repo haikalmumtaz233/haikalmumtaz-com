@@ -1,7 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
+import { ReactLenis } from '@studio-freight/react-lenis';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import CustomCursor from './components/CustomCursor';
 import Home from './pages/Home';
 import About from './pages/About';
 import Portfolio from './pages/Portfolio';
@@ -24,17 +26,20 @@ const Layout = () => {
 /* === APP === */
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="about" element={<About />} />
-          <Route path="portfolio" element={<Portfolio />} />
-          <Route path="achievements" element={<Achievements />} />
-          <Route path="hobbies" element={<Hobbies />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <ReactLenis root options={{ lerp: 0.1, duration: 1.5, smoothWheel: true }}>
+      <BrowserRouter>
+        <CustomCursor />
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="about" element={<About />} />
+            <Route path="portfolio" element={<Portfolio />} />
+            <Route path="achievements" element={<Achievements />} />
+            <Route path="hobbies" element={<Hobbies />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </ReactLenis>
   );
 }
 

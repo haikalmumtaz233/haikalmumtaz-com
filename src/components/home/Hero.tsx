@@ -40,73 +40,105 @@ const Hero = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
+        staggerChildren: 0.15,
+        delayChildren: 0.2,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 40 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.8,
+        duration: 0.9,
+        ease: [0.25, 0.4, 0.25, 1],
       },
     },
   };
 
   return (
     <section className="relative min-h-screen bg-transparent overflow-hidden flex items-center">
-      {/* === GRADIENT GLOW EFFECTS === */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-purple-600/20 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-cyan-600/20 rounded-full blur-3xl"></div>
+      {/* === MOVING GRADIENT MESH BACKGROUND === */}
+      <div className="absolute inset-0 opacity-30">
+        <motion.div
+          animate={{
+            backgroundPosition: ['0% 0%', '100% 100%'],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            repeatType: 'reverse',
+            ease: 'linear',
+          }}
+          className="absolute inset-0 bg-gradient-to-br from-purple-600/30 via-transparent to-cyan-600/30"
+          style={{
+            backgroundSize: '400% 400%',
+          }}
+        />
+      </div>
+
+      {/* === NOISE TEXTURE OVERLAY === */}
+      <div 
+        className="absolute inset-0 opacity-[0.02]"
+        style={{
+          backgroundImage: 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iMSIvPjwvc3ZnPg==)',
+        }}
+      />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[calc(100vh-10rem)]">
-          {/* === TEXT CONTENT === */}
+        <div className="flex items-center justify-center min-h-[calc(100vh-10rem)]">
+          {/* === CENTERED CONTENT === */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="flex flex-col justify-center"
+            className="flex flex-col items-center justify-center text-center max-w-7xl"
           >
+            {/* === MASSIVE NAME === */}
             <motion.h1
               variants={itemVariants}
-              className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tighter text-white mb-6 leading-none"
+              className="text-7xl sm:text-8xl md:text-9xl lg:text-[12rem] xl:text-[14rem] font-black tracking-tighter leading-[0.85] mb-8"
+              style={{
+                background: 'linear-gradient(to bottom, #ffffff 0%, #a0a0a0 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
             >
-              Muhammad Raditya
+              MUHAMMAD
               <br />
-              Haikal Mumtaz
+              RADITYA
             </motion.h1>
 
-            {/* === TYPEWRITER ROLE === */}
-            <motion.div variants={itemVariants} className="mb-8 h-16 flex items-center">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+            {/* === MONOSPACE TYPEWRITER ROLE === */}
+            <motion.div variants={itemVariants} className="mb-12 h-10">
+              <h2 className="text-sm sm:text-base md:text-lg font-mono text-gray-400 tracking-wide uppercase">
                 {displayText}
-                <span className="animate-pulse">|</span>
+                <span className="animate-pulse">_</span>
               </h2>
             </motion.div>
 
             <motion.p
               variants={itemVariants}
-              className="text-base sm:text-lg text-gray-400 mb-10 max-w-lg leading-relaxed"
+              className="text-base sm:text-lg md:text-xl text-gray-400 mb-16 max-w-2xl leading-relaxed font-light"
             >
-              Informatics graduate from UPN "Veteran" Yogyakarta specializing in scalable web
-              apps and machine learning solutions. Passionate about building innovative technology.
+              Informatics graduate specializing in scalable web applications
+              <br className="hidden md:block" />
+              and machine learning solutions
             </motion.p>
 
             {/* === CTA BUTTONS === */}
             <motion.div
               variants={itemVariants}
-              className="flex flex-col sm:flex-row gap-4"
+              className="flex flex-col sm:flex-row gap-5"
             >
               <Link to="/portfolio">
                 <motion.button
-                  whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(6, 182, 212, 0.4)' }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-semibold rounded-full shadow-lg flex items-center justify-center gap-2 transition-shadow"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full sm:w-auto px-10 py-5 bg-white text-black font-bold rounded-full shadow-2xl flex items-center justify-center gap-3 transition-all hover:shadow-white/20"
                 >
                   View Work
                   <ArrowRight size={20} />
@@ -114,168 +146,14 @@ const Hero = () => {
               </Link>
 
               <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="w-full sm:w-auto px-8 py-4 border-2 border-white/20 text-white font-semibold rounded-full backdrop-blur-sm hover:border-cyan-400 hover:bg-white/5 transition-all flex items-center justify-center gap-2"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full sm:w-auto px-10 py-5 border border-white/30 text-white font-semibold rounded-full backdrop-blur-sm hover:bg-white/5 transition-all flex items-center justify-center gap-3"
               >
                 Download CV
                 <Download size={20} />
               </motion.button>
             </motion.div>
-          </motion.div>
-
-          {/* === ABSTRACT GLOWING ORBS === */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="hidden lg:flex items-center justify-center relative h-[600px]"
-          >
-            <div className="relative w-full h-full">
-              {/* === GLOWING ORB 1 - CYAN/BLUE === */}
-              <motion.div
-                animate={{
-                  y: [0, -30, 0],
-                  x: [0, 20, 0],
-                  scale: [1, 1.1, 1],
-                  rotate: [0, 90, 0],
-                }}
-                transition={{
-                  duration: 8,
-                  repeat: Infinity,
-                  repeatType: 'reverse',
-                }}
-                className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-cyan-400 via-blue-500 to-blue-600 rounded-full blur-[100px] opacity-70"
-              ></motion.div>
-
-              {/* === GLOWING ORB 2 - PURPLE/PINK === */}
-              <motion.div
-                animate={{
-                  y: [0, 40, 0],
-                  x: [0, -30, 0],
-                  scale: [1, 1.2, 1],
-                  rotate: [0, -120, 0],
-                }}
-                transition={{
-                  duration: 10,
-                  repeat: Infinity,
-                  repeatType: 'reverse',
-                  delay: 1,
-                }}
-                className="absolute bottom-20 right-10 w-80 h-80 bg-gradient-to-br from-purple-500 via-pink-500 to-purple-600 rounded-full blur-[120px] opacity-60"
-              ></motion.div>
-
-              {/* === GLOWING ORB 3 - INDIGO/VIOLET === */}
-              <motion.div
-                animate={{
-                  y: [0, -20, 0],
-                  x: [0, 15, 0],
-                  scale: [1, 1.15, 1],
-                  rotate: [0, 60, 0],
-                }}
-                transition={{
-                  duration: 9,
-                  repeat: Infinity,
-                  repeatType: 'reverse',
-                  delay: 0.5,
-                }}
-                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-500 rounded-full blur-3xl opacity-50"
-              ></motion.div>
-
-              {/* === GLASS CARD OVERLAY === */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 1.2 }}
-                className="absolute inset-0 flex items-center justify-center"
-              >
-                <div className="relative backdrop-blur-md bg-white/5 border border-white/10 rounded-3xl p-8 w-[400px] h-[500px] shadow-2xl">
-                  {/* === CODE SNIPPET ABSTRACT === */}
-                  <div className="space-y-4">
-                    <motion.div
-                      animate={{ opacity: [0.4, 1, 0.4] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                      className="flex gap-2"
-                    >
-                      <div className="w-3 h-3 rounded-full bg-red-400"></div>
-                      <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-                      <div className="w-3 h-3 rounded-full bg-green-400"></div>
-                    </motion.div>
-
-                    <div className="space-y-3 pt-6">
-                      <motion.div
-                        animate={{ width: ['70%', '90%', '70%'] }}
-                        transition={{ duration: 3, repeat: Infinity, delay: 0.2 }}
-                        className="h-4 bg-gradient-to-r from-cyan-400/40 to-cyan-500/40 rounded-lg"
-                      ></motion.div>
-
-                      <motion.div
-                        animate={{ width: ['50%', '75%', '50%'] }}
-                        transition={{ duration: 3, repeat: Infinity, delay: 0.4 }}
-                        className="h-4 bg-gradient-to-r from-purple-400/40 to-purple-500/40 rounded-lg ml-8"
-                      ></motion.div>
-
-                      <motion.div
-                        animate={{ width: ['60%', '85%', '60%'] }}
-                        transition={{ duration: 3, repeat: Infinity, delay: 0.6 }}
-                        className="h-4 bg-gradient-to-r from-blue-400/40 to-blue-500/40 rounded-lg ml-8"
-                      ></motion.div>
-
-                      <motion.div
-                        animate={{ width: ['40%', '65%', '40%'] }}
-                        transition={{ duration: 3, repeat: Infinity, delay: 0.8 }}
-                        className="h-4 bg-gradient-to-r from-pink-400/40 to-pink-500/40 rounded-lg ml-16"
-                      ></motion.div>
-
-                      <motion.div
-                        animate={{ width: ['55%', '80%', '55%'] }}
-                        transition={{ duration: 3, repeat: Infinity, delay: 1 }}
-                        className="h-4 bg-gradient-to-r from-indigo-400/40 to-indigo-500/40 rounded-lg ml-8"
-                      ></motion.div>
-
-                      <motion.div
-                        animate={{ width: ['45%', '70%', '45%'] }}
-                        transition={{ duration: 3, repeat: Infinity, delay: 1.2 }}
-                        className="h-4 bg-gradient-to-r from-violet-400/40 to-violet-500/40 rounded-lg"
-                      ></motion.div>
-
-                      <div className="pt-4">
-                        <motion.div
-                          animate={{ width: ['65%', '88%', '65%'] }}
-                          transition={{ duration: 3, repeat: Infinity, delay: 1.4 }}
-                          className="h-4 bg-gradient-to-r from-teal-400/40 to-teal-500/40 rounded-lg"
-                        ></motion.div>
-                      </div>
-
-                      <motion.div
-                        animate={{ width: ['50%', '72%', '50%'] }}
-                        transition={{ duration: 3, repeat: Infinity, delay: 1.6 }}
-                        className="h-4 bg-gradient-to-r from-emerald-400/40 to-emerald-500/40 rounded-lg ml-8"
-                      ></motion.div>
-
-                      <motion.div
-                        animate={{ width: ['60%', '83%', '60%'] }}
-                        transition={{ duration: 3, repeat: Infinity, delay: 1.8 }}
-                        className="h-4 bg-gradient-to-r from-sky-400/40 to-sky-500/40 rounded-lg ml-8"
-                      ></motion.div>
-
-                      <motion.div
-                        animate={{ width: ['70%', '90%', '70%'] }}
-                        transition={{ duration: 3, repeat: Infinity, delay: 2 }}
-                        className="h-4 bg-gradient-to-r from-rose-400/40 to-rose-500/40 rounded-lg"
-                      ></motion.div>
-                    </div>
-
-                    {/* === BLINKING CURSOR === */}
-                    <motion.div
-                      animate={{ opacity: [1, 0, 1] }}
-                      transition={{ duration: 1, repeat: Infinity }}
-                      className="absolute bottom-8 left-8 w-2 h-6 bg-cyan-400"
-                    ></motion.div>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
           </motion.div>
         </div>
       </div>
