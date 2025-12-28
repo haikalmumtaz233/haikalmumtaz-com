@@ -1,5 +1,6 @@
 import Hero from '../components/home/Hero';
 import Identity from '../components/home/Identity';
+import Experience from '../components/home/Experience';
 import FeaturedProjects from '../components/home/FeaturedProjects';
 
 const Home = () => {
@@ -24,6 +25,7 @@ const Home = () => {
       <div className="relative z-10">
         <Hero />
         <Identity />
+        <Experience />
         <FeaturedProjects />
       </div>
     </div>

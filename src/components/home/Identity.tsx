@@ -27,12 +27,12 @@ const Identity = () => {
   ];
 
   return (
-    <section ref={targetRef} className="relative bg-transparent py-20 md:py-24 overflow-hidden">
+    <section ref={targetRef} className="relative bg-white py-16 md:py-20 overflow-hidden">
       {/* === FADE OVERLAY LEFT === */}
-      <div className="absolute left-0 top-0 bottom-0 w-32 md:w-48 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent z-10 pointer-events-none" />
+      <div className="absolute left-0 top-0 bottom-0 w-32 md:w-48 bg-gradient-to-r from-white via-white/80 to-transparent z-10 pointer-events-none" />
 
       {/* === FADE OVERLAY RIGHT === */}
-      <div className="absolute right-0 top-0 bottom-0 w-32 md:w-48 bg-gradient-to-l from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-32 md:w-48 bg-gradient-to-l from-white via-white/80 to-transparent z-10 pointer-events-none" />
 
       {/* === KINETIC TYPOGRAPHY STRIP === */}
       <motion.div 
@@ -48,21 +48,21 @@ const Identity = () => {
             repeat: Infinity,
             ease: 'linear',
           }}
-          className="flex items-center gap-8 md:gap-12 pr-8 md:pr-12"
+          className="flex items-center gap-6 md:gap-10 pr-6 md:pr-10"
         >
           {duplicatedIdentities.map((identity, index) => (
-            <div key={index} className="flex items-center gap-8 md:gap-12 flex-shrink-0">
+            <div key={index} className="flex items-center gap-6 md:gap-10 flex-shrink-0">
               {/* === IDENTITY TEXT === */}
               <span
-                className={`text-6xl md:text-8xl font-black uppercase tracking-tighter whitespace-nowrap ${
+                className={`text-4xl md:text-6xl font-black uppercase tracking-tighter whitespace-nowrap ${
                   identity.filled
-                    ? 'text-white'
+                    ? 'text-black'
                     : 'text-transparent'
                 }`}
                 style={
                   !identity.filled
                     ? {
-                        WebkitTextStroke: '2px white',
+                        WebkitTextStroke: '1px black',
                       }
                     : undefined
                 }
@@ -71,7 +71,7 @@ const Identity = () => {
               </span>
 
               {/* === SEPARATOR === */}
-              <span className="text-6xl md:text-8xl text-purple-500 font-black">
+              <span className="text-4xl md:text-6xl text-purple-600 font-black">
                 •
               </span>
             </div>
