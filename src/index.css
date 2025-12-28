@@ -11,9 +11,12 @@
   box-sizing: border-box;
 }
 
-/* === CURSOR FIX === */
-body, a, button, input, textarea, select {
-  cursor: auto !important;
+/* === CURSOR RESET === */
+body {
+  cursor: default; /* Arrow for normal elements */
+}
+a, button, [role="button"] {
+  cursor: pointer; /* Hand for interactive elements */
 }
 
 /* === GLOBAL STYLES === */
