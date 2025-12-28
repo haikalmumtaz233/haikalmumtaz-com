@@ -62,10 +62,9 @@ const Experience = () => {
                 viewport={{ once: true, amount: 0.5 }}
                 transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
               >
-                <h2 className="text-5xl md:text-6xl lg:text-5xl xl:text-7xl font-black text-white uppercase tracking-tighter leading-[0.85] w-full break-words">
-                  Professional
-                  <br />
-                  Experience
+                <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-white uppercase tracking-tighter leading-[0.85]">
+                  Professional <br />
+                  <span className="text-gray-500">Experience</span>
                 </h2>
               </motion.div>
             </div>
