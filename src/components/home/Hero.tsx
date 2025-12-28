@@ -121,7 +121,7 @@ const Hero = () => {
       </AnimatePresence>
 
       {/* === HERO SECTION === */}
-      <section className="relative min-h-screen bg-[#0a0a0a] overflow-hidden flex items-center">
+      <section className="relative h-screen bg-[#0a0a0a] overflow-hidden flex items-center justify-center">
         {/* === GRID BACKGROUND === */}
         <div 
           className="absolute inset-0 opacity-[0.03]"
@@ -163,8 +163,8 @@ const Hero = () => {
           }}
         />
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
-          <div className="flex items-center justify-center min-h-[calc(100vh-10rem)]">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 h-full">
+          <div className="flex items-center justify-center h-full">
             {/* === 2-COLUMN GRID LAYOUT === */}
             <AnimatePresence>
               {isIntroComplete && (
@@ -172,17 +172,17 @@ const Hero = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
-                  className="w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
+                  className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-center max-h-full"
                 >
                   {/* === LEFT COLUMN: CONTENT === */}
-                  <div className="flex flex-col">
+                  <div className="flex flex-col justify-center">
                     {/* === NAME STACK === */}
-                    <div className="mb-8">
-                      {nameBlocks.map((block, index) => (
+                    <div className="mb-4">
+                      {nameBlocks.map((block) => (
                         <motion.h1
                           key={block.text}
                           layoutId={block.layoutId}
-                          className={`font-black uppercase tracking-tighter leading-[0.9] text-5xl md:text-7xl lg:text-8xl ${
+                          className={`font-black uppercase tracking-tighter leading-[0.9] text-4xl md:text-6xl lg:text-7xl ${
                             block.text === 'HAIKAL' 
                               ? 'text-white' 
                               : 'text-transparent'
@@ -205,7 +205,7 @@ const Hero = () => {
                       variants={secondaryVariants}
                       initial="hidden"
                       animate="visible"
-                      className="flex items-center gap-3 mb-6"
+                      className="flex items-center gap-3 mb-4"
                     >
                       <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
                       <span className="text-gray-300 text-sm">Ready to help your project 🚀</span>
@@ -216,7 +216,7 @@ const Hero = () => {
                       variants={secondaryVariants}
                       initial="hidden"
                       animate="visible"
-                      className="text-gray-400 max-w-lg leading-relaxed mb-8"
+                      className="text-gray-400 max-w-lg leading-relaxed text-sm md:text-base mb-6 line-clamp-4"
                     >
                       Creative and solution-oriented individual with expertise in full-stack development, machine learning, and IoT systems. Passionate about building innovative products that solve real-world problems.
                     </motion.p>
@@ -226,7 +226,7 @@ const Hero = () => {
                       variants={secondaryVariants}
                       initial="hidden"
                       animate="visible"
-                      className="flex items-center gap-4 mb-8"
+                      className="flex items-center gap-4 mb-6"
                     >
                       {socialLinks.map(({ Icon, href, label }) => (
                         <a
@@ -234,7 +234,7 @@ const Hero = () => {
                           href={href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
+                          className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors cursor-pointer"
                           aria-label={label}
                         >
                           <Icon className="w-5 h-5 text-white" />
@@ -249,39 +249,35 @@ const Hero = () => {
                       animate="visible"
                       href="/cv.pdf"
                       download
-                      className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-black font-bold rounded-md hover:bg-gray-100 transition-colors w-fit"
+                      className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-white text-black font-bold rounded-md hover:bg-gray-100 transition-colors w-fit cursor-pointer"
                     >
                       <Download className="w-5 h-5" />
                       Download CV
                     </motion.a>
                   </div>
 
-                  {/* === RIGHT COLUMN: PORTRAIT + GLASS CARD === */}
+                  {/* === RIGHT COLUMN: PORTRAIT + FLOATING GLASS CARD === */}
                   <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8, delay: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }}
-                    className="relative w-full max-w-md mx-auto lg:max-w-full"
+                    className="relative w-full max-w-md mx-auto lg:max-w-full h-[70vh] group"
                   >
                     {/* === PORTRAIT CONTAINER === */}
-                    <div className="relative aspect-[3/4] rounded-2xl overflow-hidden">
-                      {/* === PLACEHOLDER IMAGE === */}
+                    <div className="relative w-full h-full rounded-2xl overflow-hidden">
+                      {/* === PORTRAIT IMAGE === */}
                       <img
-                        src="src/assets/Foto ITC 2.JPG"
+                        src="src/assets/itc-nobg.png"
                         alt="Portrait"
-                        className="w-full h-full object-cover grayscale"
-                        style={{
-                          maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
-                          WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
-                        }}
+                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out cursor-pointer"
                       />
 
-                      {/* === GLASS CARD OVERLAY === */}
+                      {/* === FLOATING GLASS CARD OVERLAY === */}
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.8, duration: 0.6 }}
-                        className="absolute bottom-0 left-0 right-0 backdrop-blur-md bg-black/50 border-t border-white/10 p-6"
+                        className="absolute bottom-6 left-6 right-6 backdrop-blur-md bg-black/60 border border-white/10 rounded-xl p-4"
                       >
                         {/* === I AM A === */}
                         <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">
@@ -289,8 +285,8 @@ const Hero = () => {
                         </p>
 
                         {/* === TYPEWRITER ROLE === */}
-                        <div className="mb-4">
-                          <h2 className="text-2xl font-bold text-white">
+                        <div className="mb-3">
+                          <h2 className="text-xl md:text-2xl font-bold text-white">
                             {displayText}
                             <span className="animate-pulse">|</span>
                           </h2>
@@ -304,7 +300,7 @@ const Hero = () => {
                     </div>
 
                     {/* === DECORATIVE GRADIENT === */}
-                    <div className="absolute -z-10 -right-10 top-1/2 -translate-y-1/2 w-72 h-72 bg-gradient-to-br from-purple-600/30 to-cyan-600/30 rounded-full blur-3xl" />
+                    <div className="absolute -z-10 -right-10 top-1/2 -translate-y-1/2 w-72 h-72 bg-gradient-to-br from-purple-600/30 to-cyan-600/30 rounded-full blur-3xl pointer-events-none" />
                   </motion.div>
                 </motion.div>
               )}
