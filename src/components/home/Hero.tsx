@@ -268,7 +268,7 @@ const Hero = () => {
                     <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-[2.5rem] blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-1000 z-0" />
 
                     {/* === PORTRAIT CONTAINER === */}
-                    <div className="relative aspect-[3/4] max-h-[70vh] rounded-3xl overflow-hidden border border-white/10 z-10">
+                    <div className="relative aspect-[3/4] h-[80vh] rounded-3xl overflow-hidden border border-white/10 z-10">
                       {/* === PORTRAIT IMAGE === */}
                       <img
                         src="src/assets/itc-nobg.png"
@@ -276,12 +276,12 @@ const Hero = () => {
                         className="w-full h-full object-cover object-center grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out cursor-pointer"
                       />
 
-                      {/* === FLOATING GLASS CARD OVERLAY === */}
+                      {/* === GLASS CARD DOCKED TO BOTTOM === */}
                       <motion.div
-                        initial={{ opacity: 0, y: 20, x: "-50%" }}
-                        animate={{ opacity: 1, y: 0, x: "-50%" }}
+                        initial={{ opacity: 0, y: "100%" }}
+                        animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.8, duration: 0.6 }}
-                        className="absolute bottom-6 left-1/2 w-[90%] z-20 backdrop-blur-md bg-black/60 border border-white/10 rounded-xl p-4"
+                        className="absolute bottom-0 left-0 w-full z-20 backdrop-blur-md bg-black/70 border-t border-white/20 rounded-t-none rounded-b-3xl py-6 px-6"
                       >
                         {/* === I AM A === */}
                         <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">

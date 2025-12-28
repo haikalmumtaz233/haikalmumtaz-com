@@ -1,5 +1,5 @@
 import Hero from '../components/home/Hero';
-import TechStack from '../components/home/TechStack';
+import Identity from '../components/home/Identity';
 import FeaturedProjects from '../components/home/FeaturedProjects';
 
 const Home = () => {
@@ -23,7 +23,7 @@ const Home = () => {
       {/* === CONTENT === */}
       <div className="relative z-10">
         <Hero />
-        <TechStack />
+        <Identity />
         <FeaturedProjects />
       </div>
     </div>
