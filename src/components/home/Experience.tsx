@@ -46,15 +46,8 @@ const Experience = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
           {/* === LEFT COLUMN - STICKY TITLE === */}
           <div className="lg:col-span-4">
-            <div className="sticky top-0 h-screen flex flex-col justify-center">
-              <div className="flex items-center gap-4 mb-6">
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-                  className="w-4 h-4 bg-gradient-to-br from-cyan-400 to-purple-500 rounded-full"
-                />
-              </div>
-              <h2 className="text-6xl md:text-8xl font-black text-white uppercase tracking-tighter leading-[0.85]">
+            <div className="sticky top-32 h-fit">
+              <h2 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.9]">
                 Career
                 <br />
                 History
@@ -96,7 +89,6 @@ interface ExperienceItemProps {
 }
 
 const ExperienceItem = ({ experience, index, hoveredIndex, setHoveredIndex }: ExperienceItemProps) => {
-  const isHovered = hoveredIndex === index;
   const isDimmed = hoveredIndex !== null && hoveredIndex !== index;
 
   return (
@@ -107,10 +99,9 @@ const ExperienceItem = ({ experience, index, hoveredIndex, setHoveredIndex }: Ex
       transition={{ duration: 0.6, delay: index * 0.15 }}
       onMouseEnter={() => setHoveredIndex(index)}
       onMouseLeave={() => setHoveredIndex(null)}
-      className="border-t border-white/20 pt-12 pb-12 transition-all duration-500 cursor-pointer"
+      className="border-t border-white/20 pt-12 pb-12 transition-opacity duration-500 ease-in-out cursor-pointer"
       style={{
         opacity: isDimmed ? 0.3 : 1,
-        transform: isDimmed ? 'scale(0.98)' : isHovered ? 'translateX(10px)' : 'none',
       }}
     >
       {/* === INNER GRID: YEAR + CONTENT === */}
@@ -125,10 +116,10 @@ const ExperienceItem = ({ experience, index, hoveredIndex, setHoveredIndex }: Ex
 
         {/* === RIGHT: COMPANY, ROLE, DESCRIPTION === */}
         <div className="md:col-span-9">
-          <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 transition-colors duration-300">
+          <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
             {experience.company}
           </h3>
-          <p className="text-lg md:text-xl font-semibold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
+          <p className="text-lg md:text-xl font-medium bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
             {experience.role}
           </p>
           <p className="text-gray-400 text-base md:text-lg leading-relaxed">

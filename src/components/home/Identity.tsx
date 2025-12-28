@@ -27,7 +27,7 @@ const Identity = () => {
   ];
 
   return (
-    <section ref={targetRef} className="relative bg-white py-6 md:py-8 overflow-hidden">
+    <section ref={targetRef} className="relative bg-white py-10 overflow-hidden">
       {/* === FADE OVERLAY LEFT === */}
       <div className="absolute left-0 top-0 bottom-0 w-32 md:w-48 bg-gradient-to-r from-white via-white/80 to-transparent z-10 pointer-events-none" />
 
@@ -48,13 +48,13 @@ const Identity = () => {
             repeat: Infinity,
             ease: 'linear',
           }}
-          className="flex items-center gap-6 md:gap-10 pr-6 md:pr-10"
+          className="flex items-center gap-8 md:gap-12 pr-8 md:pr-12"
         >
           {duplicatedIdentities.map((identity, index) => (
-            <div key={index} className="flex items-center gap-6 md:gap-10 flex-shrink-0">
+            <div key={index} className="flex items-center gap-8 md:gap-12 flex-shrink-0">
               {/* === IDENTITY TEXT === */}
               <span
-                className={`text-4xl md:text-6xl font-black uppercase tracking-tighter whitespace-nowrap ${
+                className={`text-5xl md:text-7xl font-black uppercase tracking-tighter whitespace-nowrap ${
                   identity.filled
                     ? 'text-black'
                     : 'text-transparent'
@@ -71,7 +71,7 @@ const Identity = () => {
               </span>
 
               {/* === SEPARATOR === */}
-              <span className="text-4xl md:text-6xl text-black font-black">
+              <span className="text-5xl md:text-7xl text-black font-black">
                 •
               </span>
             </div>
