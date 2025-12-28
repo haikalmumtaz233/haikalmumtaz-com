@@ -51,10 +51,10 @@ const Experience = () => {
 
   return (
     <section ref={sectionRef} className="relative bg-[#0a0a0a] pt-40 pb-24 md:pt-52 md:pb-32 w-full overflow-x-clip">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-stretch">
+      <div className="w-full px-4 md:px-8 lg:px-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-12 items-stretch">
           {/* === LEFT COLUMN - STICKY TITLE === */}
-          <div className="lg:col-span-4 min-h-full">
+          <div className="lg:col-span-5 min-h-full">
             <div className="sticky top-1/2 -translate-y-1/2 py-8 text-left">
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
@@ -62,7 +62,7 @@ const Experience = () => {
                 viewport={{ once: true, amount: 0.5 }}
                 transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
               >
-                <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-white uppercase tracking-tighter leading-[0.85]">
+                <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white uppercase tracking-tighter leading-[0.8]">
                   Professional <br />
                   <span className="text-gray-500">Experience</span>
                 </h2>
@@ -71,11 +71,11 @@ const Experience = () => {
           </div>
 
           {/* === RIGHT COLUMN - CINEMATIC LIST === */}
-          <div className="lg:col-span-8 relative">
+          <div className="lg:col-span-7 relative">
             {/* === SCROLL PROGRESS LINE === */}
             {/* <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-white/10 hidden lg:block" /> */}
             
-            <div>
+            <div className="max-w-3xl">
               {experiences.map((exp, index) => (
                 <ExperienceItem
                   key={index}
