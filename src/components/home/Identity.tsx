@@ -27,7 +27,7 @@ const Identity = () => {
   ];
 
   return (
-    <section ref={targetRef} className="relative bg-white py-16 md:py-20 overflow-hidden">
+    <section ref={targetRef} className="relative bg-white py-6 md:py-8 overflow-hidden">
       {/* === FADE OVERLAY LEFT === */}
       <div className="absolute left-0 top-0 bottom-0 w-32 md:w-48 bg-gradient-to-r from-white via-white/80 to-transparent z-10 pointer-events-none" />
 
@@ -71,7 +71,7 @@ const Identity = () => {
               </span>
 
               {/* === SEPARATOR === */}
-              <span className="text-4xl md:text-6xl text-purple-600 font-black">
+              <span className="text-4xl md:text-6xl text-black font-black">
                 •
               </span>
             </div>
