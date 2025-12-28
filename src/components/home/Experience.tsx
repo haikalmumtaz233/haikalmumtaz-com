@@ -55,7 +55,7 @@ const Experience = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-stretch">
           {/* === LEFT COLUMN - STICKY TITLE === */}
           <div className="lg:col-span-4 min-h-full">
-            <div className="sticky top-1/2 -translate-y-1/2 py-8 pr-12">
+            <div className="sticky top-1/2 -translate-y-1/2 py-8 text-left">
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}

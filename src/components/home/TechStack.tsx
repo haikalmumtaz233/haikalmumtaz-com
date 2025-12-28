@@ -63,12 +63,12 @@ const TechStack = () => {
                 <img
                   src={tech.logo}
                   alt={tech.name}
-                  className="w-full h-full object-contain opacity-70 group-hover:opacity-100 transition-opacity duration-300"
+                  className="w-full h-full object-contain filter grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
                 />
               </div>
 
               {/* === TEXT === */}
-              <span className="text-white font-semibold text-base md:text-lg">
+              <span className="text-white font-semibold text-base md:text-lg bg-gradient-to-r from-white to-white bg-[length:0%_2px] bg-no-repeat bg-left-bottom group-hover:bg-[length:100%_2px] transition-all duration-500">
                 {tech.name}
               </span>
             </motion.div>
