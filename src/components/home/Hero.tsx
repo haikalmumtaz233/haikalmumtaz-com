@@ -129,31 +129,6 @@ const Hero = () => {
               and machine learning solutions
             </motion.p>
 
-            {/* === CTA BUTTONS === */}
-            <motion.div
-              variants={itemVariants}
-              className="flex flex-col sm:flex-row gap-5"
-            >
-              <Link to="/portfolio">
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full sm:w-auto px-10 py-5 bg-white text-black font-bold rounded-full shadow-2xl flex items-center justify-center gap-3 transition-all hover:shadow-white/20"
-                >
-                  View Work
-                  <ArrowRight size={20} />
-                </motion.button>
-              </Link>
-
-              <motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full sm:w-auto px-10 py-5 border border-white/30 text-white font-semibold rounded-full backdrop-blur-sm hover:bg-white/5 transition-all flex items-center justify-center gap-3"
-              >
-                Download CV
-                <Download size={20} />
-              </motion.button>
-            </motion.div>
           </motion.div>
         </div>
       </div>
