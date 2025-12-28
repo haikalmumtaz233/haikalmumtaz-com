@@ -277,10 +277,10 @@ const Hero = () => {
 
                       {/* === FLOATING GLASS CARD OVERLAY === */}
                       <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
+                        initial={{ opacity: 0, y: 20, x: "-50%" }}
+                        animate={{ opacity: 1, y: 0, x: "-50%" }}
                         transition={{ delay: 0.8, duration: 0.6 }}
-                        className="absolute w-[calc(100%-2rem)] left-1/2 -translate-x-1/2 bottom-4 backdrop-blur-md bg-black/70 border border-white/10 rounded-xl p-5 z-20"
+                        className="absolute bottom-6 left-1/2 w-[90%] z-20 backdrop-blur-md bg-black/60 border border-white/10 rounded-xl p-4"
                       >
                         {/* === I AM A === */}
                         <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">
