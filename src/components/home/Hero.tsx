@@ -163,8 +163,8 @@ const Hero = () => {
           }}
         />
 
-        <div className="container mx-auto px-6 sm:px-8 lg:px-16 max-w-7xl relative z-10 h-full">
-          <div className="flex items-center justify-center h-full">
+        <div className="w-full h-full px-6 md:px-12 lg:px-24 flex items-center justify-between relative z-10">
+          <div className="w-full h-full flex items-center justify-center">
             {/* === 2-COLUMN GRID LAYOUT === */}
             <AnimatePresence>
               {isIntroComplete && (
@@ -172,17 +172,17 @@ const Hero = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
-                  className="w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center max-h-full"
+                  className="w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center"
                 >
                   {/* === LEFT COLUMN: CONTENT === */}
-                  <div className="flex flex-col justify-center pr-0 lg:pr-8">
+                  <div className="lg:col-span-7 flex flex-col justify-center items-start">
                     {/* === NAME STACK === */}
                     <div className="mb-4">
                       {nameBlocks.map((block) => (
                         <motion.h1
                           key={block.text}
                           layoutId={block.layoutId}
-                          className={`font-black uppercase tracking-tighter leading-[0.9] text-4xl md:text-6xl lg:text-7xl ${
+                          className={`font-black uppercase tracking-tighter leading-[0.9] text-5xl md:text-7xl lg:text-8xl ${
                             block.text === 'HAIKAL' 
                               ? 'text-white' 
                               : 'text-transparent'
@@ -257,12 +257,13 @@ const Hero = () => {
                   </div>
 
                   {/* === RIGHT COLUMN: PORTRAIT + FLOATING GLASS CARD === */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.8, delay: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }}
-                    className="relative w-full max-w-lg mx-auto group"
-                  >
+                  <div className="lg:col-span-5 flex justify-end">
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.8, delay: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }}
+                      className="relative w-full max-w-lg group"
+                    >
                     {/* === GLOW EFFECT (BEHIND IMAGE) === */}
                     <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-[2.5rem] blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-1000 z-0" />
 
@@ -301,13 +302,14 @@ const Hero = () => {
                         </p>
                       </motion.div>
                     </div>
-
+                      
                     {/* === DECORATIVE GRADIENT === */}
                     <div className="absolute -z-10 -right-10 top-1/2 -translate-y-1/2 w-72 h-72 bg-gradient-to-br from-purple-600/30 to-cyan-600/30 rounded-full blur-3xl pointer-events-none" />
                   </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
           </div>
         </div>
 
