@@ -121,7 +121,7 @@ const Hero = () => {
       </AnimatePresence>
 
       {/* === HERO SECTION === */}
-      <section className="relative h-screen bg-[#0a0a0a] overflow-hidden flex items-center justify-center">
+      <section className="relative h-screen bg-[#0a0a0a] overflow-hidden flex items-center justify-center cursor-auto">
         {/* === GRID BACKGROUND === */}
         <div 
           className="absolute inset-0 opacity-[0.03]"
@@ -261,15 +261,18 @@ const Hero = () => {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8, delay: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }}
-                    className="relative w-full max-w-md mx-auto lg:max-w-full h-[70vh] group"
+                    className="relative w-full max-w-md mx-auto lg:max-w-full h-[60vh] group"
                   >
+                    {/* === GLOW EFFECT (BEHIND IMAGE) === */}
+                    <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-[2rem] blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-1000 z-0" />
+
                     {/* === PORTRAIT CONTAINER === */}
-                    <div className="relative w-full h-full rounded-2xl overflow-hidden">
+                    <div className="relative w-full h-full rounded-2xl overflow-hidden border border-white/10 z-10">
                       {/* === PORTRAIT IMAGE === */}
                       <img
                         src="src/assets/itc-nobg.png"
                         alt="Portrait"
-                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out cursor-pointer"
+                        className="w-full h-full object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out cursor-pointer"
                       />
 
                       {/* === FLOATING GLASS CARD OVERLAY === */}
@@ -277,7 +280,7 @@ const Hero = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.8, duration: 0.6 }}
-                        className="absolute bottom-6 left-6 right-6 backdrop-blur-md bg-black/60 border border-white/10 rounded-xl p-4"
+                        className="absolute bottom-6 left-6 right-6 backdrop-blur-md bg-black/60 border border-white/10 rounded-xl p-4 z-20"
                       >
                         {/* === I AM A === */}
                         <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">
@@ -315,14 +318,20 @@ const Hero = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1, duration: 0.8 }}
-              className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+              className="absolute bottom-10 left-1/2 transform -translate-x-1/2 cursor-pointer"
             >
               <motion.div
-                animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
                 className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center p-2"
               >
-                <motion.div className="w-1.5 h-1.5 bg-white/50 rounded-full"></motion.div>
+                <motion.div 
+                  className="w-1.5 h-1.5 bg-white/50 rounded-full"
+                  animate={{ y: [0, 12, 0] }}
+                  transition={{ 
+                    duration: 1.5, 
+                    repeat: Infinity, 
+                    ease: "easeInOut" 
+                  }}
+                />
               </motion.div>
             </motion.div>
           )}
