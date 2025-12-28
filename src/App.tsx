@@ -1,9 +1,9 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import { ReactLenis } from '@studio-freight/react-lenis';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import CustomCursor from './components/CustomCursor';
 import Home from './pages/Home';
 import About from './pages/About';
 import Portfolio from './pages/Portfolio';
@@ -12,13 +12,28 @@ import Hobbies from './pages/Hobbies';
 
 /* === LAYOUT === */
 const Layout = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === '/') {
+      setIsLoading(true);
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 2600);
+      return () => clearTimeout(timer);
+    } else {
+      setIsLoading(false);
+    }
+  }, [location.pathname]);
+
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      {!isLoading && <Navbar />}
       <main className="flex-grow">
-        <Outlet />
+        <Outlet context={{ isLoading, setIsLoading }} />
       </main>
-      <Footer />
+      {!isLoading && <Footer />}
     </div>
   );
 };
@@ -28,7 +43,6 @@ function App() {
   return (
     <ReactLenis root options={{ lerp: 0.1, duration: 1.5, smoothWheel: true }}>
       <BrowserRouter>
-        <CustomCursor />
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
