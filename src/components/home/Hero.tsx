@@ -163,7 +163,7 @@ const Hero = () => {
           }}
         />
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 h-full">
+        <div className="container mx-auto px-6 sm:px-8 lg:px-16 max-w-7xl relative z-10 h-full">
           <div className="flex items-center justify-center h-full">
             {/* === 2-COLUMN GRID LAYOUT === */}
             <AnimatePresence>
@@ -172,10 +172,10 @@ const Hero = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
-                  className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-center max-h-full"
+                  className="w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center max-h-full"
                 >
                   {/* === LEFT COLUMN: CONTENT === */}
-                  <div className="flex flex-col justify-center">
+                  <div className="flex flex-col justify-center pr-0 lg:pr-8">
                     {/* === NAME STACK === */}
                     <div className="mb-4">
                       {nameBlocks.map((block) => (
@@ -261,18 +261,18 @@ const Hero = () => {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8, delay: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }}
-                    className="relative w-full max-w-md mx-auto lg:max-w-full h-[60vh] group"
+                    className="relative w-full max-w-lg mx-auto group"
                   >
                     {/* === GLOW EFFECT (BEHIND IMAGE) === */}
-                    <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-[2rem] blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-1000 z-0" />
+                    <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-[2.5rem] blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-1000 z-0" />
 
                     {/* === PORTRAIT CONTAINER === */}
-                    <div className="relative w-full h-full rounded-2xl overflow-hidden border border-white/10 z-10">
+                    <div className="relative aspect-[3/4] max-h-[70vh] rounded-3xl overflow-hidden border border-white/10 z-10">
                       {/* === PORTRAIT IMAGE === */}
                       <img
                         src="src/assets/itc-nobg.png"
                         alt="Portrait"
-                        className="w-full h-full object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out cursor-pointer"
+                        className="w-full h-full object-cover object-center grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out cursor-pointer"
                       />
 
                       {/* === FLOATING GLASS CARD OVERLAY === */}
@@ -280,7 +280,7 @@ const Hero = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.8, duration: 0.6 }}
-                        className="absolute bottom-6 left-6 right-6 backdrop-blur-md bg-black/60 border border-white/10 rounded-xl p-4 z-20"
+                        className="absolute w-[94%] left-1/2 -translate-x-1/2 bottom-6 backdrop-blur-md bg-black/60 border border-white/10 rounded-xl p-6 z-20"
                       >
                         {/* === I AM A === */}
                         <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">
@@ -289,7 +289,7 @@ const Hero = () => {
 
                         {/* === TYPEWRITER ROLE === */}
                         <div className="mb-3">
-                          <h2 className="text-xl md:text-2xl font-bold text-white">
+                          <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-white break-words">
                             {displayText}
                             <span className="animate-pulse">|</span>
                           </h2>
