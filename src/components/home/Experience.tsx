@@ -53,7 +53,7 @@ const Experience = () => {
     <section ref={sectionRef} className="relative bg-[#0a0a0a] pt-40 pb-24 md:pt-52 md:pb-32 w-full overflow-x-clip">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-stretch">
-          {/* === LEFT COLUMN - STICKY TITLE (PERFECTLY CENTERED) === */}
+          {/* === LEFT COLUMN - STICKY TITLE === */}
           <div className="lg:col-span-4 min-h-full">
             <div className="sticky top-1/2 -translate-y-1/2 py-8 pr-12">
               <motion.div
@@ -74,7 +74,7 @@ const Experience = () => {
           {/* === RIGHT COLUMN - CINEMATIC LIST === */}
           <div className="lg:col-span-8 relative">
             {/* === SCROLL PROGRESS LINE === */}
-            <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-white/10 hidden lg:block" />
+            {/* <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-white/10 hidden lg:block" /> */}
             
             <div>
               {experiences.map((exp, index) => (
