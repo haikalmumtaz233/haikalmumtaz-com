@@ -9,7 +9,11 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  cursor: none;
+}
+
+/* === CURSOR FIX === */
+body, a, button, input, textarea, select {
+  cursor: auto !important;
 }
 
 /* === GLOBAL STYLES === */

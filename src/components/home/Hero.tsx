@@ -280,7 +280,7 @@ const Hero = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.8, duration: 0.6 }}
-                        className="absolute w-[94%] left-1/2 -translate-x-1/2 bottom-6 backdrop-blur-md bg-black/60 border border-white/10 rounded-xl p-6 z-20"
+                        className="absolute w-[calc(100%-2rem)] left-1/2 -translate-x-1/2 bottom-4 backdrop-blur-md bg-black/70 border border-white/10 rounded-xl p-5 z-20"
                       >
                         {/* === I AM A === */}
                         <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">
@@ -289,7 +289,7 @@ const Hero = () => {
 
                         {/* === TYPEWRITER ROLE === */}
                         <div className="mb-3">
-                          <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-white break-words">
+                          <h2 className="text-base md:text-lg lg:text-xl font-bold text-white leading-tight">
                             {displayText}
                             <span className="animate-pulse">|</span>
                           </h2>
