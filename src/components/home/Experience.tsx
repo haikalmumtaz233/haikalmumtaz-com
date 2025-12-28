@@ -43,15 +43,22 @@ const Experience = () => {
   return (
     <section ref={sectionRef} className="relative bg-[#0a0a0a] py-24 md:py-32">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
-          {/* === LEFT COLUMN - STICKY TITLE === */}
-          <div className="lg:col-span-4">
-            <div className="sticky top-32 h-fit">
-              <h2 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.9]">
-                Career
-                <br />
-                History
-              </h2>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-stretch">
+          {/* === LEFT COLUMN - STICKY TITLE (THE TRACK) === */}
+          <div className="lg:col-span-4 min-h-full">
+            <div className="sticky top-24 md:top-32 flex flex-col justify-between py-8">
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
+              >
+                <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-white uppercase tracking-tighter leading-[0.8]">
+                  Career
+                  <br />
+                  History
+                </h2>
+              </motion.div>
             </div>
           </div>
 
@@ -65,6 +72,7 @@ const Experience = () => {
                   index={index}
                   hoveredIndex={hoveredIndex}
                   setHoveredIndex={setHoveredIndex}
+                  isLast={index === experiences.length - 1}
                 />
               ))}
             </div>
@@ -86,9 +94,10 @@ interface ExperienceItemProps {
   index: number;
   hoveredIndex: number | null;
   setHoveredIndex: (index: number | null) => void;
+  isLast: boolean;
 }
 
-const ExperienceItem = ({ experience, index, hoveredIndex, setHoveredIndex }: ExperienceItemProps) => {
+const ExperienceItem = ({ experience, index, hoveredIndex, setHoveredIndex, isLast }: ExperienceItemProps) => {
   const isDimmed = hoveredIndex !== null && hoveredIndex !== index;
 
   return (
@@ -99,7 +108,9 @@ const ExperienceItem = ({ experience, index, hoveredIndex, setHoveredIndex }: Ex
       transition={{ duration: 0.6, delay: index * 0.15 }}
       onMouseEnter={() => setHoveredIndex(index)}
       onMouseLeave={() => setHoveredIndex(null)}
-      className="border-t border-white/20 pt-12 pb-12 transition-opacity duration-500 ease-in-out cursor-pointer"
+      className={`border-t border-white/20 pt-12 transition-opacity duration-500 ease-in-out cursor-pointer ${
+        isLast ? 'pb-32' : 'pb-12'
+      }`}
       style={{
         opacity: isDimmed ? 0.3 : 1,
       }}

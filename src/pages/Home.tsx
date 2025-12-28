@@ -5,7 +5,7 @@ import FeaturedProjects from '../components/home/FeaturedProjects';
 
 const Home = () => {
   return (
-    <div className="relative overflow-hidden">
+    <div className="relative">
       {/* === BACKGROUND GRID PATTERN === */}
       <div className="absolute inset-0 bg-gray-950">
         <div

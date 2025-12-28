@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Download, Github, Linkedin, Instagram, Rocket } from 'lucide-react';
+import { Download, Github, Linkedin, Instagram, ArrowDown } from 'lucide-react';
 
 const Hero = () => {
   const [isIntroComplete, setIsIntroComplete] = useState(false);
@@ -322,19 +322,20 @@ const Hero = () => {
               transition={{ delay: 1, duration: 0.8 }}
               className="absolute bottom-10 left-1/2 transform -translate-x-1/2 cursor-pointer"
             >
-              <motion.div
-                className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center p-2"
-              >
-                <motion.div 
-                  className="w-1.5 h-1.5 bg-white/50 rounded-full"
-                  animate={{ y: [0, 12, 0] }}
-                  transition={{ 
-                    duration: 1.5, 
-                    repeat: Infinity, 
-                    ease: "easeInOut" 
-                  }}
-                />
-              </motion.div>
+              {/* === NEW ARROW CIRCLE INDICATOR === */}
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center bg-white/5 backdrop-blur-sm">
+                  <motion.div
+                    animate={{ y: [0, 4, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                  >
+                    <ArrowDown className="w-5 h-5 text-white" />
+                  </motion.div>
+                </div>
+                <span className="text-xs font-mono uppercase tracking-widest text-gray-400">
+                  Scroll to explore
+                </span>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
