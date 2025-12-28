@@ -53,25 +53,12 @@ const Identity = () => {
           {duplicatedIdentities.map((identity, index) => (
             <div key={index} className="flex items-center gap-8 md:gap-12 flex-shrink-0">
               {/* === IDENTITY TEXT === */}
-              <span
-                className={`text-5xl md:text-7xl font-black uppercase tracking-tighter whitespace-nowrap ${
-                  identity.filled
-                    ? 'text-black'
-                    : 'text-transparent'
-                }`}
-                style={
-                  !identity.filled
-                    ? {
-                        WebkitTextStroke: '1px black',
-                      }
-                    : undefined
-                }
-              >
+              <span className="text-3xl md:text-5xl font-black uppercase tracking-tighter whitespace-nowrap text-black">
                 {identity.text}
               </span>
 
               {/* === SEPARATOR === */}
-              <span className="text-5xl md:text-7xl text-black font-black">
+              <span className="text-3xl md:text-5xl text-black font-black">
                 •
               </span>
             </div>

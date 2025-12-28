@@ -262,18 +262,18 @@ const Hero = () => {
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.8, delay: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }}
-                      className="relative w-full max-w-lg group"
+                      className="relative w-full max-w-2xl group"
                     >
                     {/* === GLOW EFFECT (BEHIND IMAGE) === */}
                     <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-[2.5rem] blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-1000 z-0" />
 
                     {/* === PORTRAIT CONTAINER === */}
-                    <div className="relative aspect-[3/4] h-[80vh] rounded-3xl overflow-hidden border border-white/10 z-10">
+                    <div className="relative aspect-[3/4] h-[85vh] rounded-3xl overflow-hidden border border-white/10 z-10">
                       {/* === PORTRAIT IMAGE === */}
                       <img
                         src="src/assets/itc-nobg.png"
                         alt="Portrait"
-                        className="w-full h-full object-cover object-center grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out cursor-pointer"
+                        className="w-full h-full object-cover object-center grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out cursor-pointer scale-110"
                       />
 
                       {/* === GLASS CARD DOCKED TO BOTTOM === */}

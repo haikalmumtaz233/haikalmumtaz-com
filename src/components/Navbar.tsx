@@ -23,6 +23,10 @@ const Navbar = () => {
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
 
+  // Animation constants
+  const DURATION = 0.25;
+  const STAGGER = 0.025;
+
   /* === DISABLE BODY SCROLL WHEN MENU OPEN === */
   useEffect(() => {
     if (isOpen) {
@@ -79,7 +83,7 @@ const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: "-100%" }}
             transition={{ duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }}
-            className="fixed inset-0 z-40 bg-[#0a0a0a]/98 backdrop-blur-sm overflow-hidden"
+            className="fixed inset-0 z-40 bg-[#09090b] overflow-hidden"
           >
             {/* === MENU CONTENT === */}
             <div className="h-full flex flex-col items-center justify-center px-6">
@@ -101,24 +105,48 @@ const Navbar = () => {
                       <Link
                         to={link.path}
                         onClick={closeMenu}
-                        className="group relative block text-6xl md:text-8xl font-black uppercase tracking-tighter text-white hover:text-transparent transition-all duration-500 cursor-pointer"
-                        style={{
-                          WebkitTextStroke: '0px white',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.WebkitTextStroke = '2px white';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.WebkitTextStroke = '0px white';
-                        }}
+                        className="block cursor-pointer"
                       >
-                        <motion.span 
-                          className="inline-block"
-                          whileHover={{ x: 20 }}
-                          transition={{ duration: 0.3 }}
+                        <motion.div
+                          initial="initial"
+                          whileHover="hovered"
+                          className="relative block overflow-hidden whitespace-nowrap text-6xl md:text-8xl font-black uppercase text-white"
+                          style={{ lineHeight: 0.9 }}
                         >
-                          {link.name}
-                        </motion.span>
+                          {/* PRIMARY TEXT (Moves Up) */}
+                          <div>
+                            {link.name.split("").map((l, i) => (
+                              <motion.span
+                                variants={{
+                                  initial: { y: 0 },
+                                  hovered: { y: "-100%" },
+                                }}
+                                transition={{ duration: DURATION, ease: "easeInOut", delay: STAGGER * i }}
+                                className="inline-block"
+                                key={i}
+                              >
+                                {l}
+                              </motion.span>
+                            ))}
+                          </div>
+
+                          {/* SECONDARY TEXT (Comes from bottom) */}
+                          <div className="absolute inset-0">
+                            {link.name.split("").map((l, i) => (
+                              <motion.span
+                                variants={{
+                                  initial: { y: "100%" },
+                                  hovered: { y: 0 },
+                                }}
+                                transition={{ duration: DURATION, ease: "easeInOut", delay: STAGGER * i }}
+                                className="inline-block text-cyan-400"
+                                key={i}
+                              >
+                                {l}
+                              </motion.span>
+                            ))}
+                          </div>
+                        </motion.div>
                       </Link>
                     </motion.li>
                   ))}
@@ -130,28 +158,34 @@ const Navbar = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8, duration: 0.6 }}
-                className="absolute bottom-12 left-1/2 -translate-x-1/2 w-full max-w-md px-6"
+                className="absolute bottom-0 left-0 w-full px-8 pb-8 flex justify-between items-end"
               >
+                {/* === EMAIL === */}
+                <div>
+                  <p className="text-sm text-gray-500 uppercase tracking-wider mb-1">Email</p>
+                  <a 
+                    href="mailto:hmumtaz70@gmail.com" 
+                    className="text-base text-white hover:text-cyan-400 transition-colors duration-300"
+                  >
+                    hmumtaz70@gmail.com
+                  </a>
+                </div>
+
                 {/* === SOCIAL ICONS === */}
-                <div className="flex items-center justify-center gap-6 mb-6">
+                <div className="flex items-center gap-4">
                   {socialLinks.map(({ Icon, href, label }) => (
                     <a
                       key={label}
                       href={href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:scale-110 transition-all duration-300 cursor-pointer"
+                      className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:scale-110 transition-all duration-300 cursor-pointer"
                       aria-label={label}
                     >
-                      <Icon className="w-5 h-5 text-white" />
+                      <Icon className="w-4 h-4 text-white" />
                     </a>
                   ))}
                 </div>
-
-                {/* === LOCATION === */}
-                <p className="text-center text-sm text-gray-400 uppercase tracking-wider">
-                  Yogyakarta, Indonesia
-                </p>
               </motion.div>
             </div>
 

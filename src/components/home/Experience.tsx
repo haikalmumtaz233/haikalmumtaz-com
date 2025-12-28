@@ -50,7 +50,7 @@ const Experience = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <section ref={sectionRef} className="relative bg-[#0a0a0a] pt-40 pb-24 md:pt-52 md:pb-32 w-full overflow-x-clip">
+    <section ref={sectionRef} className="relative bg-[#0a0a0a] pt-60 md:pt-80 pb-10 w-full overflow-x-clip">
       <div className="w-full px-4 md:px-8 lg:px-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-12 items-stretch">
           {/* === LEFT COLUMN - STICKY TITLE === */}
@@ -58,8 +58,8 @@ const Experience = () => {
             <div className="sticky top-1/2 -translate-y-1/2 py-8 text-left">
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, amount: 0.5 }}
+                animate={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
               >
                 <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white uppercase tracking-tighter leading-[0.8]">
