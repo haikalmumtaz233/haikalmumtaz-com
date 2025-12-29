@@ -2,29 +2,6 @@ import { motion } from 'framer-motion';
 import { tools } from '../../data/tools';
 
 const Tools = () => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.05,
-        delayChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.4,
-        ease: [0.43, 0.13, 0.23, 0.96] as const,
-      },
-    },
-  };
-
   const titleVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -47,8 +24,11 @@ const Tools = () => {
     },
   };
 
+  // Duplicate tools array 5 times for seamless infinite scroll
+  const duplicatedTools = [...tools, ...tools, ...tools, ...tools, ...tools];
+
   return (
-    <section className="relative bg-[#0a0a0a] py-24 md:py-32">
+    <section className="relative bg-[#0a0a0a] py-24 md:py-32 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         {/* === HEADER WITH MASKED REVEAL === */}
         <motion.div
@@ -75,23 +55,28 @@ const Tools = () => {
             </motion.p>
           </div>
         </motion.div>
+      </div>
 
-        {/* === SQUARE GRID === */}
+      {/* === INFINITE SCROLL MARQUEE (RIGHT TO LEFT) === */}
+      <div className="w-full overflow-hidden relative">
+        {/* === LEFT FADE === */}
+        <div className="absolute top-0 bottom-0 left-0 w-24 md:w-40 z-10 bg-gradient-to-r from-[#0a0a0a] to-transparent pointer-events-none" />
+        
+        {/* === RIGHT FADE === */}
+        <div className="absolute top-0 bottom-0 right-0 w-24 md:w-40 z-10 bg-gradient-to-l from-[#0a0a0a] to-transparent pointer-events-none" />
+        
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6"
+          animate={{ x: ['0%', '-50%'] }}
+          transition={{ ease: 'linear', duration: 40, repeat: Infinity }}
+          className="flex gap-6 md:gap-8"
         >
-          {tools.map((tool, index) => (
-            <motion.div
+          {duplicatedTools.map((tool, index) => (
+            <div
               key={index}
-              variants={itemVariants}
-              className="aspect-square bg-white/5 border border-white/10 rounded-2xl flex flex-col items-center justify-center gap-3 hover:bg-white/10 hover:border-white/20 transition-all duration-300 group cursor-pointer"
+              className="w-28 h-28 md:w-32 md:h-32 flex flex-col items-center justify-center gap-2 flex-shrink-0 hover:bg-white/5 rounded-2xl transition-all duration-300 group cursor-pointer"
             >
               {/* === ICON === */}
-              <div className="w-10 h-10 flex items-center justify-center">
+              <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center">
                 <img
                   src={tool.logo}
                   alt={tool.name}
@@ -100,10 +85,10 @@ const Tools = () => {
               </div>
 
               {/* === TEXT === */}
-              <span className="text-xs md:text-sm font-mono text-gray-400 group-hover:text-white transition-colors duration-300 text-center px-2">
+              <span className="text-xs font-mono text-gray-400 group-hover:text-white transition-colors duration-300 text-center px-2">
                 {tool.name}
               </span>
-            </motion.div>
+            </div>
           ))}
         </motion.div>
       </div>

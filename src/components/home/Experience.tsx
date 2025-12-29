@@ -84,14 +84,11 @@ const Experience = () => {
                 animate="visible"
                 viewport={{ once: true, margin: "-100px" }}
               >
-                <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white uppercase tracking-tighter leading-[0.8]">
+                <h2 className="text-3xl md:text-5xl lg:text-6xl font-black text-white uppercase tracking-tighter leading-none">
                   <div className="overflow-hidden">
-                    <motion.span variants={wordVariants} className="inline-block">
+                    <motion.span variants={wordVariants} className="inline-block mr-3">
                       Professional
                     </motion.span>
-                  </div>
-                  <br />
-                  <div className="overflow-hidden">
                     <motion.span variants={wordVariants} className="inline-block text-gray-500">
                       Experience
                     </motion.span>
