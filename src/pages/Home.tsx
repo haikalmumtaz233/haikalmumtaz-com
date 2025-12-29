@@ -4,6 +4,7 @@ import Experience from '../components/home/Experience';
 import TechStack from '../components/home/TechStack';
 import Tools from '../components/home/Tools';
 import FavoriteMoments from '../components/home/FavoriteMoments';
+import Certifications from '../components/home/Certifications';
 import FeaturedProjects from '../components/home/FeaturedProjects';
 
 const Home = () => {
@@ -32,6 +33,7 @@ const Home = () => {
         <TechStack />
         <Tools />
         <FavoriteMoments />
+        <Certifications />
         <FeaturedProjects />
       </div>
     </div>
