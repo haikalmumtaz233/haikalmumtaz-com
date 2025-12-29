@@ -12,7 +12,7 @@ const FavoriteMoments = () => {
   });
 
   // Transform vertical scroll into horizontal movement
-  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-85%']);
+  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-55%']);
 
   // Helper to get alignment class
   const getAlignmentClass = (alignment: 'start' | 'center' | 'end') => {
@@ -30,10 +30,10 @@ const FavoriteMoments = () => {
   const renderContent = (moment: typeof moments[0]) => {
     const textBlock = (
       <div className="space-y-3">
-        <p className="text-xs font-mono tracking-[0.2em] text-gray-500 uppercase">
+        <p className="text-[10px] md:text-xs font-mono tracking-[0.2em] text-gray-500 uppercase">
           {moment.year}
         </p>
-        <h3 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tight leading-none">
+        <h3 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tight leading-none">
           {moment.title}
         </h3>
       </div>
@@ -85,17 +85,17 @@ const FavoriteMoments = () => {
         {/* === HORIZONTAL SCROLLING TRACK === */}
         <motion.div
           style={{ x }}
-          className="flex items-stretch gap-32 md:gap-40 px-6 md:px-12"
+          className="flex items-stretch gap-24 md:gap-32 px-6 md:px-12"
         >
           {/* === OPENING TITLE CARD === */}
-          <div className="flex-shrink-0 flex items-center justify-center w-[500px] md:w-[650px] h-[80vh]">
+          <div className="flex-shrink-0 flex items-center justify-center w-[400px] md:w-[500px] h-[80vh]">
             <div className="text-left">
               <motion.h2
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] as const }}
-                className="text-7xl md:text-8xl lg:text-9xl font-black text-white uppercase tracking-tighter leading-none"
+                className="text-6xl md:text-7xl lg:text-8xl font-black text-white uppercase tracking-tighter leading-none"
               >
                 Favorite
                 <br />
@@ -130,9 +130,6 @@ const FavoriteMoments = () => {
               {renderContent(moment)}
             </motion.div>
           ))}
-
-          {/* === CLOSING SPACER === */}
-          <div className="flex-shrink-0 w-[300px]" />
         </motion.div>
       </div>
     </section>
