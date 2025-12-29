@@ -1,12 +1,12 @@
 import { useLayoutEffect } from 'react';
 import Hero from '../components/home/Hero';
 import Identity from '../components/home/Identity';
+import FeaturedProjects from '../components/home/FeaturedProjects';
 import Experience from '../components/home/Experience';
 import TechStack from '../components/home/TechStack';
 import Tools from '../components/home/Tools';
-import FavoriteMoments from '../components/home/FavoriteMoments';
 import Certifications from '../components/home/Certifications';
-import FeaturedProjects from '../components/home/FeaturedProjects';
+import FavoriteMoments from '../components/home/FavoriteMoments';
 import Contact from '../components/home/Contact';
 
 const Home = () => {
@@ -31,17 +31,31 @@ const Home = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-purple-900/10 via-transparent to-blue-900/10" />
       </div>
 
-      {/* === CONTENT === */}
+      {/* === CONTENT (HIGH-IMPACT FLOW) === */}
       <div className="relative z-10">
         <Hero />
         <Identity />
+        
+        {/* PROOF: Show work immediately */}
+        <FeaturedProjects />
+        
+        {/* TRUST: Show experience */}
         <Experience />
+        
+        {/* HOW: Show skills */}
         <TechStack />
         <Tools />
-        <FavoriteMoments />
+        
+        {/* VALIDATION: Show awards */}
         <Certifications />
-        <FeaturedProjects />
-        <Contact />
+        
+        {/* HUMAN: Show personality */}
+        <FavoriteMoments />
+        
+        {/* ACTION: Close with contact */}
+        <div id="contact">
+          <Contact />
+        </div>
       </div>
     </div>
   );

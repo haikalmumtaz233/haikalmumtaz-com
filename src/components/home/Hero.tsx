@@ -48,8 +48,10 @@ const Hero = () => {
 
   /* === ANIMATION VARIANTS === */
   const nameBlocks = [
-    { text: 'MUHAMMAD RADITYA', delay: 0, weight: 'light' },
-    { text: 'HAIKAL MUMTAZ', delay: 0.15, weight: 'bold' },
+    { text: 'MUHAMMAD', delay: 0, weight: 'light' },
+    { text: 'RADITYA', delay: 0.1, weight: 'light' },
+    { text: 'HAIKAL', delay: 0.2, weight: 'bold' },
+    { text: 'MUMTAZ', delay: 0.3, weight: 'light' },
   ];
 
   const statusVariants = {
@@ -193,7 +195,7 @@ const Hero = () => {
                               delay: block.delay,
                               ease: [0.43, 0.13, 0.23, 0.96],
                             }}
-                            className={`uppercase tracking-tighter leading-[0.8] text-5xl md:text-7xl lg:text-8xl ${
+                            className={`uppercase tracking-tighter leading-[0.8] text-4xl md:text-6xl lg:text-7xl ${
                               block.weight === 'bold' 
                                 ? 'font-black text-white' 
                                 : 'font-light text-transparent'
