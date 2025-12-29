@@ -7,7 +7,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 const navLinks = [
   { name: 'HOME', path: '/' },
   { name: 'ABOUT', path: '/about' },
-  { name: 'PLAYGROUND', path: '/playground' },
   { name: 'CONTACT', path: '#contact', isScroll: true },
 ];
 
@@ -110,7 +109,7 @@ const Navbar = () => {
           >
             <div className="h-full flex flex-col items-center justify-center px-6">
               <nav className="mb-16">
-                <ul className="space-y-2">
+                <ul className="space-y-4">
                   {navLinks.map((link, index) => (
                     <motion.li
                       key={link.name}
@@ -156,7 +155,7 @@ const Navbar = () => {
                                   hovered: { y: 0 },
                                 }}
                                 transition={{ duration: DURATION, ease: "easeInOut", delay: STAGGER * i }}
-                                className="inline-block text-cyan-400"
+                                className="inline-block text-zinc-500"
                                 key={i}
                               >
                                 {l}
@@ -178,7 +177,7 @@ const Navbar = () => {
               >
                 <div>
                   <p className="text-sm text-gray-500 uppercase tracking-wider mb-1">Email</p>
-                  <a href="mailto:hmumtaz70@gmail.com" className="text-base text-white hover:text-cyan-400 transition-colors">
+                  <a href="mailto:hmumtaz70@gmail.com" className="text-base text-white hover:text-zinc-400 transition-colors">
                     hmumtaz70@gmail.com
                   </a>
                 </div>
@@ -197,7 +196,7 @@ const Navbar = () => {
                 </div>
               </motion.div>
             </div>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-br from-cyan-600/5 to-purple-600/5 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-br from-zinc-800/5 to-zinc-900/5 rounded-full blur-3xl pointer-events-none" />
           </motion.div>
         )}
       </AnimatePresence>
