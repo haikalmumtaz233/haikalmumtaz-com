@@ -12,7 +12,7 @@ const FavoriteMoments = () => {
   });
 
   // Transform vertical scroll into horizontal movement
-  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-55%']);
+  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-80%']);
 
   // Helper to get alignment class
   const getAlignmentClass = (alignment: 'start' | 'center' | 'end') => {
@@ -85,7 +85,7 @@ const FavoriteMoments = () => {
         {/* === HORIZONTAL SCROLLING TRACK === */}
         <motion.div
           style={{ x }}
-          className="flex items-stretch gap-24 md:gap-32 px-6 md:px-12"
+          className="flex items-stretch gap-24 md:gap-32 px-6 md:px-12 pr-24 md:pr-32"
         >
           {/* === OPENING TITLE CARD === */}
           <div className="flex-shrink-0 flex items-center justify-center w-[400px] md:w-[500px] h-[80vh]">
