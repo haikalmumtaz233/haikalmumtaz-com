@@ -3,6 +3,7 @@ import Identity from '../components/home/Identity';
 import Experience from '../components/home/Experience';
 import TechStack from '../components/home/TechStack';
 import Tools from '../components/home/Tools';
+import FavoriteMoments from '../components/home/FavoriteMoments';
 import FeaturedProjects from '../components/home/FeaturedProjects';
 
 const Home = () => {
@@ -30,6 +31,7 @@ const Home = () => {
         <Experience />
         <TechStack />
         <Tools />
+        <FavoriteMoments />
         <FeaturedProjects />
       </div>
     </div>
