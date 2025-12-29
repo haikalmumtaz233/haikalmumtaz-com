@@ -1,538 +1,524 @@
-import { motion, useInView } from 'framer-motion';
-import { User, GraduationCap, Award, Briefcase } from 'lucide-react';
-import { useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { GraduationCap, Award, Users, Download, Sparkles } from 'lucide-react';
+
 
 const About = () => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.3,
-        delayChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, x: -30 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        duration: 0.8,
-      },
-    },
-  };
-
-  const imageVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 1,
-      },
-    },
-  };
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end'],
+  });
 
   return (
-    <section className="relative min-h-screen bg-transparent py-24 md:py-32 overflow-hidden">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center max-w-7xl mx-auto"
-        >
-          {/* === LEFT COLUMN - IMAGE === */}
-          <motion.div
-            variants={imageVariants}
-            className="relative flex justify-center lg:justify-start order-1 lg:order-1"
-          >
-            <motion.div
-              animate={{
-                y: [0, -10, 0],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                repeatType: 'reverse',
-              }}
-              className="relative"
-            >
-              {/* === ROTATING GRADIENT RING === */}
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-                className="absolute inset-0 bg-gradient-to-tr from-cyan-500 via-purple-500 to-pink-500 rounded-3xl blur-xl opacity-70"
-              ></motion.div>
-              
-              <motion.div
-                animate={{ rotate: -360 }}
-                transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
-                className="absolute -inset-2 bg-gradient-to-bl from-pink-500 via-purple-500 to-cyan-500 rounded-3xl opacity-40 blur-2xl"
-              ></motion.div>
-              
-              {/* === IMAGE CONTAINER === */}
-              <div className="relative w-80 h-96 md:w-96 md:h-[480px] bg-gradient-to-br from-cyan-500/10 via-purple-500/10 to-pink-500/10 rounded-3xl border-4 border-white/20 overflow-hidden backdrop-blur-xl shadow-2xl shadow-purple-500/20">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(6,182,212,0.15),transparent_50%)]"></div>
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(168,85,247,0.15),transparent_50%)]"></div>
-                
-                {/* === PLACEHOLDER IMAGE === */}
-                <div className="relative w-full h-full flex items-center justify-center bg-gray-900/30">
-                  <User size={120} className="text-gray-500" />
-                </div>
-              </div>
+    <div ref={containerRef} className="bg-[#0a0a0a] text-white">
+      <ParallaxHero scrollYProgress={scrollYProgress} />
+      <TheJourney />
+      <EducationStats />
+      <Philosophy />
+      <SignatureCTA />
+    </div>
+  );
+};
 
-              {/* === DECORATIVE ELEMENTS === */}
+/* ========================================
+   SECTION 1: PARALLAX HERO
+======================================== */
+const ParallaxHero = ({ scrollYProgress }: { scrollYProgress: any }) => {
+  const y = useTransform(scrollYProgress, [0, 0.3], [0, 100]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+
+  return (
+    <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      {/* === GRID BACKGROUND === */}
+      <div
+        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px',
+        }}
+      />
+
+      <div className="container mx-auto px-6 md:px-12 lg:px-24">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          {/* === LEFT: TEXT === */}
+          <motion.div style={{ opacity }} className="space-y-8">
+            <div className="overflow-hidden">
               <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full blur-2xl opacity-60"
-              ></motion.div>
-              
+                initial={{ y: '100%' }}
+                animate={{ y: '0%' }}
+                transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
+              >
+                <h1 className="text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-none">
+                  HELLO,
+                </h1>
+              </motion.div>
+            </div>
+            <div className="overflow-hidden">
               <motion.div
-                animate={{ rotate: -360 }}
-                transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
-                className="absolute -bottom-4 -left-4 w-32 h-32 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full blur-2xl opacity-60"
-              ></motion.div>
+                initial={{ y: '100%' }}
+                animate={{ y: '0%' }}
+                transition={{ duration: 0.8, delay: 0.1, ease: [0.43, 0.13, 0.23, 0.96] }}
+              >
+                <h1 className="text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-none">
+                  I'M HAIKAL.
+                </h1>
+              </motion.div>
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="space-y-4"
+            >
+              <p className="text-xl md:text-2xl text-zinc-400 font-light max-w-xl">
+                Fullstack Developer & AI Enthusiast
+              </p>
+              <p className="text-base md:text-lg text-zinc-500 max-w-xl leading-relaxed">
+                More than code. I build digital legacies.
+              </p>
             </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="h-px w-32 bg-gradient-to-r from-white to-transparent"
+            />
           </motion.div>
 
-          {/* === RIGHT COLUMN - CONTENT === */}
-          <motion.div
-            variants={containerVariants}
-            className="order-2 lg:order-2 space-y-6"
-          >
-            <motion.h1
-              variants={itemVariants}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight"
-            >
-              Behind the Code
-            </motion.h1>
-
-            <motion.div variants={itemVariants} className="space-y-5 text-gray-300 leading-relaxed">
-              <p className="text-base md:text-lg">
-                Hey there! I'm <span className="text-gradient font-semibold">Muhammad Raditya Haikal Mumtaz</span>, 
-                a fresh graduate from <span className="text-white font-medium">UPN "Veteran" Yogyakarta</span> with 
-                a degree in Computer Science. My journey into tech started in the most unexpected way—through my 
-                love for <span className="text-cyan-400 font-medium">games</span>. What began as countless hours 
-                of gaming evolved into a burning curiosity about how these virtual worlds actually worked.
-              </p>
-
-              <p className="text-base md:text-lg">
-                That curiosity led me down the rabbit hole of programming, where I discovered my passion for 
-                building <span className="text-gradient font-semibold">Full-Stack</span> applications and diving 
-                deep into <span className="text-gradient font-semibold">Machine Learning</span>. I'm the kind 
-                of developer who loves prototyping—taking ideas from concept to reality, experimenting with new 
-                technologies, and pushing the boundaries of what's possible. Whether it's crafting seamless web 
-                experiences or training AI models to solve real-world problems, I'm always eager to learn and grow.
-              </p>
-
-              <p className="text-base md:text-lg">
-                As a <span className="text-purple-400 font-medium">fast learner</span> and eternal 
-                <span className="text-cyan-400 font-medium"> gamer</span> at heart, I approach every project 
-                with the same enthusiasm I had when I first discovered coding. I'm constantly exploring emerging 
-                technologies, building innovative solutions, and embracing challenges that help me evolve as a developer. 
-                Let's create something amazing together!
-              </p>
-            </motion.div>
-
-            {/* === STATS === */}
+          {/* === RIGHT: IMAGE WITH PARALLAX === */}
+          <motion.div style={{ y }} className="relative">
             <motion.div
-              variants={itemVariants}
-              className="relative mt-12 backdrop-blur-xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 rounded-3xl p-8 shadow-xl shadow-black/20"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, delay: 0.3, ease: [0.43, 0.13, 0.23, 0.96] }}
+              className="relative aspect-[3/4] rounded-2xl overflow-hidden border border-zinc-800"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-purple-500/5 rounded-3xl"></div>
-              
-              <div className="relative grid grid-cols-3 gap-6 md:gap-8">
-                {/* === STAT 1 === */}
-                <div className="text-center relative">
-                  <div className="text-5xl md:text-6xl font-black bg-gradient-to-br from-cyan-400 via-cyan-300 to-blue-400 bg-clip-text text-transparent mb-2 leading-none">
-                    2025
-                  </div>
-                  <div className="text-xs md:text-sm text-gray-400 font-medium uppercase tracking-wider">Graduate</div>
-                </div>
-                
-                {/* === DIVIDER 1 === */}
-                <div className="absolute left-1/3 top-1/2 -translate-y-1/2 w-px h-16 bg-gradient-to-b from-transparent via-white/20 to-transparent hidden sm:block"></div>
-                
-                {/* === STAT 2 === */}
-                <div className="text-center relative">
-                  <div className="text-5xl md:text-6xl font-black bg-gradient-to-br from-purple-400 via-purple-300 to-pink-400 bg-clip-text text-transparent mb-2 leading-none">
-                    10+
-                  </div>
-                  <div className="text-xs md:text-sm text-gray-400 font-medium uppercase tracking-wider">Projects</div>
-                </div>
-                
-                {/* === DIVIDER 2 === */}
-                <div className="absolute left-2/3 top-1/2 -translate-y-1/2 w-px h-16 bg-gradient-to-b from-transparent via-white/20 to-transparent hidden sm:block"></div>
-                
-                {/* === STAT 3 === */}
-                <div className="text-center relative">
-                  <div className="text-5xl md:text-6xl font-black bg-gradient-to-br from-pink-400 via-rose-300 to-orange-400 bg-clip-text text-transparent mb-2 leading-none">
-                    ∞
-                  </div>
-                  <div className="text-xs md:text-sm text-gray-400 font-medium uppercase tracking-wider">Ideas</div>
-                </div>
+              {/* === PORTRAIT PLACEHOLDER === */}
+              <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 to-zinc-950">
+                <img
+                  src="src/assets/itc-nobg.png"
+                  alt="Portrait"
+                  className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                />
               </div>
+
+              {/* === ACCENT LINE === */}
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-white to-transparent" />
             </motion.div>
           </motion.div>
-        </motion.div>
-
-        {/* === SECTION DIVIDER === */}
-        <div className="max-w-7xl mx-auto mt-20 md:mt-24 mb-20 md:mb-24">
-          <div className="relative h-px w-full">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"></div>
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500/30 to-transparent blur-sm"></div>
-          </div>
         </div>
-
-        {/* === EDUCATION & CERTIFICATIONS === */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="max-w-7xl mx-auto"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">
-            Education & Certifications
-          </h2>
-
-          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-            {/* === EDUCATION CARD === */}
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-              className="relative md:col-span-2 group overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 rounded-3xl p-8 hover:border-cyan-500/50 transition-all duration-500"
-            >
-              {/* === BACKGROUND PATTERN === */}
-              <div className="absolute inset-0 opacity-30">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-cyan-500/20 to-transparent rounded-full blur-3xl"></div>
-                <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-blue-500/20 to-transparent rounded-full blur-3xl"></div>
-              </div>
-              
-              {/* === GLASS SHINE EFFECT === */}
-              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out">
-                <div className="w-32 h-full bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12"></div>
-              </div>
-
-              <div className="relative flex flex-col sm:flex-row items-start gap-6">
-                <div className="p-4 bg-gradient-to-br from-cyan-500/30 to-blue-500/30 rounded-2xl ring-4 ring-cyan-500/20 shadow-lg shadow-cyan-500/20">
-                  <GraduationCap size={48} className="text-cyan-300" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
-                    Bachelor of Informatics
-                  </h3>
-                  <p className="text-gray-300 text-base md:text-lg font-medium mb-1">
-                    UPN "Veteran" Yogyakarta
-                  </p>
-                  <p className="text-gray-400 text-sm md:text-base mb-4">2021 - 2025</p>
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/30 rounded-full">
-                    <span className="text-cyan-300 text-base md:text-lg font-bold">GPA: 3.88/4.00</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* === CERTIFICATION CARD 1 === */}
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
-              className="relative group overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 rounded-3xl p-6 hover:border-purple-500/50 transition-all duration-500"
-            >
-              {/* === GLASS SHINE EFFECT === */}
-              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out">
-                <div className="w-24 h-full bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12"></div>
-              </div>
-
-              <div className="relative flex items-start gap-4">
-                <div className="p-3 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-xl ring-2 ring-purple-500/30">
-                  <Award size={32} className="text-purple-300" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-lg md:text-xl font-bold text-white mb-2">
-                    TensorFlow Developer
-                  </h3>
-                  <p className="text-gray-300 text-sm md:text-base font-medium">
-                    Google Developers
-                  </p>
-                  <p className="text-gray-400 text-xs md:text-sm mt-1">Certified Professional</p>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* === CERTIFICATION CARD 2 === */}
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
-              className="relative group overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 rounded-3xl p-6 hover:border-indigo-500/50 transition-all duration-500"
-            >
-              {/* === GLASS SHINE EFFECT === */}
-              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out">
-                <div className="w-24 h-full bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12"></div>
-              </div>
-
-              <div className="relative flex items-start gap-4">
-                <div className="p-3 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-xl ring-2 ring-indigo-500/30">
-                  <Award size={32} className="text-indigo-300" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-lg md:text-xl font-bold text-white mb-2">
-                    Associate Data Scientist
-                  </h3>
-                  <p className="text-gray-300 text-sm md:text-base font-medium">
-                    BNSP Indonesia
-                  </p>
-                  <p className="text-gray-400 text-xs md:text-sm mt-1">Professional Certificate</p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </motion.div>
-
-        {/* === SECTION DIVIDER === */}
-        <div className="max-w-7xl mx-auto mt-20 md:mt-24 mb-20 md:mb-24">
-          <div className="relative h-px w-full">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-pink-500/30 to-transparent blur-sm"></div>
-          </div>
-        </div>
-
-        {/* === EXPERIENCE TIMELINE === */}
-        <ExperienceTimeline />
       </div>
     </section>
   );
 };
 
-const ExperienceTimeline = () => {
-  const experiences = [
+/* ========================================
+   SECTION 2: THE JOURNEY (STICKY SIDEBAR)
+======================================== */
+const TheJourney = () => {
+  const [activeYear, setActiveYear] = useState('2021');
+
+  const journeyData = [
     {
-      role: 'Fullstack Developer Intern',
-      company: 'Ruang Media Solusi',
-      period: 'Nov 2025 - Present',
-      color: 'cyan',
-      achievements: [
-        'Developed School Profile Website using Vue.js and Tailwind CSS',
-        'Implemented responsive and modern UI/UX design',
-        'Collaborated with team on fullstack development tasks',
-      ],
+      year: '2021',
+      title: 'The Foundation',
+      period: '2021-2022',
+      description:
+        'Where it all began. Started my journey at UPN "Veteran" Yogyakarta, diving deep into Computer Science fundamentals. What began as a passion for gaming evolved into a burning curiosity to understand how virtual worlds are built.',
     },
     {
-      role: 'Fullstack Developer Intern',
-      company: 'Horus Technology',
-      period: 'Oct 2025 - Nov 2025',
-      color: 'purple',
-      achievements: [
-        'Built features for TING App using modern web technologies',
-        'Designed and developed landing page with engaging UI',
-        'Worked on both frontend and backend implementation',
-      ],
+      year: '2023',
+      title: 'The Acceleration',
+      period: '2023-2024',
+      description:
+        'Joined Bangkit Academy and became a Laboratory Assistant. Mentored 200+ students across 8 technical courses including IoT, Web Development, and Databases. This is where teaching became my second passion.',
     },
     {
-      role: 'Laboratory Assistant',
-      company: 'Informatics Lab - UPN Veteran Yogyakarta',
-      period: 'Aug 2022 - Jul 2025',
-      color: 'blue',
-      achievements: [
-        'Mentored 200+ students across 8 different courses',
-        'Taught Database, IoT, Web Development, and other technical subjects',
-        'Developed teaching materials and practical lab exercises',
-      ],
-    },
-    {
-      role: 'Deputy Head of Web Development',
-      company: 'IT Club - UPN Veteran Yogyakarta',
-      period: 'Jul 2023 - Aug 2024',
-      color: 'pink',
-      achievements: [
-        'Led training programs for React and Express.js',
-        'Organized workshops and coding bootcamps',
-        'Managed web development team and project coordination',
-      ],
+      year: '2025',
+      title: 'The Professional',
+      period: '2025-Present',
+      description:
+        'Graduated with 3.88 GPA and stepped into the professional world. Fullstack Developer Intern at Ruang Media Solusi and Horus Technology, building real-world applications and bringing ideas to life.',
     },
   ];
 
-  const timelineRef = useRef(null);
-  const isInView = useInView(timelineRef, { once: true, amount: 0.2 });
+  return (
+    <section className="relative py-32 px-6 md:px-12 lg:px-24">
+      <div className="container mx-auto">
+        {/* === SECTION HEADER === */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mb-24"
+        >
+          <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4">THE JOURNEY</h2>
+          <div className="h-px w-20 bg-white" />
+        </motion.div>
+
+        <div className="grid lg:grid-cols-12 gap-16">
+          {/* === LEFT: STICKY YEAR DISPLAY === */}
+          <div className="lg:col-span-4 lg:sticky lg:top-32 self-start">
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <motion.div
+                key={activeYear}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className="text-[12rem] md:text-[16rem] font-black leading-none text-transparent"
+                style={{
+                  WebkitTextStroke: '2px rgba(255,255,255,0.1)',
+                }}
+              >
+                {activeYear}
+              </motion.div>
+              <div className="absolute bottom-0 left-0 text-zinc-500 text-sm font-mono">
+                CHAPTER {journeyData.findIndex((j) => j.year === activeYear) + 1}/3
+              </div>
+            </motion.div>
+          </div>
+
+          {/* === RIGHT: STORY CARDS === */}
+          <div className="lg:col-span-8 space-y-32">
+            {journeyData.map((journey, index) => (
+              <StoryCard
+                key={journey.year}
+                journey={journey}
+                index={index}
+                setActiveYear={setActiveYear}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const StoryCard = ({
+  journey,
+  index,
+  setActiveYear,
+}: {
+  journey: any;
+  index: number;
+  setActiveYear: (year: string) => void;
+}) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { margin: '-50% 0px -50% 0px' });
+
+  useEffect(() => {
+    if (isInView) {
+      setActiveYear(journey.year);
+    }
+  }, [isInView, journey.year, setActiveYear]);
 
   return (
     <motion.div
-      ref={timelineRef}
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay: 0.8 }}
-      className="max-w-7xl mx-auto"
+      ref={ref}
+      initial={{ opacity: 0, y: 60 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-100px' }}
+      transition={{ duration: 0.8, delay: index * 0.1, ease: [0.43, 0.13, 0.23, 0.96] }}
+      className="relative group"
     >
-      <h2 className="text-3xl md:text-4xl font-bold text-white mb-16 text-center">
-        Professional Experience
-      </h2>
+      {/* === YEAR BADGE === */}
+      <div className="inline-flex items-center gap-3 mb-6">
+        <span className="text-sm font-mono text-zinc-500">{journey.period}</span>
+        <div className="h-px flex-1 max-w-[100px] bg-gradient-to-r from-zinc-700 to-transparent" />
+      </div>
 
-      <div className="relative">
-        {/* === GRADIENT FADE TOP === */}
-        <div className="absolute left-4 md:left-1/2 md:transform md:-translate-x-1/2 -top-8 w-0.5 h-8 bg-gradient-to-b from-transparent to-cyan-500/50 z-0"></div>
-        
-        {/* === TIMELINE LINE === */}
-        <motion.div
-          initial={{ height: 0 }}
-          animate={isInView ? { height: '100%' } : { height: 0 }}
-          transition={{ duration: 1.5, ease: 'easeOut' }}
-          className="absolute left-4 md:left-1/2 top-0 w-0.5 bg-gradient-to-b from-cyan-500 via-purple-500 to-pink-500 md:transform md:-translate-x-1/2"
-        />
-        
-        {/* === GRADIENT FADE BOTTOM === */}
-        <div className="absolute left-4 md:left-1/2 md:transform md:-translate-x-1/2 -bottom-8 w-0.5 h-8 bg-gradient-to-t from-transparent to-pink-500/50 z-0"></div>
+      {/* === CARD === */}
+      <div className="relative p-8 md:p-12 border border-zinc-800 rounded-2xl bg-zinc-950/50 backdrop-blur-sm hover:border-zinc-700 transition-all duration-500 group-hover:translate-x-2">
+        <h3 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight">{journey.title}</h3>
+        <p className="text-lg text-zinc-400 leading-relaxed">{journey.description}</p>
 
-        {/* === EXPERIENCE CARDS === */}
-        <div className="space-y-12">
-          {experiences.map((exp, index) => (
-            <ExperienceCard key={index} experience={exp} index={index} />
-          ))}
-        </div>
+        {/* === DECORATIVE DOT === */}
+        <div className="absolute -left-3 top-12 w-6 h-6 rounded-full bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
     </motion.div>
   );
 };
 
-const ExperienceCard = ({ experience, index }: { experience: any; index: number }) => {
-  const cardRef = useRef(null);
-  const isInView = useInView(cardRef, { once: true, amount: 0.3 });
-  const isActive = useInView(cardRef, { amount: 0.5 });
+/* ========================================
+   SECTION 3: EDUCATION & STATS (BENTO GRID)
+======================================== */
+const EducationStats = () => {
+  return (
+    <section className="relative py-32 px-6 md:px-12 lg:px-24 bg-zinc-950/50">
+      <div className="container mx-auto">
+        {/* === SECTION HEADER === */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mb-16"
+        >
+          <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4">CREDENTIALS</h2>
+          <div className="h-px w-20 bg-white" />
+        </motion.div>
 
-  const isEven = index % 2 === 0;
-  
-  const colorMap: any = {
-    cyan: {
-      dot: 'from-cyan-400 to-cyan-500',
-      dotActive: 'from-cyan-300 to-cyan-400',
-      ping: 'bg-cyan-400',
-      border: 'border-l-cyan-500',
-      connector: 'bg-cyan-500',
-    },
-    purple: {
-      dot: 'from-purple-400 to-purple-500',
-      dotActive: 'from-purple-300 to-purple-400',
-      ping: 'bg-purple-400',
-      border: 'border-l-purple-500',
-      connector: 'bg-purple-500',
-    },
-    blue: {
-      dot: 'from-blue-400 to-blue-500',
-      dotActive: 'from-blue-300 to-blue-400',
-      ping: 'bg-blue-400',
-      border: 'border-l-blue-500',
-      connector: 'bg-blue-500',
-    },
-    pink: {
-      dot: 'from-pink-400 to-pink-500',
-      dotActive: 'from-pink-300 to-pink-400',
-      ping: 'bg-pink-400',
-      border: 'border-l-pink-500',
-      connector: 'bg-pink-500',
-    },
-  };
+        {/* === BENTO GRID === */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* === CARD 1: EDUCATION (LARGE - SPAN 2) === */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="md:col-span-2 relative p-8 md:p-12 border border-zinc-800 rounded-2xl bg-gradient-to-br from-zinc-900 to-zinc-950 overflow-hidden group hover:border-yellow-500/50 transition-all duration-500"
+          >
+            {/* === ACCENT GLOW === */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-500/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
-  const colors = colorMap[experience.color] || colorMap.cyan;
+            <div className="relative">
+              <div className="flex items-start justify-between mb-6">
+                <div className="p-3 bg-yellow-500/10 rounded-xl border border-yellow-500/20">
+                  <GraduationCap className="w-8 h-8 text-yellow-500" />
+                </div>
+                <div className="px-4 py-2 bg-yellow-500/20 rounded-full border border-yellow-500/30">
+                  <span className="text-yellow-500 font-bold text-lg">GPA 3.88/4.00</span>
+                </div>
+              </div>
+
+              <h3 className="text-3xl md:text-4xl font-bold mb-3">Bachelor of Informatics</h3>
+              <p className="text-xl text-zinc-400 mb-2">UPN "Veteran" Yogyakarta</p>
+              <p className="text-zinc-500 font-mono text-sm">2021 - 2025</p>
+            </div>
+          </motion.div>
+
+          {/* === CARD 2: CERTIFICATIONS (TALL) === */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="md:row-span-2 relative p-8 border border-zinc-800 rounded-2xl bg-zinc-950 hover:border-zinc-700 transition-all duration-500"
+          >
+            <div className="flex items-center gap-3 mb-8">
+              <Award className="w-6 h-6 text-zinc-400" />
+              <h3 className="text-xl font-bold">Certifications</h3>
+            </div>
+
+            <div className="space-y-6">
+              <div className="group/cert">
+                <div className="flex items-start gap-3 mb-2">
+                  <div className="w-2 h-2 bg-white rounded-full mt-2" />
+                  <div>
+                    <p className="font-semibold text-lg">TensorFlow Developer</p>
+                    <p className="text-sm text-zinc-500">Google Developers</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="h-px bg-zinc-800" />
+
+              <div className="group/cert">
+                <div className="flex items-start gap-3 mb-2">
+                  <div className="w-2 h-2 bg-white rounded-full mt-2" />
+                  <div>
+                    <p className="font-semibold text-lg">Associate Data Scientist</p>
+                    <p className="text-sm text-zinc-500">BNSP Indonesia</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* === CARD 3: STATS === */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="relative p-8 border border-zinc-800 rounded-2xl bg-zinc-950 hover:border-zinc-700 transition-all duration-500 overflow-hidden group"
+          >
+            <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+            <div className="relative">
+              <Users className="w-6 h-6 text-zinc-400 mb-4" />
+              <CountUpNumber target={200} />
+              <p className="text-zinc-500 text-sm mt-2">Students Mentored</p>
+            </div>
+          </motion.div>
+
+          {/* === CARD 4: PROJECTS === */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="relative p-8 border border-zinc-800 rounded-2xl bg-zinc-950 hover:border-zinc-700 transition-all duration-500 overflow-hidden group"
+          >
+            <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+            <div className="relative">
+              <Sparkles className="w-6 h-6 text-zinc-400 mb-4" />
+              <CountUpNumber target={20} suffix="+" />
+              <p className="text-zinc-500 text-sm mt-2">Projects Completed</p>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const CountUpNumber = ({ target, suffix = '' }: { target: number; suffix?: string }) => {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+
+  useEffect(() => {
+    if (isInView) {
+      let start = 0;
+      const duration = 2000;
+      const increment = target / (duration / 16);
+
+      const timer = setInterval(() => {
+        start += increment;
+        if (start >= target) {
+          setCount(target);
+          clearInterval(timer);
+        } else {
+          setCount(Math.floor(start));
+        }
+      }, 16);
+
+      return () => clearInterval(timer);
+    }
+  }, [isInView, target]);
 
   return (
-    <motion.div
-      ref={cardRef}
-      initial={{ opacity: 0, x: isEven ? -50 : 50 }}
-      animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: isEven ? -50 : 50 }}
-      transition={{ duration: 0.6, delay: index * 0.2 }}
-      className={`relative flex items-center ${
-        isEven ? 'justify-start' : 'md:justify-end'
-      }`}
-    >
-      {/* === CONNECTOR NODE WITH PING === */}
-      <div className="absolute left-4 md:left-1/2 top-1/2 -translate-y-1/2 md:transform md:-translate-x-1/2 z-20">
-        {/* === PING ANIMATION === */}
-        {isActive && (
-          <motion.div
-            initial={{ scale: 1, opacity: 0.8 }}
-            animate={{ scale: 2, opacity: 0 }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeOut' }}
-            className={`absolute inset-0 rounded-full ${colors.ping} blur-sm`}
-          ></motion.div>
-        )}
-        
-        {/* === DOT === */}
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={isInView ? { scale: 1 } : { scale: 0 }}
-          transition={{ duration: 0.4, delay: index * 0.2 + 0.3 }}
-          className={`relative w-4 h-4 rounded-full bg-gradient-to-br ${
-            isActive ? colors.dotActive : colors.dot
-          } ring-4 ring-gray-900 shadow-lg transition-all duration-300`}
-        />
-      </div>
+    <div ref={ref} className="text-5xl font-black">
+      {count}
+      {suffix}
+    </div>
+  );
+};
 
-      {/* === HORIZONTAL CONNECTOR LINE === */}
-      <motion.div
-        initial={{ width: 0 }}
-        animate={isInView ? { width: '3.5rem' } : { width: 0 }}
-        transition={{ duration: 0.4, delay: index * 0.2 + 0.5 }}
-        className={`hidden md:block absolute top-1/2 -translate-y-1/2 ${
-          isEven ? 'right-[calc(50%+0.5rem)]' : 'left-[calc(50%+0.5rem)]'
-        } h-0.5 ${colors.connector} opacity-50 z-10`}
-        style={{
-          transformOrigin: isEven ? 'right' : 'left'
-        }}
-      />
+/* ========================================
+   SECTION 4: PHILOSOPHY
+======================================== */
+const Philosophy = () => {
+  const cards = [
+    {
+      title: 'User-Centric',
+      description: 'Every line of code serves a purpose: to create experiences that users love.',
+    },
+    {
+      title: 'Continuous Learning',
+      description: 'Technology evolves fast. I evolve faster. Always exploring, always growing.',
+    },
+    {
+      title: 'Quality First',
+      description: 'Beautiful code, beautiful products. No compromises on craftsmanship.',
+    },
+  ];
 
-      {/* === CARD CONTENT === */}
-      <div
-        className={`ml-12 md:ml-0 md:w-[calc(50%-3.5rem)] ${
-          isEven ? 'md:pr-0' : 'md:pl-0'
-        }`}
-      >
+  return (
+    <section className="relative py-32 px-6 md:px-12 lg:px-24">
+      <div className="container mx-auto">
+        {/* === SECTION HEADER === */}
         <motion.div
-          whileHover={{ scale: 1.02, x: isEven ? 4 : -4 }}
-          className={`relative backdrop-blur-sm bg-white/[0.02] ${
-            isEven 
-              ? `border-l border-t border-b border-white/5 border-r-4 ${colors.border.replace('border-l', 'border-r')}` 
-              : `border-r border-t border-b border-white/5 border-l-4 ${colors.border}`
-          } rounded-2xl p-6 hover:bg-white/[0.05] transition-all group ${
-            isEven ? 'md:ml-auto md:text-right' : 'md:mr-auto md:text-left'
-          }`}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mb-16"
         >
-          {/* === ICON === */}
-          <div className={`flex items-start gap-4 mb-4 ${isEven ? 'md:flex-row-reverse' : ''}`}>
-            <div className="p-3 bg-gradient-to-br from-white/5 to-white/[0.02] rounded-xl border border-white/10">
-              <Briefcase size={24} className="text-gray-300" />
-            </div>
-            <div className="flex-1">
-              <h3 className={`text-xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-1 ${isEven ? 'md:text-right' : ''}`}>
-                {experience.role}
-              </h3>
-              <p className={`text-gray-400 text-sm font-medium ${isEven ? 'md:text-right' : ''}`}>
-                {experience.company}
-              </p>
-              <p className={`text-gray-500 text-xs mt-1 ${isEven ? 'md:text-right' : ''}`}>{experience.period}</p>
-            </div>
+          <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4">PHILOSOPHY</h2>
+          <div className="h-px w-20 bg-white" />
+        </motion.div>
+
+        {/* === 3-COLUMN CARDS === */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {cards.map((card, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: index * 0.1 }}
+              className="group relative p-8 border border-zinc-800 rounded-2xl bg-zinc-950/50 hover:bg-zinc-900/50 hover:border-white/20 transition-all duration-500 cursor-pointer"
+            >
+              {/* === HOVER ACCENT === */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/0 to-white/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+              <div className="relative">
+                <div className="w-12 h-12 mb-6 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors duration-500">
+                  <div className="w-2 h-2 bg-white rounded-full" />
+                </div>
+                <h3 className="text-2xl font-bold mb-4">{card.title}</h3>
+                <p className="text-zinc-400 leading-relaxed">{card.description}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+/* ========================================
+   SECTION 5: SIGNATURE CTA
+======================================== */
+const SignatureCTA = () => {
+  return (
+    <section className="relative py-32 px-6 md:px-12 lg:px-24">
+      <div className="container mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="text-center space-y-8"
+        >
+          {/* === SIGNATURE LINE === */}
+          <div className="flex items-center justify-center gap-4">
+            <div className="h-px w-16 bg-gradient-to-r from-transparent to-white" />
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+              className="w-2 h-2 bg-white rounded-full"
+            />
+            <div className="h-px w-16 bg-gradient-to-l from-transparent to-white" />
           </div>
 
-          {/* === ACHIEVEMENTS === */}
-          <ul className={`space-y-2 ${isEven ? 'ml-16 md:ml-0 md:mr-16' : 'ml-16'}`}>
-            {experience.achievements.map((achievement: string, idx: number) => (
-              <motion.li
-                key={idx}
-                initial={{ opacity: 0, x: -10 }}
-                animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
-                transition={{ duration: 0.3, delay: index * 0.2 + 0.4 + idx * 0.1 }}
-                className={`text-gray-300 text-sm flex items-start gap-2 ${isEven ? 'md:flex-row-reverse md:text-right' : ''}`}
-              >
-                <span className="text-cyan-400 mt-1.5 text-xs">•</span>
-                <span>{achievement}</span>
-              </motion.li>
-            ))}
-          </ul>
+          <h2 className="text-4xl md:text-6xl font-black tracking-tight">
+            Ready to write the next chapter?
+          </h2>
+
+          <p className="text-xl text-zinc-500 max-w-2xl mx-auto">
+            Let's create something extraordinary together.
+          </p>
+
+          <motion.a
+            href="/cv.pdf"
+            download
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="inline-flex items-center gap-3 px-8 py-4 bg-white text-black font-bold rounded-md hover:bg-zinc-100 transition-colors"
+          >
+            <Download className="w-5 h-5" />
+            Download Resume
+          </motion.a>
         </motion.div>
       </div>
-    </motion.div>
+    </section>
   );
 };
 
