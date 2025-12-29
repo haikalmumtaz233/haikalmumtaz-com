@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { Github, ExternalLink } from 'lucide-react';
 import { useRef } from 'react';
 
 const FeaturedProjects = () => {
@@ -14,17 +14,21 @@ const FeaturedProjects = () => {
       stack: ['Vue.js', 'Tailwind CSS', 'Backend API'],
       image: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&q=80',
       gradient: 'from-purple-900/20 via-transparent to-blue-900/20',
+      repoLink: '#',
+      liveLink: '#',
     },
     {
       id: 2,
-      name: 'SABER',
-      subtitle: 'Energy Prediction System',
-      category: 'Data Science & IoT',
+      name: 'StreetBeats',
+      subtitle: 'Music & Urban Culture Platform',
+      category: 'Frontend Development',
       description:
-        'IoT-based electricity usage forecasting using LSTM neural networks and time-series analysis.',
-      stack: ['Python', 'TensorFlow', 'IoT'],
-      image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=800&q=80',
-      gradient: 'from-cyan-900/20 via-transparent to-teal-900/20',
+        'Dynamic platform celebrating urban music culture with curated playlists, artist profiles, and community features for music enthusiasts.',
+      stack: ['React', 'Tailwind CSS', 'Supabase'],
+      image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&q=80',
+      gradient: 'from-orange-900/20 via-transparent to-red-900/20',
+      repoLink: '#',
+      liveLink: '#',
     },
     {
       id: 3,
@@ -36,6 +40,8 @@ const FeaturedProjects = () => {
       stack: ['React', 'Framer Motion', 'Tailwind'],
       image: 'https://images.unsplash.com/photo-1545665277-5937bf04a560?w=800&q=80',
       gradient: 'from-pink-900/20 via-transparent to-orange-900/20',
+      repoLink: '#',
+      liveLink: '#',
     },
   ];
 
@@ -88,9 +94,11 @@ const Card = ({ project, index, totalCards }: CardProps) => {
     offset: ['start end', 'start start'],
   });
 
+  // Calculate dynamic scale for the stacking effect
   const targetScale = 1 - (totalCards - index) * 0.05;
   const scale = useTransform(scrollYProgress, [0, 1], [1, targetScale]);
-  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
+  
+  // Opacity dihapus agar tetap 100% solid
 
   return (
     <div
@@ -99,13 +107,19 @@ const Card = ({ project, index, totalCards }: CardProps) => {
       style={{ paddingTop: `${index * 20}px` }}
     >
       <motion.div
-        style={{ scale, opacity }}
+        style={{ scale }} // Removed opacity from style
         className="w-full max-w-6xl h-[80vh] rounded-3xl overflow-hidden relative mx-4"
       >
-        {/* === CARD CONTAINER === */}
-        <div className={`relative w-full h-full bg-gradient-to-br ${project.gradient} border border-white/10 backdrop-blur-sm`}>
+        {/* === SOLID CARD CONTAINER === */}
+        <div className="relative w-full h-full bg-[#121212]">
+          {/* === GRADIENT OVERLAY === */}
+          <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient}`} />
+          
+          {/* === BORDER === */}
+          <div className="absolute inset-0 border border-white/10 rounded-3xl" />
+          
           {/* === GRID LAYOUT === */}
-          <div className="grid lg:grid-cols-2 h-full">
+          <div className="relative grid lg:grid-cols-2 h-full z-10">
             {/* === IMAGE SIDE === */}
             <div className="relative overflow-hidden">
               <motion.img
@@ -119,7 +133,7 @@ const Card = ({ project, index, totalCards }: CardProps) => {
             </div>
 
             {/* === CONTENT SIDE === */}
-            <div className="relative flex flex-col justify-center p-8 md:p-12 lg:p-16 bg-[#1a1a1a]/90 backdrop-blur-sm">
+            <div className="relative flex flex-col justify-center p-8 md:p-12 lg:p-16 bg-[#1a1a1a] backdrop-blur-sm">
               {/* === CATEGORY === */}
               <span className="inline-block w-fit px-4 py-2 bg-white/5 text-gray-400 text-xs font-mono rounded-full mb-6 tracking-wider uppercase border border-white/10">
                 {project.category}
@@ -152,15 +166,34 @@ const Card = ({ project, index, totalCards }: CardProps) => {
                 ))}
               </div>
 
-              {/* === CTA BUTTON === */}
-              <motion.button
-                whileHover={{ scale: 1.05, x: 5 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-3 text-white font-semibold text-lg group bg-white/10 hover:bg-white/20 px-6 py-3 rounded-xl border border-white/20 transition-colors w-fit"
-              >
-                View Case Study
-                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-              </motion.button>
+              {/* === DUAL CTA BUTTONS === */}
+              <div className="flex flex-wrap gap-4">
+                {/* === REPOSITORY BUTTON === */}
+                <motion.a
+                  href={project.repoLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center gap-2 text-white font-semibold text-base px-6 py-3 rounded-xl border border-white/20 hover:border-white/40 transition-colors"
+                >
+                  <Github size={20} />
+                  Repository
+                </motion.a>
+
+                {/* === LIVE DEMO BUTTON === */}
+                <motion.a
+                  href={project.liveLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center gap-2 text-black font-semibold text-base px-6 py-3 rounded-xl bg-white hover:bg-gray-200 transition-colors"
+                >
+                  <ExternalLink size={20} />
+                  Live Demo
+                </motion.a>
+              </div>
 
               {/* === CARD NUMBER === */}
               <div className="absolute bottom-8 right-8 text-8xl font-black text-white/5">
