@@ -6,6 +6,7 @@ import Tools from '../components/home/Tools';
 import FavoriteMoments from '../components/home/FavoriteMoments';
 import Certifications from '../components/home/Certifications';
 import FeaturedProjects from '../components/home/FeaturedProjects';
+import Contact from '../components/home/Contact';
 
 const Home = () => {
   return (
@@ -35,6 +36,7 @@ const Home = () => {
         <FavoriteMoments />
         <Certifications />
         <FeaturedProjects />
+        <Contact />
       </div>
     </div>
   );

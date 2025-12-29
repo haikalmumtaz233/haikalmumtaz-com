@@ -6,7 +6,7 @@ const Certifications = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const [hoveredId, setHoveredId] = useState<number | null>(null);
 
-  // Track scroll progress - ONLY when section is locked at top
+  // Track scroll progress
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end end'],
@@ -27,10 +27,9 @@ const Certifications = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] as const }}
-          className="absolute top-20 md:top-32 left-1/2 -translate-x-1/2 z-0"
+          className="absolute top-2 md:top-4 -translate-x-1/2 z-0"
         >
-          <h2 className="text-6xl md:text-7xl lg:text-8xl font-black text-white/5 uppercase tracking-tighter leading-none text-center">
-            Honors &<br />
+          <h2 className="text-6xl md:text-7xl lg:text-8xl font-black text-white/50 uppercase tracking-tighter leading-none text-center">
             Certifications
           </h2>
         </motion.div>
@@ -54,10 +53,10 @@ const Certifications = () => {
               <motion.div
                 key={cert.id}
                 style={{
-                  x: isHovered ? 0 : x,
-                  y: isHovered ? -40 : y,
+                  x: x, // Keep original fan position!
+                  y: isHovered ? -50 : y,
                   rotate: isHovered ? 0 : rotate,
-                  zIndex: isHovered ? 50 : 10 - Math.abs(offset),
+                  zIndex: isHovered ? 100 : 10 - Math.abs(offset),
                 }}
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}

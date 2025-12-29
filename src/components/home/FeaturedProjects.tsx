@@ -1,12 +1,8 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 
 const FeaturedProjects = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
-
   const projects = [
     {
       id: 1,
@@ -16,7 +12,8 @@ const FeaturedProjects = () => {
       description:
         'End-to-end cinema ticketing system with admin dashboard and seamless user booking experience.',
       stack: ['Vue.js', 'Tailwind CSS', 'Backend API'],
-      image: '/api/placeholder/800/600',
+      image: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&q=80',
+      gradient: 'from-purple-900/20 via-transparent to-blue-900/20',
     },
     {
       id: 2,
@@ -26,163 +23,154 @@ const FeaturedProjects = () => {
       description:
         'IoT-based electricity usage forecasting using LSTM neural networks and time-series analysis.',
       stack: ['Python', 'TensorFlow', 'IoT'],
-      image: '/api/placeholder/800/600',
+      image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=800&q=80',
+      gradient: 'from-cyan-900/20 via-transparent to-teal-900/20',
+    },
+    {
+      id: 3,
+      name: 'Portfolio',
+      subtitle: 'Creative Developer Showcase',
+      category: 'Frontend Development',
+      description:
+        'Modern, interactive portfolio website showcasing projects with advanced animations and smooth user experience.',
+      stack: ['React', 'Framer Motion', 'Tailwind'],
+      image: 'https://images.unsplash.com/photo-1545665277-5937bf04a560?w=800&q=80',
+      gradient: 'from-pink-900/20 via-transparent to-orange-900/20',
     },
   ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.3,
-      },
-    },
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 60 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        ease: [0.25, 0.4, 0.25, 1],
-      },
-    },
-  };
-
   return (
-    <section className="bg-gray-950 py-20 md:py-32 lg:py-40" ref={ref}>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* === SECTION HEADER === */}
+    <section className="relative bg-[#0a0a0a] pb-20">
+      {/* === SECTION HEADER === */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-32 pb-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="mb-20 md:mb-32"
         >
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter text-white mb-4">
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter text-white mb-4">
             Featured Work
           </h2>
           <p className="text-gray-500 text-lg md:text-xl font-light">
             Selected projects & case studies
           </p>
         </motion.div>
+      </div>
 
-        {/* === PROJECTS STACK === */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-          className="space-y-32 md:space-y-40"
-        >
-          {projects.map((project, index) => (
-            <ProjectCard key={project.id} project={project} index={index} />
-          ))}
-        </motion.div>
+      {/* === STICKY CARDS STACK === */}
+      <div className="relative">
+        {projects.map((project, index) => (
+          <Card
+            key={project.id}
+            project={project}
+            index={index}
+            totalCards={projects.length}
+          />
+        ))}
       </div>
     </section>
   );
 };
 
-/* === PROJECT CARD WITH PARALLAX === */
-const ProjectCard = ({ project, index }: { project: any; index: number }) => {
+/* === STICKY CARD COMPONENT === */
+interface CardProps {
+  project: any;
+  index: number;
+  totalCards: number;
+}
+
+const Card = ({ project, index, totalCards }: CardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
+
   const { scrollYProgress } = useScroll({
     target: cardRef,
-    offset: ['start end', 'end start'],
+    offset: ['start end', 'start start'],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const targetScale = 1 - (totalCards - index) * 0.05;
+  const scale = useTransform(scrollYProgress, [0, 1], [1, targetScale]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
 
   return (
-    <motion.div
+    <div
       ref={cardRef}
-      variants={{
-        hidden: { opacity: 0, y: 60 },
-        visible: {
-          opacity: 1,
-          y: 0,
-          transition: {
-            duration: 0.8,
-            ease: [0.25, 0.4, 0.25, 1],
-          },
-        },
-      }}
-      className="group"
+      className="h-screen flex items-center justify-center sticky top-0"
+      style={{ paddingTop: `${index * 20}px` }}
     >
-      <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-        {/* === IMAGE WITH PARALLAX === */}
-        <motion.div
-          className={`relative h-[400px] md:h-[500px] lg:h-[600px] bg-gray-900 rounded-2xl overflow-hidden ${
-            index % 2 === 1 ? 'lg:order-2' : ''
-          }`}
-          whileHover={{ scale: 1.02 }}
-          transition={{ duration: 0.4 }}
-        >
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900"
-            style={{ y }}
-          >
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-6xl md:text-8xl opacity-10">{project.name[0]}</div>
+      <motion.div
+        style={{ scale, opacity }}
+        className="w-full max-w-6xl h-[80vh] rounded-3xl overflow-hidden relative mx-4"
+      >
+        {/* === CARD CONTAINER === */}
+        <div className={`relative w-full h-full bg-gradient-to-br ${project.gradient} border border-white/10 backdrop-blur-sm`}>
+          {/* === GRID LAYOUT === */}
+          <div className="grid lg:grid-cols-2 h-full">
+            {/* === IMAGE SIDE === */}
+            <div className="relative overflow-hidden">
+              <motion.img
+                src={project.image}
+                alt={project.name}
+                className="absolute inset-0 w-full h-full object-cover"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.6 }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
             </div>
-          </motion.div>
-          
-          {/* === OVERLAY ON HOVER === */}
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              whileHover={{ scale: 1, opacity: 1 }}
-              className="text-white text-lg font-semibold"
-            >
-              View Project
-            </motion.div>
-          </div>
-        </motion.div>
 
-        {/* === CONTENT === */}
-        <div className={index % 2 === 1 ? 'lg:order-1' : ''}>
-          <span className="inline-block px-4 py-2 bg-white/5 text-gray-400 text-sm font-medium rounded-full mb-6 tracking-wide uppercase">
-            {project.category}
-          </span>
-
-          <h3 className="text-5xl md:text-6xl lg:text-7xl font-black text-white mb-3 tracking-tighter group-hover:text-gray-300 transition-colors">
-            {project.name}
-          </h3>
-
-          <p className="text-xl md:text-2xl text-gray-500 mb-8 font-light">
-            {project.subtitle}
-          </p>
-
-          <p className="text-gray-400 text-lg mb-10 leading-relaxed max-w-xl">
-            {project.description}
-          </p>
-
-          {/* === TECH STACK === */}
-          <div className="flex flex-wrap gap-3 mb-10">
-            {project.stack.map((tech: string, i: number) => (
-              <span
-                key={i}
-                className="px-4 py-2 bg-gray-900 border border-gray-800 text-gray-300 text-sm rounded-lg font-mono"
-              >
-                {tech}
+            {/* === CONTENT SIDE === */}
+            <div className="relative flex flex-col justify-center p-8 md:p-12 lg:p-16 bg-[#1a1a1a]/90 backdrop-blur-sm">
+              {/* === CATEGORY === */}
+              <span className="inline-block w-fit px-4 py-2 bg-white/5 text-gray-400 text-xs font-mono rounded-full mb-6 tracking-wider uppercase border border-white/10">
+                {project.category}
               </span>
-            ))}
-          </div>
 
-          {/* === CTA === */}
-          <motion.button
-            whileHover={{ x: 10 }}
-            className="flex items-center gap-3 text-white font-semibold text-lg group/btn"
-          >
-            View Case Study
-            <ArrowRight size={24} className="group-hover/btn:translate-x-2 transition-transform" />
-          </motion.button>
+              {/* === TITLE === */}
+              <h3 className="text-5xl md:text-6xl lg:text-7xl font-black text-white mb-3 tracking-tighter">
+                {project.name}
+              </h3>
+
+              {/* === SUBTITLE === */}
+              <p className="text-xl md:text-2xl text-gray-400 mb-6 font-light">
+                {project.subtitle}
+              </p>
+
+              {/* === DESCRIPTION === */}
+              <p className="text-gray-500 text-base md:text-lg mb-8 leading-relaxed">
+                {project.description}
+              </p>
+
+              {/* === TECH STACK === */}
+              <div className="flex flex-wrap gap-2 mb-10">
+                {project.stack.map((tech: string, i: number) => (
+                  <span
+                    key={i}
+                    className="px-3 py-1.5 bg-white/5 border border-white/10 text-gray-300 text-sm rounded-lg font-mono"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+
+              {/* === CTA BUTTON === */}
+              <motion.button
+                whileHover={{ scale: 1.05, x: 5 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-3 text-white font-semibold text-lg group bg-white/10 hover:bg-white/20 px-6 py-3 rounded-xl border border-white/20 transition-colors w-fit"
+              >
+                View Case Study
+                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+              </motion.button>
+
+              {/* === CARD NUMBER === */}
+              <div className="absolute bottom-8 right-8 text-8xl font-black text-white/5">
+                0{index + 1}
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 };
 
