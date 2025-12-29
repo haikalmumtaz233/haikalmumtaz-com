@@ -48,7 +48,7 @@ const TechStack = () => {
   };
 
   return (
-    <section className="relative bg-[#0a0a0a] py-24 md:py-32">
+    <section className="relative bg-[#0a0a0a] py-16 md:py-24">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         {/* === HEADER === */}
         <motion.div

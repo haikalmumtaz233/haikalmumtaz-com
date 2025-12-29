@@ -28,7 +28,7 @@ const Tools = () => {
   const duplicatedTools = [...tools, ...tools, ...tools, ...tools, ...tools];
 
   return (
-    <section className="relative bg-[#0a0a0a] py-24 md:py-32 overflow-hidden">
+    <section className="relative bg-[#0a0a0a] py-16 md:py-24 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         {/* === HEADER WITH MASKED REVEAL === */}
         <motion.div
@@ -57,23 +57,23 @@ const Tools = () => {
         </motion.div>
       </div>
 
-      {/* === INFINITE SCROLL MARQUEE (RIGHT TO LEFT) === */}
+      {/* === INFINITE SCROLL MARQUEE === */}
       <div className="w-full overflow-hidden relative">
         {/* === LEFT FADE === */}
-        <div className="absolute top-0 bottom-0 left-0 w-24 md:w-40 z-10 bg-gradient-to-r from-[#0a0a0a] to-transparent pointer-events-none" />
+        <div className="absolute top-0 bottom-0 left-0 w-48 md:w-72 z-10 bg-gradient-to-r from-[#0a0a0a] to-transparent pointer-events-none" />
         
         {/* === RIGHT FADE === */}
-        <div className="absolute top-0 bottom-0 right-0 w-24 md:w-40 z-10 bg-gradient-to-l from-[#0a0a0a] to-transparent pointer-events-none" />
+        <div className="absolute top-0 bottom-0 right-0 w-48 md:w-72 z-10 bg-gradient-to-l from-[#0a0a0a] to-transparent pointer-events-none" />
         
         <motion.div
           animate={{ x: ['0%', '-50%'] }}
-          transition={{ ease: 'linear', duration: 40, repeat: Infinity }}
-          className="flex gap-6 md:gap-8"
+          transition={{ ease: 'linear', duration: 10, repeat: Infinity }}
+          className="flex gap-1 md:gap-2"
         >
           {duplicatedTools.map((tool, index) => (
             <div
               key={index}
-              className="w-28 h-28 md:w-32 md:h-32 flex flex-col items-center justify-center gap-2 flex-shrink-0 hover:bg-white/5 rounded-2xl transition-all duration-300 group cursor-pointer"
+              className="w-32 h-32 md:w-36 md:h-36 flex flex-col items-center justify-center gap-2 flex-shrink-0 hover:bg-white/5 rounded-2xl transition-all duration-300 group cursor-pointer"
             >
               {/* === ICON === */}
               <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center">
@@ -85,7 +85,7 @@ const Tools = () => {
               </div>
 
               {/* === TEXT === */}
-              <span className="text-xs font-mono text-gray-400 group-hover:text-white transition-colors duration-300 text-center px-2">
+              <span className="text-sm md:text-base font-mono text-gray-400 group-hover:text-white transition-colors duration-300 text-center px-2">
                 {tool.name}
               </span>
             </div>
