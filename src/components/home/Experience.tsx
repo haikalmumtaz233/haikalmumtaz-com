@@ -49,22 +49,53 @@ const Experience = () => {
   const sectionRef = useRef(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
+  const titleVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const wordVariants = {
+    hidden: { y: '100%' },
+    visible: {
+      y: '0%',
+      transition: {
+        duration: 0.8,
+        ease: [0.43, 0.13, 0.23, 0.96] as const,
+      },
+    },
+  };
+
   return (
     <section ref={sectionRef} className="relative bg-[#0a0a0a] pt-60 md:pt-80 pb-10 w-full overflow-x-clip">
       <div className="w-full px-4 md:px-8 lg:px-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-12 items-stretch">
           {/* === LEFT COLUMN - STICKY TITLE === */}
           <div className="lg:col-span-5 min-h-full">
-            <div className="sticky top-1/2 -translate-y-1/2 py-8 text-left">
+            <div className="sticky top-1/2 -translate-y-1/2 py-8 text-left border-l-2 border-white/20 pl-8 md:pl-12">
               <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
+                variants={titleVariants}
+                initial="hidden"
+                animate="visible"
                 viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
               >
                 <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white uppercase tracking-tighter leading-[0.8]">
-                  Professional <br />
-                  <span className="text-gray-500">Experience</span>
+                  <div className="overflow-hidden">
+                    <motion.span variants={wordVariants} className="inline-block">
+                      Professional
+                    </motion.span>
+                  </div>
+                  <br />
+                  <div className="overflow-hidden">
+                    <motion.span variants={wordVariants} className="inline-block text-gray-500">
+                      Experience
+                    </motion.span>
+                  </div>
                 </h2>
               </motion.div>
             </div>

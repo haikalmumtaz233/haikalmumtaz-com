@@ -2,6 +2,7 @@ import Hero from '../components/home/Hero';
 import Identity from '../components/home/Identity';
 import Experience from '../components/home/Experience';
 import TechStack from '../components/home/TechStack';
+import Tools from '../components/home/Tools';
 import FeaturedProjects from '../components/home/FeaturedProjects';
 
 const Home = () => {
@@ -28,6 +29,7 @@ const Home = () => {
         <Identity />
         <Experience />
         <TechStack />
+        <Tools />
         <FeaturedProjects />
       </div>
     </div>
