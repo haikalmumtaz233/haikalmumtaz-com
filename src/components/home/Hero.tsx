@@ -48,21 +48,30 @@ const Hero = () => {
 
   /* === ANIMATION VARIANTS === */
   const nameBlocks = [
-    { text: 'MUHAMMAD', delay: 0, from: 'left', layoutId: 'name-1' },
-    { text: 'RADITYA', delay: 0.15, from: 'right', layoutId: 'name-2' },
-    { text: 'HAIKAL', delay: 0.3, from: 'left', layoutId: 'name-3' },
-    { text: 'MUMTAZ', delay: 0.45, from: 'right', layoutId: 'name-4' },
+    { text: 'MUHAMMAD RADITYA', delay: 0, weight: 'light' },
+    { text: 'HAIKAL MUMTAZ', delay: 0.15, weight: 'bold' },
   ];
 
+  const statusVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        delay: 0.6,
+      },
+    },
+  };
+
   const secondaryVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.8,
+        duration: 0.6,
         ease: [0.43, 0.13, 0.23, 0.96],
-        delay: 0.5,
+        delay: 0.7,
       },
     },
   };
@@ -76,7 +85,7 @@ const Hero = () => {
   return (
     <>
       {/* === ENTRANCE SEQUENCE OVERLAY === */}
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {!isIntroComplete && (
           <motion.div
             className="fixed inset-0 z-50 bg-[#0a0a0a] flex items-center justify-center overflow-hidden"
@@ -85,35 +94,31 @@ const Hero = () => {
           >
             {/* === NOISE TEXTURE === */}
             <div 
-              className="absolute inset-0 opacity-[0.03]"
+              className="absolute inset-0 opacity-[0.03] pointer-events-none"
               style={{
                 backgroundImage: 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iMSIvPjwvc3ZnPg==)',
               }}
             />
             
-            {/* === FLYING NAME BLOCKS === */}
-            <div className="flex flex-col items-center justify-center gap-1">
-              {nameBlocks.map((block) => (
-                <motion.div
-                  key={block.text}
-                  layoutId={block.layoutId}
-                  initial={{
-                    x: block.from === 'left' ? '-100vw' : '100vw',
-                    opacity: 0,
-                  }}
-                  animate={{
-                    x: 0,
-                    opacity: 1,
-                  }}
-                  transition={{
-                    duration: 1.2,
-                    delay: block.delay,
-                    ease: [0.43, 0.13, 0.23, 0.96],
-                  }}
-                  className="text-4xl md:text-6xl font-black tracking-tighter leading-[0.9] text-white uppercase"
-                >
-                  {block.text}
-                </motion.div>
+            {/* === STAGGERED NAME REVEAL === */}
+            <div className="flex flex-col items-center justify-center gap-2">
+              {nameBlocks.map((block, i) => (
+                <div key={i} className="overflow-hidden">
+                  <motion.div
+                    initial={{ y: '100%', opacity: 0 }}
+                    animate={{ y: '0%', opacity: 1 }}
+                    transition={{
+                      duration: 0.8,
+                      delay: block.delay,
+                      ease: [0.43, 0.13, 0.23, 0.96],
+                    }}
+                    className={`text-4xl md:text-6xl lg:text-7xl tracking-tighter leading-none text-white uppercase ${
+                      block.weight === 'bold' ? 'font-black' : 'font-light'
+                    }`}
+                  >
+                    {block.text}
+                  </motion.div>
+                </div>
               ))}
             </div>
           </motion.div>
@@ -124,7 +129,7 @@ const Hero = () => {
       <section className="relative h-screen bg-[#0a0a0a] overflow-hidden flex items-center justify-center cursor-auto">
         {/* === GRID BACKGROUND === */}
         <div 
-          className="absolute inset-0 opacity-[0.03]"
+          className="absolute inset-0 opacity-[0.03] pointer-events-none"
           style={{
             backgroundImage: `
               linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
@@ -137,7 +142,7 @@ const Hero = () => {
         />
 
         {/* === MOVING GRADIENT MESH === */}
-        <div className="absolute inset-0 opacity-20">
+        <div className="absolute inset-0 opacity-20 pointer-events-none">
           <motion.div
             animate={{
               backgroundPosition: ['0% 0%', '100% 100%'],
@@ -157,7 +162,7 @@ const Hero = () => {
 
         {/* === NOISE TEXTURE === */}
         <div 
-          className="absolute inset-0 opacity-[0.02]"
+          className="absolute inset-0 opacity-[0.02] pointer-events-none"
           style={{
             backgroundImage: 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iMSIvPjwvc3ZnPg==)',
           }}
@@ -175,37 +180,44 @@ const Hero = () => {
                   className="w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center"
                 >
                   {/* === LEFT COLUMN: CONTENT === */}
-                  <div className="lg:col-span-7 flex flex-col justify-center items-start">
+                  <div className="lg:col-span-7 flex flex-col justify-center items-start will-change-transform">
                     {/* === NAME STACK === */}
-                    <div className="mb-4">
-                      {nameBlocks.map((block) => (
-                        <motion.h1
-                          key={block.text}
-                          layoutId={block.layoutId}
-                          className={`font-black uppercase tracking-tighter leading-[0.9] text-5xl md:text-7xl lg:text-8xl ${
-                            block.text === 'HAIKAL' 
-                              ? 'text-white' 
-                              : 'text-transparent'
-                          }`}
-                          style={
-                            block.text !== 'HAIKAL'
-                              ? {
-                                  WebkitTextStroke: '2px white',
-                                }
-                              : undefined
-                          }
-                        >
-                          {block.text}
-                        </motion.h1>
+                    <div className="mb-6">
+                      {nameBlocks.map((block, i) => (
+                        <div key={i} className="overflow-hidden">
+                          <motion.h1
+                            initial={{ y: '100%' }}
+                            animate={{ y: '0%' }}
+                            transition={{
+                              duration: 0.8,
+                              delay: block.delay,
+                              ease: [0.43, 0.13, 0.23, 0.96],
+                            }}
+                            className={`uppercase tracking-tighter leading-[0.8] text-5xl md:text-7xl lg:text-8xl ${
+                              block.weight === 'bold' 
+                                ? 'font-black text-white' 
+                                : 'font-light text-transparent'
+                            }`}
+                            style={
+                              block.weight !== 'bold'
+                                ? {
+                                    WebkitTextStroke: '1.5px white',
+                                  }
+                                : undefined
+                            }
+                          >
+                            {block.text}
+                          </motion.h1>
+                        </div>
                       ))}
                     </div>
 
                     {/* === STATUS INDICATOR === */}
                     <motion.div
-                      variants={secondaryVariants}
+                      variants={statusVariants}
                       initial="hidden"
                       animate="visible"
-                      className="flex items-center gap-3 mb-4"
+                      className="flex items-center gap-3 mb-6"
                     >
                       <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
                       <span className="text-gray-300 text-sm">Ready to help your project 🚀</span>
@@ -257,18 +269,18 @@ const Hero = () => {
                   </div>
 
                   {/* === RIGHT COLUMN: PORTRAIT + FLOATING GLASS CARD === */}
-                  <div className="lg:col-span-5 flex justify-end">
+                  <div className="lg:col-span-5 flex justify-end items-center">
                     <motion.div
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.8, delay: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }}
-                      className="relative w-full max-w-2xl group"
+                      className="relative w-full max-w-2xl group will-change-transform"
                     >
                     {/* === GLOW EFFECT (BEHIND IMAGE) === */}
-                    <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-[2.5rem] blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-1000 z-0" />
+                    <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-[2.5rem] blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-1000 z-0 pointer-events-none" />
 
                     {/* === PORTRAIT CONTAINER === */}
-                    <div className="relative aspect-[3/4] h-[85vh] rounded-3xl overflow-hidden border border-white/10 z-10">
+                    <div className="relative aspect-[3/4] h-[85vh] rounded-3xl overflow-hidden border border-white/10 shadow-2xl z-10">
                       {/* === PORTRAIT IMAGE === */}
                       <img
                         src="src/assets/itc-nobg.png"
@@ -281,7 +293,7 @@ const Hero = () => {
                         initial={{ opacity: 0, y: "100%" }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.8, duration: 0.6 }}
-                        className="absolute bottom-0 left-0 w-full z-20 backdrop-blur-md bg-black/70 border-t border-white/20 rounded-t-none rounded-b-3xl py-6 px-6"
+                        className="absolute bottom-0 left-0 w-full z-20 backdrop-blur-md bg-black/70 border-t-2 border-white/20 shadow-lg rounded-t-none rounded-b-3xl py-6 px-6"
                       >
                         {/* === I AM A === */}
                         <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">
