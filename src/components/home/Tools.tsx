@@ -22,15 +22,14 @@ const Tools = () => {
         ease: [0.43, 0.13, 0.23, 0.96] as const,
       },
     },
-  };
+  }
 
-  // Duplicate tools array 5 times for seamless infinite scroll
-  const duplicatedTools = [...tools, ...tools, ...tools, ...tools, ...tools];
+  const toolsTrack = [...tools, ...tools]; 
 
   return (
     <section className="relative bg-[#0a0a0a] py-16 md:py-24 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
-        {/* === HEADER WITH MASKED REVEAL === */}
+        {/* === HEADER === */}
         <motion.div
           variants={titleVariants}
           initial="hidden"
@@ -58,24 +57,27 @@ const Tools = () => {
       </div>
 
       {/* === INFINITE SCROLL MARQUEE === */}
-      <div className="w-full overflow-hidden relative">
-        {/* === LEFT FADE === */}
-        <div className="absolute top-0 bottom-0 left-0 w-48 md:w-72 z-10 bg-gradient-to-r from-[#0a0a0a] to-transparent pointer-events-none" />
+      <div className="w-full overflow-hidden relative flex">
+        <div className="absolute top-0 bottom-0 left-0 w-24 md:w-48 z-10 bg-gradient-to-r from-[#0a0a0a] to-transparent pointer-events-none" />
         
-        {/* === RIGHT FADE === */}
-        <div className="absolute top-0 bottom-0 right-0 w-48 md:w-72 z-10 bg-gradient-to-l from-[#0a0a0a] to-transparent pointer-events-none" />
-        
+        <div className="absolute top-0 bottom-0 right-0 w-24 md:w-48 z-10 bg-gradient-to-l from-[#0a0a0a] to-transparent pointer-events-none" />
+
+        {/* === TRACK 1 === */}
         <motion.div
-          animate={{ x: ['0%', '-50%'] }}
-          transition={{ ease: 'linear', duration: 10, repeat: Infinity }}
-          className="flex gap-1 md:gap-2"
+          initial={{ x: 0 }}
+          animate={{ x: "-100%" }}
+          transition={{ 
+            duration: 20,
+            repeat: Infinity, 
+            ease: "linear" 
+          }}
+          className="flex gap-4 pr-4 flex-shrink-0"
         >
-          {duplicatedTools.map((tool, index) => (
+          {toolsTrack.map((tool, index) => (
             <div
-              key={index}
+              key={`t1-${index}`}
               className="w-32 h-32 md:w-36 md:h-36 flex flex-col items-center justify-center gap-2 flex-shrink-0 hover:bg-white/5 rounded-2xl transition-all duration-300 group cursor-pointer"
             >
-              {/* === ICON === */}
               <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center">
                 <img
                   src={tool.logo}
@@ -83,8 +85,36 @@ const Tools = () => {
                   className="w-full h-full object-contain filter grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
                 />
               </div>
+              <span className="text-sm md:text-base font-mono text-gray-400 group-hover:text-white transition-colors duration-300 text-center px-2">
+                {tool.name}
+              </span>
+            </div>
+          ))}
+        </motion.div>
 
-              {/* === TEXT === */}
+        {/* === TRACK 2 === */}
+        <motion.div
+          initial={{ x: 0 }}
+          animate={{ x: "-100%" }}
+          transition={{ 
+            duration: 20, 
+            repeat: Infinity, 
+            ease: "linear" 
+          }}
+          className="flex gap-4 pr-4 flex-shrink-0"
+        >
+          {toolsTrack.map((tool, index) => (
+            <div
+              key={`t2-${index}`}
+              className="w-32 h-32 md:w-36 md:h-36 flex flex-col items-center justify-center gap-2 flex-shrink-0 hover:bg-white/5 rounded-2xl transition-all duration-300 group cursor-pointer"
+            >
+              <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center">
+                <img
+                  src={tool.logo}
+                  alt={tool.name}
+                  className="w-full h-full object-contain filter grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
+                />
+              </div>
               <span className="text-sm md:text-base font-mono text-gray-400 group-hover:text-white transition-colors duration-300 text-center px-2">
                 {tool.name}
               </span>

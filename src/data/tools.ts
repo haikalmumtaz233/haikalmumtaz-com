@@ -10,11 +10,11 @@ export const tools: Tool[] = [
   },
   {
     name: 'GitHub',
-    logo: 'https://cdn.simpleicons.org/github',
+    logo: 'https://cdn.simpleicons.org/github/white',
   },
   {
     name: 'VS Code',
-    logo: 'https://cdn.simpleicons.org/visualstudiocode',
+    logo: 'src/assets/tools/vscode.svg',
   },
   {
     name: 'Google Colab',
@@ -42,11 +42,11 @@ export const tools: Tool[] = [
   },
   {
     name: 'Apidog',
-    logo: 'https://cdn.simpleicons.org/apidog',
+    logo: 'src/assets/tools/apidog.svg',
   },
   {
     name: 'Canva',
-    logo: 'https://cdn.simpleicons.org/canva',
+    logo: 'src/assets/tools/canva.svg',
   },
   {
     name: 'Figma',
@@ -54,6 +54,6 @@ export const tools: Tool[] = [
   },
   {
     name: 'CapCut',
-    logo: 'https://cdn.simpleicons.org/capcut',
+    logo: 'src/assets/tools/capcut.svg',
   },
 ];

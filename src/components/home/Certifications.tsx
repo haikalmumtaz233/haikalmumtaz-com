@@ -30,7 +30,7 @@ const Certifications = () => {
           className="absolute top-2 md:top-4 -translate-x-1/2 z-0"
         >
           <h2 className="text-6xl md:text-7xl lg:text-8xl font-black text-white/50 uppercase tracking-tighter leading-none text-center">
-            Certifications
+            Certifications & Awards
           </h2>
         </motion.div>
 
