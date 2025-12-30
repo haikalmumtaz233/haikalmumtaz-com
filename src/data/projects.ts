@@ -53,6 +53,19 @@ export const projects: Project[] = [
     },
     {
         id: 4,
+        name: 'Vehicle Route LeafletJS',
+        subtitle: 'Bus Route Mapping Application',
+        category: 'Frontend Development',
+        description:
+            'Bus route mapping application using LeafletJS for interactive visualization and navigation of vehicle routes.',
+        stack: ['JavaScript', 'LeafletJS', 'HTML', 'CSS'],
+        image: 'src/assets/projects/vehicleroute.png',
+        gradient: 'from-pink-900/20 via-transparent to-orange-900/20',
+        repoLink: 'https://github.com/haikalmumtaz233/vehicle-route-leafletjs',
+        liveLink: 'https://haikalmumtaz233.github.io/vehicle-route-leafletjs/',
+    },
+    {
+        id: 5,
         name: 'SMP Muhdela Yogyakarta Website',
         subtitle: 'School Profile Website',
         category: 'Frontend Development',
@@ -77,18 +90,6 @@ export const projects: Project[] = [
         repoLink: '#',
         liveLink: '#',
     },
-    {
-        id: 6,
-        name: 'Vehicle Route LeafletJS',
-        subtitle: 'Bus Route Mapping Application',
-        category: 'Frontend Development',
-        description:
-            'Bus route mapping application using LeafletJS for interactive visualization and navigation of vehicle routes.',
-        stack: ['JavaScript', 'LeafletJS', 'HTML', 'CSS'],
-        image: 'src/assets/projects/vehicleroute.png',
-        gradient: 'from-pink-900/20 via-transparent to-orange-900/20',
-        repoLink: 'https://github.com/haikalmumtaz233/vehicle-route-leafletjs',
-        liveLink: 'https://haikalmumtaz233.github.io/vehicle-route-leafletjs/',
-    },
+    
 
 ];
