@@ -14,7 +14,7 @@ const FeaturedProjects = () => {
           transition={{ duration: 0.8 }}
         >
           <h2 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter text-white mb-4">
-            Featured Work
+            FEATURED WORK
           </h2>
           <p className="text-gray-500 text-lg md:text-xl font-light">
             Selected projects & case studies
@@ -43,15 +43,12 @@ interface CardProps {
 const Card = ({ project, index }: CardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // Logic to disable buttons if link is '#'
   const isRepoDisabled = project.repoLink === '#';
   const isLiveDisabled = project.liveLink === '#';
 
   return (
     <div
       ref={cardRef}
-      // PERBAIKAN: top-0 (Hapus dynamic top). Semua card akan sticky di posisi paling atas viewport (0px).
-      // h-screen + flex + justify-center memastikan konten card selalu di tengah layar saat sticky.
       className="sticky top-0 h-screen flex items-center justify-center"
     >
       <motion.div

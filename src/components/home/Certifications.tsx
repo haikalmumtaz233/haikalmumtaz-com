@@ -73,7 +73,7 @@ const Certifications = () => {
               variants={wordVariants}
               className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto"
             >
-              Achievements & Awards
+              Certificates & Awards
             </motion.p>
           </div>
         </motion.div>
