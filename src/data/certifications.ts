@@ -72,4 +72,12 @@ export const certifications: Certification[] = [
     image: 'src/assets/certifications/pomda.png',
     credentialLink: 'https://drive.google.com/file/d/1hNUzM6vZcwf77VNSqAWZ7g4AWLLrL7Jq/view?usp=sharing',
   },
+  {
+    id: 9,
+    title: 'FKBMIK - Battle of Veteran II Place',
+    issuer: 'FKBMIK UPN "Veteran" Yogyakarta',
+    date: '2023',
+    image: 'src/assets/certifications/fkbmik.png',
+    credentialLink: 'https://drive.google.com/file/d/1V7nmh5Iflp-XZMFyPnsOhZL99wyiIFCP/view?usp=sharing',
+  },
 ];
