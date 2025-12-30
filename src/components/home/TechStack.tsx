@@ -91,18 +91,21 @@ const TechStack = () => {
               className="flex items-center gap-4 p-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-colors duration-300 group cursor-pointer"
             >
               {/* === ICON WRAPPER === */}
-              <div className="w-12 h-12 rounded-xl bg-black/50 flex items-center justify-center p-2 flex-shrink-0">
+              <div className="w-12 h-12 rounded-xl bg-black/50 flex items-center justify-center p-2 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
                 <img
                   src={tech.logo}
                   alt={tech.name}
-                  className="w-full h-full object-contain filter grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
+                  className="w-full h-full object-contain"
                 />
               </div>
 
-              {/* === TEXT === */}
-              <span className="text-white font-semibold text-base md:text-lg bg-gradient-to-r from-white to-white bg-[length:0%_2px] bg-no-repeat bg-left-bottom group-hover:bg-[length:100%_2px] transition-all duration-500">
-                {tech.name}
-              </span>
+              {/* === TEXT WITH ANIMATED UNDERLINE === */}
+              <div className="relative">
+                <span className="text-gray-400 font-semibold text-base md:text-lg transition-colors duration-300 group-hover:text-white block">
+                  {tech.name}
+                </span>
+                <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-white transition-all duration-300 ease-out group-hover:w-full opacity-0 group-hover:opacity-100" />
+              </div>
             </motion.div>
           ))}
         </motion.div>
