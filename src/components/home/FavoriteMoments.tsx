@@ -79,7 +79,7 @@ const FavoriteMoments = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-[#0a0a0a] h-[400vh]"
+      className="relative bg-transparent h-[400vh]"
     >
       <div className="sticky top-0 h-screen overflow-hidden flex items-center">
         <motion.div

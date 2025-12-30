@@ -1,5 +1,7 @@
 import { useLayoutEffect } from 'react';
-import Hero from '../components/home/Hero';
+// Pastikan import ini mengarah ke file Hero yang BARU & BERSIH
+// Jika kamu sudah rename jadi HeroSection, ubah jadi: import HeroSection from '../components/home/HeroSection';
+import Hero from '../components/home/Hero'; 
 import Identity from '../components/home/Identity';
 import FeaturedProjects from '../components/home/FeaturedProjects';
 import Experience from '../components/home/Experience';
@@ -15,24 +17,8 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="relative">
-      {/* === BACKGROUND GRID PATTERN === */}
-      <div className="absolute inset-0 bg-gray-950">
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `
-              linear-gradient(to right, rgb(55, 65, 81) 1px, transparent 1px),
-              linear-gradient(to bottom, rgb(55, 65, 81) 1px, transparent 1px)
-            `,
-            backgroundSize: '80px 80px',
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-900/10 via-transparent to-blue-900/10" />
-      </div>
-
-      {/* === CONTENT (HIGH-IMPACT FLOW) === */}
-      <div className="relative z-10">
+    <>
+      <div className="relative z-10 space-y-24 md:space-y-32 pb-24 md:pb-32">
         <Hero />
         <Identity />
         
@@ -57,7 +43,7 @@ const Home = () => {
           <Contact />
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

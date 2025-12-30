@@ -27,7 +27,7 @@ const Tools = () => {
   const toolsTrack = [...tools, ...tools]; 
 
   return (
-    <section className="relative bg-[#0a0a0a] py-16 md:py-24 overflow-hidden">
+    <section className="relative bg-transparent py-16 md:py-24 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         {/* === HEADER === */}
         <motion.div

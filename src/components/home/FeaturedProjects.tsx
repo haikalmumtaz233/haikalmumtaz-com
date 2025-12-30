@@ -5,7 +5,7 @@ import { projects } from '../../data/projects';
 
 const FeaturedProjects = () => {
   return (
-    <section className="relative bg-[#0a0a0a] pb-20">
+    <section className="relative bg-transparent pb-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-32 pb-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

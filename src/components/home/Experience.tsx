@@ -29,7 +29,7 @@ const Experience = () => {
   };
 
   return (
-    <section ref={sectionRef} className="relative bg-[#0a0a0a] pt-60 md:pt-80 pb-10 w-full overflow-x-clip">
+    <section ref={sectionRef} className="relative bg-transparent pt-60 md:pt-80 pb-10 w-full overflow-x-clip">
       <div className="w-full px-4 md:px-8 lg:px-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-12 items-stretch">
           {/* === LEFT COLUMN - STICKY TITLE === */}

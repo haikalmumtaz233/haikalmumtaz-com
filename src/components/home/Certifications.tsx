@@ -48,7 +48,7 @@ const Certifications = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-[#0a0a0a] h-[250vh]"
+      className="relative bg-transparent h-[250vh]"
     >
       <div className="sticky top-0 h-screen overflow-hidden flex flex-col items-center justify-center perspective-1000">
         
