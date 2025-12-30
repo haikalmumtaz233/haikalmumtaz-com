@@ -31,7 +31,7 @@ const Contact = () => {
 
     // === WHATSAPP FORMATTING ===
     // GANTI NOMOR INI DENGAN NOMOR WA KAMU (Format: 628...)
-    const phoneNumber = '6281234567890'; 
+    const phoneNumber = '6285228518483'; 
     
     const text = `
 *New Contact Form Submission*
@@ -55,9 +55,9 @@ ${formData.message}
   };
 
   const socialLinks = [
-    { icon: Github, href: 'https://github.com', label: 'Github' },
-    { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn' },
-    { icon: Instagram, href: 'https://instagram.com', label: 'Instagram' },
+    { icon: Github, href: 'https://github.com/haikalmumtaz233', label: 'Github' },
+    { icon: Linkedin, href: 'https://www.linkedin.com/in/haikal-mumtaz/', label: 'LinkedIn' },
+    { icon: Instagram, href: 'https://www.instagram.com/haikal_mumtaz23/', label: 'Instagram' },
   ];
 
   return (

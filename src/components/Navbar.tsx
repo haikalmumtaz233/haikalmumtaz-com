@@ -8,9 +8,9 @@ const navLinks = [
 ];
 
 const socialLinks = [
-  { Icon: Github, href: 'https://github.com', label: 'GitHub' },
-  { Icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn' },
-  { Icon: Instagram, href: 'https://instagram.com', label: 'Instagram' },
+  { Icon: Github, href: 'https://github.com/haikalmumtaz233', label: 'GitHub' },
+  { Icon: Linkedin, href: 'https://www.linkedin.com/in/haikal-mumtaz/', label: 'LinkedIn' },
+  { Icon: Instagram, href: 'https://www.instagram.com/haikal_mumtaz23/', label: 'Instagram' },
 ];
 
 const Navbar = () => {
