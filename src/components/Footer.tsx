@@ -1,6 +1,15 @@
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
+  const handleNavigation = (path: string) => {
+    if (path === '#top') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      const element = document.querySelector(path);
+      element?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <footer className="bg-[#0a0a0a] pt-20 pb-10 border-t border-white/10">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -20,33 +29,24 @@ const Footer = () => {
 
           {/* === NAVIGATION === */}
           <div className="md:col-span-3">
-            <h3 className="text-sm font-mono text-gray-500 uppercase tracking-wider mb-6">Sitemap</h3>
+            <h3 className="text-sm font-mono text-gray-500 uppercase tracking-wider mb-6">Navigate</h3>
             <ul className="space-y-4">
-              {[
-                { name: 'Home', path: '/' },
-                { name: 'About', path: '/about' },
-                { name: 'CV / Resume', path: '/cv.pdf', isDownload: true },
-              ].map((item) => (
-                <li key={item.name}>
-                  {item.isDownload ? (
-                    <a 
-                      href={item.path} 
-                      download 
-                      className="text-gray-300 hover:text-white transition-colors text-lg flex items-center gap-2 group"
-                    >
-                      {item.name}
-                      <span className="opacity-0 group-hover:opacity-100 transition-opacity">↓</span>
-                    </a>
-                  ) : (
-                    <a 
-                      href={item.path} 
-                      className="text-gray-300 hover:text-white transition-colors text-lg"
-                    >
-                      {item.name}
-                    </a>
-                  )}
-                </li>
-              ))}
+              <li>
+                <button 
+                  onClick={() => handleNavigation('#top')}
+                  className="text-gray-300 hover:text-white transition-colors text-lg text-left"
+                >
+                  Home
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => handleNavigation('#contact')}
+                  className="text-gray-300 hover:text-white transition-colors text-lg text-left"
+                >
+                  Contact
+                </button>
+              </li>
             </ul>
           </div>
 
