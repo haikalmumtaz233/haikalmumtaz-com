@@ -18,7 +18,7 @@ export const certifications: Certification[] = [
   },
   {
     id: 2,
-    title: 'TensorFlow Developer',
+    title: 'TensorFlow Developer Certificate',
     issuer: 'Google',
     date: '2024',
     image: 'src/assets/certifications/tfdc.png',
@@ -34,7 +34,7 @@ export const certifications: Certification[] = [
   },
   {
     id: 4,
-    title: 'Sertifikat Pelatihan VSGA',
+    title: 'VSGA Certification - Data Science',
     issuer: 'Komdigi Indonesia',
     date: '2024',
     image: 'src/assets/certifications/vsga.png',
@@ -58,10 +58,18 @@ export const certifications: Certification[] = [
   },
   {
     id: 7,
-    title: 'Sertifikat Asisten Lab',
+    title: 'Laboratory Assistant Certificate',
     issuer: 'Laboratorium Informatika - UPN "Veteran" Yogyakarta',
     date: '2025',
     image: 'src/assets/certifications/asistenlab.png',
     credentialLink: 'https://drive.google.com/file/d/1LKjKKhVWf9eBvRmIM0vsPYlMvLNFyoCX/view?usp=sharing',
+  },
+  {
+    id: 8,
+    title: 'POMDA DIY - II Place E-Sport Valorant',
+    issuer: 'BAPOMI DIY',
+    date: '2024',
+    image: 'src/assets/certifications/pomda.png',
+    credentialLink: 'https://drive.google.com/file/d/1hNUzM6vZcwf77VNSqAWZ7g4AWLLrL7Jq/view?usp=sharing',
   },
 ];
