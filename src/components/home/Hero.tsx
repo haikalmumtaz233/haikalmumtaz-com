@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { Download, Github, Linkedin, Instagram, ArrowDown } from 'lucide-react';
 
 const Hero = () => {
@@ -47,14 +47,22 @@ const Hero = () => {
     { text: 'MUMTAZ', delay: 0.3, weight: 'light' },
   ];
 
-  const statusVariants = {
+  const statusVariants: Variants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.6, delay: 0.6 } },
   };
 
-  const secondaryVariants = {
+  const secondaryVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96], delay: 0.7 } },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { 
+        duration: 0.6, 
+        ease: [0.43, 0.13, 0.23, 0.96] as const,
+        delay: 0.7 
+      } 
+    },
   };
 
   const socialLinks = [
@@ -92,7 +100,6 @@ const Hero = () => {
         )}
       </AnimatePresence>
 
-      {/* PERBAIKAN: Section ini sekarang bersih, tidak ada div background grid/ungu lagi */}
       <section className="relative min-h-screen lg:h-screen overflow-x-hidden flex items-center justify-center cursor-auto py-20 lg:py-0">
         
         <div className="w-full h-full px-6 md:px-12 lg:px-24 flex items-center justify-between relative z-10">
