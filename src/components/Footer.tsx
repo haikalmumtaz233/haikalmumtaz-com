@@ -41,6 +41,22 @@ const Footer = () => {
               </li>
               <li>
                 <button 
+                  onClick={() => handleNavigation('#projects')}
+                  className="text-gray-300 hover:text-white transition-colors text-lg text-left"
+                >
+                  Projects
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => handleNavigation('#experience')}
+                  className="text-gray-300 hover:text-white transition-colors text-lg text-left"
+                >
+                  Experience
+                </button>
+              </li>
+              <li>
+                <button 
                   onClick={() => handleNavigation('#contact')}
                   className="text-gray-300 hover:text-white transition-colors text-lg text-left"
                 >
@@ -55,9 +71,9 @@ const Footer = () => {
             <h3 className="text-sm font-mono text-gray-500 uppercase tracking-wider mb-6">Connect</h3>
             <ul className="space-y-4">
               {[
-                { name: 'LinkedIn', url: 'https://linkedin.com' },
-                { name: 'GitHub', url: 'https://github.com' },
-                { name: 'Instagram', url: 'https://instagram.com' },
+                { name: 'LinkedIn', url: 'https://www.linkedin.com/in/haikal-mumtaz/' },
+                { name: 'GitHub', url: 'https://github.com/haikalmumtaz233' },
+                { name: 'Instagram', url: 'https://www.instagram.com/haikal_mumtaz23/' },
                 { name: 'Email', url: 'mailto:hmumtaz70@gmail.com' },
               ].map((link) => (
                 <li key={link.name}>
