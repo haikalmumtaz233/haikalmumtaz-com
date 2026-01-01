@@ -1,5 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
 
+/* Monument Extended Font */
+@font-face {
+  font-family: 'Monument Extended';
+  src: url('https://cdn.jsdelivr.net/gh/MonumentType/monument-grotesk@latest/webfonts/MonumentExtended-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Monument Extended';
+  src: url('https://cdn.jsdelivr.net/gh/MonumentType/monument-grotesk@latest/webfonts/MonumentExtended-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Monument Extended';
+  src: url('https://cdn.jsdelivr.net/gh/MonumentType/monument-grotesk@latest/webfonts/MonumentExtended-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

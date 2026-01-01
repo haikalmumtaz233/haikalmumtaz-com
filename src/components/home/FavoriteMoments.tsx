@@ -99,7 +99,7 @@ const FavoriteMoments = () => {
               <div className="overflow-hidden">
                 <motion.h2
                   variants={wordVariants}
-                  className="text-6xl md:text-7xl lg:text-8xl font-black text-white uppercase tracking-tighter leading-none"
+                  className="text-6xl md:text-7xl lg:text-8xl font-monument font-black text-white uppercase tracking-tight leading-none"
                 >
                   Favorite
                 </motion.h2>
@@ -108,7 +108,7 @@ const FavoriteMoments = () => {
               <div className="overflow-hidden">
                 <motion.h2
                   variants={wordVariants}
-                  className="text-6xl md:text-7xl lg:text-8xl font-black text-gray-500 uppercase tracking-tighter leading-none"
+                  className="text-6xl md:text-7xl lg:text-8xl font-monument font-black text-gray-500 uppercase tracking-tight leading-none"
                 >
                   Moments
                 </motion.h2>

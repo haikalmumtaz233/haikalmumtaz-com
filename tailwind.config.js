@@ -8,6 +8,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+        monument: ['Monument Extended', 'sans-serif'],
       },
     },
   },

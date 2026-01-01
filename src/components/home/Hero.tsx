@@ -140,7 +140,7 @@ const Hero = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.6 }}
-                    className="text-[12vw] sm:text-[10vw] md:text-[11vw] lg:text-[13vw] xl:text-[14vw] font-black uppercase leading-[0.9] tracking-tighter text-white whitespace-nowrap"
+                    className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-8xl font-monument font-black uppercase leading-[0.9] tracking-tight text-white"
                   >
                     <span className="inline-block">HAIKAL</span>{' '}
                     <span className="inline-block">MUMTAZ</span>

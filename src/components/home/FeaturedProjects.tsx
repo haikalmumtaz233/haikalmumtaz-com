@@ -13,7 +13,7 @@ const FeaturedProjects = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter text-white mb-4">
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-monument font-black tracking-tight text-white mb-4 uppercase">
             FEATURED WORK
           </h2>
           <p className="text-gray-500 text-lg md:text-xl font-light">

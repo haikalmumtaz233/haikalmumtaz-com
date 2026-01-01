@@ -61,7 +61,7 @@ const TechStack = () => {
           <div className="overflow-hidden">
             <motion.h2
               variants={wordVariants}
-              className="text-5xl md:text-6xl lg:text-7xl font-black text-white uppercase tracking-tighter mb-4"
+              className="text-5xl md:text-6xl lg:text-7xl font-monument font-black text-white uppercase tracking-tight mb-4"
             >
               Tech Stack
             </motion.h2>
