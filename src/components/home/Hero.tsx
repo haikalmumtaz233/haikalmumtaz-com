@@ -264,9 +264,9 @@ const Hero = () => {
               transition={{ duration: 0.8, delay: 1.2 }}
               className="flex items-center justify-center lg:justify-start"
             >
-              <div className="font-mono text-sm md:text-base text-gray-300">
+              <div className="font-mono text-sm md:text-base">
                 <span className="text-purple-500">&gt;</span>{' '}
-                <span>{displayedText}</span>
+                <span className="text-gray-300">{displayedText}</span>
                 <motion.span
                   className="inline-block w-[2px] h-5 bg-purple-500 ml-1"
                   animate={{ opacity: [1, 0, 1] }}
@@ -307,7 +307,7 @@ const Hero = () => {
               <a
                 href="/cv.pdf"
                 download
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-black font-bold text-xs uppercase tracking-wider rounded-full hover:bg-gray-200 transition-all duration-300 shadow-lg shadow-purple-500/20"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-transparent border border-white/30 text-white font-bold text-xs uppercase tracking-wider rounded-full hover:bg-white hover:text-black transition-all duration-300 shadow-lg shadow-purple-500/10"
               >
                 <Download className="w-4 h-4" />
                 Download CV
