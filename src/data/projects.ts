@@ -85,7 +85,7 @@ export const projects: Project[] = [
         description:
             'Content management system for SMP Muhdela Yogyakarta, enabling easy updates to school information, news, and events by non-technical staff.',
         stack: ['Vue.js', 'Tailwind CSS'],
-        image: '/projects/smpmuhdela.png',
+        image: '/projects/cms.png',
         gradient: 'from-pink-900/20 via-transparent to-orange-900/20',
         repoLink: '#',
         liveLink: '#',

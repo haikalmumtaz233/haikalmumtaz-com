@@ -42,11 +42,11 @@ export const tools: Tool[] = [
   },
   {
     name: 'Apidog',
-    logo: 'src/assets/tools/apidog.svg',
+    logo: '/tools/apidog.svg',
   },
   {
     name: 'Canva',
-    logo: 'src/assets/tools/canva.svg',
+    logo: '/tools/canva.svg',
   },
   {
     name: 'Figma',
@@ -54,6 +54,6 @@ export const tools: Tool[] = [
   },
   {
     name: 'CapCut',
-    logo: 'src/assets/tools/capcut.svg',
+    logo: '/tools/capcut.svg',
   },
 ];
