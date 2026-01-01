@@ -1,6 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, Mail, Instagram, Linkedin, Github, Send } from 'lucide-react';
+import { ArrowUpRight, Mail, Instagram, Linkedin, Github } from 'lucide-react';
+
+declare global {
+  interface Window {
+    turnstile: {
+      render: (container: HTMLElement, options: {
+        sitekey: string;
+        callback: (token: string) => void;
+        'expired-callback'?: () => void;
+        'error-callback'?: () => void;
+        theme?: 'light' | 'dark' | 'auto';
+      }) => string;
+      reset: (widgetId: string) => void;
+      remove: (widgetId: string) => void;
+    };
+  }
+}
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -9,10 +25,56 @@ const Contact = () => {
     email: '',
     phone: '',
     message: '',
-    honeypot: '', // Anti-spam field (should remain empty)
+    honeypot: '',
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileError, setTurnstileError] = useState(false);
+  const turnstileRef = useRef<HTMLDivElement>(null);
+  const widgetIdRef = useRef<string | null>(null);
+
+  // Load Turnstile script and render widget
+  useEffect(() => {
+    const loadTurnstile = () => {
+      if (window.turnstile && turnstileRef.current && !widgetIdRef.current) {
+        widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
+          sitekey: '0x4AAAAAACKC_rdGcHxbc3VL',
+          callback: (token: string) => {
+            setTurnstileToken(token);
+            setTurnstileError(false);
+          },
+          'expired-callback': () => {
+            setTurnstileToken(null);
+          },
+          'error-callback': () => {
+            setTurnstileError(true);
+          },
+          theme: 'dark',
+        });
+      }
+    };
+
+    // Check if script already loaded
+    if (window.turnstile) {
+      loadTurnstile();
+    } else {
+      // Load the Turnstile script
+      const script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+      script.async = true;
+      script.defer = true;
+      script.onload = loadTurnstile;
+      document.head.appendChild(script);
+    }
+
+    return () => {
+      if (widgetIdRef.current && window.turnstile) {
+        window.turnstile.remove(widgetIdRef.current);
+        widgetIdRef.current = null;
+      }
+    };
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,6 +87,13 @@ const Contact = () => {
     // === HONEYPOT CHECK ===
     if (formData.honeypot) {
       console.log('Spam detected');
+      setIsSubmitting(false);
+      return;
+    }
+
+    // === TURNSTILE VALIDATION ===
+    if (!turnstileToken) {
+      setTurnstileError(true);
       setIsSubmitting(false);
       return;
     }
@@ -51,6 +120,11 @@ ${formData.message}
       window.open(whatsappURL, '_blank');
       setIsSubmitting(false);
       setFormData({ firstName: '', lastName: '', email: '', phone: '', message: '', honeypot: '' });
+      setTurnstileToken(null);
+      // Reset Turnstile widget
+      if (widgetIdRef.current && window.turnstile) {
+        window.turnstile.reset(widgetIdRef.current);
+      }
     }, 1000);
   };
 
@@ -200,10 +274,17 @@ ${formData.message}
                 autoComplete="off"
               />
 
-              {/* === CLOUDFLARE TURNSTILE PLACEHOLDER === */}
-              <div className="w-full h-16 bg-white/5 rounded-lg flex items-center justify-center border border-white/10 text-gray-500 text-sm">
-                {/* Implement Cloudflare Turnstile Component Here */}
-                [Cloudflare Turnstile Widget]
+              {/* === CLOUDFLARE TURNSTILE WIDGET === */}
+              <div className="w-full">
+                <div 
+                  ref={turnstileRef} 
+                  className="flex justify-center"
+                />
+                {turnstileError && (
+                  <p className="text-red-500 text-sm mt-2 text-center">
+                    Please complete the security check
+                  </p>
+                )}
               </div>
 
               {/* SUBMIT BUTTON */}

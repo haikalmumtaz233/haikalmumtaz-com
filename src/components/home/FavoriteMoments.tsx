@@ -46,11 +46,11 @@ const FavoriteMoments = () => {
 
   const renderContent = (moment: typeof moments[0]) => {
     const textBlock = (
-      <div className="space-y-3">
+      <div className="space-y-2 md:space-y-3">
         <p className="text-[10px] md:text-xs font-mono tracking-[0.2em] text-gray-500 uppercase">
           {moment.year}
         </p>
-        <h3 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tight leading-none">
+        <h3 className="text-xl md:text-4xl font-black text-white uppercase tracking-tight leading-none">
           {moment.title}
         </h3>
       </div>
@@ -58,7 +58,6 @@ const FavoriteMoments = () => {
 
     const imageBlock = (
       <div className={`relative overflow-hidden rounded-lg ${moment.className} group`}>
-        {/* REVISI: Grayscale dihapus. Gambar langsung berwarna. */}
         <img
           src={moment.image}
           alt={moment.title}
@@ -68,11 +67,11 @@ const FavoriteMoments = () => {
     );
 
     if (moment.textPos === 'above') {
-      return <div className="flex flex-col gap-6">{textBlock}{imageBlock}</div>;
+      return <div className="flex flex-col gap-4 md:gap-6">{textBlock}{imageBlock}</div>;
     } else if (moment.textPos === 'below') {
-      return <div className="flex flex-col gap-6">{imageBlock}{textBlock}</div>;
+      return <div className="flex flex-col gap-4 md:gap-6">{imageBlock}{textBlock}</div>;
     } else {
-      return <div className="flex items-center gap-8">{imageBlock}{textBlock}</div>;
+      return <div className="flex items-center gap-4 md:gap-8">{imageBlock}{textBlock}</div>;
     }
   };
 
@@ -84,10 +83,10 @@ const FavoriteMoments = () => {
       <div className="sticky top-0 h-screen overflow-hidden flex items-center">
         <motion.div
           style={{ x }}
-          className="flex items-stretch gap-24 md:gap-32 px-6 md:px-12 pr-24 md:pr-32"
+          className="flex items-stretch gap-8 md:gap-24 lg:gap-32 px-4 md:px-12 pr-12 md:pr-32"
         >
           {/* === OPENING TITLE CARD (TECH STACK STYLE) === */}
-          <div className="flex-shrink-0 flex items-center justify-center w-[400px] md:w-[500px] h-[80vh]">
+          <div className="flex-shrink-0 flex items-center justify-center w-[85vw] md:w-[500px] h-[80vh]">
             <motion.div
               variants={titleVariants}
               initial="hidden"
@@ -99,7 +98,7 @@ const FavoriteMoments = () => {
               <div className="overflow-hidden">
                 <motion.h2
                   variants={wordVariants}
-                  className="text-6xl md:text-7xl lg:text-8xl font-monument font-black text-white uppercase tracking-tight leading-none"
+                  className="text-4xl md:text-7xl lg:text-8xl font-monument font-black text-white uppercase tracking-tight leading-none"
                 >
                   Favorite
                 </motion.h2>
@@ -108,16 +107,16 @@ const FavoriteMoments = () => {
               <div className="overflow-hidden">
                 <motion.h2
                   variants={wordVariants}
-                  className="text-6xl md:text-7xl lg:text-8xl font-monument font-black text-white uppercase tracking-tight leading-none"
+                  className="text-4xl md:text-7xl lg:text-8xl font-monument font-black text-white uppercase tracking-tight leading-none"
                 >
                   Moments
                 </motion.h2>
               </div>
 
-              <div className="overflow-hidden mt-8">
+              <div className="overflow-hidden mt-6 md:mt-8">
                 <motion.p
                   variants={wordVariants}
-                  className="text-gray-400 text-lg md:text-xl max-w-md font-light"
+                  className="text-gray-400 text-base md:text-xl max-w-md font-light"
                 >
                   A collection of moments that shaped my journey through tech, education, and personal growth.
                 </motion.p>

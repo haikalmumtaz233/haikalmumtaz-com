@@ -46,10 +46,10 @@ const Certifications = () => {
       <div className="sticky top-0 h-screen overflow-hidden flex items-center">
         <motion.div
           style={{ x }}
-          className="flex items-center gap-10 md:gap-14 lg:gap-18 px-6 md:px-12 pr-12 md:pr-16"
+          className="flex items-center gap-4 md:gap-10 lg:gap-14 px-4 md:px-12 pr-8 md:pr-16"
         >
           {/* === TITLE CARD (FIRST ITEM IN SCROLL) === */}
-          <div className="flex-shrink-0 flex items-center justify-center w-[350px] md:w-[450px] lg:w-[500px] h-[80vh]">
+          <div className="flex-shrink-0 flex items-center justify-center w-[85vw] md:w-[450px] lg:w-[500px] h-[80vh]">
             <motion.div
               variants={titleVariants}
               initial="hidden"
@@ -60,16 +60,16 @@ const Certifications = () => {
               <div className="overflow-hidden">
                 <motion.h2
                   variants={wordVariants}
-                  className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-monument font-black text-white uppercase tracking-tight leading-none"
+                  className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-monument font-black text-white uppercase tracking-tight leading-none"
                 >
                   Certificates
                 </motion.h2>
               </div>
               
-              <div className="overflow-hidden mt-6 md:mt-8">
+              <div className="overflow-hidden mt-4 md:mt-8">
                 <motion.p
                   variants={wordVariants}
-                  className="text-gray-400 text-base md:text-lg lg:text-xl max-w-md font-light"
+                  className="text-gray-400 text-sm md:text-lg lg:text-xl max-w-md font-light"
                 >
                   Certificates & Awards
                 </motion.p>
@@ -94,7 +94,7 @@ const Certifications = () => {
                 }}
                 onMouseEnter={() => setHoveredId(cert.id)}
                 onMouseLeave={() => setHoveredId(null)}
-                className="flex-shrink-0 w-[280px] md:w-[320px] lg:w-[360px] h-[80vh] flex items-center"
+                className="flex-shrink-0 w-[75vw] md:w-[320px] lg:w-[360px] h-[80vh] flex items-center"
               >
                 <motion.div
                   animate={{

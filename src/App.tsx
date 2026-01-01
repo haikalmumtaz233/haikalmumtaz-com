@@ -1,3 +1,4 @@
+import { useLayoutEffect } from 'react';
 import { ReactLenis } from '@studio-freight/react-lenis';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -5,6 +6,16 @@ import Home from './pages/Home';
 import Background from './components/Background';
 
 function App() {
+  // Force scroll to top on page load/refresh
+  useLayoutEffect(() => {
+    // Disable browser's automatic scroll restoration
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    // Force scroll to top immediately
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <ReactLenis root options={{ lerp: 0.1, duration: 1.5, smoothWheel: true }}>
       <Background />
