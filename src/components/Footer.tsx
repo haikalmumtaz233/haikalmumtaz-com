@@ -13,10 +13,10 @@ const Footer = () => {
   return (
     <footer className="bg-[#0a0a0a] pt-20 pb-10 border-t border-white/10">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-12 gap-12 md:gap-8 mb-16">
           
           {/* === BRAND / NAME === */}
-          <div className="md:col-span-6 flex flex-col justify-between h-full">
+          <div className="col-span-2 md:col-span-6 flex flex-col justify-between h-full">
             <div>
               <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-4">
                 Haikal Mumtaz
@@ -28,7 +28,7 @@ const Footer = () => {
           </div>
 
           {/* === NAVIGATION === */}
-          <div className="md:col-span-3">
+          <div className="col-span-1 md:col-span-3">
             <h3 className="text-sm font-mono text-gray-500 uppercase tracking-wider mb-6">Navigate</h3>
             <ul className="space-y-4">
               <li>
@@ -67,7 +67,7 @@ const Footer = () => {
           </div>
 
           {/* === SOCIALS === */}
-          <div className="md:col-span-3">
+          <div className="col-span-1 md:col-span-3">
             <h3 className="text-sm font-mono text-gray-500 uppercase tracking-wider mb-6">Connect</h3>
             <ul className="space-y-4">
               {[

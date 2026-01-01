@@ -4,7 +4,7 @@ import { Download, ChevronDown, Briefcase } from 'lucide-react';
 
 const Hero = () => {
   const [isIntroComplete, setIsIntroComplete] = useState(false);
-  const [showBlob, setShowBlob] = useState(false);
+  const [loadingCounter, setLoadingCounter] = useState(0);
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
@@ -12,17 +12,24 @@ const Hero = () => {
 
   const roles = ['Fullstack Developer', 'Machine Learning Engineer', 'Data Scientist', 'Game Developer'];
 
+  // Loading counter animation (0 to 100)
   useEffect(() => {
-    const blobTimer = setTimeout(() => {
-      setShowBlob(true);
-    }, 1000);
+    const counterInterval = setInterval(() => {
+      setLoadingCounter((prev) => {
+        if (prev >= 100) {
+          clearInterval(counterInterval);
+          return 100;
+        }
+        return prev + 2;
+      });
+    }, 15);
 
     const completeTimer = setTimeout(() => {
       setIsIntroComplete(true);
-    }, 2400);
+    }, 1800);
 
     return () => {
-      clearTimeout(blobTimer);
+      clearInterval(counterInterval);
       clearTimeout(completeTimer);
     };
   }, []);
@@ -88,7 +95,7 @@ const Hero = () => {
               exit={{ y: '-100%' }}
               transition={{ 
                 duration: 0.8, 
-                ease: [0.76, 0, 0.24, 1],
+                ease: [0.87, 0, 0.13, 1],
                 delay: 0.2
               }}
             >
@@ -106,22 +113,16 @@ const Hero = () => {
               </motion.h1>
             </motion.div>
 
-            {/* CENTER ENERGY BLOB */}
+            {/* CENTER LOADING COUNTER */}
             <motion.div
               className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[60]"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ 
-                scale: showBlob ? [0, 1.5, 2] : 0, 
-                opacity: showBlob ? [0, 1, 0] : 0 
-              }}
-              transition={{ 
-                duration: 0.8, 
-                ease: [0.76, 0, 0.24, 1],
-                times: [0, 0.5, 1]
-              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: loadingCounter < 100 ? 1 : 0 }}
+              transition={{ duration: 0.3 }}
             >
-              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-red-400 blur-xl" />
-              <div className="absolute inset-0 w-24 h-24 md:w-32 md:h-32 rounded-full bg-white/80" />
+              <div className="font-monument text-6xl md:text-8xl font-black text-black">
+                {loadingCounter.toString().padStart(2, '0')}
+              </div>
             </motion.div>
 
             {/* BOTTOM PANEL */}
@@ -131,7 +132,7 @@ const Hero = () => {
               exit={{ y: '100%' }}
               transition={{ 
                 duration: 0.8, 
-                ease: [0.76, 0, 0.24, 1],
+                ease: [0.87, 0, 0.13, 1],
                 delay: 0.2
               }}
             >
@@ -305,8 +306,8 @@ const Hero = () => {
               className="flex justify-center lg:justify-end"
             >
               <a
-                href="/cv.pdf"
-                download
+                href="/CV.pdf"
+                download="Haikal_Mumtaz_CV.pdf"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-transparent border border-white/30 text-white font-bold text-xs uppercase tracking-wider rounded-full hover:bg-white hover:text-black transition-all duration-300 shadow-lg shadow-purple-500/10"
               >
                 <Download className="w-4 h-4" />
