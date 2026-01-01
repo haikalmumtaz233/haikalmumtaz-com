@@ -58,6 +58,14 @@ export const certifications: Certification[] = [
   },
   {
     id: 7,
+    title: 'Nominator Best Project Pitching',
+    issuer: 'Career Vibe Check - Komdigi Yogyakarta & Metrodata Academy',
+    date: '2023',
+    image: 'src/assets/certifications/pitching.png',
+    credentialLink: 'https://drive.google.com/file/d/1RCjC7BYXQKFwuecIxxxhUykKb9iuvqsU/view?usp=sharing',
+  },
+  {
+    id: 8,
     title: 'Laboratory Assistant Certificate',
     issuer: 'Laboratorium Informatika - UPN "Veteran" Yogyakarta',
     date: '2025',
@@ -65,19 +73,12 @@ export const certifications: Certification[] = [
     credentialLink: 'https://drive.google.com/file/d/1LKjKKhVWf9eBvRmIM0vsPYlMvLNFyoCX/view?usp=sharing',
   },
   {
-    id: 8,
+    id: 9,
     title: 'POMDA DIY - II Place E-Sport Valorant',
     issuer: 'BAPOMI DIY',
     date: '2024',
     image: 'src/assets/certifications/pomda.png',
     credentialLink: 'https://drive.google.com/file/d/1hNUzM6vZcwf77VNSqAWZ7g4AWLLrL7Jq/view?usp=sharing',
   },
-  {
-    id: 9,
-    title: 'Nominator Best Project Pitching',
-    issuer: 'Career Vibe Check - Komdigi Yogyakarta & Metrodata Academy',
-    date: '2023',
-    image: 'src/assets/certifications/pitching.png',
-    credentialLink: 'https://drive.google.com/file/d/1RCjC7BYXQKFwuecIxxxhUykKb9iuvqsU/view?usp=sharing',
-  },
+  
 ];
