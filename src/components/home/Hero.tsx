@@ -1,10 +1,10 @@
+// Hero.tsx
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Download, ChevronDown, Briefcase } from 'lucide-react';
 
 const Hero = () => {
   const [isIntroComplete, setIsIntroComplete] = useState(false);
-  const [loadingCounter, setLoadingCounter] = useState(0);
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
@@ -12,28 +12,17 @@ const Hero = () => {
 
   const roles = ['Fullstack Developer', 'Machine Learning Engineer', 'Data Scientist', 'Game Developer'];
 
-  // Loading counter animation (0 to 100)
+  // Intro Sequence Timer
   useEffect(() => {
-    const counterInterval = setInterval(() => {
-      setLoadingCounter((prev) => {
-        if (prev >= 100) {
-          clearInterval(counterInterval);
-          return 100;
-        }
-        return prev + 2;
-      });
-    }, 15);
-
+    // Total intro time: ~2.5 seconds
     const completeTimer = setTimeout(() => {
       setIsIntroComplete(true);
-    }, 1800);
+    }, 2500);
 
-    return () => {
-      clearInterval(counterInterval);
-      clearTimeout(completeTimer);
-    };
+    return () => clearTimeout(completeTimer);
   }, []);
 
+  // Scroll Indicator Logic
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
@@ -79,9 +68,6 @@ const Hero = () => {
     return () => clearTimeout(timer);
   }, [isIntroComplete, displayedText, isDeleting, currentRoleIndex]);
 
-
-
-
   return (
     <>
       {/* ========== CINEMATIC SPLIT-SCREEN REVEAL ========== */}
@@ -90,12 +76,12 @@ const Hero = () => {
           <>
             {/* TOP PANEL */}
             <motion.div
-              className="fixed top-0 left-0 right-0 h-[50vh] bg-white z-50 flex items-end justify-center pb-12 overflow-hidden"
+              className="fixed top-0 left-0 right-0 h-[50vh] bg-white z-50 flex items-end justify-center pb-8 overflow-hidden"
               initial={{ y: 0 }}
               exit={{ y: '-100%' }}
               transition={{ 
-                duration: 0.8, 
-                ease: [0.87, 0, 0.13, 1],
+                duration: 1.2, 
+                ease: [0.87, 0, 0.13, 1], // Custom energetic ease
                 delay: 0.2
               }}
             >
@@ -104,34 +90,21 @@ const Hero = () => {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ 
                   duration: 0.8, 
-                  ease: [0.43, 0.13, 0.23, 0.96],
-                  delay: 0.1
+                  ease: [0.43, 0.13, 0.23, 0.96]
                 }}
-                className="font-monument font-black text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-black uppercase tracking-tighter leading-none"
+                className="font-sans font-black text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-black uppercase tracking-tighter leading-none"
               >
                 HAIKAL
               </motion.h1>
             </motion.div>
 
-            {/* CENTER LOADING COUNTER */}
-            <motion.div
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[60]"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: loadingCounter < 100 ? 1 : 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="font-monument text-6xl md:text-8xl font-black text-black">
-                {loadingCounter.toString().padStart(2, '0')}
-              </div>
-            </motion.div>
-
             {/* BOTTOM PANEL */}
             <motion.div
-              className="fixed bottom-0 left-0 right-0 h-[50vh] bg-white z-50 flex items-start justify-center pt-12 overflow-hidden"
+              className="fixed bottom-0 left-0 right-0 h-[50vh] bg-white z-50 flex items-start justify-center pt-8 overflow-hidden"
               initial={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ 
-                duration: 0.8, 
+                duration: 1.2, 
                 ease: [0.87, 0, 0.13, 1],
                 delay: 0.2
               }}
@@ -141,10 +114,9 @@ const Hero = () => {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ 
                   duration: 0.8, 
-                  ease: [0.43, 0.13, 0.23, 0.96],
-                  delay: 0.1
+                  ease: [0.43, 0.13, 0.23, 0.96]
                 }}
-                className="font-monument font-black text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-black uppercase tracking-tighter leading-none"
+                className="font-sans font-black text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-black uppercase tracking-tighter leading-none"
               >
                 MUMTAZ
               </motion.h1>
