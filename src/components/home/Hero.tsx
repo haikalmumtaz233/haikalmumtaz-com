@@ -27,7 +27,7 @@ const Hero = () => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const windowHeight = window.innerHeight;
-      
+
       if (scrollY < windowHeight - 100) {
         setShowScrollIndicator(true);
       } else {
@@ -37,7 +37,7 @@ const Hero = () => {
 
     window.addEventListener('scroll', handleScroll);
     handleScroll();
-    
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -79,8 +79,8 @@ const Hero = () => {
               className="fixed top-0 left-0 right-0 h-[50vh] bg-white z-50 flex items-end justify-center pb-8 overflow-hidden"
               initial={{ y: 0 }}
               exit={{ y: '-100%' }}
-              transition={{ 
-                duration: 1.2, 
+              transition={{
+                duration: 1.2,
                 ease: [0.87, 0, 0.13, 1], // Custom energetic ease
                 delay: 0.2
               }}
@@ -88,8 +88,8 @@ const Hero = () => {
               <motion.h1
                 initial={{ y: -100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ 
-                  duration: 0.8, 
+                transition={{
+                  duration: 0.8,
                   ease: [0.43, 0.13, 0.23, 0.96]
                 }}
                 className="font-sans font-black text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-black uppercase tracking-tighter leading-none"
@@ -103,8 +103,8 @@ const Hero = () => {
               className="fixed bottom-0 left-0 right-0 h-[50vh] bg-white z-50 flex items-start justify-center pt-8 overflow-hidden"
               initial={{ y: 0 }}
               exit={{ y: '100%' }}
-              transition={{ 
-                duration: 1.2, 
+              transition={{
+                duration: 1.2,
                 ease: [0.87, 0, 0.13, 1],
                 delay: 0.2
               }}
@@ -112,8 +112,8 @@ const Hero = () => {
               <motion.h1
                 initial={{ y: 100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ 
-                  duration: 0.8, 
+                transition={{
+                  duration: 0.8,
                   ease: [0.43, 0.13, 0.23, 0.96]
                 }}
                 className="font-sans font-black text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-black uppercase tracking-tighter leading-none"
@@ -131,64 +131,23 @@ const Hero = () => {
         <div className="flex-shrink-0 h-20" />
 
         {/* ========== MAIN TYPOGRAPHY ========== */}
-        <motion.div
-          initial={{ opacity: 0, y: 100 }}
-          animate={{ 
-            opacity: isIntroComplete ? 1 : 0, 
-            y: isIntroComplete ? 0 : 100 
-          }}
-          transition={{ 
-            duration: 1.2, 
-            delay: isIntroComplete ? 0.3 : 0,
-            ease: [0.43, 0.13, 0.23, 0.96]
-          }}
-          className="flex-grow flex items-center justify-center"
-        >
+        <div className="flex-grow flex items-center justify-center">
           <div className="text-center px-4">
-            <motion.h2
-              initial={{ opacity: 0 }}
-              animate={{ opacity: isIntroComplete ? 1 : 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-xs md:text-sm font-bold uppercase tracking-[0.5em] text-gray-500 mb-6"
-            >
+            <h2 className="text-xs md:text-sm font-bold uppercase tracking-[0.5em] text-gray-500 mb-6">
               MUHAMMAD RADITYA
-            </motion.h2>
-            
-            <motion.h1
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ 
-                opacity: isIntroComplete ? 1 : 0, 
-                y: isIntroComplete ? 0 : 40 
-              }}
-              transition={{ 
-                duration: 1.2, 
-                delay: 0.5,
-                ease: [0.43, 0.13, 0.23, 0.96]
-              }}
-              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-8xl font-monument font-black uppercase leading-[0.9] tracking-tight text-white"
-            >
+            </h2>
+
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-8xl font-monument font-black uppercase leading-[0.9] tracking-tight text-white">
               <span className="inline-block">HAIKAL</span>{' '}
               <span className="inline-block">MUMTAZ</span>
-            </motion.h1>
+            </h1>
           </div>
-        </motion.div>
+        </div>
 
         {/* ========== BOTTOM INFO GRID ========== */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ 
-            opacity: isIntroComplete ? 1 : 0, 
-            y: isIntroComplete ? 0 : 50 
-          }}
-          transition={{ 
-            duration: 1, 
-            delay: 0.8,
-            ease: [0.43, 0.13, 0.23, 0.96]
-          }}
-          className="w-full max-w-7xl px-6 pb-8"
-        >
+        <div className="w-full max-w-7xl px-6 pb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-center">
-            
+
             {/* ========== COLUMN 1 ========== */}
             <AnimatePresence>
               {showScrollIndicator && isIntroComplete && (
@@ -196,16 +155,16 @@ const Hero = () => {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.5, delay: 1.1 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
                   className="hidden lg:flex items-center gap-3"
                 >
                   {/* Animated Icon */}
                   <motion.div
                     className="flex items-center justify-center w-10 h-10 rounded-full border border-white/30"
-                    animate={{ 
+                    animate={{
                       y: [0, 8, 0],
                     }}
-                    transition={{ 
+                    transition={{
                       duration: 1.8,
                       repeat: Infinity,
                       ease: "easeInOut"
@@ -228,15 +187,7 @@ const Hero = () => {
             </AnimatePresence>
 
             {/* ========== COLUMN 2 ========== */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ 
-                opacity: isIntroComplete ? 1 : 0, 
-                y: isIntroComplete ? 0 : 20 
-              }}
-              transition={{ duration: 0.8, delay: 1.2 }}
-              className="flex items-center justify-center lg:justify-start"
-            >
+            <div className="flex items-center justify-center lg:justify-start">
               <div className="font-mono text-sm md:text-base">
                 <span className="text-purple-500">&gt;</span>{' '}
                 <span className="text-gray-300">{displayedText}</span>
@@ -246,18 +197,10 @@ const Hero = () => {
                   transition={{ duration: 0.8, repeat: Infinity }}
                 />
               </div>
-            </motion.div>
+            </div>
 
             {/* ========== COLUMN 3 ========== */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ 
-                opacity: isIntroComplete ? 1 : 0, 
-                y: isIntroComplete ? 0 : 20 
-              }}
-              transition={{ duration: 0.8, delay: 1.3 }}
-              className="flex items-center justify-center lg:justify-end"
-            >
+            <div className="flex items-center justify-center lg:justify-end">
               <a
                 href="#contact"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-black font-bold text-xs uppercase tracking-wider rounded-full hover:bg-gray-200 transition-all duration-300 shadow-lg shadow-purple-500/20"
@@ -265,18 +208,10 @@ const Hero = () => {
                 <Briefcase className="w-4 h-4" />
                 Business Inquiries
               </a>
-            </motion.div>
+            </div>
 
             {/* ========== COLUMN 4 ========== */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ 
-                opacity: isIntroComplete ? 1 : 0, 
-                x: isIntroComplete ? 0 : 20 
-              }}
-              transition={{ duration: 0.8, delay: 1.4 }}
-              className="flex justify-center lg:justify-end"
-            >
+            <div className="flex justify-center lg:justify-end">
               <a
                 href="/CV.pdf"
                 download="Haikal_Mumtaz_CV.pdf"
@@ -285,10 +220,10 @@ const Hero = () => {
                 <Download className="w-4 h-4" />
                 Download CV
               </a>
-            </motion.div>
+            </div>
 
           </div>
-        </motion.div>
+        </div>
       </section>
     </>
   );

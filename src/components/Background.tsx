@@ -9,72 +9,64 @@ gsap.registerPlugin(ScrollTrigger);
 const Background = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+    
+    // Wrapper refs for parallax scroll
+    const orb1WrapperRef = useRef<HTMLDivElement>(null);
+    const orb2WrapperRef = useRef<HTMLDivElement>(null);
+    const orb3WrapperRef = useRef<HTMLDivElement>(null);
+    
+    // Inner orb refs for floating animation
     const orb1Ref = useRef<HTMLDivElement>(null);
     const orb2Ref = useRef<HTMLDivElement>(null);
     const orb3Ref = useRef<HTMLDivElement>(null);
 
     // === GSAP FLOATING ORBS ANIMATION ===
     useGSAP(() => {
-        // Ensure elements exist
         if (!orb1Ref.current || !orb2Ref.current || !orb3Ref.current) return;
+        if (!orb1WrapperRef.current || !orb2WrapperRef.current || !orb3WrapperRef.current) return;
 
-        // A. Perpetual Floating (Idle Animation)
-        // Use a timeline or simple to with yoyo for smooth idle movement
+        // A. Perpetual Floating (Idle Animation) - Applied to INNER ORBS
         gsap.to(orb1Ref.current, {
-            x: 'random(-30, 30)',
-            y: 'random(-20, 20)',
-            duration: 10,
+            x: 'random(-50, 50)',
+            y: 'random(-30, 30)',
+            duration: 15,
             repeat: -1,
             yoyo: true,
             ease: 'sine.inOut',
         });
 
         gsap.to(orb2Ref.current, {
-            x: 'random(-30, 30)',
-            y: 'random(-30, 30)',
+            x: 'random(-40, 40)',
+            y: 'random(-40, 40)',
+            duration: 18,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+        });
+
+        gsap.to(orb3Ref.current, {
+            x: 'random(-60, 60)',
+            y: 'random(-50, 50)',
             duration: 12,
             repeat: -1,
             yoyo: true,
             ease: 'sine.inOut',
         });
 
-        gsap.to(orb3Ref.current, {
-            x: 'random(-40, 40)',
-            y: 'random(-30, 30)',
-            duration: 8,
-            repeat: -1,
-            yoyo: true,
-            ease: 'sine.inOut',
-        });
-
-        // B. Scroll Parallax (ScrollTrigger)
-        // INCREASED SCRUB to 1.5 or 2 for smoother catch-up during navigation jumps
-        // REDUCED MOVEMENT RANGE slightly to prevent off-screen glitches
-        
-        gsap.to(orb1Ref.current, {
-            y: '50vh', // Reduced from 150vh to be safer
-            ease: 'none',
-            scrollTrigger: {
-                trigger: document.body, // Use body as trigger container
-                start: 'top top',
-                end: 'bottom bottom',
-                scrub: 2, // Smoother scrub
-            },
-        });
-
-        gsap.to(orb2Ref.current, {
-            y: '30vh', // Reduced from 80vh
+        // B. Scroll Parallax (ScrollTrigger) - Applied to WRAPPERS
+        gsap.to(orb1WrapperRef.current, {
+            y: '150vh',
             ease: 'none',
             scrollTrigger: {
                 trigger: document.body,
                 start: 'top top',
                 end: 'bottom bottom',
-                scrub: 2.5,
+                scrub: 1.5,
             },
         });
 
-        gsap.to(orb3Ref.current, {
-            y: '60vh', // Reduced from 120vh
+        gsap.to(orb2WrapperRef.current, {
+            y: '80vh',
             ease: 'none',
             scrollTrigger: {
                 trigger: document.body,
@@ -83,8 +75,18 @@ const Background = () => {
                 scrub: 2,
             },
         });
-        
-    }, { scope: containerRef }); // Scope is fine, ensures cleanup
+
+        gsap.to(orb3WrapperRef.current, {
+            y: '120vh',
+            ease: 'none',
+            scrollTrigger: {
+                trigger: document.body,
+                start: 'top top',
+                end: 'bottom bottom',
+                scrub: 1.5,
+            },
+        });
+    }, { scope: containerRef });
 
     // === CANVAS STARFIELD ANIMATION ===
     useEffect(() => {
@@ -217,38 +219,60 @@ const Background = () => {
 
     return (
         <div ref={containerRef} className="fixed inset-0 z-[-1] bg-[#0a0a0a]">
-            {/* CANVAS */}
-            <canvas ref={canvasRef} className="absolute inset-0 block" />
+            {/* === CANVAS STARFIELD === */}
+            <canvas
+                ref={canvasRef}
+                className="absolute inset-0 block"
+            />
 
-            {/* GSAP ORBS - Added will-change-transform for performance */}
+            {/* === GSAP FLOATING ORBS LAYER === */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div
-                    ref={orb1Ref}
-                    className="absolute -top-[20%] -left-[10%] w-[600px] h-[600px] rounded-full bg-purple-600 mix-blend-screen filter blur-[100px] opacity-40"
-                    style={{ willChange: 'transform' }}
-                />
-                <div
-                    ref={orb2Ref}
-                    className="absolute -bottom-[10%] -right-[5%] w-[400px] h-[400px] rounded-full bg-cyan-500 mix-blend-screen filter blur-[100px] opacity-40"
-                    style={{ willChange: 'transform' }}
-                />
-                <div
-                    ref={orb3Ref}
-                    className="absolute top-[30%] right-[10%] w-[250px] h-[250px] rounded-full bg-fuchsia-500 mix-blend-screen filter blur-[100px] opacity-40"
-                    style={{ willChange: 'transform' }}
-                />
+                {/* Orb 1 (Primary) - Large Purple, Top-Left */}
+                <div ref={orb1WrapperRef} className="absolute -top-[20%] -left-[10%]" style={{ willChange: 'transform' }}>
+                    <div
+                        ref={orb1Ref}
+                        className="w-[600px] h-[600px] rounded-full bg-purple-600 mix-blend-screen filter blur-[100px] opacity-40"
+                        style={{ willChange: 'transform' }}
+                    />
+                </div>
+                
+                {/* Orb 2 (Secondary) - Medium Cyan, Bottom-Right */}
+                <div ref={orb2WrapperRef} className="absolute -bottom-[10%] -right-[5%]" style={{ willChange: 'transform' }}>
+                    <div
+                        ref={orb2Ref}
+                        className="w-[400px] h-[400px] rounded-full bg-cyan-500 mix-blend-screen filter blur-[100px] opacity-40"
+                        style={{ willChange: 'transform' }}
+                    />
+                </div>
+                
+                {/* Orb 3 (Accent) - Small Pink/Magenta, Center-Right */}
+                <div ref={orb3WrapperRef} className="absolute top-[30%] right-[10%]" style={{ willChange: 'transform' }}>
+                    <div
+                        ref={orb3Ref}
+                        className="w-[250px] h-[250px] rounded-full bg-fuchsia-500 mix-blend-screen filter blur-[100px] opacity-40"
+                        style={{ willChange: 'transform' }}
+                    />
+                </div>
             </div>
 
-            {/* OVERLAYS */}
+            {/* === GRADIENT OVERLAYS === */}
+            {/* === GRADIENT OVERLAYS === */}
             <div 
                 className="absolute bottom-0 left-0 right-0 h-[60vh] pointer-events-none opacity-70"
-                style={{ background: 'linear-gradient(to top, rgba(217, 70, 239, 0.3) 0%, rgba(168, 85, 247, 0.1) 50%, transparent 100%)' }}
+                style={{
+                    background: 'linear-gradient(to top, rgba(217, 70, 239, 0.3) 0%, rgba(168, 85, 247, 0.1) 50%, transparent 100%',
+                }}
             />
+
             <div
                 className="absolute inset-0 opacity-30 pointer-events-none"
-                style={{ background: 'radial-gradient(circle at 50% 50%, transparent 20%, #0a0a0a 100%)' }}
+                style={{
+                    background: 'radial-gradient(circle at 50% 50%, transparent 20%, #0a0a0a 100%)'
+                }}
             />
-             <div
+            
+            {/* === NOISE TEXTURE === */}
+            <div
                 className="absolute inset-0 opacity-[0.04] pointer-events-none"
                 style={{
                     backgroundImage: 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iMSIvPjwvc3ZnPg==)',
