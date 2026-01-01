@@ -14,7 +14,7 @@ export const tools: Tool[] = [
   },
   {
     name: 'VS Code',
-    logo: '/tools/vscode.svg',
+    logo: 'public/tools/vscode.svg',
   },
   {
     name: 'Google Colab',
@@ -42,11 +42,11 @@ export const tools: Tool[] = [
   },
   {
     name: 'Apidog',
-    logo: '/tools/apidog.svg',
+    logo: 'public/tools/apidog.svg',
   },
   {
     name: 'Canva',
-    logo: '/tools/canva.svg',
+    logo: 'public/tools/canva.svg',
   },
   {
     name: 'Figma',
@@ -54,6 +54,6 @@ export const tools: Tool[] = [
   },
   {
     name: 'CapCut',
-    logo: '/tools/capcut.svg',
+    logo: 'public/tools/capcut.svg',
   },
 ];

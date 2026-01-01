@@ -76,7 +76,7 @@ export const moments: Moment[] = [
     id: 8,
     title: 'Lab Assistant 2025',
     year: '2025',
-    image: '/moments/assistant2025.jpg',
+    image: 'public/moments/assistant2025.jpg',
     className: 'aspect-[16/9] w-[580px] md:w-[580px]',
     alignment: 'start',
     textPos: 'below',
