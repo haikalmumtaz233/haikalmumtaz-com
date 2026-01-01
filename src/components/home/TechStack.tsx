@@ -95,6 +95,8 @@ const TechStack = () => {
                 <img
                   src={tech.logo}
                   alt={tech.name}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-contain"
                 />
               </div>

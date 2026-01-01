@@ -97,10 +97,9 @@ const Certifications = () => {
             
             return (
               <motion.div
-                key={cert.id}
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, margin: '-100px' }}
+                viewport={{ once: true, amount: 0.1, margin: '-50px' }}
                 transition={{
                   duration: 0.8,
                   delay: index * 0.1,
@@ -123,6 +122,7 @@ const Certifications = () => {
                       src={cert.image}
                       alt={cert.title}
                       loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover"
                     />
                   </div>

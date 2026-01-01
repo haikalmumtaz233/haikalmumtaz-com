@@ -54,7 +54,7 @@ const Card = ({ project, index }: CardProps) => {
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
+        viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 0.6, delay: index * 0.1 }}
         className="w-full max-w-6xl rounded-2xl md:rounded-3xl overflow-hidden relative shadow-2xl border border-white/10 bg-[#121212]"
       >
@@ -68,6 +68,8 @@ const Card = ({ project, index }: CardProps) => {
             <motion.img
               src={project.image}
               alt={project.name}
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-contain drop-shadow-2xl"
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.4 }}

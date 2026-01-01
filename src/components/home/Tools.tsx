@@ -79,6 +79,8 @@ const Tools = () => {
                 <img
                   src={tool.logo}
                   alt={tool.name}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-contain filter grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
                 />
               </div>
@@ -109,6 +111,8 @@ const Tools = () => {
                 <img
                   src={tool.logo}
                   alt={tool.name}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-contain filter grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
                 />
               </div>
