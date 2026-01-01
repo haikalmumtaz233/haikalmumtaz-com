@@ -13,7 +13,7 @@ export const certifications: Certification[] = [
     title: 'Bangkit Academy 2023',
     issuer: 'Google, GoTo, Traveloka',
     date: 'Jan 2024',
-    image: 'src/assets/certifications/bangkit.png',
+    image: '/certifications/bangkit.png',
     credentialLink: 'https://drive.google.com/file/d/1ZF_NikvK0CSqsnp5ffgM1qX0X5e8_gHZ/view?usp=sharing',
   },
   {
@@ -21,7 +21,7 @@ export const certifications: Certification[] = [
     title: 'TensorFlow Developer Certificate',
     issuer: 'Google',
     date: '2024',
-    image: 'src/assets/certifications/tfdc.png',
+    image: '/certifications/tfdc.png',
     credentialLink: 'https://www.credential.net/26ca09d8-f7a9-4573-ae59-44a47a713e7f',
   },
   {
@@ -29,7 +29,7 @@ export const certifications: Certification[] = [
     title: 'Associate Data Scientist',
     issuer: 'BNSP Indonesia',
     date: '2024',
-    image: 'src/assets/certifications/bnsp.png',
+    image: '/certifications/bnsp.png',
     credentialLink: 'https://drive.google.com/file/d/17Myj5bd3hTOlUwsHEEAKY0XGUX37KtTj/view?usp=sharing',
   },
   {
@@ -37,7 +37,7 @@ export const certifications: Certification[] = [
     title: 'VSGA Certification - Data Science',
     issuer: 'Komdigi Indonesia',
     date: '2024',
-    image: 'src/assets/certifications/vsga.png',
+    image: '/certifications/vsga.png',
     credentialLink: 'https://drive.google.com/file/d/17mJMZOfmzf7xaQ6L_r11ladU35RdlObv/view?usp=sharing',
   },
   {
@@ -45,7 +45,7 @@ export const certifications: Certification[] = [
     title: 'TOEFL ITP',
     issuer: 'ELTI Gramedia Yogyakarta',
     date: '2025',
-    image: 'src/assets/certifications/toefl.png',
+    image: '/certifications/toefl.png',
     credentialLink: 'https://drive.google.com/file/d/1OsOGaKd7dXB3-z-KQifW0DliRIRac1Ak/view?usp=sharing',
   },
   {
@@ -53,7 +53,7 @@ export const certifications: Certification[] = [
     title: 'TixNow - II Place Best Project',
     issuer: 'Career Vibe Check - Komdigi Yogyakarta & Metrodata Academy',
     date: '2025',
-    image: 'src/assets/certifications/tixnow.png',
+    image: '/certifications/tixnow.png',
     credentialLink: 'https://drive.google.com/file/d/1AfJ8cpjI2pcFVFVjd2vtNNahROOj15QJ/view?usp=sharing',
   },
   {
@@ -61,7 +61,7 @@ export const certifications: Certification[] = [
     title: 'Nominator Best Project Pitching',
     issuer: 'Career Vibe Check - Komdigi Yogyakarta & Metrodata Academy',
     date: '2023',
-    image: 'src/assets/certifications/pitching.png',
+    image: '/certifications/pitching.png',
     credentialLink: 'https://drive.google.com/file/d/1RCjC7BYXQKFwuecIxxxhUykKb9iuvqsU/view?usp=sharing',
   },
   {
@@ -69,7 +69,7 @@ export const certifications: Certification[] = [
     title: 'Laboratory Assistant Certificate',
     issuer: 'Laboratorium Informatika - UPN "Veteran" Yogyakarta',
     date: '2025',
-    image: 'src/assets/certifications/asistenlab.png',
+    image: '/certifications/asistenlab.png',
     credentialLink: 'https://drive.google.com/file/d/1LKjKKhVWf9eBvRmIM0vsPYlMvLNFyoCX/view?usp=sharing',
   },
   {
@@ -77,7 +77,7 @@ export const certifications: Certification[] = [
     title: 'POMDA DIY - II Place E-Sport Valorant',
     issuer: 'BAPOMI DIY',
     date: '2024',
-    image: 'src/assets/certifications/pomda.png',
+    image: '/certifications/pomda.png',
     credentialLink: 'https://drive.google.com/file/d/1hNUzM6vZcwf77VNSqAWZ7g4AWLLrL7Jq/view?usp=sharing',
   },
   

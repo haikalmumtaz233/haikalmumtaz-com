@@ -20,7 +20,7 @@ export const techStack: TechItem[] = [
   { name: "Flask", logo: "https://cdn.simpleicons.org/flask" },
   { name: "TensorFlow", logo: "https://cdn.simpleicons.org/tensorflow" },
   { name: "Docker", logo: "https://cdn.simpleicons.org/docker" },
-  { name: "Java", logo: "src/assets/techStack/java.png"},
+  { name: "Java", logo: "/techStack/java.png"},
   { name: "Spring Boot", logo: "https://cdn.simpleicons.org/springboot" },
   { name: "Thymeleaf", logo: "https://cdn.simpleicons.org/thymeleaf" },
   { name: "Bootstrap", logo: "https://cdn.simpleicons.org/bootstrap" },

@@ -14,7 +14,7 @@ export const tools: Tool[] = [
   },
   {
     name: 'VS Code',
-    logo: 'src/assets/tools/vscode.svg',
+    logo: '/tools/vscode.svg',
   },
   {
     name: 'Google Colab',
