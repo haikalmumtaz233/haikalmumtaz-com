@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Download, Github, Linkedin, Instagram, ChevronDown } from 'lucide-react';
+import { Download, ChevronDown, Briefcase } from 'lucide-react';
 
 const Hero = () => {
   const [isIntroComplete, setIsIntroComplete] = useState(false);
@@ -12,14 +12,11 @@ const Hero = () => {
 
   const roles = ['Fullstack Developer', 'Machine Learning Engineer', 'Data Scientist', 'Game Developer'];
 
-  // Preloader sequence timing
   useEffect(() => {
-    // Show blob after text converges
     const blobTimer = setTimeout(() => {
       setShowBlob(true);
     }, 1000);
 
-    // Complete intro after blob pulse and split
     const completeTimer = setTimeout(() => {
       setIsIntroComplete(true);
     }, 2400);
@@ -30,7 +27,6 @@ const Hero = () => {
     };
   }, []);
 
-  // Scroll indicator visibility handler
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
@@ -77,11 +73,7 @@ const Hero = () => {
   }, [isIntroComplete, displayedText, isDeleting, currentRoleIndex]);
 
 
-  const socialLinks = [
-    { Icon: Github, href: 'https://github.com/haikalmumtaz233', label: 'GitHub' },
-    { Icon: Linkedin, href: 'https://www.linkedin.com/in/haikal-mumtaz/', label: 'LinkedIn' },
-    { Icon: Instagram, href: 'https://www.instagram.com/haikal_mumtaz23/', label: 'Instagram' },
-  ];
+
 
   return (
     <>
@@ -89,7 +81,7 @@ const Hero = () => {
       <AnimatePresence>
         {!isIntroComplete && (
           <>
-            {/* TOP PANEL - "HAIKAL" */}
+            {/* TOP PANEL */}
             <motion.div
               className="fixed top-0 left-0 right-0 h-[50vh] bg-white z-50 flex items-end justify-center pb-12 overflow-hidden"
               initial={{ y: 0 }}
@@ -132,7 +124,7 @@ const Hero = () => {
               <div className="absolute inset-0 w-24 h-24 md:w-32 md:h-32 rounded-full bg-white/80" />
             </motion.div>
 
-            {/* BOTTOM PANEL - "MUMTAZ" */}
+            {/* BOTTOM PANEL */}
             <motion.div
               className="fixed bottom-0 left-0 right-0 h-[50vh] bg-white z-50 flex items-start justify-center pt-12 overflow-hidden"
               initial={{ y: 0 }}
@@ -160,12 +152,12 @@ const Hero = () => {
         )}
       </AnimatePresence>
 
-      {/* ========== HERO SECTION: MINIMAL TYPOGRAPHY LAYOUT ========== */}
+      {/* ========== HERO SECTION ========== */}
       <section className="relative h-screen max-h-screen bg-transparent text-white overflow-hidden flex flex-col items-center justify-between py-12 px-6">
         {/* ========== TOP SPACER ========== */}
         <div className="flex-shrink-0 h-20" />
 
-        {/* ========== MAIN TYPOGRAPHY - CENTER STAGE ========== */}
+        {/* ========== MAIN TYPOGRAPHY ========== */}
         <motion.div
           initial={{ opacity: 0, y: 100 }}
           animate={{ 
@@ -208,7 +200,7 @@ const Hero = () => {
           </div>
         </motion.div>
 
-        {/* ========== BOTTOM INFO GRID (4 COLUMNS) ========== */}
+        {/* ========== BOTTOM INFO GRID ========== */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ 
@@ -224,7 +216,7 @@ const Hero = () => {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-center">
             
-            {/* ========== COLUMN 1: MODERN SCROLL INDICATOR (DESKTOP ONLY) ========== */}
+            {/* ========== COLUMN 1 ========== */}
             <AnimatePresence>
               {showScrollIndicator && isIntroComplete && (
                 <motion.div
@@ -262,7 +254,7 @@ const Hero = () => {
               )}
             </AnimatePresence>
 
-            {/* ========== COLUMN 2: ROLE TYPEWRITER ========== */}
+            {/* ========== COLUMN 2 ========== */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ 
@@ -283,7 +275,7 @@ const Hero = () => {
               </div>
             </motion.div>
 
-            {/* ========== COLUMN 3: SOCIAL LINKS ========== */}
+            {/* ========== COLUMN 3 ========== */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ 
@@ -291,23 +283,18 @@ const Hero = () => {
                 y: isIntroComplete ? 0 : 20 
               }}
               transition={{ duration: 0.8, delay: 1.3 }}
-              className="flex items-center justify-center lg:justify-end gap-3"
+              className="flex items-center justify-center lg:justify-end"
             >
-              {socialLinks.map(({ Icon, href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-300"
-                  aria-label={label}
-                >
-                  <Icon className="w-4 h-4" />
-                </a>
-              ))}
+              <a
+                href="#contact"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-black font-bold text-xs uppercase tracking-wider rounded-full hover:bg-gray-200 transition-all duration-300 shadow-lg shadow-purple-500/20"
+              >
+                <Briefcase className="w-4 h-4" />
+                Business Inquiries
+              </a>
             </motion.div>
 
-            {/* ========== COLUMN 4: DOWNLOAD CV CTA ========== */}
+            {/* ========== COLUMN 4 ========== */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ 

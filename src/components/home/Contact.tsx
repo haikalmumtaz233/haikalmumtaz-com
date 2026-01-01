@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight, Mail, Instagram, Linkedin, Github, CheckCircle, XCircle, X } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 
 declare global {
   interface Window {
@@ -119,44 +120,22 @@ const Contact = () => {
     }
 
     try {
-      // === SEND TO BACKEND API ===
-      // The turnstileToken should be sent to your backend server
-      // where it will be validated using the SECRET KEY.
-      // 
-      // Example backend validation:
-      // const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      //   body: `secret=${SECRET_KEY}&response=${turnstileToken}`
-      // });
-      //
-      // Replace this with your actual API endpoint (e.g., EmailJS, custom backend, etc.)
-      
-      const payload = {
+      // === SEND EMAIL VIA EMAILJS ===
+      const templateParams = {
+        title: "New Inquiry from Portfolio",
         name: `${formData.firstName} ${formData.lastName}`,
         email: formData.email,
         phone: formData.phone,
         message: formData.message,
-        turnstileToken: turnstileToken, // Send to backend for validation
+        time: new Date().toLocaleString()
       };
 
-      // Simulate API call - Replace with actual EmailJS or backend API
-      console.log('Form submission payload:', payload);
-      
-      // Simulating network request
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // TODO: Replace with actual API call
-      // Example with EmailJS:
-      // await emailjs.send('service_id', 'template_id', payload, 'public_key');
-      // 
-      // Example with custom backend:
-      // const response = await fetch('/api/contact', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(payload)
-      // });
-      // if (!response.ok) throw new Error('Failed to send message');
+      await emailjs.send(
+        'service_ra1eucx',
+        'template_vre5vmq',
+        templateParams,
+        'K1WcBojUUDy4lfPVR'
+      );
 
       // Success
       addToast('success', 'Message sent successfully! I\'ll get back to you soon.');
