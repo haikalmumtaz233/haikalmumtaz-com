@@ -1,10 +1,19 @@
-import { useRef, useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { certifications } from '../../data/certifications';
 import { ExternalLink } from 'lucide-react';
 
 const Certifications = () => {
+  const sectionRef = useRef<HTMLElement>(null);
   const [hoveredId, setHoveredId] = useState<number | null>(null);
+
+  // Track scroll progress - horizontal scroll animation
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end end'],
+  });
+
+  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-75%']);
 
   // === ANIMATION VARIANTS ===
   const titleVariants = {
@@ -30,71 +39,77 @@ const Certifications = () => {
   };
 
   return (
-    <section className="relative bg-transparent py-20 md:py-32 overflow-hidden">
-      {/* Title */}
-      <motion.div
-        variants={titleVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.5 }}
-        className="text-center px-4 mb-12"
-      >
-        <div className="overflow-hidden">
-          <motion.h2
-            variants={wordVariants}
-            className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-monument font-black text-white uppercase tracking-tight mb-4"
-          >
-            Certifications
-          </motion.h2>
-        </div>
-        <div className="overflow-hidden">
-          <motion.p
-            variants={wordVariants}
-            className="text-gray-400 text-base md:text-lg xl:text-xl"
-          >
-            Certificates & Awards
-          </motion.p>
-        </div>
-      </motion.div>
+    <section
+      ref={sectionRef}
+      className="relative bg-transparent h-[300vh]"
+    >
+      <div className="sticky top-0 h-screen overflow-hidden flex items-center">
+        <motion.div
+          style={{ x }}
+          className="flex items-center gap-6 md:gap-8 px-6 md:px-12 pr-24 md:pr-32"
+        >
+          {/* === TITLE CARD === */}
+          <div className="flex-shrink-0 flex items-center justify-center w-[350px] md:w-[450px] lg:w-[500px] h-[80vh]">
+            <motion.div
+              variants={titleVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="text-left"
+            >
+              <div className="overflow-hidden">
+                <motion.h2
+                  variants={wordVariants}
+                  className="text-5xl md:text-6xl lg:text-7xl font-monument font-black text-white uppercase tracking-tight mb-4"
+                >
+                  Certifications
+                </motion.h2>
+              </div>
+              
+              <div className="overflow-hidden">
+                <motion.p
+                  variants={wordVariants}
+                  className="text-gray-400 text-base md:text-lg lg:text-xl max-w-md font-light"
+                >
+                  Certificates & Awards
+                </motion.p>
+              </div>
+            </motion.div>
+          </div>
 
-      {/* Horizontal Scrollable Cards */}
-      <div className="relative">
-        <div className="flex overflow-x-auto gap-4 md:gap-6 px-6 md:px-12 pb-6 snap-x snap-mandatory scrollbar-hide scroll-smooth">
+          {/* === CARDS === */}
           {certifications.map((cert, index) => {
             const isHovered = hoveredId === cert.id;
             
             return (
               <motion.div
                 key={cert.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ 
-                  duration: 0.4, 
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: '-100px' }}
+                transition={{
+                  duration: 0.8,
                   delay: index * 0.1,
-                  ease: "easeOut" 
+                  ease: [0.43, 0.13, 0.23, 0.96] as const,
                 }}
                 onMouseEnter={() => setHoveredId(cert.id)}
                 onMouseLeave={() => setHoveredId(null)}
-                className="flex-shrink-0 w-[280px] md:w-[320px] lg:w-[360px] snap-center"
+                className="flex-shrink-0 w-[280px] md:w-[320px] lg:w-[360px] h-[80vh] flex items-center"
               >
                 <motion.div
                   animate={{
-                    y: isHovered ? -10 : 0,
+                    y: isHovered ? -15 : 0,
                   }}
                   transition={{ duration: 0.3, ease: "easeOut" }}
-                  className="relative aspect-[3/4] rounded-2xl overflow-hidden border border-white/10 bg-[#121212] shadow-xl hover:shadow-2xl transition-shadow duration-300"
+                  className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden border border-white/10 bg-[#121212] shadow-xl hover:shadow-2xl transition-shadow duration-300"
                 >
-                  {/* Image */}
+                  {/* Image - NO SCALE */}
                   <div className="absolute inset-0 bg-gray-900">
                     <img
                       src={cert.image}
                       alt={cert.title}
                       loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      style={{
-                        transform: isHovered ? 'scale(1.05)' : 'scale(1)',
-                      }}
+                      className="w-full h-full object-cover"
                     />
                   </div>
 
@@ -133,7 +148,7 @@ const Certifications = () => {
                     </motion.a>
                   </div>
 
-                  {/* Shine Effect */}
+                  {/* Shine Effect - NO SCALE */}
                   <div 
                     className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent transition-opacity duration-300 pointer-events-none"
                     style={{
@@ -144,7 +159,7 @@ const Certifications = () => {
               </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
