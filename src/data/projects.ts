@@ -48,8 +48,8 @@ export const projects: Project[] = [
         stack: ['React', 'Framer Motion', 'Tailwind'],
         image: '/projects/portfolio.png',
         gradient: 'from-pink-900/20 via-transparent to-orange-900/20',
-        repoLink: '#',
-        liveLink: '#',
+        repoLink: 'https://github.com/haikalmumtaz233/haikalmumtaz-com',
+        liveLink: 'https://haikalmumtaz-com.vercel.app/',
     },
     {
         id: 4,

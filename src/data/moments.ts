@@ -67,7 +67,7 @@ export const moments: Moment[] = [
     id: 7,
     title: 'Lab Assistant 2024',
     year: '2024',
-    image: '/moments/assistant2024-2.jpeg',
+    image: '/moments/assistant2024.JPEG',
     className: 'aspect-[16/9] w-[580px] md:w-[580px]',
     alignment: 'end',
     textPos: 'above',

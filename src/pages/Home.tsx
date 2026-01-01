@@ -1,4 +1,3 @@
-import { useLayoutEffect } from 'react';
 import Hero from '../components/home/Hero';
 // import Identity from '../components/home/Identity';
 import FeaturedProjects from '../components/home/FeaturedProjects';
@@ -10,10 +9,6 @@ import FavoriteMoments from '../components/home/FavoriteMoments';
 import Contact from '../components/home/Contact';
 
 const Home = () => {
-  useLayoutEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   return (
     <>
       <div className="relative z-10 space-y-24 md:space-y-32 pb-24 md:pb-32">

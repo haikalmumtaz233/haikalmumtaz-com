@@ -6,14 +6,11 @@ import Home from './pages/Home';
 import Background from './components/Background';
 
 function App() {
-  // Force scroll to top on page load/refresh
+  // Enable native browser scroll restoration
   useLayoutEffect(() => {
-    // Disable browser's automatic scroll restoration
     if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual';
+      history.scrollRestoration = 'auto';
     }
-    // Force scroll to top immediately
-    window.scrollTo(0, 0);
   }, []);
 
   return (
