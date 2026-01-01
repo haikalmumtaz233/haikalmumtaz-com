@@ -51,8 +51,8 @@ export const moments: Moment[] = [
     year: '2024',
     image: 'src/assets/moments/yogyakomtek.jpg',
     className: 'aspect-[16/9] w-[450px] md:w-[500px]',
-    alignment: 'start',
-    textPos: 'below',
+    alignment: 'center',
+    textPos: 'above',
   },
   {
     id: 6,
@@ -61,7 +61,7 @@ export const moments: Moment[] = [
     image: 'src/assets/moments/pomda.jpg',
     className: 'aspect-[10/16] w-[280px] md:w-[320px]',
     alignment: 'end',
-    textPos: 'above',
+    textPos: 'below',
   },
   {
     id: 7,
@@ -78,8 +78,8 @@ export const moments: Moment[] = [
     year: '2025',
     image: 'src/assets/moments/assistant2025.jpg',
     className: 'aspect-[16/9] w-[580px] md:w-[580px]',
-    alignment: 'end',
-    textPos: 'above',
+    alignment: 'start',
+    textPos: 'below',
   },
   {
     id: 9,
@@ -96,7 +96,7 @@ export const moments: Moment[] = [
     year: '2025',
     image: 'src/assets/moments/tixnow.jpg',
     className: 'aspect-square w-[320px] md:w-[380px]',
-    alignment: 'start',
+    alignment: 'center',
     textPos: 'below',
   },
 ];

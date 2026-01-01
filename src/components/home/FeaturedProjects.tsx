@@ -17,7 +17,7 @@ const FeaturedProjects = () => {
             FEATURED WORK
           </h2>
           <p className="text-gray-500 text-lg md:text-xl font-light">
-            Selected projects & case studies
+            My best projects
           </p>
         </motion.div>
       </div>

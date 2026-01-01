@@ -10,7 +10,7 @@ export interface Experience {
 export const experiences: Experience[] = [
     {
         company: "Ruang Media Solusi",
-        role: "Fullstack Developer Intern",
+        role: "Fullstack Developer",
         year: "2025",
         period: "NOV — PRESENT",
         description:

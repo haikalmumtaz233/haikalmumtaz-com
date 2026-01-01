@@ -29,7 +29,7 @@ const Experience = () => {
   };
 
   return (
-    <section ref={sectionRef} className="relative bg-transparent pt-60 md:pt-80 pb-10 w-full overflow-x-clip">
+    <section ref={sectionRef} className="relative bg-transparent pt-20 md:pt-40 pb-10 w-full overflow-x-clip">
       <div className="w-full px-4 md:px-8 lg:px-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-12 items-stretch">
           {/* === LEFT COLUMN - STICKY TITLE === */}
@@ -46,7 +46,7 @@ const Experience = () => {
                     <motion.span variants={wordVariants} className="inline-block mr-3">
                       Professional
                     </motion.span>
-                    <motion.span variants={wordVariants} className="inline-block text-gray-500">
+                    <motion.span variants={wordVariants} className="inline-block ">
                       Experience
                     </motion.span>
                   </div>
@@ -125,9 +125,11 @@ const ExperienceItem = ({ experience, index, hoveredIndex, setHoveredIndex }: Ex
                 </p>
               )}
             </div>
-            <p className="text-xl md:text-2xl font-medium bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">
-              {experience.role}
-            </p>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full mb-6 transition-all duration-300">
+              <p className="text-sm md:text-base font-medium text-white tracking-wider">
+                {experience.role}
+              </p>
+            </div>
             <p className="text-gray-400 text-base md:text-lg lg:text-xl leading-relaxed max-w-3xl">
               {experience.description}
             </p>

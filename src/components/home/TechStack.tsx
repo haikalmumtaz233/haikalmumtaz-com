@@ -48,7 +48,7 @@ const TechStack = () => {
   };
 
   return (
-    <section className="relative bg-transparent py-16 md:py-24">
+    <section className="relative bg-transparent py-13 md:py-21">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         {/* === HEADER === */}
         <motion.div
@@ -71,7 +71,7 @@ const TechStack = () => {
               variants={wordVariants}
               className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto"
             >
-              Technologies I use to build scalable solutions.
+              Technologies I use to develop, build, and deploy.
             </motion.p>
           </div>
         </motion.div>

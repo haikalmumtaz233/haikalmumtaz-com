@@ -27,7 +27,7 @@ const Tools = () => {
   const toolsTrack = [...tools, ...tools]; 
 
   return (
-    <section className="relative bg-transparent py-16 md:py-24 overflow-hidden">
+    <section className="relative bg-transparent py-16 md:py-23 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         {/* === HEADER === */}
         <motion.div
@@ -50,7 +50,7 @@ const Tools = () => {
               variants={wordVariants}
               className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto"
             >
-              My digital arsenal for development and design.
+              My tools for development and design.
             </motion.p>
           </div>
         </motion.div>
@@ -58,10 +58,7 @@ const Tools = () => {
 
       {/* === INFINITE SCROLL MARQUEE === */}
       <div className="w-full overflow-hidden relative flex">
-        <div className="absolute top-0 bottom-0 left-0 w-24 md:w-48 z-10 bg-gradient-to-r from-[#0a0a0a] to-transparent pointer-events-none" />
         
-        <div className="absolute top-0 bottom-0 right-0 w-24 md:w-48 z-10 bg-gradient-to-l from-[#0a0a0a] to-transparent pointer-events-none" />
-
         {/* === TRACK 1 === */}
         <motion.div
           initial={{ x: 0 }}

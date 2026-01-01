@@ -10,7 +10,7 @@ const Hero = () => {
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const heroRef = useRef<HTMLElement>(null);
 
-  const roles = ['Fullstack Developer', 'Machine Learning Engineer', 'Data Scientist'];
+  const roles = ['Fullstack Developer', 'Machine Learning Engineer', 'Data Scientist', 'Game Developer'];
 
   useEffect(() => {
     const timer = setTimeout(() => {

@@ -26,7 +26,7 @@ export const tools: Tool[] = [
   },
   {
     name: 'Cursor',
-    logo: 'https://cdn.simpleicons.org/cursor',
+    logo: 'https://cdn.simpleicons.org/cursor/white',
   },
   {
     name: 'Android Studio',

@@ -108,7 +108,7 @@ const FavoriteMoments = () => {
               <div className="overflow-hidden">
                 <motion.h2
                   variants={wordVariants}
-                  className="text-6xl md:text-7xl lg:text-8xl font-monument font-black text-gray-500 uppercase tracking-tight leading-none"
+                  className="text-6xl md:text-7xl lg:text-8xl font-monument font-black text-white uppercase tracking-tight leading-none"
                 >
                   Moments
                 </motion.h2>
@@ -119,7 +119,7 @@ const FavoriteMoments = () => {
                   variants={wordVariants}
                   className="text-gray-400 text-lg md:text-xl max-w-md font-light"
                 >
-                  A curated collection of defining moments that shaped my journey through technology, education, and personal growth.
+                  A collection of moments that shaped my journey through tech, education, and personal growth.
                 </motion.p>
               </div>
             </motion.div>

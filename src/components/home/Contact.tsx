@@ -74,11 +74,11 @@ ${formData.message}
           >
             <h2 className="text-5xl md:text-6xl lg:text-7xl font-monument font-black text-white uppercase tracking-tight leading-none mb-8">
               Let's work <br />
-              <span className="text-gray-500">together</span>
+              together
             </h2>
             
             <p className="text-gray-400 text-lg mb-12 max-w-md">
-              Have a project in mind or just want to say hi? I'm always open to discussing new projects, creative ideas or opportunities to be part of your visions.
+              Have a project in mind or just want to say hi? I'm always open to discussing new projects, or opportunities to be part of your visions.
             </p>
 
             <div className="space-y-8">
