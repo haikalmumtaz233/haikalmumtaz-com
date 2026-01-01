@@ -1,9 +1,21 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { moments } from '../../data/moments';
 
 const FavoriteMoments = () => {
   const sectionRef = useRef<HTMLElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect screen size and handle resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Track scroll progress
   const { scrollYProgress } = useScroll({
@@ -11,7 +23,10 @@ const FavoriteMoments = () => {
     offset: ['start start', 'end end'],
   });
 
-  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-78%']);
+  // Separate transform values for mobile vs desktop
+  const xDesktop = useTransform(scrollYProgress, [0, 1], ['0%', '-78%']);
+  const xMobile = useTransform(scrollYProgress, [0, 1], ['0%', '-200%']);
+  const x = isMobile ? xMobile : xDesktop;
 
   // === ANIMATION VARIANTS ===
   const titleVariants = {

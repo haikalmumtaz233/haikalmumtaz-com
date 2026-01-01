@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { certifications } from '../../data/certifications';
 import { ExternalLink } from 'lucide-react';
@@ -6,6 +6,18 @@ import { ExternalLink } from 'lucide-react';
 const Certifications = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const [hoveredId, setHoveredId] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect screen size and handle resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Track scroll progress - horizontal scroll animation
   const { scrollYProgress } = useScroll({
@@ -13,7 +25,10 @@ const Certifications = () => {
     offset: ['start start', 'end end'],
   });
 
-  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-65%']);
+  // Separate transform values for mobile vs desktop
+  const xDesktop = useTransform(scrollYProgress, [0, 1], ['0%', '-65%']);
+  const xMobile = useTransform(scrollYProgress, [0, 1], ['0%', '-180%']);
+  const x = isMobile ? xMobile : xDesktop;
 
   // === ANIMATION VARIANTS ===
   const titleVariants = {

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowUpRight, Mail, Instagram, Linkedin, Github } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowUpRight, Mail, Instagram, Linkedin, Github, CheckCircle, XCircle, X } from 'lucide-react';
 
 declare global {
   interface Window {
@@ -18,6 +18,15 @@ declare global {
   }
 }
 
+// Toast notification types
+type ToastType = 'success' | 'error';
+
+interface Toast {
+  id: number;
+  type: ToastType;
+  message: string;
+}
+
 const Contact = () => {
   const [formData, setFormData] = useState({
     firstName: '',
@@ -31,8 +40,20 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [turnstileError, setTurnstileError] = useState(false);
+  const [toasts, setToasts] = useState<Toast[]>([]);
   const turnstileRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
+
+  // Toast helper functions
+  const addToast = (type: ToastType, message: string) => {
+    const id = Date.now();
+    setToasts(prev => [...prev, { id, type, message }]);
+    setTimeout(() => removeToast(id), 5000);
+  };
+
+  const removeToast = (id: number) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  };
 
   // Load Turnstile script and render widget
   useEffect(() => {
@@ -55,11 +76,9 @@ const Contact = () => {
       }
     };
 
-    // Check if script already loaded
     if (window.turnstile) {
       loadTurnstile();
     } else {
-      // Load the Turnstile script
       const script = document.createElement('script');
       script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
       script.async = true;
@@ -80,7 +99,7 @@ const Contact = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -95,37 +114,64 @@ const Contact = () => {
     if (!turnstileToken) {
       setTurnstileError(true);
       setIsSubmitting(false);
+      addToast('error', 'Please complete the security check');
       return;
     }
 
-    // === WHATSAPP FORMATTING ===
-    // GANTI NOMOR INI DENGAN NOMOR WA KAMU (Format: 628...)
-    const phoneNumber = '6285228518483'; 
-    
-    const text = `
-*New Contact Form Submission*
----------------------------
-*Name:* ${formData.firstName} ${formData.lastName}
-*Email:* ${formData.email}
-*Phone:* ${formData.phone}
----------------------------
-*Message:*
-${formData.message}
-    `.trim();
+    try {
+      // === SEND TO BACKEND API ===
+      // The turnstileToken should be sent to your backend server
+      // where it will be validated using the SECRET KEY.
+      // 
+      // Example backend validation:
+      // const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      //   body: `secret=${SECRET_KEY}&response=${turnstileToken}`
+      // });
+      //
+      // Replace this with your actual API endpoint (e.g., EmailJS, custom backend, etc.)
+      
+      const payload = {
+        name: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
+        phone: formData.phone,
+        message: formData.message,
+        turnstileToken: turnstileToken, // Send to backend for validation
+      };
 
-    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(text)}`;
+      // Simulate API call - Replace with actual EmailJS or backend API
+      console.log('Form submission payload:', payload);
+      
+      // Simulating network request
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // TODO: Replace with actual API call
+      // Example with EmailJS:
+      // await emailjs.send('service_id', 'template_id', payload, 'public_key');
+      // 
+      // Example with custom backend:
+      // const response = await fetch('/api/contact', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(payload)
+      // });
+      // if (!response.ok) throw new Error('Failed to send message');
 
-    // Simulate generic delay for UX then redirect
-    setTimeout(() => {
-      window.open(whatsappURL, '_blank');
-      setIsSubmitting(false);
+      // Success
+      addToast('success', 'Message sent successfully! I\'ll get back to you soon.');
       setFormData({ firstName: '', lastName: '', email: '', phone: '', message: '', honeypot: '' });
       setTurnstileToken(null);
-      // Reset Turnstile widget
+      
       if (widgetIdRef.current && window.turnstile) {
         window.turnstile.reset(widgetIdRef.current);
       }
-    }, 1000);
+    } catch (error) {
+      console.error('Form submission error:', error);
+      addToast('error', 'Failed to send message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const socialLinks = [
@@ -136,6 +182,39 @@ ${formData.message}
 
   return (
     <section className="relative bg-transparent py-24 md:py-32 overflow-hidden">
+      {/* === TOAST NOTIFICATIONS === */}
+      <div className="fixed top-6 right-6 z-50 flex flex-col gap-3">
+        <AnimatePresence>
+          {toasts.map((toast) => (
+            <motion.div
+              key={toast.id}
+              initial={{ opacity: 0, x: 100, scale: 0.9 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: 100, scale: 0.9 }}
+              transition={{ duration: 0.3, ease: [0.43, 0.13, 0.23, 0.96] }}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg backdrop-blur-md border ${
+                toast.type === 'success' 
+                  ? 'bg-green-500/20 border-green-500/30 text-green-400' 
+                  : 'bg-red-500/20 border-red-500/30 text-red-400'
+              }`}
+            >
+              {toast.type === 'success' ? (
+                <CheckCircle className="w-5 h-5 flex-shrink-0" />
+              ) : (
+                <XCircle className="w-5 h-5 flex-shrink-0" />
+              )}
+              <p className="text-sm font-medium pr-2">{toast.message}</p>
+              <button 
+                onClick={() => removeToast(toast.id)}
+                className="ml-auto p-1 hover:bg-white/10 rounded-full transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
           

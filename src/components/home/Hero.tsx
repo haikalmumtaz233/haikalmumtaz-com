@@ -4,7 +4,7 @@ import { Download, Github, Linkedin, Instagram, ChevronDown } from 'lucide-react
 
 const Hero = () => {
   const [isIntroComplete, setIsIntroComplete] = useState(false);
-  const [showLine, setShowLine] = useState(false);
+  const [showBlob, setShowBlob] = useState(false);
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
@@ -14,18 +14,18 @@ const Hero = () => {
 
   // Preloader sequence timing
   useEffect(() => {
-    // Show line after text converges
-    const lineTimer = setTimeout(() => {
-      setShowLine(true);
+    // Show blob after text converges
+    const blobTimer = setTimeout(() => {
+      setShowBlob(true);
     }, 1000);
 
-    // Complete intro after split reveal
+    // Complete intro after blob pulse and split
     const completeTimer = setTimeout(() => {
       setIsIntroComplete(true);
-    }, 2200);
+    }, 2400);
 
     return () => {
-      clearTimeout(lineTimer);
+      clearTimeout(blobTimer);
       clearTimeout(completeTimer);
     };
   }, []);
@@ -114,17 +114,23 @@ const Hero = () => {
               </motion.h1>
             </motion.div>
 
-            {/* CENTER LINE - THE CUT */}
+            {/* CENTER ENERGY BLOB */}
             <motion.div
-              className="fixed top-1/2 left-0 right-0 h-[2px] bg-black z-[60] origin-left -translate-y-1/2"
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: showLine ? 1 : 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ 
-                duration: 0.4, 
-                ease: [0.76, 0, 0.24, 1]
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[60]"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ 
+                scale: showBlob ? [0, 1.5, 2] : 0, 
+                opacity: showBlob ? [0, 1, 0] : 0 
               }}
-            />
+              transition={{ 
+                duration: 0.8, 
+                ease: [0.76, 0, 0.24, 1],
+                times: [0, 0.5, 1]
+              }}
+            >
+              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-red-400 blur-xl" />
+              <div className="absolute inset-0 w-24 h-24 md:w-32 md:h-32 rounded-full bg-white/80" />
+            </motion.div>
 
             {/* BOTTOM PANEL - "MUMTAZ" */}
             <motion.div
