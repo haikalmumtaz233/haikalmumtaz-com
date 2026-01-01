@@ -11,9 +11,9 @@ const FavoriteMoments = () => {
     offset: ['start start', 'end end'],
   });
 
-  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-80%']);
+  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-78%']);
 
-  // === ANIMATION VARIANTS (Copied from TechStack) ===
+  // === ANIMATION VARIANTS ===
   const titleVariants = {
     hidden: { opacity: 0 },
     visible: {

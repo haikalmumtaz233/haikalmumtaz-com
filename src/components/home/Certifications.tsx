@@ -13,7 +13,7 @@ const Certifications = () => {
     offset: ['start start', 'end end'],
   });
 
-  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-85%']);
+  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-65%']);
 
   // === ANIMATION VARIANTS ===
   const titleVariants = {
@@ -41,12 +41,12 @@ const Certifications = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-transparent h-[400vh]"
+      className="relative bg-transparent h-[280vh]"
     >
       <div className="sticky top-0 h-screen overflow-hidden flex items-center">
         <motion.div
           style={{ x }}
-          className="flex items-center gap-10 md:gap-14 lg:gap-18 px-6 md:px-12 pr-24 md:pr-32"
+          className="flex items-center gap-10 md:gap-14 lg:gap-18 px-6 md:px-12 pr-12 md:pr-16"
         >
           {/* === TITLE CARD (FIRST ITEM IN SCROLL) === */}
           <div className="flex-shrink-0 flex items-center justify-center w-[350px] md:w-[450px] lg:w-[500px] h-[80vh]">
