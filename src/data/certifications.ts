@@ -74,10 +74,10 @@ export const certifications: Certification[] = [
   },
   {
     id: 9,
-    title: 'FKBMIK - Battle of Veteran II Place',
-    issuer: 'FKBMIK UPN "Veteran" Yogyakarta',
+    title: 'Nominator Best Project Pitching',
+    issuer: 'Career Vibe Check - Komdigi Yogyakarta & Metrodata Academy',
     date: '2023',
-    image: 'src/assets/certifications/fkbmik.png',
-    credentialLink: 'https://drive.google.com/file/d/1V7nmh5Iflp-XZMFyPnsOhZL99wyiIFCP/view?usp=sharing',
+    image: 'src/assets/certifications/pitching.png',
+    credentialLink: 'https://drive.google.com/file/d/1RCjC7BYXQKFwuecIxxxhUykKb9iuvqsU/view?usp=sharing',
   },
 ];
