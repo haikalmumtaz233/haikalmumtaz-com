@@ -157,7 +157,7 @@ const Hero = () => {
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-center">
                   
-                  {/* ========== COLUMN 1: MODERN SCROLL INDICATOR ========== */}
+                  {/* ========== COLUMN 1: MODERN SCROLL INDICATOR (DESKTOP ONLY) ========== */}
                   <AnimatePresence>
                     {showScrollIndicator && (
                       <motion.div
@@ -165,7 +165,7 @@ const Hero = () => {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -20 }}
                         transition={{ duration: 0.5 }}
-                        className="flex items-center gap-3"
+                        className="hidden lg:flex items-center gap-3"
                       >
                         {/* Animated Icon */}
                         <motion.div
@@ -200,7 +200,7 @@ const Hero = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 1.1 }}
-                    className="flex items-center justify-start"
+                    className="flex items-center justify-center lg:justify-start"
                   >
                     <div className="font-mono text-sm md:text-base text-gray-300">
                       <span className="text-purple-500">&gt;</span>{' '}
@@ -244,7 +244,7 @@ const Hero = () => {
                     <a
                       href="/cv.pdf"
                       download
-                      className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-black font-bold text-xs uppercase tracking-wider rounded-full hover:bg-gray-200 hover:scale-105 transition-all duration-300 shadow-lg shadow-purple-500/20"
+                      className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-black font-bold text-xs uppercase tracking-wider rounded-full hover:bg-gray-200 transition-all duration-300 shadow-lg shadow-purple-500/20"
                     >
                       <Download className="w-4 h-4" />
                       Download CV

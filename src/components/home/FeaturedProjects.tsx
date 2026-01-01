@@ -49,18 +49,22 @@ const Card = ({ project, index }: CardProps) => {
   return (
     <div
       ref={cardRef}
-      className="sticky top-0 h-screen flex items-center justify-center"
+      className="sticky top-0 h-screen flex items-center justify-center px-4 md:px-0"
     >
       <motion.div
-        className="w-full max-w-6xl min-h-[60vh] h-auto rounded-3xl overflow-hidden relative mx-4 shadow-2xl border border-white/10 bg-[#121212]"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.6, delay: index * 0.1 }}
+        className="w-full max-w-6xl rounded-2xl md:rounded-3xl overflow-hidden relative shadow-2xl border border-white/10 bg-[#121212]"
       >
-        <div className="relative w-full h-full grid lg:grid-cols-2">
+        <div className="relative w-full h-full flex flex-col lg:grid lg:grid-cols-2">
           
           {/* === BACKGROUND GRADIENT === */}
           <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-blue-900/20 pointer-events-none" />
 
-          {/* === LEFT: IMAGE === */}
-          <div className="relative h-64 sm:h-80 lg:h-full w-full bg-black/50 overflow-hidden order-1 lg:order-1 flex items-center justify-center p-6">
+          {/* === TOP/LEFT: IMAGE === */}
+          <div className="relative h-56 sm:h-72 lg:h-full w-full bg-black/50 overflow-hidden flex items-center justify-center p-6 md:p-8 lg:p-10">
             <motion.img
               src={project.image}
               alt={project.name}
@@ -68,51 +72,66 @@ const Card = ({ project, index }: CardProps) => {
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.4 }}
             />
-          </div>
-
-          {/* === RIGHT: CONTENT === */}
-          <div className="relative flex flex-col justify-center p-8 md:p-12 lg:p-16 z-10 order-2 lg:order-2 border-t lg:border-t-0 lg:border-l border-white/10 bg-[#121212]/50 backdrop-blur-sm">
             
-            <span className="inline-block w-fit px-4 py-2 bg-white/5 text-gray-400 text-xs font-mono rounded-full mb-6 tracking-wider uppercase border border-white/10">
+            {/* Mobile: Category Badge Overlay */}
+            <span className="lg:hidden absolute top-4 left-4 px-3 py-1.5 bg-black/60 backdrop-blur-md text-gray-300 text-xs font-mono rounded-full tracking-wider uppercase border border-white/20">
               {project.category}
             </span>
 
-            <h3 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-3 tracking-tighter leading-[0.9]">
+            {/* Mobile: Card Number Overlay */}
+            <div className="lg:hidden absolute bottom-4 right-4 text-5xl font-black text-white/10 pointer-events-none">
+              0{index + 1}
+            </div>
+          </div>
+
+          {/* === BOTTOM/RIGHT: CONTENT === */}
+          <div className="relative flex flex-col justify-between p-6 sm:p-8 md:p-10 lg:p-12 xl:p-16 z-10 border-t lg:border-t-0 lg:border-l border-white/10 bg-[#121212]/50 backdrop-blur-sm">
+            
+            {/* Desktop: Category Badge */}
+            <span className="hidden lg:inline-block w-fit px-4 py-2 bg-white/5 text-gray-400 text-xs font-mono rounded-full mb-6 tracking-wider uppercase border border-white/10">
+              {project.category}
+            </span>
+
+            {/* Project Title */}
+            <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-2 sm:mb-3 tracking-tighter leading-[0.95]">
               {project.name}
             </h3>
 
-            <p className="text-xl text-gray-400 mb-6 font-light">
+            {/* Subtitle */}
+            <p className="text-lg sm:text-xl text-gray-400 mb-4 sm:mb-6 font-light">
               {project.subtitle}
             </p>
 
-            <p className="text-gray-500 text-base md:text-lg mb-8 leading-relaxed max-w-xl">
+            {/* Description */}
+            <p className="text-gray-500 text-sm sm:text-base md:text-lg mb-6 sm:mb-8 leading-relaxed line-clamp-3 sm:line-clamp-4 lg:line-clamp-none">
               {project.description}
             </p>
 
-            <div className="flex flex-wrap gap-2 mb-10">
+            {/* Tech Stack - Scrollable on Mobile */}
+            <div className="flex flex-wrap gap-2 mb-6 sm:mb-8 lg:mb-10 overflow-x-auto pb-2 scrollbar-hide">
               {project.stack.map((tech: string, i: number) => (
-                <span key={i} className="px-3 py-1.5 bg-white/5 border border-white/10 text-gray-300 text-sm rounded-lg font-mono whitespace-nowrap">
+                <span key={i} className="px-2.5 py-1 sm:px-3 sm:py-1.5 bg-white/5 border border-white/10 text-gray-300 text-xs sm:text-sm rounded-lg font-mono whitespace-nowrap">
                   {tech}
                 </span>
               ))}
             </div>
 
-            {/* === BUTTONS === */}
-            <div className="flex flex-wrap gap-4 mt-auto">
+            {/* Buttons - Stack on Small Mobile, Row on Larger */}
+            <div className="flex flex-col xs:flex-row flex-wrap gap-3 sm:gap-4">
               <motion.a
                 href={isRepoDisabled ? undefined : project.repoLink}
                 target={isRepoDisabled ? undefined : "_blank"}
                 rel="noopener noreferrer"
                 whileHover={!isRepoDisabled ? { scale: 1.05 } : {}}
                 whileTap={!isRepoDisabled ? { scale: 0.95 } : {}}
-                className={`flex items-center gap-2 font-semibold text-base px-6 py-3 rounded-xl border border-white/20 transition-colors ${
+                className={`flex items-center justify-center gap-2 font-semibold text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl border border-white/20 transition-colors ${
                   isRepoDisabled 
                     ? 'text-gray-600 border-white/5 bg-white/5 cursor-not-allowed opacity-50 pointer-events-none' 
-                    : 'text-white hover:border-white/40'
+                    : 'text-white hover:border-white/40 hover:bg-white/5'
                 }`}
                 aria-disabled={isRepoDisabled}
               >
-                <Github size={20} /> Repository
+                <Github size={18} className="sm:w-5 sm:h-5" /> Repository
               </motion.a>
 
               <motion.a
@@ -121,19 +140,19 @@ const Card = ({ project, index }: CardProps) => {
                 rel="noopener noreferrer"
                 whileHover={!isLiveDisabled ? { scale: 1.05 } : {}}
                 whileTap={!isLiveDisabled ? { scale: 0.95 } : {}}
-                className={`flex items-center gap-2 font-semibold text-base px-6 py-3 rounded-xl transition-colors ${
+                className={`flex items-center justify-center gap-2 font-semibold text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl transition-colors ${
                   isLiveDisabled 
                     ? 'text-gray-500 bg-gray-800 cursor-not-allowed opacity-50 pointer-events-none' 
                     : 'text-black bg-white hover:bg-gray-200'
                 }`}
                 aria-disabled={isLiveDisabled}
               >
-                <ExternalLink size={20} /> Live Demo
+                <ExternalLink size={18} className="sm:w-5 sm:h-5" /> Live Demo
               </motion.a>
             </div>
 
-            {/* CARD NUMBER */}
-            <div className="absolute bottom-4 right-4 md:bottom-8 md:right-8 text-6xl md:text-8xl font-black text-white/5 pointer-events-none">
+            {/* Desktop: Card Number */}
+            <div className="hidden lg:block absolute bottom-6 right-6 xl:bottom-8 xl:right-8 text-6xl md:text-7xl xl:text-8xl font-black text-white/5 pointer-events-none">
               0{index + 1}
             </div>
           </div>
