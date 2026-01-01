@@ -120,37 +120,45 @@ const Card = ({ project, index }: CardProps) => {
 
             {/* Buttons */}
             <div className="flex flex-col xs:flex-row flex-wrap gap-3 sm:gap-4">
-              <motion.a
-                href={isRepoDisabled ? undefined : project.repoLink}
-                target={isRepoDisabled ? undefined : "_blank"}
-                rel="noopener noreferrer"
-                whileHover={!isRepoDisabled ? { scale: 1.05 } : {}}
-                whileTap={!isRepoDisabled ? { scale: 0.95 } : {}}
-                className={`flex items-center justify-center gap-2 font-semibold text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl border border-white/20 transition-colors ${
-                  isRepoDisabled 
-                    ? 'text-gray-600 border-white/5 bg-white/5 cursor-not-allowed opacity-50 pointer-events-none' 
-                    : 'text-white hover:border-white/40 hover:bg-white/5'
-                }`}
-                aria-disabled={isRepoDisabled}
-              >
-                <Github size={18} className="sm:w-5 sm:h-5" /> Repository
-              </motion.a>
+              {isRepoDisabled ? (
+                <motion.button
+                  disabled
+                  className="flex items-center justify-center gap-2 font-semibold text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl border border-white/5 bg-white/5 text-gray-600 cursor-not-allowed opacity-50"
+                >
+                  <Github size={18} className="sm:w-5 sm:h-5" /> Repository
+                </motion.button>
+              ) : (
+                <motion.a
+                  href={project.repoLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center justify-center gap-2 font-semibold text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl border border-white/20 text-white hover:border-white/40 hover:bg-white/5 transition-colors"
+                >
+                  <Github size={18} className="sm:w-5 sm:h-5" /> Repository
+                </motion.a>
+              )}
 
-              <motion.a
-                href={isLiveDisabled ? undefined : project.liveLink}
-                target={isLiveDisabled ? undefined : "_blank"}
-                rel="noopener noreferrer"
-                whileHover={!isLiveDisabled ? { scale: 1.05 } : {}}
-                whileTap={!isLiveDisabled ? { scale: 0.95 } : {}}
-                className={`flex items-center justify-center gap-2 font-semibold text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl transition-colors ${
-                  isLiveDisabled 
-                    ? 'text-gray-500 bg-gray-800 cursor-not-allowed opacity-50 pointer-events-none' 
-                    : 'text-black bg-white hover:bg-gray-200'
-                }`}
-                aria-disabled={isLiveDisabled}
-              >
-                <ExternalLink size={18} className="sm:w-5 sm:h-5" /> Live Demo
-              </motion.a>
+              {isLiveDisabled ? (
+                <motion.button
+                  disabled
+                  className="flex items-center justify-center gap-2 font-semibold text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-gray-800 text-gray-500 cursor-not-allowed opacity-50"
+                >
+                  <ExternalLink size={18} className="sm:w-5 sm:h-5" /> Live Demo
+                </motion.button>
+              ) : (
+                <motion.a
+                  href={project.liveLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center justify-center gap-2 font-semibold text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-white text-black hover:bg-gray-200 transition-colors"
+                >
+                  <ExternalLink size={18} className="sm:w-5 sm:h-5" /> Live Demo
+                </motion.a>
+              )}
             </div>
 
             {/* Desktop: Card Number */}
