@@ -1,8 +1,86 @@
 import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const Background = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const orb1Ref = useRef<HTMLDivElement>(null);
+    const orb2Ref = useRef<HTMLDivElement>(null);
+    const orb3Ref = useRef<HTMLDivElement>(null);
 
+    // === GSAP FLOATING ORBS ANIMATION ===
+    useGSAP(() => {
+        const orbs = [orb1Ref.current, orb2Ref.current, orb3Ref.current];
+        if (!orbs.every(orb => orb)) return;
+
+        // A. Perpetual Floating (Idle Animation)
+        gsap.to(orb1Ref.current, {
+            x: 'random(-50, 50)',
+            y: 'random(-30, 30)',
+            duration: 15,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+        });
+
+        gsap.to(orb2Ref.current, {
+            x: 'random(-40, 40)',
+            y: 'random(-40, 40)',
+            duration: 18,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+        });
+
+        gsap.to(orb3Ref.current, {
+            x: 'random(-60, 60)',
+            y: 'random(-50, 50)',
+            duration: 12,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+        });
+
+        // B. Scroll Parallax (ScrollTrigger)
+        gsap.to(orb1Ref.current, {
+            y: '150vh',
+            ease: 'none',
+            scrollTrigger: {
+                trigger: document.body,
+                start: 'top top',
+                end: 'bottom bottom',
+                scrub: 1,
+            },
+        });
+
+        gsap.to(orb2Ref.current, {
+            y: '80vh',
+            ease: 'none',
+            scrollTrigger: {
+                trigger: document.body,
+                start: 'top top',
+                end: 'bottom bottom',
+                scrub: 2,
+            },
+        });
+
+        gsap.to(orb3Ref.current, {
+            y: '120vh',
+            ease: 'none',
+            scrollTrigger: {
+                trigger: document.body,
+                start: 'top top',
+                end: 'bottom bottom',
+                scrub: 1.5,
+            },
+        });
+    }, { scope: containerRef });
+
+    // === CANVAS STARFIELD ANIMATION ===
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -213,12 +291,38 @@ const Background = () => {
     }, []);
 
     return (
-        <div className="fixed inset-0 z-[-1] bg-[#0a0a0a]">
+        <div ref={containerRef} className="fixed inset-0 z-[-1] bg-[#0a0a0a]">
+            {/* === CANVAS STARFIELD === */}
             <canvas
                 ref={canvasRef}
                 className="absolute inset-0 block"
             />
 
+            {/* === GSAP FLOATING ORBS LAYER === */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                {/* Orb 1 (Primary) - Large Purple, Top-Left */}
+                <div
+                    ref={orb1Ref}
+                    className="absolute -top-[20%] -left-[10%] w-[600px] h-[600px] rounded-full bg-purple-600 mix-blend-screen filter blur-[100px] opacity-40"
+                    style={{ willChange: 'transform' }}
+                />
+                
+                {/* Orb 2 (Secondary) - Medium Cyan, Bottom-Right */}
+                <div
+                    ref={orb2Ref}
+                    className="absolute -bottom-[10%] -right-[5%] w-[400px] h-[400px] rounded-full bg-cyan-500 mix-blend-screen filter blur-[100px] opacity-40"
+                    style={{ willChange: 'transform' }}
+                />
+                
+                {/* Orb 3 (Accent) - Small Pink/Magenta, Center-Right */}
+                <div
+                    ref={orb3Ref}
+                    className="absolute top-[30%] right-[10%] w-[250px] h-[250px] rounded-full bg-fuchsia-500 mix-blend-screen filter blur-[100px] opacity-40"
+                    style={{ willChange: 'transform' }}
+                />
+            </div>
+
+            {/* === GRADIENT OVERLAYS === */}
             <div 
                 className="absolute bottom-0 left-0 right-0 h-[60vh] pointer-events-none opacity-70"
                 style={{
@@ -233,6 +337,7 @@ const Background = () => {
                 }}
             />
             
+            {/* === NOISE TEXTURE === */}
             <div
                 className="absolute inset-0 opacity-[0.04] pointer-events-none"
                 style={{

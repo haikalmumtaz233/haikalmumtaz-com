@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight, Mail, Instagram, Linkedin, Github, CheckCircle, XCircle, X } from 'lucide-react';
 import emailjs from '@emailjs/browser';
+import DOMPurify from 'dompurify';
 
 declare global {
   interface Window {
@@ -44,6 +45,20 @@ const Contact = () => {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const turnstileRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
+
+  // === SECURITY: INPUT SANITIZATION HELPER ===
+  const sanitizeInput = (text: string): string => {
+    return DOMPurify.sanitize(text.trim(), { 
+      ALLOWED_TAGS: [], 
+      ALLOWED_ATTR: [] 
+    });
+  };
+
+  // === SECURITY: VALIDATION PATTERNS ===
+  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const PHONE_REGEX = /^[\d\s+\-()]{10,}$/;
+  const MAX_MESSAGE_LENGTH = 2000;
+  const MAX_NAME_LENGTH = 50;
 
   // Toast helper functions
   const addToast = (type: ToastType, message: string) => {
@@ -122,14 +137,57 @@ const Contact = () => {
       return;
     }
 
+    // === SECURITY: SANITIZE ALL INPUTS ===
+    const sanitizedFirstName = sanitizeInput(formData.firstName);
+    const sanitizedLastName = sanitizeInput(formData.lastName);
+    const sanitizedEmail = sanitizeInput(formData.email);
+    const sanitizedPhone = sanitizeInput(formData.phone);
+    const sanitizedMessage = sanitizeInput(formData.message);
+
+    // === SECURITY: STRICT VALIDATION ===
+    // Validate name lengths
+    if (sanitizedFirstName.length > MAX_NAME_LENGTH || sanitizedLastName.length > MAX_NAME_LENGTH) {
+      setIsSubmitting(false);
+      addToast('error', 'Name is too long. Maximum 50 characters.');
+      return;
+    }
+
+    // Validate email format
+    if (!EMAIL_REGEX.test(sanitizedEmail)) {
+      setIsSubmitting(false);
+      addToast('error', 'Invalid email format. Please use a valid email address.');
+      return;
+    }
+
+    // Validate phone format
+    if (sanitizedPhone && !PHONE_REGEX.test(sanitizedPhone)) {
+      setIsSubmitting(false);
+      addToast('error', 'Invalid phone number format. Use only numbers, spaces, +, (), or -.');
+      return;
+    }
+
+    // Validate message length
+    if (sanitizedMessage.length > MAX_MESSAGE_LENGTH) {
+      setIsSubmitting(false);
+      addToast('error', `Message is too long. Maximum ${MAX_MESSAGE_LENGTH} characters.`);
+      return;
+    }
+
+    // Validate message not empty
+    if (sanitizedMessage.length === 0) {
+      setIsSubmitting(false);
+      addToast('error', 'Message cannot be empty.');
+      return;
+    }
+
     try {
       // === SEND EMAIL VIA EMAILJS ===
       const templateParams = {
         title: "New Inquiry from Portfolio",
-        name: `${formData.firstName} ${formData.lastName}`,
-        email: formData.email,
-        phone: formData.phone,
-        message: formData.message,
+        name: `${sanitizedFirstName} ${sanitizedLastName}`,
+        email: sanitizedEmail,
+        phone: sanitizedPhone || 'Not provided',
+        message: sanitizedMessage,
         time: new Date().toLocaleString()
       };
 
@@ -264,6 +322,7 @@ const Contact = () => {
                     type="text"
                     name="firstName"
                     required
+                    maxLength={50}
                     value={formData.firstName}
                     onChange={handleChange}
                     className="w-full bg-transparent border-b border-white/20 py-2 text-white focus:border-white focus:outline-none transition-colors"
@@ -276,6 +335,7 @@ const Contact = () => {
                     type="text"
                     name="lastName"
                     required
+                    maxLength={50}
                     value={formData.lastName}
                     onChange={handleChange}
                     className="w-full bg-transparent border-b border-white/20 py-2 text-white focus:border-white focus:outline-none transition-colors"
@@ -292,6 +352,7 @@ const Contact = () => {
                     type="email"
                     name="email"
                     required
+                    pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
                     value={formData.email}
                     onChange={handleChange}
                     className="w-full bg-transparent border-b border-white/20 py-2 text-white focus:border-white focus:outline-none transition-colors"
@@ -303,6 +364,7 @@ const Contact = () => {
                   <input
                     type="tel"
                     name="phone"
+                    pattern="[\d\s+\-()]{10,}"
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full bg-transparent border-b border-white/20 py-2 text-white focus:border-white focus:outline-none transition-colors"
@@ -318,11 +380,15 @@ const Contact = () => {
                   name="message"
                   required
                   rows={4}
+                  maxLength={2000}
                   value={formData.message}
                   onChange={handleChange}
                   className="w-full bg-transparent border-b border-white/20 py-2 text-white focus:border-white focus:outline-none transition-colors resize-none"
                   placeholder="Tell me about your project..."
                 />
+                <p className="text-xs text-gray-500 text-right">
+                  {formData.message.length}/{MAX_MESSAGE_LENGTH}
+                </p>
               </div>
 
               {/* === HONEYPOT === */}
