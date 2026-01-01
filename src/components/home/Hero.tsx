@@ -1,12 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Download, Github, Linkedin, Instagram } from 'lucide-react';
+import { Download, Github, Linkedin, Instagram, ChevronDown } from 'lucide-react';
 
 const Hero = () => {
   const [isIntroComplete, setIsIntroComplete] = useState(false);
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(true);
+  const heroRef = useRef<HTMLElement>(null);
 
   const roles = ['Fullstack Developer', 'Machine Learning Engineer', 'Data Scientist'];
 
@@ -15,6 +17,27 @@ const Hero = () => {
       setIsIntroComplete(true);
     }, 2500);
     return () => clearTimeout(timer);
+  }, []);
+
+  // Scroll indicator visibility handler
+  useEffect(() => {
+    const handleScroll = () => {
+      if (heroRef.current) {
+        const heroBottom = heroRef.current.getBoundingClientRect().bottom;
+        const windowHeight = window.innerHeight;
+        
+        if (heroBottom >= windowHeight - 10) {
+          setShowScrollIndicator(true);
+        } else {
+          setShowScrollIndicator(false);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Typewriter effect
@@ -117,9 +140,10 @@ const Hero = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.6 }}
-                    className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase leading-[0.9] tracking-tighter text-white"
+                    className="text-[12vw] sm:text-[10vw] md:text-[11vw] lg:text-[13vw] xl:text-[14vw] font-black uppercase leading-[0.9] tracking-tighter text-white whitespace-nowrap"
                   >
-                    HAIKAL<br />MUMTAZ
+                    <span className="inline-block">HAIKAL</span>{' '}
+                    <span className="inline-block">MUMTAZ</span>
                   </motion.h1>
                 </div>
               </motion.div>
@@ -133,29 +157,43 @@ const Hero = () => {
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-center">
                   
-                  {/* ========== COLUMN 1: SCROLL INDICATOR ========== */}
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8, delay: 1 }}
-                    className="flex flex-col items-start gap-3"
-                  >
-                    <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-gray-500">
-                      SCROLL TO EXPLORE
-                    </p>
-                    <motion.div
-                      className="w-[1px] h-12 bg-gradient-to-b from-purple-500 to-transparent"
-                      animate={{ 
-                        y: [0, 10, 0],
-                        opacity: [0.5, 1, 0.5]
-                      }}
-                      transition={{ 
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                      }}
-                    />
-                  </motion.div>
+                  {/* ========== COLUMN 1: MODERN SCROLL INDICATOR ========== */}
+                  <AnimatePresence>
+                    {showScrollIndicator && (
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.5 }}
+                        className="flex items-center gap-3"
+                      >
+                        {/* Animated Icon */}
+                        <motion.div
+                          className="flex items-center justify-center w-10 h-10 rounded-full border border-white/30"
+                          animate={{ 
+                            y: [0, 8, 0],
+                          }}
+                          transition={{ 
+                            duration: 1.8,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                          }}
+                        >
+                          <ChevronDown className="w-5 h-5 text-white/70" />
+                        </motion.div>
+
+                        {/* Text */}
+                        <div className="flex flex-col leading-none">
+                          <span className="text-xs font-medium uppercase tracking-wider text-white/90">
+                            Scroll
+                          </span>
+                          <span className="text-[10px] font-normal uppercase tracking-widest text-gray-500">
+                            To Explore
+                          </span>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
 
                   {/* ========== COLUMN 2: ROLE TYPEWRITER ========== */}
                   <motion.div
