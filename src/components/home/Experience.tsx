@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useRef, useState } from 'react';
-import { experiences } from '../../data/experience'; // Import Data
+import { experiences } from '../../data/experience';
 
 const Experience = () => {
   const sectionRef = useRef(null);
@@ -32,7 +32,7 @@ const Experience = () => {
     <section ref={sectionRef} className="relative bg-transparent pt-20 md:pt-40 pb-10 w-full overflow-x-clip">
       <div className="w-full px-4 md:px-8 lg:px-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-12 items-stretch">
-          {/* === LEFT COLUMN - STICKY TITLE === */}
+          {/* === LEFT COLUMN === */}
           <div className="lg:col-span-5 min-h-full">
             <div className="sticky top-1/2 -translate-y-1/2 py-8 text-left border-l-2 border-white/20 pl-8 md:pl-12">
               <motion.div
@@ -41,7 +41,7 @@ const Experience = () => {
                 animate="visible"
                 viewport={{ once: true, margin: "-100px" }}
               >
-                <h2 className="text-3xl md:text-5xl lg:text-6xl font-monument font-black text-white uppercase tracking-tight leading-none">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none">
                   <div className="overflow-hidden">
                     <motion.span variants={wordVariants} className="inline-block mr-3">
                       Professional
@@ -55,7 +55,7 @@ const Experience = () => {
             </div>
           </div>
 
-          {/* === RIGHT COLUMN - CINEMATIC LIST === */}
+          {/* === RIGHT COLUMN === */}
           <div className="lg:col-span-7 relative">
             <div className="max-w-3xl">
               {experiences.map((exp, index) => (

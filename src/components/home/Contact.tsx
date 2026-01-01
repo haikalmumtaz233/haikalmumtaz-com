@@ -80,7 +80,10 @@ const Contact = () => {
     if (window.turnstile) {
       loadTurnstile();
     } else {
+      if (document.getElementById('turnstile-script')) return;
+      
       const script = document.createElement('script');
+      script.id = 'turnstile-script';
       script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
       script.async = true;
       script.defer = true;
@@ -322,7 +325,7 @@ const Contact = () => {
                 />
               </div>
 
-              {/* === HONEYPOT (HIDDEN) === */}
+              {/* === HONEYPOT === */}
               <input
                 type="text"
                 name="honeypot"

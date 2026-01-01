@@ -78,7 +78,7 @@ export const projects: Project[] = [
         liveLink: '#',
     },
     {
-        id: 5,
+        id: 7,
         name: 'Content Management System',
         subtitle: 'School CMS Website',
         category: 'Frontend Development',

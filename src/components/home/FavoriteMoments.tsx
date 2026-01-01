@@ -25,7 +25,7 @@ const FavoriteMoments = () => {
 
   // Separate transform values for mobile vs desktop
   const xDesktop = useTransform(scrollYProgress, [0, 1], ['0%', '-78%']);
-  const xMobile = useTransform(scrollYProgress, [0, 1], ['0%', '-200%']);
+  const xMobile = useTransform(scrollYProgress, [0, 1], ['0%', '-88%']);
   const x = isMobile ? xMobile : xDesktop;
 
   // === ANIMATION VARIANTS ===
@@ -100,7 +100,7 @@ const FavoriteMoments = () => {
           style={{ x }}
           className="flex items-stretch gap-8 md:gap-24 lg:gap-32 px-4 md:px-12 pr-12 md:pr-32"
         >
-          {/* === OPENING TITLE CARD (TECH STACK STYLE) === */}
+          {/* === OPENING TITLE CARD === */}
           <div className="flex-shrink-0 flex items-center justify-center w-[85vw] md:w-[500px] h-[80vh]">
             <motion.div
               variants={titleVariants}
@@ -113,7 +113,7 @@ const FavoriteMoments = () => {
               <div className="overflow-hidden">
                 <motion.h2
                   variants={wordVariants}
-                  className="text-4xl md:text-7xl lg:text-8xl font-monument font-black text-white uppercase tracking-tight leading-none"
+                  className="text-4xl md:text-5xl lg:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none"
                 >
                   Favorite
                 </motion.h2>
@@ -122,7 +122,7 @@ const FavoriteMoments = () => {
               <div className="overflow-hidden">
                 <motion.h2
                   variants={wordVariants}
-                  className="text-4xl md:text-7xl lg:text-8xl font-monument font-black text-white uppercase tracking-tight leading-none"
+                  className="text-4xl md:text-5xl lg:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none"
                 >
                   Moments
                 </motion.h2>

@@ -19,7 +19,6 @@ const Certifications = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Track scroll progress - horizontal scroll animation
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end end'],
@@ -27,7 +26,7 @@ const Certifications = () => {
 
   // Separate transform values for mobile vs desktop
   const xDesktop = useTransform(scrollYProgress, [0, 1], ['0%', '-65%']);
-  const xMobile = useTransform(scrollYProgress, [0, 1], ['0%', '-180%']);
+  const xMobile = useTransform(scrollYProgress, [0, 1], ['0%', '-88%']);
   const x = isMobile ? xMobile : xDesktop;
 
   // === ANIMATION VARIANTS ===
@@ -63,7 +62,7 @@ const Certifications = () => {
           style={{ x }}
           className="flex items-center gap-4 md:gap-10 lg:gap-14 px-4 md:px-12 pr-8 md:pr-16"
         >
-          {/* === TITLE CARD (FIRST ITEM IN SCROLL) === */}
+          {/* === TITLE CARD === */}
           <div className="flex-shrink-0 flex items-center justify-center w-[85vw] md:w-[450px] lg:w-[500px] h-[80vh]">
             <motion.div
               variants={titleVariants}
@@ -75,7 +74,7 @@ const Certifications = () => {
               <div className="overflow-hidden">
                 <motion.h2
                   variants={wordVariants}
-                  className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-monument font-black text-white uppercase tracking-tight leading-none"
+                  className="text-4xl md:text-4xl lg:text-5xl xl:text-6xl font-monument font-black text-white uppercase tracking-tight leading-none"
                 >
                   Certificates
                 </motion.h2>

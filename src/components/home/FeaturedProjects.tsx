@@ -73,12 +73,12 @@ const Card = ({ project, index }: CardProps) => {
               transition={{ duration: 0.4 }}
             />
             
-            {/* Mobile: Category Badge Overlay */}
+            {/* Mobile: Category Badge */}
             <span className="lg:hidden absolute top-4 left-4 px-3 py-1.5 bg-black/60 backdrop-blur-md text-gray-300 text-xs font-mono rounded-full tracking-wider uppercase border border-white/20">
               {project.category}
             </span>
 
-            {/* Mobile: Card Number Overlay */}
+            {/* Mobile: Card Number */}
             <div className="lg:hidden absolute bottom-4 right-4 text-5xl font-black text-white/10 pointer-events-none">
               0{index + 1}
             </div>
@@ -107,7 +107,7 @@ const Card = ({ project, index }: CardProps) => {
               {project.description}
             </p>
 
-            {/* Tech Stack - Scrollable on Mobile */}
+            {/* Tech Stack */}
             <div className="flex flex-wrap gap-2 mb-6 sm:mb-8 lg:mb-10 overflow-x-auto pb-2 scrollbar-hide">
               {project.stack.map((tech: string, i: number) => (
                 <span key={i} className="px-2.5 py-1 sm:px-3 sm:py-1.5 bg-white/5 border border-white/10 text-gray-300 text-xs sm:text-sm rounded-lg font-mono whitespace-nowrap">
@@ -116,7 +116,7 @@ const Card = ({ project, index }: CardProps) => {
               ))}
             </div>
 
-            {/* Buttons - Stack on Small Mobile, Row on Larger */}
+            {/* Buttons */}
             <div className="flex flex-col xs:flex-row flex-wrap gap-3 sm:gap-4">
               <motion.a
                 href={isRepoDisabled ? undefined : project.repoLink}

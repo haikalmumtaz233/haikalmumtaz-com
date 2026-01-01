@@ -65,8 +65,6 @@ const Background = () => {
                 this.z = Math.random() * 1.5 + 0.5;
                 this.size = Math.random() * 1.2;
                 
-                // UPDATED: Membuat bintang lebih terang secara umum
-                // Range sebelumnya: 0.2 - 0.8. Range baru: 0.4 - 0.95
                 this.baseAlpha = Math.random() * 0.55 + 0.4; 
                 this.alpha = this.baseAlpha;
                 this.twinkleSpeed = Math.random() * 0.01 + 0.002;
@@ -77,9 +75,8 @@ const Background = () => {
             }
 
             update() {
-                // 1. Twinkle Effect (dengan batas brightness baru)
+                // 1. Twinkle Effect
                 this.alpha += this.twinkleSpeed;
-                // Batas atas 1.0, batas bawah sedikit di bawah baseAlpha
                 if (this.alpha > 1 || this.alpha < this.baseAlpha - 0.15) {
                     this.twinkleSpeed = -this.twinkleSpeed;
                 }
@@ -111,10 +108,8 @@ const Background = () => {
                 ctx.beginPath();
                 const renderSize = this.size * (this.z * 0.8);
                 ctx.arc(this.x, this.y, renderSize, 0, Math.PI * 2);
-                // Memastikan alpha tidak negatif
                 ctx.fillStyle = `rgba(${this.color}, ${Math.max(0, this.alpha)})`;
                 
-                // UPDATED: Menambahkan sedikit glow effect pada bintang yang terang
                 if (this.alpha > 0.8) {
                     ctx.shadowBlur = renderSize * 3;
                     ctx.shadowColor = `rgba(${this.color}, 0.4)`;
@@ -168,7 +163,6 @@ const Background = () => {
                 const tailX = this.x + this.length;
                 const tailY = this.y - this.length * 0.5;
 
-                // UPDATED: Meteor sedikit lebih terang dan kebiruan
                 const gradient = ctx.createLinearGradient(this.x, this.y, tailX, tailY);
                 gradient.addColorStop(0, 'rgba(230,240,255,1)'); 
                 gradient.addColorStop(1, 'rgba(230,240,255,0)');
@@ -177,7 +171,7 @@ const Background = () => {
                 ctx.moveTo(this.x, this.y);
                 ctx.lineTo(tailX, tailY);
                 ctx.strokeStyle = gradient;
-                ctx.lineWidth = 2; // Sedikit lebih tebal
+                ctx.lineWidth = 2;
                 ctx.lineCap = 'round';
                 ctx.stroke();
             }
@@ -185,9 +179,6 @@ const Background = () => {
 
         // --- INIT ---
         const stars: Star[] = [];
-        // UPDATED: Menambah kepadatan bintang.
-        // Pembagi yang lebih kecil = hasil yang lebih besar = lebih banyak bintang.
-        // Sebelumnya 10000, sekarang 6000.
         const starCount = Math.floor((width * height) / 6000); 
         for (let i = 0; i < starCount; i++) {
             stars.push(new Star());
@@ -203,7 +194,6 @@ const Background = () => {
                 star.draw();
             });
 
-            // Reset shadow blur setelah menggambar bintang agar tidak mempengaruhi meteor
             ctx.shadowBlur = 0;
 
             shootingStar.update();
@@ -224,24 +214,18 @@ const Background = () => {
 
     return (
         <div className="fixed inset-0 z-[-1] bg-[#0a0a0a]">
-            {/* 1. Canvas Layer (Stars) */}
             <canvas
                 ref={canvasRef}
                 className="absolute inset-0 block"
             />
 
-            {/* 2. NEW: Lenis-style Bottom Glow (Pink/Purple Fade) */}
             <div 
                 className="absolute bottom-0 left-0 right-0 h-[60vh] pointer-events-none opacity-70"
                 style={{
-                    // Gradient dari bawah (pink/ungu terang) ke atas (transparan)
-                    background: 'linear-gradient(to top, rgba(217, 70, 239, 0.3) 0%, rgba(168, 85, 247, 0.1) 50%, transparent 100%)',
-                    // Opsional: Tambahkan blur agar perpendarannya lebih halus lagi
-                    // filter: 'blur(80px)', // Hati-hati, blur besar bisa berat di performa
+                    background: 'linear-gradient(to top, rgba(217, 70, 239, 0.3) 0%, rgba(168, 85, 247, 0.1) 50%, transparent 100%',
                 }}
             />
 
-            {/* 3. Radial Vignette Overlay (Membuat tengah lebih gelap agar konten terbaca) */}
             <div
                 className="absolute inset-0 opacity-30 pointer-events-none"
                 style={{
@@ -249,7 +233,6 @@ const Background = () => {
                 }}
             />
             
-            {/* 4. Noise Texture (Paling atas agar memberi tekstur ke glow juga) */}
             <div
                 className="absolute inset-0 opacity-[0.04] pointer-events-none"
                 style={{

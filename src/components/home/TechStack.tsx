@@ -99,7 +99,6 @@ const TechStack = () => {
                 />
               </div>
 
-              {/* === TEXT WITH ANIMATED UNDERLINE === */}
               <div className="relative">
                 <span className="text-gray-400 font-semibold text-base md:text-lg transition-colors duration-300 group-hover:text-white block">
                   {tech.name}
