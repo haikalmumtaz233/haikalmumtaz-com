@@ -61,8 +61,8 @@ const Tools = () => {
         
         {/* === TRACK 1 === */}
         <motion.div
-          initial={{ x: 0 }}
-          animate={{ x: "-100%" }}
+          initial={{ x: "-100%" }}
+          animate={{ x: "0%" }}
           transition={{ 
             duration: 20,
             repeat: Infinity, 
@@ -91,8 +91,8 @@ const Tools = () => {
 
         {/* === TRACK 2 === */}
         <motion.div
-          initial={{ x: 0 }}
-          animate={{ x: "-100%" }}
+          initial={{ x: "-100%" }}
+          animate={{ x: "0%" }}
           transition={{ 
             duration: 20, 
             repeat: Infinity, 

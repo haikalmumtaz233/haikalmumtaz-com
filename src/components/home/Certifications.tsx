@@ -39,46 +39,50 @@ const Certifications = () => {
   };
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative bg-transparent h-[300vh]"
-    >
-      <div className="sticky top-0 h-screen overflow-hidden flex items-center">
-        <motion.div
-          style={{ x }}
-          className="flex items-center gap-6 md:gap-8 px-6 md:px-12 pr-24 md:pr-32"
-        >
-          {/* === TITLE CARD === */}
-          <div className="flex-shrink-0 flex items-center justify-center w-[350px] md:w-[450px] lg:w-[500px] h-[80vh]">
-            <motion.div
-              variants={titleVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="text-left"
-            >
-              <div className="overflow-hidden">
-                <motion.h2
-                  variants={wordVariants}
-                  className="text-5xl md:text-6xl lg:text-7xl font-monument font-black text-white uppercase tracking-tight mb-4"
-                >
-                  Certifications
-                </motion.h2>
-              </div>
-              
-              <div className="overflow-hidden">
-                <motion.p
-                  variants={wordVariants}
-                  className="text-gray-400 text-base md:text-lg lg:text-xl max-w-md font-light"
-                >
-                  Certificates & Awards
-                </motion.p>
-              </div>
-            </motion.div>
-          </div>
+    <>
+      {/* === TITLE SECTION (FIXED - NO SCROLL) === */}
+      <div className="relative bg-transparent pt-10 md:pt-15">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <motion.div
+            variants={titleVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <div className="overflow-hidden">
+              <motion.h2
+                variants={wordVariants}
+                className="text-5xl md:text-6xl lg:text-7xl font-monument font-black text-white uppercase tracking-tight mb-4"
+              >
+                Certifications
+              </motion.h2>
+            </div>
+            
+            <div className="overflow-hidden">
+              <motion.p
+                variants={wordVariants}
+                className="text-gray-400 text-base md:text-lg lg:text-xl font-light"
+              >
+                Certificates & Awards
+              </motion.p>
+            </div>
+          </motion.div>
+        </div>
+      </div>
 
-          {/* === CARDS === */}
-          {certifications.map((cert, index) => {
+      {/* === HORIZONTAL SCROLL SECTION === */}
+      <section
+        ref={sectionRef}
+        className="relative bg-transparent h-[300vh]"
+      >
+        <div className="sticky top-0 h-screen overflow-hidden flex items-center">
+          <motion.div
+            style={{ x }}
+            className="flex items-center gap-6 md:gap-8 px-6 md:px-12 pr-24 md:pr-32"
+          >
+            {/* === CARDS === */}
+            {certifications.map((cert, index) => {
             const isHovered = hoveredId === cert.id;
             
             return (
@@ -162,6 +166,7 @@ const Certifications = () => {
         </motion.div>
       </div>
     </section>
+    </>
   );
 };
 
