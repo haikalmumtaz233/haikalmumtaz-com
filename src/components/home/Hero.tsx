@@ -67,12 +67,12 @@ const Hero = () => {
         )}
       </AnimatePresence>
 
-      {/* ========== HERO SECTION: CINEMATIC POSTER ========== */}
-      <section className="relative min-h-screen bg-transparent text-white pt-24 lg:pt-32 pb-12 flex flex-col items-center overflow-hidden">
+      {/* ========== HERO SECTION: CINEMATIC HEADER ========== */}
+      <section className="relative min-h-screen bg-transparent text-white overflow-hidden flex flex-col items-center pt-24 lg:pt-32 pb-16">
         <AnimatePresence>
           {isIntroComplete && (
             <>
-              {/* ========== 1. TOP HEADER: THE NAME ========== */}
+              {/* ========== 1. CINEMATIC HEADER: THE NAME ========== */}
               <motion.div
                 initial={{ opacity: 0, y: -30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -83,7 +83,7 @@ const Hero = () => {
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.4 }}
-                  className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-gray-400 mb-2"
+                  className="text-xs md:text-sm lg:text-base font-bold uppercase tracking-[0.5em] text-gray-500 mb-2 lg:mb-3"
                 >
                   MUHAMMAD RADITYA
                 </motion.h2>
@@ -94,15 +94,15 @@ const Hero = () => {
                   transition={{ duration: 0.8, delay: 0.5 }}
                   className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black uppercase leading-[0.9] tracking-tighter"
                 >
-                  <span className="text-transparent" style={{ WebkitTextStroke: '2px #a855f7' }}>HAIKAL</span>
+                  <span className="text-transparent" style={{ WebkitTextStroke: '1px #a855f7' }}>HAIKAL</span>
                   {' '}
                   <span className="text-white">MUMTAZ</span>
                 </motion.h1>
               </motion.div>
 
               {/* ========== 2. COMPACT 3-COLUMN GRID ========== */}
-              <div className="w-full max-w-[1400px] px-6 lg:px-12">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-4 items-end">
+              <div className="w-full max-w-[1400px] px-6 lg:px-12 flex-grow flex items-center">
+                <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-4 items-center">
                   
                   {/* ========== LEFT COL: BIO & ACTIONS (RIGHT-ALIGNED) ========== */}
                   <motion.div
@@ -161,28 +161,23 @@ const Hero = () => {
                     </motion.div>
                   </motion.div>
 
-                  {/* ========== CENTER COL: IMAGE ========== */}
-                  <div className="col-span-12 lg:col-span-6 relative flex justify-center items-end order-1 lg:order-2 h-[50vh] lg:h-[65vh]">
+                  {/* ========== CENTER COL: IMAGE (CLEAN & SHARP) ========== */}
+                  <div className="col-span-12 lg:col-span-6 relative flex justify-center items-center order-1 lg:order-2">
                     <motion.div
                       initial={{ opacity: 0, y: 50, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       transition={{ duration: 1, delay: 0.7, ease: [0.43, 0.13, 0.23, 0.96] as const }}
-                      className="relative z-10 h-full w-full flex items-end justify-center"
+                      className="relative h-[50vh] lg:h-[65vh] flex items-end justify-center"
                     >
-                      <div className="relative h-full">
-                        <img
-                          src="src/assets/itc-nobg.png"
-                          alt="Muhammad Raditya Haikal Mumtaz"
-                          className="h-full w-auto object-contain object-bottom"
-                        />
-                        
-                        {/* Bottom Fade Gradient */}
-                        <div className="absolute bottom-0 left-0 right-0 h-[30%] bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent pointer-events-none" />
-                      </div>
-                    </motion.div>
+                      <img
+                        src="src/assets/itc-nobg.png"
+                        alt="Muhammad Raditya Haikal Mumtaz"
+                        className="h-full w-auto object-contain object-bottom drop-shadow-2xl"
+                      />
 
-                    {/* Purple Glow Effect */}
-                    <div className="absolute -z-10 bottom-0 left-1/2 -translate-x-1/2 w-[100%] h-[60%] bg-purple-500/20 blur-[120px] rounded-full pointer-events-none opacity-40" />
+                      {/* Purple Glow Effect (Subtle Atmosphere) */}
+                      <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-[120%] h-[40%] bg-purple-500/20 blur-[100px] rounded-full pointer-events-none opacity-30 -z-10" />
+                    </motion.div>
                   </div>
 
                   {/* ========== RIGHT COL: CURRENT ROLE (LEFT-ALIGNED) ========== */}
@@ -201,7 +196,7 @@ const Hero = () => {
                       Current Focus
                     </motion.span>
 
-                    <div className="overflow-hidden h-24 lg:h-28 flex items-center max-w-xs">
+                    <div className="overflow-hidden h-28 lg:h-32 flex items-center max-w-xs">
                       <AnimatePresence mode="wait">
                         <motion.div
                           key={currentRoleIndex}
