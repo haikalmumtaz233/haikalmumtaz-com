@@ -1,35 +1,10 @@
 import { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { certifications } from '../../data/certifications';
+import { motion } from 'framer-motion';
+import { certifications, type Certification } from '../../data/certifications';
 import { ExternalLink } from 'lucide-react';
 
 const Certifications = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [hoveredId, setHoveredId] = useState<number | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
-
-  // Detect screen size and handle resize
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start start', 'end end'],
-  });
-
-  // Separate transform values for mobile vs desktop
-  const xDesktop = useTransform(scrollYProgress, [0, 1], ['0%', '-65%']);
-  const xMobile = useTransform(scrollYProgress, [0, 1], ['0%', '-88%']);
-  const x = isMobile ? xMobile : xDesktop;
-
-  // === ANIMATION VARIANTS ===
+  // === HEADER VARIANTS ===
   const titleVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -53,129 +28,191 @@ const Certifications = () => {
   };
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative bg-transparent h-[280vh]"
-    >
-      <div className="sticky top-0 h-screen overflow-hidden flex items-center">
+    <section className="relative bg-transparent py-20 md:py-32 min-h-[80vh] overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* === HEADER (REDESIGNED) === */}
         <motion.div
-          style={{ x }}
-          className="flex items-center gap-4 md:gap-10 lg:gap-14 px-4 md:px-12 pr-8 md:pr-16"
+          variants={titleVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.5 }}
+          className="text-center mb-16 md:mb-24"
         >
-          {/* === TITLE CARD === */}
-          <div className="flex-shrink-0 flex items-center justify-center w-[85vw] md:w-[450px] lg:w-[500px] h-[80vh]">
-            <motion.div
-              variants={titleVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="text-left"
+          <div className="overflow-hidden mb-4">
+            <motion.h2
+              variants={wordVariants}
+              className="text-4xl md:text-6xl lg:text-7xl font-monument font-black tracking-tight text-white uppercase"
             >
-              <div className="overflow-hidden">
-                <motion.h2
-                  variants={wordVariants}
-                  className="text-4xl md:text-4xl lg:text-5xl xl:text-6xl font-monument font-black text-white uppercase tracking-tight leading-none"
-                >
-                  Certificates
-                </motion.h2>
-              </div>
-              
-              <div className="overflow-hidden mt-4 md:mt-8">
-                <motion.p
-                  variants={wordVariants}
-                  className="text-gray-400 text-sm md:text-lg lg:text-xl max-w-md font-light"
-                >
-                  Certificates & Awards
-                </motion.p>
-              </div>
-            </motion.div>
+              CERTIFICATIONS
+            </motion.h2>
           </div>
-
-          {/* === CERTIFICATE CARDS === */}
-          {certifications.map((cert, index) => {
-            const isHovered = hoveredId === cert.id;
-            
-            return (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, amount: 0.1, margin: '-50px' }}
-                transition={{
-                  duration: 0.8,
-                  delay: index * 0.1,
-                  ease: [0.43, 0.13, 0.23, 0.96] as const,
-                }}
-                onMouseEnter={() => setHoveredId(cert.id)}
-                onMouseLeave={() => setHoveredId(null)}
-                className="flex-shrink-0 w-[75vw] md:w-[320px] lg:w-[360px] h-[80vh] flex items-center"
-              >
-                <motion.div
-                  animate={{
-                    y: isHovered ? -15 : 0,
-                  }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
-                  className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden border border-white/10 bg-[#121212] shadow-xl hover:shadow-2xl transition-shadow duration-300"
-                >
-                  {/* Image */}
-                  <div className="absolute inset-0 bg-gray-900">
-                    <img
-                      src={cert.image}
-                      alt={cert.title}
-                      loading="lazy"
-                      decoding="async"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
-
-                  {/* Content */}
-                  <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6 flex flex-col gap-2">
-                    <span className="w-fit px-2.5 py-1 bg-white/10 backdrop-blur-md rounded text-[10px] font-mono text-cyan-400 border border-white/10">
-                      {cert.date}
-                    </span>
-                    
-                    <div>
-                      <h3 className="text-lg md:text-xl font-bold text-white leading-tight mb-1 line-clamp-2">
-                        {cert.title}
-                      </h3>
-                      <p className="text-xs text-gray-400 line-clamp-1 mb-3">
-                        {cert.issuer}
-                      </p>
-                    </div>
-
-                    <motion.a
-                      href={cert.credentialLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ 
-                        opacity: isHovered ? 1 : 0, 
-                        height: isHovered ? 'auto' : 0 
-                      }}
-                      transition={{ duration: 0.2 }}
-                      className="inline-flex items-center gap-2 text-xs font-bold text-white mt-1 hover:text-cyan-400 transition-colors"
-                    >
-                      <span>View Credential</span>
-                      <ExternalLink size={12} />
-                    </motion.a>
-                  </div>
-
-                  {/* Shine Effect */}
-                  <div 
-                    className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent transition-opacity duration-300 pointer-events-none"
-                    style={{
-                      opacity: isHovered ? 1 : 0,
-                    }}
-                  />
-                </motion.div>
-              </motion.div>
-            );
-          })}
+          <div className="overflow-hidden">
+            <motion.p
+              variants={wordVariants}
+              className="text-gray-400 text-lg md:text-xl font-sans tracking-wide max-w-2xl mx-auto"
+            >
+              Digital records of achievements and credentials
+            </motion.p>
+          </div>
         </motion.div>
+
+        {/* === HORIZONTAL SLIDER === */}
+        <HorizontalSlider />
       </div>
     </section>
+  );
+};
+
+const HorizontalSlider = () => {
+  const [width, setWidth] = useState(0);
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // === CALCULATE DRAG CONSTRAINTS ===
+  useEffect(() => {
+    if (!sliderRef.current || !containerRef.current) return;
+    
+    // Calculate total scrollable width minus visible width
+    const updateWidth = () => {
+      if (sliderRef.current && containerRef.current) {
+        setWidth(sliderRef.current.scrollWidth - containerRef.current.offsetWidth);
+      }
+    };
+
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
+
+  return (
+    <div className="relative" ref={containerRef}>
+      {/* === DESKTOP: DRAGGABLE SLIDER === */}
+      {/* cursor-grab active:cursor-grabbing indicates interactivity */}
+      <motion.div
+        className="hidden md:flex gap-6 lg:gap-8 cursor-grab active:cursor-grabbing pb-8"
+        ref={sliderRef}
+        drag="x"
+        dragConstraints={{ right: 0, left: -width }} // The Fix: Explicit numeric constraints
+        whileTap={{ cursor: "grabbing" }}
+      >
+        {certifications.map((cert, index) => (
+          <CertificateCard key={cert.id} cert={cert} index={index} />
+        ))}
+      </motion.div>
+
+      {/* === MOBILE: NATIVE SCROLL === */}
+      <div className="md:hidden overflow-x-auto scrollbar-hide pb-6">
+        <div className="flex gap-4 px-2">
+          {certifications.map((cert, index) => (
+            <CertificateCard key={cert.id} cert={cert} index={index} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+interface CertificateCardProps {
+  cert: Certification;
+  index: number;
+}
+
+const CertificateCard = ({ cert, index }: CertificateCardProps) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const hasCredential = cert.credentialLink && cert.credentialLink !== '';
+
+  return (
+    <motion.article
+      initial={{ opacity: 0, x: 50 }} // Changed animation to slide from right for archive feel
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, amount: 0.1 }}
+      transition={{ duration: 0.6, delay: index * 0.1 }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="flex-shrink-0 w-[280px] md:w-[320px] lg:w-[360px] select-none"
+    >
+      <div className="relative aspect-[3/4] rounded-xl overflow-hidden border border-white/10 bg-[#0a0a0a] shadow-2xl group transition-colors duration-300 hover:border-white/30">
+        
+        {/* === IMAGE === */}
+        <div className="absolute inset-0 bg-gray-950">
+          <img
+            src={cert.image}
+            alt={`${cert.title} certificate from ${cert.issuer}`}
+            loading="lazy"
+            decoding="async"
+            // Removed scale-105 on hover as requested
+            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+          />
+        </div>
+
+        {/* === GRADIENT OVERLAY === */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+
+        {/* === FILE NUMBER === */}
+        <div className="absolute top-4 right-4 px-2.5 py-1 bg-black/70 backdrop-blur-sm border border-white/20 rounded text-[10px] font-mono text-gray-400 tracking-wider">
+          FILE_{String(cert.id).padStart(3, '0')}
+        </div>
+
+        {/* === CONTENT === */}
+        <div className="absolute bottom-0 left-0 right-0 p-5 lg:p-6 space-y-3">
+          {/* Date Badge - Changed to monochrome for cleaner look */}
+          <span className="inline-block px-3 py-1.5 bg-white/5 backdrop-blur-md rounded border border-white/10 text-xs font-mono text-gray-300 tracking-wide">
+            {cert.date}
+          </span>
+
+          {/* Title & Issuer */}
+          <div className="space-y-1">
+            <h3 className="text-lg lg:text-xl font-bold text-white leading-tight line-clamp-2">
+              {cert.title}
+            </h3>
+            <p className="text-xs font-mono text-gray-400 line-clamp-1">
+              {cert.issuer}
+            </p>
+          </div>
+
+          {/* View Credential Button */}
+          {hasCredential ? (
+            <motion.a
+              href={cert.credentialLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{
+                opacity: isHovered ? 1 : 0,
+                y: isHovered ? 0 : 10,
+              }}
+              transition={{ duration: 0.2 }}
+              className="inline-flex items-center gap-2 text-xs font-mono font-bold text-white bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-lg hover:bg-white/20 hover:border-white/40 transition-colors"
+            >
+              <span>View Credential</span>
+              <ExternalLink size={14} />
+            </motion.a>
+          ) : (
+            <motion.span
+              initial={{ opacity: 0, y: 10 }}
+              animate={{
+                opacity: isHovered ? 1 : 0,
+                y: isHovered ? 0 : 10,
+              }}
+              transition={{ duration: 0.2 }}
+              className="inline-flex items-center gap-2 text-xs font-mono text-gray-600 bg-white/5 border border-white/5 px-4 py-2 rounded-lg cursor-not-allowed"
+            >
+              <span>NO_LINK</span>
+            </motion.span>
+          )}
+        </div>
+
+        {/* === HOVER GLOW EFFECT (WHITE) === */}
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-white/5 pointer-events-none" // Changed to White
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.3 }}
+        />
+
+      </div>
+    </motion.article>
   );
 };
 
