@@ -69,7 +69,7 @@ const TechStack = () => {
           <div className="overflow-hidden">
             <motion.p
               variants={wordVariants}
-              className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto"
+              className="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto"
             >
               Technologies I use to develop, build, and deploy.
             </motion.p>
@@ -102,7 +102,7 @@ const TechStack = () => {
               </div>
 
               <div className="relative">
-                <span className="text-gray-400 font-semibold text-base md:text-lg transition-colors duration-300 group-hover:text-white block">
+                <span className="text-slate-400 font-semibold text-base md:text-lg transition-colors duration-300 group-hover:text-white block">
                   {tech.name}
                 </span>
                 <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-white transition-all duration-300 ease-out group-hover:w-full opacity-0 group-hover:opacity-100" />

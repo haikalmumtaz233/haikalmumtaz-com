@@ -62,7 +62,7 @@ const FavoriteMoments = () => {
   const renderContent = (moment: typeof moments[0]) => {
     const textBlock = (
       <div className="space-y-2 md:space-y-3">
-        <p className="text-[10px] md:text-xs font-mono tracking-[0.2em] text-gray-500 uppercase">
+        <p className="text-[10px] md:text-xs font-mono tracking-[0.2em] text-slate-500 uppercase">
           {moment.year}
         </p>
         <h3 className="text-xl md:text-4xl font-black text-white uppercase tracking-tight leading-none">
@@ -133,7 +133,7 @@ const FavoriteMoments = () => {
               <div className="overflow-hidden mt-6 md:mt-8">
                 <motion.p
                   variants={wordVariants}
-                  className="text-gray-400 text-base md:text-xl max-w-md font-light"
+                  className="text-slate-400 text-base md:text-xl max-w-md font-light"
                 >
                   A collection of moments that shaped my journey through tech, education, and personal growth.
                 </motion.p>

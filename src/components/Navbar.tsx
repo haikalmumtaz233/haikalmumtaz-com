@@ -95,7 +95,7 @@ const Navbar = () => {
                           </div>
                           <div className="absolute inset-0">
                             {link.name.split("").map((l, i) => (
-                              <motion.span variants={{ initial: { y: "100%" }, hovered: { y: 0 } }} transition={{ duration: DURATION, delay: STAGGER * i }} className="inline-block text-gray-500" key={i}>{l}</motion.span>
+                              <motion.span variants={{ initial: { y: "100%" }, hovered: { y: 0 } }} transition={{ duration: DURATION, delay: STAGGER * i }} className="inline-block text-slate-500" key={i}>{l}</motion.span>
                             ))}
                           </div>
                         </motion.div>
@@ -106,7 +106,7 @@ const Navbar = () => {
               </nav>
 
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }} className="absolute bottom-0 left-0 w-full px-8 pb-8 flex justify-between items-end">
-                <a href="mailto:hmumtaz70@gmail.com" className="text-white hover:text-gray-400 transition-colors">hmumtaz70@gmail.com</a>
+                <a href="mailto:hmumtaz70@gmail.com" className="text-white hover:text-white/70 transition-colors">hmumtaz70@gmail.com</a>
                 <div className="flex gap-4">
                   {socialLinks.map(({ Icon, href }, i) => (
                     <a key={i} href={href} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all"><Icon className="w-4 h-4 text-white" /></a>

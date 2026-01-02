@@ -16,7 +16,7 @@ const FeaturedProjects = () => {
           <h2 className="text-5xl md:text-6xl lg:text-7xl font-monument font-black tracking-tight text-white mb-4 uppercase">
             FEATURED WORK
           </h2>
-          <p className="text-gray-500 text-lg md:text-xl font-light">
+          <p className="text-slate-500 text-lg md:text-xl font-light">
             My best projects
           </p>
         </motion.div>
@@ -72,7 +72,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
 
-          <div className="absolute top-4 left-4 px-3 py-1.5 bg-black/80 backdrop-blur-md text-gray-300 text-xs font-mono rounded-full tracking-wider uppercase border border-white/20">
+          <div className="absolute top-4 left-4 px-3 py-1.5 bg-black/80 backdrop-blur-md text-slate-300 text-xs font-mono rounded-full tracking-wider uppercase border border-white/20">
             {project.category}
           </div>
 
@@ -92,12 +92,12 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
           <h3 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-3 tracking-tighter leading-tight">
             {project.name}
           </h3>
-          <p className="text-xl md:text-2xl text-gray-400 font-light">
+          <p className="text-xl md:text-2xl text-slate-400 font-light">
             {project.subtitle}
           </p>
         </div>
 
-        <p className="text-gray-500 text-base md:text-lg leading-relaxed">
+        <p className="text-slate-500 text-base md:text-lg leading-relaxed">
           {project.description}
         </p>
 
@@ -105,7 +105,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
           {project.stack.map((tech: string, i: number) => (
             <span
               key={i}
-              className="px-3 py-1.5 bg-white/5 border border-white/10 text-gray-300 text-sm rounded-lg font-mono"
+              className="px-3 py-1.5 bg-white/5 border border-white/10 text-slate-300 text-sm rounded-lg font-mono"
             >
               {tech}
             </span>
@@ -114,7 +114,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
 
         <div className="flex flex-wrap gap-4 pt-2">
           {isRepoDisabled ? (
-            <span className="flex items-center justify-center gap-2 font-semibold text-sm md:text-base px-6 py-3 rounded-xl border border-white/5 bg-white/5 text-gray-600 cursor-not-allowed opacity-50">
+            <span className="flex items-center justify-center gap-2 font-semibold text-sm md:text-base px-6 py-3 rounded-xl border border-white/5 bg-white/5 text-slate-600 cursor-not-allowed opacity-50">
               <Github size={20} /> Repository
             </span>
           ) : (
@@ -131,7 +131,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
           )}
 
           {isLiveDisabled ? (
-            <span className="flex items-center justify-center gap-2 font-semibold text-sm md:text-base px-6 py-3 rounded-xl bg-gray-800 text-gray-500 cursor-not-allowed opacity-50">
+            <span className="flex items-center justify-center gap-2 font-semibold text-sm md:text-base px-6 py-3 rounded-xl bg-white/5 text-slate-600 cursor-not-allowed opacity-50">
               <ExternalLink size={20} /> Live Demo
             </span>
           ) : (
@@ -141,7 +141,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
               rel="noopener noreferrer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center justify-center gap-2 font-semibold text-sm md:text-base px-6 py-3 rounded-xl bg-white text-black hover:bg-gray-200 transition-colors"
+              className="flex items-center justify-center gap-2 font-semibold text-sm md:text-base px-6 py-3 rounded-xl bg-white text-black hover:bg-white/90 transition-colors"
             >
               <ExternalLink size={20} /> Live Demo
             </motion.a>

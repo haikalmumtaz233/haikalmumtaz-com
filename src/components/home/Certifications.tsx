@@ -28,10 +28,10 @@ const Certifications = () => {
   };
 
   return (
-    <section className="relative bg-transparent py-20 md:py-32 min-h-[80vh] overflow-hidden">
+    <section className="relative bg-transparent py-14 md:py-18 min-h-[80vh] overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* === HEADER (REDESIGNED) === */}
+        {/* === HEADER === */}
         <motion.div
           variants={titleVariants}
           initial="hidden"
@@ -50,9 +50,9 @@ const Certifications = () => {
           <div className="overflow-hidden">
             <motion.p
               variants={wordVariants}
-              className="text-gray-400 text-lg md:text-xl font-sans tracking-wide max-w-2xl mx-auto"
+              className="text-slate-400 text-lg md:text-xl font-sans tracking-wide max-w-2xl mx-auto"
             >
-              Digital records of achievements and credentials
+              Records of achievements and credentials
             </motion.p>
           </div>
         </motion.div>
@@ -73,7 +73,6 @@ const HorizontalSlider = () => {
   useEffect(() => {
     if (!sliderRef.current || !containerRef.current) return;
     
-    // Calculate total scrollable width minus visible width
     const updateWidth = () => {
       if (sliderRef.current && containerRef.current) {
         setWidth(sliderRef.current.scrollWidth - containerRef.current.offsetWidth);
@@ -88,12 +87,11 @@ const HorizontalSlider = () => {
   return (
     <div className="relative" ref={containerRef}>
       {/* === DESKTOP: DRAGGABLE SLIDER === */}
-      {/* cursor-grab active:cursor-grabbing indicates interactivity */}
       <motion.div
         className="hidden md:flex gap-6 lg:gap-8 cursor-grab active:cursor-grabbing pb-8"
         ref={sliderRef}
         drag="x"
-        dragConstraints={{ right: 0, left: -width }} // The Fix: Explicit numeric constraints
+        dragConstraints={{ right: 0, left: -width }}
         whileTap={{ cursor: "grabbing" }}
       >
         {certifications.map((cert, index) => (
@@ -124,7 +122,7 @@ const CertificateCard = ({ cert, index }: CertificateCardProps) => {
 
   return (
     <motion.article
-      initial={{ opacity: 0, x: 50 }} // Changed animation to slide from right for archive feel
+      initial={{ opacity: 0, x: 50 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, amount: 0.1 }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -135,13 +133,12 @@ const CertificateCard = ({ cert, index }: CertificateCardProps) => {
       <div className="relative aspect-[3/4] rounded-xl overflow-hidden border border-white/10 bg-[#0a0a0a] shadow-2xl group transition-colors duration-300 hover:border-white/30">
         
         {/* === IMAGE === */}
-        <div className="absolute inset-0 bg-gray-950">
+        <div className="absolute inset-0 bg-black/50">
           <img
             src={cert.image}
             alt={`${cert.title} certificate from ${cert.issuer}`}
             loading="lazy"
             decoding="async"
-            // Removed scale-105 on hover as requested
             className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
           />
         </div>
@@ -149,15 +146,9 @@ const CertificateCard = ({ cert, index }: CertificateCardProps) => {
         {/* === GRADIENT OVERLAY === */}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
 
-        {/* === FILE NUMBER === */}
-        <div className="absolute top-4 right-4 px-2.5 py-1 bg-black/70 backdrop-blur-sm border border-white/20 rounded text-[10px] font-mono text-gray-400 tracking-wider">
-          FILE_{String(cert.id).padStart(3, '0')}
-        </div>
-
         {/* === CONTENT === */}
         <div className="absolute bottom-0 left-0 right-0 p-5 lg:p-6 space-y-3">
-          {/* Date Badge - Changed to monochrome for cleaner look */}
-          <span className="inline-block px-3 py-1.5 bg-white/5 backdrop-blur-md rounded border border-white/10 text-xs font-mono text-gray-300 tracking-wide">
+          <span className="inline-block px-3 py-1.5 bg-cyan-500/10 backdrop-blur-md rounded border border-cyan-400/30 text-xs font-mono text-cyan-400 tracking-wide">
             {cert.date}
           </span>
 
@@ -166,7 +157,7 @@ const CertificateCard = ({ cert, index }: CertificateCardProps) => {
             <h3 className="text-lg lg:text-xl font-bold text-white leading-tight line-clamp-2">
               {cert.title}
             </h3>
-            <p className="text-xs font-mono text-gray-400 line-clamp-1">
+            <p className="text-xs font-mono text-slate-400 line-clamp-1">
               {cert.issuer}
             </p>
           </div>
@@ -196,14 +187,14 @@ const CertificateCard = ({ cert, index }: CertificateCardProps) => {
                 y: isHovered ? 0 : 10,
               }}
               transition={{ duration: 0.2 }}
-              className="inline-flex items-center gap-2 text-xs font-mono text-gray-600 bg-white/5 border border-white/5 px-4 py-2 rounded-lg cursor-not-allowed"
+              className="inline-flex items-center gap-2 text-xs font-mono text-slate-600 bg-white/5 border border-white/5 px-4 py-2 rounded-lg cursor-not-allowed"
             >
               <span>NO_LINK</span>
             </motion.span>
           )}
         </div>
 
-        {/* === HOVER GLOW EFFECT (WHITE) === */}
+        {/* === HOVER GLOW EFFECT === */}
         <motion.div
           className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-white/5 pointer-events-none" // Changed to White
           initial={{ opacity: 0 }}

@@ -48,7 +48,7 @@ const Tools = () => {
           <div className="overflow-hidden">
             <motion.p
               variants={wordVariants}
-              className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto"
+              className="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto"
             >
               My tools for development and design.
             </motion.p>
@@ -84,7 +84,7 @@ const Tools = () => {
                   className="w-full h-full object-contain filter grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
                 />
               </div>
-              <span className="text-sm md:text-base font-mono text-gray-400 group-hover:text-white transition-colors duration-300 text-center px-2">
+              <span className="text-sm md:text-base font-mono text-slate-400 group-hover:text-white transition-colors duration-300 text-center px-2">
                 {tool.name}
               </span>
             </div>
@@ -116,7 +116,7 @@ const Tools = () => {
                   className="w-full h-full object-contain filter grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
                 />
               </div>
-              <span className="text-sm md:text-base font-mono text-gray-400 group-hover:text-white transition-colors duration-300 text-center px-2">
+              <span className="text-sm md:text-base font-mono text-slate-400 group-hover:text-white transition-colors duration-300 text-center px-2">
                 {tool.name}
               </span>
             </div>

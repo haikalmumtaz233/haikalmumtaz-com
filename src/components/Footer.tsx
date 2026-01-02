@@ -21,7 +21,7 @@ const Footer = () => {
               <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-4">
                 Haikal Mumtaz
               </h2>
-              <p className="text-gray-500 text-lg max-w-sm">
+              <p className="text-slate-400 text-lg max-w-sm">
                 Fullstack Developer crafting digital experiences with code and creativity.
               </p>
             </div>
@@ -29,12 +29,12 @@ const Footer = () => {
 
           {/* === NAVIGATION === */}
           <div className="col-span-1 md:col-span-3">
-            <h3 className="text-sm font-mono text-gray-500 uppercase tracking-wider mb-6">Navigate</h3>
+            <h3 className="text-sm font-mono text-slate-500 uppercase tracking-wider mb-6">Navigate</h3>
             <ul className="space-y-4">
               <li>
                 <button 
                   onClick={() => handleNavigation('#top')}
-                  className="text-gray-300 hover:text-white transition-colors text-lg text-left"
+                  className="text-slate-300 hover:text-white transition-colors text-lg text-left"
                 >
                   Home
                 </button>
@@ -42,7 +42,7 @@ const Footer = () => {
               <li>
                 <button 
                   onClick={() => handleNavigation('#projects')}
-                  className="text-gray-300 hover:text-white transition-colors text-lg text-left"
+                  className="text-slate-300 hover:text-white transition-colors text-lg text-left"
                 >
                   Projects
                 </button>
@@ -50,7 +50,7 @@ const Footer = () => {
               <li>
                 <button 
                   onClick={() => handleNavigation('#experience')}
-                  className="text-gray-300 hover:text-white transition-colors text-lg text-left"
+                  className="text-slate-300 hover:text-white transition-colors text-lg text-left"
                 >
                   Experience
                 </button>
@@ -58,7 +58,7 @@ const Footer = () => {
               <li>
                 <button 
                   onClick={() => handleNavigation('#contact')}
-                  className="text-gray-300 hover:text-white transition-colors text-lg text-left"
+                  className="text-slate-300 hover:text-white transition-colors text-lg text-left"
                 >
                   Contact
                 </button>
@@ -68,7 +68,7 @@ const Footer = () => {
 
           {/* === SOCIALS === */}
           <div className="col-span-1 md:col-span-3">
-            <h3 className="text-sm font-mono text-gray-500 uppercase tracking-wider mb-6">Connect</h3>
+            <h3 className="text-sm font-mono text-slate-500 uppercase tracking-wider mb-6">Connect</h3>
             <ul className="space-y-4">
               {[
                 { name: 'LinkedIn', url: 'https://www.linkedin.com/in/haikal-mumtaz/' },
@@ -81,7 +81,7 @@ const Footer = () => {
                     href={link.url} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="text-gray-300 hover:text-white transition-colors text-lg flex items-center gap-2 group"
+                    className="text-slate-300 hover:text-white transition-colors text-lg flex items-center gap-2 group"
                   >
                     {link.name}
                     <span className="opacity-0 group-hover:opacity-100 transition-opacity">↗</span>
@@ -94,12 +94,12 @@ const Footer = () => {
 
         {/* === BOTTOM BAR === */}
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/10 gap-4">
-          <p className="text-gray-500 text-sm">
+          <p className="text-slate-500 text-sm">
             © {currentYear} Haikal Mumtaz. All rights reserved.
           </p>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span className="text-gray-500 text-sm font-mono">
+            <span className="text-slate-500 text-sm font-mono">
               Yogyakarta, Indonesia
             </span>
           </div>

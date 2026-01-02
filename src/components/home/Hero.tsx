@@ -133,7 +133,7 @@ const Hero = () => {
         {/* ========== MAIN TYPOGRAPHY ========== */}
         <div className="flex-grow flex items-center justify-center">
           <div className="text-center px-4">
-            <h2 className="text-xs md:text-sm font-bold uppercase tracking-[0.5em] text-gray-500 mb-6">
+            <h2 className="text-xs md:text-sm font-bold uppercase tracking-[0.5em] text-slate-500 mb-6">
               MUHAMMAD RADITYA
             </h2>
 
@@ -178,7 +178,7 @@ const Hero = () => {
                     <span className="text-xs font-medium uppercase tracking-wider text-white/90">
                       Scroll
                     </span>
-                    <span className="text-[10px] font-normal uppercase tracking-widest text-gray-500">
+                    <span className="text-[10px] font-normal uppercase tracking-widest text-slate-500">
                       To Explore
                     </span>
                   </div>
@@ -190,7 +190,7 @@ const Hero = () => {
             <div className="flex items-center justify-center lg:justify-start">
               <div className="font-mono text-sm md:text-base">
                 <span className="text-purple-500">&gt;</span>{' '}
-                <span className="text-gray-300">{displayedText}</span>
+                <span className="text-white/90">{displayedText}</span>
                 <motion.span
                   className="inline-block w-[2px] h-5 bg-purple-500 ml-1"
                   animate={{ opacity: [1, 0, 1] }}
@@ -203,7 +203,7 @@ const Hero = () => {
             <div className="flex items-center justify-center lg:justify-end">
               <a
                 href="#contact"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-black font-bold text-xs uppercase tracking-wider rounded-full hover:bg-gray-200 transition-all duration-300 shadow-lg shadow-purple-500/20"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-black font-bold text-xs uppercase tracking-wider rounded-full hover:bg-white/90 transition-all duration-300 shadow-lg shadow-purple-500/20"
               >
                 <Briefcase className="w-4 h-4" />
                 Business Inquiries

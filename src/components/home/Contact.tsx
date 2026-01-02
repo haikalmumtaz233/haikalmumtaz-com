@@ -271,7 +271,7 @@ const Contact = () => {
               together
             </h2>
             
-            <p className="text-gray-400 text-lg mb-12 max-w-md">
+            <p className="text-slate-400 text-lg mb-12 max-w-md">
               Have a project in mind or just want to say hi? I'm always open to discussing new projects, or opportunities to be part of your visions.
             </p>
 
@@ -279,7 +279,7 @@ const Contact = () => {
               {/* EMAIL */}
               <a 
                 href="mailto:hmumtaz70@gmail.com" 
-                className="group flex items-center gap-4 text-xl md:text-2xl text-white hover:text-gray-300 transition-colors"
+                className="group flex items-center gap-4 text-xl md:text-2xl text-white hover:text-white/80 transition-colors"
               >
                 <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
                   <Mail size={20} />
@@ -317,7 +317,7 @@ const Contact = () => {
               {/* ROW 1 */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-sm text-gray-500 uppercase tracking-wider font-mono">First Name</label>
+                  <label className="text-sm text-slate-500 uppercase tracking-wider font-mono">First Name</label>
                   <input
                     type="text"
                     name="firstName"
@@ -330,7 +330,7 @@ const Contact = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm text-gray-500 uppercase tracking-wider font-mono">Last Name</label>
+                  <label className="text-sm text-slate-500 uppercase tracking-wider font-mono">Last Name</label>
                   <input
                     type="text"
                     name="lastName"
@@ -347,7 +347,7 @@ const Contact = () => {
               {/* ROW 2 */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-sm text-gray-500 uppercase tracking-wider font-mono">Email</label>
+                  <label className="text-sm text-slate-500 uppercase tracking-wider font-mono">Email</label>
                   <input
                     type="email"
                     name="email"
@@ -360,7 +360,7 @@ const Contact = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm text-gray-500 uppercase tracking-wider font-mono">Phone</label>
+                  <label className="text-sm text-slate-500 uppercase tracking-wider font-mono">Phone</label>
                   <input
                     type="tel"
                     name="phone"
@@ -375,7 +375,7 @@ const Contact = () => {
 
               {/* MESSAGE */}
               <div className="space-y-2">
-                <label className="text-sm text-gray-500 uppercase tracking-wider font-mono">Message</label>
+                <label className="text-sm text-slate-500 uppercase tracking-wider font-mono">Message</label>
                 <textarea
                   name="message"
                   required
@@ -386,7 +386,7 @@ const Contact = () => {
                   className="w-full bg-transparent border-b border-white/20 py-2 text-white focus:border-white focus:outline-none transition-colors resize-none"
                   placeholder="Tell me about your project..."
                 />
-                <p className="text-xs text-gray-500 text-right">
+                <p className="text-xs text-slate-500 text-right">
                   {formData.message.length}/{MAX_MESSAGE_LENGTH}
                 </p>
               </div>
@@ -418,7 +418,7 @@ const Contact = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full group bg-white text-black font-bold text-lg py-4 rounded-xl flex items-center justify-center gap-3 hover:bg-gray-200 transition-all disabled:opacity-50"
+                className="w-full group bg-white text-black font-bold text-lg py-4 rounded-xl flex items-center justify-center gap-3 hover:bg-white/90 transition-all disabled:opacity-50"
               >
                 {isSubmitting ? 'Sending...' : 'Send Message'}
                 <ArrowUpRight className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />

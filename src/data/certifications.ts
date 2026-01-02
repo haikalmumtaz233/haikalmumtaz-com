@@ -51,7 +51,7 @@ export const certifications: Certification[] = [
   {
     id: 6,
     title: 'TixNow - II Place Best Project',
-    issuer: 'Career Vibe Check - Komdigi Yogyakarta & Metrodata Academy',
+    issuer: 'Career Vibe Check',
     date: '2025',
     image: '/certifications/tixnow.webp',
     credentialLink: 'https://drive.google.com/file/d/1AfJ8cpjI2pcFVFVjd2vtNNahROOj15QJ/view?usp=sharing',
@@ -59,7 +59,7 @@ export const certifications: Certification[] = [
   {
     id: 7,
     title: 'Nominator Best Project Pitching',
-    issuer: 'Career Vibe Check - Komdigi Yogyakarta & Metrodata Academy',
+    issuer: 'Career Vibe Check',
     date: '2023',
     image: '/certifications/pitching.webp',
     credentialLink: 'https://drive.google.com/file/d/1RCjC7BYXQKFwuecIxxxhUykKb9iuvqsU/view?usp=sharing',
@@ -67,7 +67,7 @@ export const certifications: Certification[] = [
   {
     id: 8,
     title: 'Laboratory Assistant Certificate',
-    issuer: 'Laboratorium Informatika - UPN "Veteran" Yogyakarta',
+    issuer: 'Laboratorium Informatika - UPNVY',
     date: '2025',
     image: '/certifications/asistenlab.webp',
     credentialLink: 'https://drive.google.com/file/d/1LKjKKhVWf9eBvRmIM0vsPYlMvLNFyoCX/view?usp=sharing',
