@@ -40,6 +40,7 @@ const Navbar = () => {
 
   return (
     <>
+      {/* === TOGGLE BUTTON === */}
       <motion.button
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -61,56 +62,154 @@ const Navbar = () => {
         </AnimatePresence>
       </motion.button>
 
+      {/* === BACKDROP OVERLAY === */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: "-100%" }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: "-100%" }}
-            transition={{ duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }}
-            className="fixed inset-0 z-40 bg-[#09090b] overflow-hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            onClick={() => setIsOpen(false)}
+            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+          />
+        )}
+      </AnimatePresence>
+
+      {/* === SIDE DRAWER === */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: "0%" }}
+            exit={{ x: "100%" }}
+            transition={{ 
+              type: "spring", 
+              damping: 30, 
+              stiffness: 300,
+              mass: 0.8
+            }}
+            className="fixed top-0 right-0 h-full w-full md:w-[480px] z-50 bg-black/80 backdrop-blur-2xl border-l border-white/10 shadow-2xl overflow-hidden"
           >
-            <div className="h-full flex flex-col items-center justify-center px-6">
-              <nav className="mb-16">
-                <ul className="space-y-4">
+            <div className="h-full flex flex-col justify-between p-8 md:p-12">
+              
+              {/* === NAVIGATION LINKS === */}
+              <nav className="flex-1 flex items-center">
+                <ul className="space-y-6 w-full">
                   {navLinks.map((link, index) => (
                     <motion.li
                       key={link.name}
-                      initial={{ opacity: 0, x: -50 }}
+                      initial={{ opacity: 0, x: 50 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.3 + index * 0.1, duration: 0.6 }}
+                      transition={{ 
+                        delay: 0.1 + index * 0.1, 
+                        duration: 0.5,
+                        type: "spring",
+                        damping: 20
+                      }}
                       className="overflow-hidden"
                     >
-                      <button onClick={() => handleNavigation(link.path)} className="block cursor-pointer text-center w-full">
+                      <button 
+                        onClick={() => handleNavigation(link.path)} 
+                        className="block cursor-pointer text-left w-full group"
+                      >
                         <motion.div
                           initial="initial"
                           whileHover="hovered"
-                          className="relative block overflow-hidden whitespace-nowrap text-6xl md:text-8xl font-black uppercase text-white"
+                          className="relative block overflow-hidden whitespace-nowrap text-4xl md:text-6xl font-black uppercase text-white"
                           style={{ lineHeight: 0.9 }}
                         >
+                          {/* Default State */}
                           <div>
                             {link.name.split("").map((l, i) => (
-                              <motion.span variants={{ initial: { y: 0 }, hovered: { y: "-100%" } }} transition={{ duration: DURATION, delay: STAGGER * i }} className="inline-block" key={i}>{l}</motion.span>
+                              <motion.span 
+                                variants={{ 
+                                  initial: { y: 0 }, 
+                                  hovered: { y: "-100%" } 
+                                }} 
+                                transition={{ 
+                                  duration: DURATION, 
+                                  delay: STAGGER * i 
+                                }} 
+                                className="inline-block" 
+                                key={i}
+                              >
+                                {l}
+                              </motion.span>
                             ))}
                           </div>
+                          
+                          {/* Hover State */}
                           <div className="absolute inset-0">
                             {link.name.split("").map((l, i) => (
-                              <motion.span variants={{ initial: { y: "100%" }, hovered: { y: 0 } }} transition={{ duration: DURATION, delay: STAGGER * i }} className="inline-block text-slate-500" key={i}>{l}</motion.span>
+                              <motion.span 
+                                variants={{ 
+                                  initial: { y: "100%" }, 
+                                  hovered: { y: 0 } 
+                                }} 
+                                transition={{ 
+                                  duration: DURATION, 
+                                  delay: STAGGER * i 
+                                }} 
+                                className="inline-block text-purple-400" 
+                                key={i}
+                              >
+                                {l}
+                              </motion.span>
                             ))}
                           </div>
                         </motion.div>
+
+                        {/* Underline Indicator */}
+                        <motion.div
+                          className="h-[2px] bg-gradient-to-r from-purple-500 to-cyan-500 mt-2"
+                          initial={{ width: 0 }}
+                          whileHover={{ width: "100%" }}
+                          transition={{ duration: 0.3 }}
+                        />
                       </button>
                     </motion.li>
                   ))}
                 </ul>
               </nav>
 
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }} className="absolute bottom-0 left-0 w-full px-8 pb-8 flex justify-between items-end">
-                <a href="mailto:hmumtaz70@gmail.com" className="text-white hover:text-white/70 transition-colors">hmumtaz70@gmail.com</a>
+              {/* === FOOTER SECTION === */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                transition={{ delay: 0.6, duration: 0.5 }}
+                className="space-y-8 border-t border-white/10 pt-8"
+              >
+                {/* Email */}
+                <a 
+                  href="mailto:hmumtaz70@gmail.com" 
+                  className="block text-sm md:text-base text-slate-400 hover:text-white transition-colors font-mono"
+                >
+                  hmumtaz70@gmail.com
+                </a>
+
+                {/* Social Links */}
                 <div className="flex gap-4">
-                  {socialLinks.map(({ Icon, href }, i) => (
-                    <a key={i} href={href} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all"><Icon className="w-4 h-4 text-white" /></a>
+                  {socialLinks.map(({ Icon, href, label }, i) => (
+                    <motion.a 
+                      key={i}
+                      href={href} 
+                      target="_blank" 
+                      rel="noreferrer"
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/20 transition-all group"
+                      aria-label={label}
+                    >
+                      <Icon className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
+                    </motion.a>
                   ))}
+                </div>
+
+                {/* Status Badge */}
+                <div className="flex items-center gap-3 text-xs font-mono text-slate-500">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  <span>Available for opportunities</span>
                 </div>
               </motion.div>
             </div>
