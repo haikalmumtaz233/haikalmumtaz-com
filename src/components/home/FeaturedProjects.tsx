@@ -1,17 +1,17 @@
 import { motion } from 'framer-motion';
 import { Github, ExternalLink } from 'lucide-react';
-import { useRef } from 'react';
-import { projects } from '../../data/projects';
+import { projects, type Project } from '../../data/projects';
 
 const FeaturedProjects = () => {
   return (
-    <section className="relative bg-transparent pb-20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-32 pb-10">
+    <section className="relative bg-transparent py-20 md:py-32">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
+          className="mb-16 md:mb-24"
         >
           <h2 className="text-5xl md:text-6xl lg:text-7xl font-monument font-black tracking-tight text-white mb-4 uppercase">
             FEATURED WORK
@@ -20,155 +20,135 @@ const FeaturedProjects = () => {
             My best projects
           </p>
         </motion.div>
-      </div>
 
-      <div className="relative">
-        {projects.map((project, index) => (
-          <Card
-            key={project.id}
-            project={project}
-            index={index}
-          />
-        ))}
+        <div className="space-y-20 md:space-y-32">
+          {projects.map((project, index) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              index={index}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
 };
 
-interface CardProps {
-  project: any;
+interface ProjectCardProps {
+  project: Project;
   index: number;
 }
 
-const Card = ({ project, index }: CardProps) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  const isRepoDisabled = project.repoLink === '#';
-  const isLiveDisabled = project.liveLink === '#';
+const ProjectCard = ({ project, index }: ProjectCardProps) => {
+  const isRepoDisabled = !project.repoLink || project.repoLink === '#';
+  const isLiveDisabled = !project.liveLink || project.liveLink === '#';
+  const isEven = index % 2 === 0;
 
   return (
-    <div
-      ref={cardRef}
-      className="sticky top-0 h-screen flex items-center justify-center px-4 md:px-0"
+    <motion.article
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.6 }}
+      className={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center ${
+        isEven ? '' : 'lg:flex-row-reverse'
+      }`}
     >
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.6, delay: index * 0.1 }}
-        className="w-full max-w-6xl rounded-2xl md:rounded-3xl overflow-hidden relative shadow-2xl border border-white/10 bg-[#121212]"
+      {/* === IMAGE CONTAINER === */}
+      <div
+        className={`relative ${
+          isEven ? 'lg:order-1' : 'lg:order-2'
+        }`}
       >
-        <div className="relative w-full h-full flex flex-col lg:grid lg:grid-cols-2">
+        <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/10 bg-black/50 shadow-2xl group">
+          <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-30 pointer-events-none`} />
           
-          {/* === BACKGROUND GRADIENT === */}
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-blue-900/20 pointer-events-none" />
+          <img
+            src={project.image}
+            alt={`${project.name} - ${project.subtitle}`}
+            loading="lazy"
+            decoding="async"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
 
-          {/* === TOP/LEFT: IMAGE === */}
-          <div className="relative h-56 sm:h-72 lg:h-full w-full bg-black/50 overflow-hidden flex items-center justify-center p-6 md:p-8 lg:p-10">
-            <motion.img
-              src={project.image}
-              alt={project.name}
-              loading="lazy"
-              decoding="async"
-              className="w-full h-full object-contain drop-shadow-2xl"
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.4 }}
-            />
-            
-            {/* Mobile: Category Badge */}
-            <span className="lg:hidden absolute top-4 left-4 px-3 py-1.5 bg-black/60 backdrop-blur-md text-gray-300 text-xs font-mono rounded-full tracking-wider uppercase border border-white/20">
-              {project.category}
-            </span>
-
-            {/* Mobile: Card Number */}
-            <div className="lg:hidden absolute bottom-4 right-4 text-5xl font-black text-white/10 pointer-events-none">
-              0{index + 1}
-            </div>
+          <div className="absolute top-4 left-4 px-3 py-1.5 bg-black/80 backdrop-blur-md text-gray-300 text-xs font-mono rounded-full tracking-wider uppercase border border-white/20">
+            {project.category}
           </div>
 
-          {/* === BOTTOM/RIGHT: CONTENT === */}
-          <div className="relative flex flex-col justify-between p-6 sm:p-8 md:p-10 lg:p-12 xl:p-16 z-10 border-t lg:border-t-0 lg:border-l border-white/10 bg-[#121212]/50 backdrop-blur-sm">
-            
-            {/* Desktop: Category Badge */}
-            <span className="hidden lg:inline-block w-fit px-4 py-2 bg-white/5 text-gray-400 text-xs font-mono rounded-full mb-6 tracking-wider uppercase border border-white/10">
-              {project.category}
-            </span>
-
-            {/* Project Title */}
-            <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-2 sm:mb-3 tracking-tighter leading-[0.95]">
-              {project.name}
-            </h3>
-
-            {/* Subtitle */}
-            <p className="text-lg sm:text-xl text-gray-400 mb-4 sm:mb-6 font-light">
-              {project.subtitle}
-            </p>
-
-            {/* Description */}
-            <p className="text-gray-500 text-sm sm:text-base md:text-lg mb-6 sm:mb-8 leading-relaxed line-clamp-3 sm:line-clamp-4 lg:line-clamp-none">
-              {project.description}
-            </p>
-
-            {/* Tech Stack */}
-            <div className="flex flex-wrap gap-2 mb-6 sm:mb-8 lg:mb-10 overflow-x-auto pb-2 scrollbar-hide">
-              {project.stack.map((tech: string, i: number) => (
-                <span key={i} className="px-2.5 py-1 sm:px-3 sm:py-1.5 bg-white/5 border border-white/10 text-gray-300 text-xs sm:text-sm rounded-lg font-mono whitespace-nowrap">
-                  {tech}
-                </span>
-              ))}
-            </div>
-
-            {/* Buttons */}
-            <div className="flex flex-col xs:flex-row flex-wrap gap-3 sm:gap-4">
-              {isRepoDisabled ? (
-                <motion.button
-                  disabled
-                  className="flex items-center justify-center gap-2 font-semibold text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl border border-white/5 bg-white/5 text-gray-600 cursor-not-allowed opacity-50"
-                >
-                  <Github size={18} className="sm:w-5 sm:h-5" /> Repository
-                </motion.button>
-              ) : (
-                <motion.a
-                  href={project.repoLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="flex items-center justify-center gap-2 font-semibold text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl border border-white/20 text-white hover:border-white/40 hover:bg-white/5 transition-colors"
-                >
-                  <Github size={18} className="sm:w-5 sm:h-5" /> Repository
-                </motion.a>
-              )}
-
-              {isLiveDisabled ? (
-                <motion.button
-                  disabled
-                  className="flex items-center justify-center gap-2 font-semibold text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-gray-800 text-gray-500 cursor-not-allowed opacity-50"
-                >
-                  <ExternalLink size={18} className="sm:w-5 sm:h-5" /> Live Demo
-                </motion.button>
-              ) : (
-                <motion.a
-                  href={project.liveLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="flex items-center justify-center gap-2 font-semibold text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-white text-black hover:bg-gray-200 transition-colors"
-                >
-                  <ExternalLink size={18} className="sm:w-5 sm:h-5" /> Live Demo
-                </motion.a>
-              )}
-            </div>
-
-            {/* Desktop: Card Number */}
-            <div className="hidden lg:block absolute bottom-6 right-6 xl:bottom-8 xl:right-8 text-6xl md:text-7xl xl:text-8xl font-black text-white/5 pointer-events-none">
-              0{index + 1}
-            </div>
+          <div className="absolute bottom-4 right-4 text-7xl md:text-8xl font-black text-white/5 pointer-events-none select-none">
+            0{index + 1}
           </div>
         </div>
-      </motion.div>
-    </div>
+      </div>
+
+      {/* === CONTENT CONTAINER === */}
+      <div
+        className={`flex flex-col justify-center space-y-6 ${
+          isEven ? 'lg:order-2' : 'lg:order-1'
+        }`}
+      >
+        <div>
+          <h3 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-3 tracking-tighter leading-tight">
+            {project.name}
+          </h3>
+          <p className="text-xl md:text-2xl text-gray-400 font-light">
+            {project.subtitle}
+          </p>
+        </div>
+
+        <p className="text-gray-500 text-base md:text-lg leading-relaxed">
+          {project.description}
+        </p>
+
+        <div className="flex flex-wrap gap-2">
+          {project.stack.map((tech: string, i: number) => (
+            <span
+              key={i}
+              className="px-3 py-1.5 bg-white/5 border border-white/10 text-gray-300 text-sm rounded-lg font-mono"
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
+
+        <div className="flex flex-wrap gap-4 pt-2">
+          {isRepoDisabled ? (
+            <span className="flex items-center justify-center gap-2 font-semibold text-sm md:text-base px-6 py-3 rounded-xl border border-white/5 bg-white/5 text-gray-600 cursor-not-allowed opacity-50">
+              <Github size={20} /> Repository
+            </span>
+          ) : (
+            <motion.a
+              href={project.repoLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center justify-center gap-2 font-semibold text-sm md:text-base px-6 py-3 rounded-xl border border-white/20 text-white hover:border-white/40 hover:bg-white/5 transition-colors"
+            >
+              <Github size={20} /> Repository
+            </motion.a>
+          )}
+
+          {isLiveDisabled ? (
+            <span className="flex items-center justify-center gap-2 font-semibold text-sm md:text-base px-6 py-3 rounded-xl bg-gray-800 text-gray-500 cursor-not-allowed opacity-50">
+              <ExternalLink size={20} /> Live Demo
+            </span>
+          ) : (
+            <motion.a
+              href={project.liveLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center justify-center gap-2 font-semibold text-sm md:text-base px-6 py-3 rounded-xl bg-white text-black hover:bg-gray-200 transition-colors"
+            >
+              <ExternalLink size={20} /> Live Demo
+            </motion.a>
+          )}
+        </div>
+      </div>
+    </motion.article>
   );
 };
 
