@@ -86,9 +86,10 @@ const HorizontalSlider = () => {
 
   return (
     <div className="relative" ref={containerRef}>
-      {/* === DESKTOP: DRAGGABLE SLIDER === */}
+      {/* === UNIFIED DRAGGABLE SLIDER (MOBILE + DESKTOP) === */}
       <motion.div
-        className="hidden md:flex gap-6 lg:gap-8 cursor-grab active:cursor-grabbing pb-8"
+        className="flex gap-4 md:gap-6 lg:gap-8 cursor-grab active:cursor-grabbing pb-8 pr-4 md:pr-8"
+        style={{ touchAction: 'pan-y' }}
         ref={sliderRef}
         drag="x"
         dragConstraints={{ right: 0, left: -width }}
@@ -98,15 +99,6 @@ const HorizontalSlider = () => {
           <CertificateCard key={cert.id} cert={cert} index={index} />
         ))}
       </motion.div>
-
-      {/* === MOBILE: NATIVE SCROLL === */}
-      <div className="md:hidden overflow-x-auto scrollbar-hide pb-6">
-        <div className="flex gap-4 px-2">
-          {certifications.map((cert, index) => (
-            <CertificateCard key={cert.id} cert={cert} index={index} />
-          ))}
-        </div>
-      </div>
     </div>
   );
 };

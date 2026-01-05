@@ -61,7 +61,7 @@ const TechStack = () => {
           <div className="overflow-hidden">
             <motion.h2
               variants={wordVariants}
-              className="text-5xl md:text-6xl lg:text-7xl font-monument font-black text-white uppercase tracking-tight mb-4"
+              className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-monument font-black text-white uppercase tracking-tight mb-4"
             >
               Tech Stack
             </motion.h2>
@@ -88,10 +88,10 @@ const TechStack = () => {
             <motion.div
               key={index}
               variants={itemVariants}
-              className="flex items-center gap-4 p-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-colors duration-300 group cursor-pointer"
+              className="flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-colors duration-300 group cursor-pointer"
             >
               {/* === ICON WRAPPER === */}
-              <div className="w-12 h-12 rounded-xl bg-black/50 flex items-center justify-center p-2 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-9 h-9 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-xl bg-black/50 flex items-center justify-center p-2 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
                 <img
                   src={tech.logo}
                   alt={tech.name}
@@ -102,7 +102,7 @@ const TechStack = () => {
               </div>
 
               <div className="relative">
-                <span className="text-slate-400 font-semibold text-base md:text-lg transition-colors duration-300 group-hover:text-white block">
+                <span className="text-slate-400 font-semibold text-sm md:text-base lg:text-lg transition-colors duration-300 group-hover:text-white block">
                   {tech.name}
                 </span>
                 <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-white transition-all duration-300 ease-out group-hover:w-full opacity-0 group-hover:opacity-100" />
