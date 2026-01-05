@@ -76,7 +76,7 @@ const Hero = () => {
           <>
             {/* TOP PANEL */}
             <motion.div
-              className="fixed top-0 left-0 right-0 h-[50vh] bg-white z-50 flex items-end justify-center pb-8 overflow-hidden"
+              className="fixed top-0 left-0 right-0 h-[50vh] bg-white z-50 flex items-end justify-center pb-2 md:pb-8 overflow-hidden"
               initial={{ y: 0 }}
               exit={{ y: '-100%' }}
               transition={{
@@ -92,7 +92,7 @@ const Hero = () => {
                   duration: 0.8,
                   ease: [0.43, 0.13, 0.23, 0.96]
                 }}
-                className="font-sans font-black text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-black uppercase tracking-tighter leading-none"
+                className="font-sans font-black text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-black uppercase tracking-tighter leading-[0.8]"
               >
                 HAIKAL
               </motion.h1>
@@ -100,7 +100,7 @@ const Hero = () => {
 
             {/* BOTTOM PANEL */}
             <motion.div
-              className="fixed bottom-0 left-0 right-0 h-[50vh] bg-white z-50 flex items-start justify-center pt-8 overflow-hidden"
+              className="fixed bottom-0 left-0 right-0 h-[50vh] bg-white z-50 flex items-start justify-center pt-2 md:pt-8 overflow-hidden"
               initial={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{
@@ -116,7 +116,7 @@ const Hero = () => {
                   duration: 0.8,
                   ease: [0.43, 0.13, 0.23, 0.96]
                 }}
-                className="font-sans font-black text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-black uppercase tracking-tighter leading-none"
+                className="font-sans font-black text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-black uppercase tracking-tighter leading-[0.8]"
               >
                 MUMTAZ
               </motion.h1>
