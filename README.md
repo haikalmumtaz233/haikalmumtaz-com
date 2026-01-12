@@ -56,6 +56,32 @@ Ensure you have the following installed:
 
 ---
 
+## 🔧 Configuration
+
+To enable the **Contact Form** functionality, you need to set up environment variables for EmailJS and Cloudflare Turnstile.
+
+### Setup Instructions
+
+1. **Copy the example environment file:**
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Fill in your API keys:**
+   ```env
+   # Cloudflare Turnstile (https://dash.cloudflare.com/turnstile)
+   VITE_TURNSTILE_SITE_KEY=your_turnstile_site_key_here
+
+   # EmailJS (https://www.emailjs.com/)
+   VITE_EMAILJS_SERVICE_ID=your_service_id
+   VITE_EMAILJS_TEMPLATE_ID=your_template_id
+   VITE_EMAILJS_PUBLIC_KEY=your_public_key
+   ```
+
+3. **Restart the development server** after adding the environment variables.
+
+---
+
 ## 📄 License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.

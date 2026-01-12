@@ -76,7 +76,7 @@ const Contact = () => {
     const loadTurnstile = () => {
       if (window.turnstile && turnstileRef.current && !widgetIdRef.current) {
         widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
-          sitekey: '0x4AAAAAACKC_rdGcHxbc3VL',
+          sitekey: import.meta.env.VITE_TURNSTILE_SITE_KEY,
           callback: (token: string) => {
             setTurnstileToken(token);
             setTurnstileError(false);
@@ -124,7 +124,6 @@ const Contact = () => {
 
     // === HONEYPOT CHECK ===
     if (formData.honeypot) {
-      console.log('Spam detected');
       setIsSubmitting(false);
       return;
     }
@@ -192,10 +191,10 @@ const Contact = () => {
       };
 
       await emailjs.send(
-        'service_ra1eucx',
-        'template_vre5vmq',
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
         templateParams,
-        'K1WcBojUUDy4lfPVR'
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       );
 
       // Success
@@ -207,7 +206,9 @@ const Contact = () => {
         window.turnstile.reset(widgetIdRef.current);
       }
     } catch (error) {
-      console.error('Form submission error:', error);
+      if (import.meta.env.DEV) {
+        console.error('Form submission error:', error);
+      }
       addToast('error', 'Failed to send message. Please try again.');
     } finally {
       setIsSubmitting(false);
