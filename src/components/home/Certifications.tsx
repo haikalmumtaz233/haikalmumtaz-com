@@ -1,9 +1,12 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { certifications, type Certification } from '../../data/certifications';
-import { ExternalLink } from 'lucide-react';
+import { Eye } from 'lucide-react';
+import CertificationModal from './CertificationModal';
 
 const Certifications = () => {
+  const [selectedCert, setSelectedCert] = useState<Certification | null>(null);
+
   // === HEADER VARIANTS ===
   const titleVariants = {
     hidden: { opacity: 0 },
@@ -58,13 +61,20 @@ const Certifications = () => {
         </motion.div>
 
         {/* === HORIZONTAL SLIDER === */}
-        <HorizontalSlider />
+        <HorizontalSlider onCertClick={setSelectedCert} />
       </div>
+
+      {/* === LIGHTBOX MODAL === */}
+      <CertificationModal
+        cert={selectedCert}
+        isOpen={selectedCert !== null}
+        onClose={() => setSelectedCert(null)}
+      />
     </section>
   );
 };
 
-const HorizontalSlider = () => {
+const HorizontalSlider = ({ onCertClick }: { onCertClick: (cert: Certification) => void }) => {
   const [width, setWidth] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -96,7 +106,7 @@ const HorizontalSlider = () => {
         whileTap={{ cursor: "grabbing" }}
       >
         {certifications.map((cert, index) => (
-          <CertificateCard key={cert.id} cert={cert} index={index} />
+          <CertificateCard key={cert.id} cert={cert} index={index} onCertClick={onCertClick} />
         ))}
       </motion.div>
     </div>
@@ -106,11 +116,12 @@ const HorizontalSlider = () => {
 interface CertificateCardProps {
   cert: Certification;
   index: number;
+  onCertClick: (cert: Certification) => void;
 }
 
-const CertificateCard = ({ cert, index }: CertificateCardProps) => {
+const CertificateCard = ({ cert, index, onCertClick }: CertificateCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
-  const hasCredential = cert.credentialLink && cert.credentialLink !== '';
+  const dragRef = useRef(false);
 
   return (
     <motion.article
@@ -120,7 +131,12 @@ const CertificateCard = ({ cert, index }: CertificateCardProps) => {
       transition={{ duration: 0.6, delay: index * 0.1 }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="flex-shrink-0 w-[280px] md:w-[320px] lg:w-[360px] select-none"
+      onPointerDown={() => { dragRef.current = false; }}
+      onPointerMove={() => { dragRef.current = true; }}
+      onPointerUp={() => {
+        if (!dragRef.current) onCertClick(cert);
+      }}
+      className="flex-shrink-0 w-[280px] md:w-[320px] lg:w-[360px] select-none cursor-pointer"
     >
       <div className="relative aspect-[3/4] rounded-xl overflow-hidden border border-white/10 bg-[#0a0a0a] shadow-2xl group transition-colors duration-300 hover:border-white/30">
         
@@ -154,36 +170,19 @@ const CertificateCard = ({ cert, index }: CertificateCardProps) => {
             </p>
           </div>
 
-          {/* View Credential Button */}
-          {hasCredential ? (
-            <motion.a
-              href={cert.credentialLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{
-                opacity: isHovered ? 1 : 0,
-                y: isHovered ? 0 : 10,
-              }}
-              transition={{ duration: 0.2 }}
-              className="inline-flex items-center gap-2 text-xs font-mono font-bold text-white bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-lg hover:bg-white/20 hover:border-white/40 transition-colors"
-            >
-              <span>View Credential</span>
-              <ExternalLink size={14} />
-            </motion.a>
-          ) : (
-            <motion.span
-              initial={{ opacity: 0, y: 10 }}
-              animate={{
-                opacity: isHovered ? 1 : 0,
-                y: isHovered ? 0 : 10,
-              }}
-              transition={{ duration: 0.2 }}
-              className="inline-flex items-center gap-2 text-xs font-mono text-slate-600 bg-white/5 border border-white/5 px-4 py-2 rounded-lg cursor-not-allowed"
-            >
-              <span>NO_LINK</span>
-            </motion.span>
-          )}
+          {/* View Certificate Button */}
+          <motion.span
+            initial={{ opacity: 0, y: 10 }}
+            animate={{
+              opacity: isHovered ? 1 : 0,
+              y: isHovered ? 0 : 10,
+            }}
+            transition={{ duration: 0.2 }}
+            className="inline-flex items-center gap-2 text-xs font-mono font-bold text-white bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-lg"
+          >
+            <span>View Certificate</span>
+            <Eye size={14} />
+          </motion.span>
         </div>
 
         {/* === HOVER GLOW EFFECT === */}

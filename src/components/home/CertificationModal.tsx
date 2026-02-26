@@ -1,0 +1,101 @@
+import { useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, ExternalLink } from 'lucide-react';
+import type { Certification } from '../../data/certifications';
+
+interface CertificationModalProps {
+  cert: Certification | null;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) => {
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    },
+    [onClose],
+  );
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [isOpen, handleKeyDown]);
+
+  const isOfficialLink =
+    cert?.credentialLink &&
+    !cert.credentialLink.includes('drive.google.com');
+
+  return (
+    <AnimatePresence>
+      {isOpen && cert && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ scale: 0.92, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.92, opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.43, 0.13, 0.23, 0.96] }}
+            className="relative max-w-4xl w-full max-h-[90vh] flex flex-col bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close button */}
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 z-10 p-2 bg-black/60 backdrop-blur-md rounded-full border border-white/20 text-white hover:bg-white/20 transition-colors cursor-pointer"
+            >
+              <X size={20} />
+            </button>
+
+            {/* Image */}
+            <div className="flex-1 overflow-auto flex items-center justify-center p-4 pt-14">
+              <img
+                src={cert.image}
+                alt={`${cert.title} certificate from ${cert.issuer}`}
+                className="max-w-full max-h-[65vh] object-contain rounded-lg"
+              />
+            </div>
+
+            {/* Info bar */}
+            <div className="p-5 md:p-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="space-y-1 min-w-0">
+                <h3 className="text-lg font-bold text-white leading-tight">
+                  {cert.title}
+                </h3>
+                <p className="text-xs font-mono text-slate-400">
+                  {cert.issuer} · {cert.date}
+                </p>
+              </div>
+
+              {isOfficialLink && (
+                <a
+                  href={cert.credentialLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-shrink-0 inline-flex items-center gap-2 text-xs font-mono font-bold text-white bg-white/10 border border-white/20 px-4 py-2.5 rounded-lg hover:bg-white/20 hover:border-white/40 transition-colors"
+                >
+                  <span>Verify Credential</span>
+                  <ExternalLink size={14} />
+                </a>
+              )}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+export default CertificationModal;
