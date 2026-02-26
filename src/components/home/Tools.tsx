@@ -24,12 +24,11 @@ const Tools = () => {
     },
   }
 
-  const toolsTrack = [...tools, ...tools]; 
+  const toolsTrack = [...tools, ...tools];
 
   return (
     <section className="relative bg-transparent py-16 md:py-23 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
-        {/* === HEADER === */}
         <motion.div
           variants={titleVariants}
           initial="hidden"
@@ -56,17 +55,15 @@ const Tools = () => {
         </motion.div>
       </div>
 
-      {/* === INFINITE SCROLL MARQUEE === */}
       <div className="w-full overflow-hidden relative flex">
-        
-        {/* === TRACK 1 === */}
+
         <motion.div
           initial={{ x: "-100%" }}
           animate={{ x: "0%" }}
-          transition={{ 
+          transition={{
             duration: 20,
-            repeat: Infinity, 
-            ease: "linear" 
+            repeat: Infinity,
+            ease: "linear"
           }}
           className="flex gap-4 pr-4 flex-shrink-0"
         >
@@ -91,14 +88,13 @@ const Tools = () => {
           ))}
         </motion.div>
 
-        {/* === TRACK 2 === */}
         <motion.div
           initial={{ x: "-100%" }}
           animate={{ x: "0%" }}
-          transition={{ 
-            duration: 20, 
-            repeat: Infinity, 
-            ease: "linear" 
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear"
           }}
           className="flex gap-4 pr-4 flex-shrink-0"
         >

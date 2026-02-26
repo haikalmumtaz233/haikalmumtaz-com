@@ -19,7 +19,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
-  
+
   const handleNavigation = (path: string) => {
     setIsOpen(false);
     if (path === '#top') {
@@ -40,7 +40,6 @@ const Navbar = () => {
 
   return (
     <>
-      {/* === TOGGLE BUTTON === */}
       <motion.button
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -62,7 +61,6 @@ const Navbar = () => {
         </AnimatePresence>
       </motion.button>
 
-      {/* === BACKDROP OVERLAY === */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -76,24 +74,22 @@ const Navbar = () => {
         )}
       </AnimatePresence>
 
-      {/* === SIDE DRAWER === */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ x: "100%" }}
             animate={{ x: "0%" }}
             exit={{ x: "100%" }}
-            transition={{ 
-              type: "spring", 
-              damping: 30, 
+            transition={{
+              type: "spring",
+              damping: 30,
               stiffness: 300,
               mass: 0.8
             }}
             className="fixed top-0 right-0 h-full w-full md:w-[480px] z-50 bg-black/80 backdrop-blur-2xl border-l border-white/10 shadow-2xl overflow-hidden"
           >
             <div className="h-full flex flex-col justify-between p-8 md:p-12">
-              
-              {/* === NAVIGATION LINKS === */}
+
               <nav className="flex-1 flex items-center">
                 <ul className="space-y-6 w-full">
                   {navLinks.map((link, index) => (
@@ -101,16 +97,16 @@ const Navbar = () => {
                       key={link.name}
                       initial={{ opacity: 0, x: 50 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ 
-                        delay: 0.1 + index * 0.1, 
+                      transition={{
+                        delay: 0.1 + index * 0.1,
                         duration: 0.5,
                         type: "spring",
                         damping: 20
                       }}
                       className="overflow-hidden"
                     >
-                      <button 
-                        onClick={() => handleNavigation(link.path)} 
+                      <button
+                        onClick={() => handleNavigation(link.path)}
                         className="block cursor-pointer text-left w-full group"
                       >
                         <motion.div
@@ -119,39 +115,37 @@ const Navbar = () => {
                           className="relative block overflow-hidden whitespace-nowrap text-4xl md:text-6xl font-black uppercase text-white"
                           style={{ lineHeight: 0.9 }}
                         >
-                          {/* Default State */}
                           <div>
                             {link.name.split("").map((l, i) => (
-                              <motion.span 
-                                variants={{ 
-                                  initial: { y: 0 }, 
-                                  hovered: { y: "-100%" } 
-                                }} 
-                                transition={{ 
-                                  duration: DURATION, 
-                                  delay: STAGGER * i 
-                                }} 
-                                className="inline-block" 
+                              <motion.span
+                                variants={{
+                                  initial: { y: 0 },
+                                  hovered: { y: "-100%" }
+                                }}
+                                transition={{
+                                  duration: DURATION,
+                                  delay: STAGGER * i
+                                }}
+                                className="inline-block"
                                 key={i}
                               >
                                 {l}
                               </motion.span>
                             ))}
                           </div>
-                          
-                          {/* Hover State */}
+
                           <div className="absolute inset-0">
                             {link.name.split("").map((l, i) => (
-                              <motion.span 
-                                variants={{ 
-                                  initial: { y: "100%" }, 
-                                  hovered: { y: 0 } 
-                                }} 
-                                transition={{ 
-                                  duration: DURATION, 
-                                  delay: STAGGER * i 
-                                }} 
-                                className="inline-block text-purple-400" 
+                              <motion.span
+                                variants={{
+                                  initial: { y: "100%" },
+                                  hovered: { y: 0 }
+                                }}
+                                transition={{
+                                  duration: DURATION,
+                                  delay: STAGGER * i
+                                }}
+                                className="inline-block text-purple-400"
                                 key={i}
                               >
                                 {l}
@@ -160,7 +154,6 @@ const Navbar = () => {
                           </div>
                         </motion.div>
 
-                        {/* Underline Indicator */}
                         <motion.div
                           className="h-[2px] bg-gradient-to-r from-purple-500 to-cyan-500 mt-2"
                           initial={{ width: 0 }}
@@ -173,28 +166,25 @@ const Navbar = () => {
                 </ul>
               </nav>
 
-              {/* === FOOTER SECTION === */}
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }} 
-                animate={{ opacity: 1, y: 0 }} 
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6, duration: 0.5 }}
                 className="space-y-8 border-t border-white/10 pt-8"
               >
-                {/* Email */}
-                <a 
-                  href="mailto:hmumtaz70@gmail.com" 
+                <a
+                  href="mailto:hmumtaz70@gmail.com"
                   className="block text-sm md:text-base text-slate-400 hover:text-white transition-colors font-mono"
                 >
                   hmumtaz70@gmail.com
                 </a>
 
-                {/* Social Links */}
                 <div className="flex gap-4">
                   {socialLinks.map(({ Icon, href, label }, i) => (
-                    <motion.a 
+                    <motion.a
                       key={i}
-                      href={href} 
-                      target="_blank" 
+                      href={href}
+                      target="_blank"
                       rel="noreferrer"
                       whileHover={{ scale: 1.1, rotate: 5 }}
                       whileTap={{ scale: 0.95 }}
@@ -206,7 +196,6 @@ const Navbar = () => {
                   ))}
                 </div>
 
-                {/* Status Badge */}
                 <div className="flex items-center gap-3 text-xs font-mono text-slate-500">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                   <span>Available for opportunities</span>

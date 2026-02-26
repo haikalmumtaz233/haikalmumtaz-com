@@ -6,29 +6,25 @@ const FavoriteMoments = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Detect screen size and handle resize
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Track scroll progress
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end end'],
   });
 
-  // Separate transform values for mobile vs desktop
   const xDesktop = useTransform(scrollYProgress, [0, 1], ['0%', '-78%']);
   const xMobile = useTransform(scrollYProgress, [0, 1], ['0%', '-88%']);
   const x = isMobile ? xMobile : xDesktop;
 
-  // === ANIMATION VARIANTS ===
   const titleVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -102,7 +98,6 @@ const FavoriteMoments = () => {
           style={{ x }}
           className="flex items-stretch gap-8 md:gap-24 lg:gap-32 px-4 md:px-12 pr-12 md:pr-32"
         >
-          {/* === OPENING TITLE CARD === */}
           <div className="flex-shrink-0 flex items-center justify-center w-[85vw] md:w-[500px] h-[80vh]">
             <motion.div
               variants={titleVariants}
@@ -111,7 +106,6 @@ const FavoriteMoments = () => {
               viewport={{ once: true }}
               className="text-left"
             >
-              {/* MASKED REVEAL ANIMATION */}
               <div className="overflow-hidden">
                 <motion.h2
                   variants={wordVariants}
@@ -120,7 +114,7 @@ const FavoriteMoments = () => {
                   Favorite
                 </motion.h2>
               </div>
-              
+
               <div className="overflow-hidden">
                 <motion.h2
                   variants={wordVariants}
@@ -141,7 +135,6 @@ const FavoriteMoments = () => {
             </motion.div>
           </div>
 
-          {/* === EDITORIAL GALLERY === */}
           {moments.map((moment, index) => (
             <motion.div
               key={moment.id}

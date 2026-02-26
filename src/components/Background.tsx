@@ -1,4 +1,3 @@
-// Background.tsx
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -9,23 +8,19 @@ gsap.registerPlugin(ScrollTrigger);
 const Background = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
-    
-    // Wrapper refs for parallax scroll
+
     const orb1WrapperRef = useRef<HTMLDivElement>(null);
     const orb2WrapperRef = useRef<HTMLDivElement>(null);
     const orb3WrapperRef = useRef<HTMLDivElement>(null);
-    
-    // Inner orb refs for floating animation
+
     const orb1Ref = useRef<HTMLDivElement>(null);
     const orb2Ref = useRef<HTMLDivElement>(null);
     const orb3Ref = useRef<HTMLDivElement>(null);
 
-    // === GSAP FLOATING ORBS ANIMATION ===
     useGSAP(() => {
         if (!orb1Ref.current || !orb2Ref.current || !orb3Ref.current) return;
         if (!orb1WrapperRef.current || !orb2WrapperRef.current || !orb3WrapperRef.current) return;
 
-        // A. Perpetual Floating (Idle Animation) - Applied to INNER ORBS
         gsap.to(orb1Ref.current, {
             x: 'random(-50, 50)',
             y: 'random(-30, 30)',
@@ -53,7 +48,6 @@ const Background = () => {
             ease: 'sine.inOut',
         });
 
-        // B. Scroll Parallax (ScrollTrigger) - Applied to WRAPPERS
         gsap.to(orb1WrapperRef.current, {
             y: '150vh',
             ease: 'none',
@@ -88,7 +82,6 @@ const Background = () => {
         });
     }, { scope: containerRef });
 
-    // === CANVAS STARFIELD ANIMATION ===
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -100,13 +93,11 @@ const Background = () => {
         let width = window.innerWidth;
         let height = window.innerHeight;
 
-        // --- MOUSE PARALLAX VARS ---
         let mouseX = 0;
         let mouseY = 0;
         let targetMouseX = 0;
         let targetMouseY = 0;
 
-        // --- SCROLL PARALLAX VARS ---
         let scrollY = window.scrollY;
         let targetScrollY = window.scrollY;
         let scrollVelocity = 0;
@@ -130,11 +121,9 @@ const Background = () => {
         window.addEventListener('resize', handleResize);
         window.addEventListener('mousemove', handleMouseMove);
         window.addEventListener('scroll', handleScroll);
-        
+
         handleResize();
 
-        // --- CLASSES ---
-        // (Keep the star logic lightweight)
         class Star {
             x: number;
             y: number;
@@ -150,7 +139,7 @@ const Background = () => {
                 this.y = Math.random() * height;
                 this.z = Math.random() * 1.5 + 0.5;
                 this.size = Math.random() * 1.2;
-                this.baseAlpha = Math.random() * 0.55 + 0.4; 
+                this.baseAlpha = Math.random() * 0.55 + 0.4;
                 this.alpha = this.baseAlpha;
                 this.twinkleSpeed = Math.random() * 0.01 + 0.002;
                 const colors = ['255, 255, 255', '220, 250, 255', '240, 230, 255'];
@@ -171,7 +160,7 @@ const Background = () => {
                 const scrollDiff = targetScrollY - scrollY;
                 scrollVelocity += (scrollDiff - scrollVelocity) * 0.1;
                 scrollY += scrollVelocity;
-                this.y += scrollVelocity * this.z * 0.2; 
+                this.y += scrollVelocity * this.z * 0.2;
 
                 this.y -= 0.2 * this.z;
 
@@ -191,9 +180,8 @@ const Background = () => {
             }
         }
 
-        // --- INIT ---
         const stars: Star[] = [];
-        const starCount = Math.floor((width * height) / 8000); // Reduced density for performance
+        const starCount = Math.floor((width * height) / 8000);
         for (let i = 0; i < starCount; i++) {
             stars.push(new Star());
         }
@@ -219,15 +207,12 @@ const Background = () => {
 
     return (
         <div ref={containerRef} className="fixed inset-0 z-[-1] bg-[#0a0a0a]">
-            {/* === CANVAS STARFIELD === */}
             <canvas
                 ref={canvasRef}
                 className="absolute inset-0 block"
             />
 
-            {/* === GSAP FLOATING ORBS LAYER === */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                {/* Orb 1 (Primary) - Large Purple, Top-Left */}
                 <div ref={orb1WrapperRef} className="absolute -top-[20%] -left-[10%]" style={{ willChange: 'transform' }}>
                     <div
                         ref={orb1Ref}
@@ -235,8 +220,7 @@ const Background = () => {
                         style={{ willChange: 'transform' }}
                     />
                 </div>
-                
-                {/* Orb 2 (Secondary) - Medium Cyan, Bottom-Right */}
+
                 <div ref={orb2WrapperRef} className="absolute -bottom-[10%] -right-[5%]" style={{ willChange: 'transform' }}>
                     <div
                         ref={orb2Ref}
@@ -244,8 +228,7 @@ const Background = () => {
                         style={{ willChange: 'transform' }}
                     />
                 </div>
-                
-                {/* Orb 3 (Accent) - Small Pink/Magenta, Center-Right */}
+
                 <div ref={orb3WrapperRef} className="absolute top-[30%] right-[10%]" style={{ willChange: 'transform' }}>
                     <div
                         ref={orb3Ref}
@@ -255,9 +238,7 @@ const Background = () => {
                 </div>
             </div>
 
-            {/* === GRADIENT OVERLAYS === */}
-            {/* === GRADIENT OVERLAYS === */}
-            <div 
+            <div
                 className="absolute bottom-0 left-0 right-0 h-[60vh] pointer-events-none opacity-70"
                 style={{
                     background: 'linear-gradient(to top, rgba(217, 70, 239, 0.3) 0%, rgba(168, 85, 247, 0.1) 50%, transparent 100%',
@@ -270,8 +251,7 @@ const Background = () => {
                     background: 'radial-gradient(circle at 50% 50%, transparent 20%, #0a0a0a 100%)'
                 }}
             />
-            
-            {/* === NOISE TEXTURE === */}
+
             <div
                 className="absolute inset-0 opacity-[0.04] pointer-events-none"
                 style={{

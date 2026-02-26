@@ -32,7 +32,6 @@ const Experience = () => {
     <section ref={sectionRef} className="relative bg-transparent pt-20 md:pt-40 pb-10 w-full overflow-x-clip">
       <div className="w-full px-4 md:px-8 lg:px-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-12 items-stretch">
-          {/* === LEFT COLUMN === */}
           <div className="lg:col-span-5 min-h-full">
             <div className="sticky top-1/2 -translate-y-1/2 py-8 text-left border-l-2 border-white/20 pl-8 md:pl-12">
               <motion.div
@@ -55,7 +54,6 @@ const Experience = () => {
             </div>
           </div>
 
-          {/* === RIGHT COLUMN === */}
           <div className="lg:col-span-7 relative">
             <div className="max-w-3xl">
               {experiences.map((exp, index) => (

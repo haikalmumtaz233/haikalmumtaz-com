@@ -20,7 +20,6 @@ declare global {
   }
 }
 
-// Toast notification types
 type ToastType = 'success' | 'error';
 
 interface Toast {
@@ -46,21 +45,18 @@ const Contact = () => {
   const turnstileRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
 
-  // === SECURITY: INPUT SANITIZATION HELPER ===
   const sanitizeInput = (text: string): string => {
-    return DOMPurify.sanitize(text.trim(), { 
-      ALLOWED_TAGS: [], 
-      ALLOWED_ATTR: [] 
+    return DOMPurify.sanitize(text.trim(), {
+      ALLOWED_TAGS: [],
+      ALLOWED_ATTR: []
     });
   };
 
-  // === SECURITY: VALIDATION PATTERNS ===
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const PHONE_REGEX = /^[\d\s+\-()]{10,}$/;
   const MAX_MESSAGE_LENGTH = 2000;
   const MAX_NAME_LENGTH = 50;
 
-  // Toast helper functions
   const addToast = (type: ToastType, message: string) => {
     const id = Date.now();
     setToasts(prev => [...prev, { id, type, message }]);
@@ -71,7 +67,6 @@ const Contact = () => {
     setToasts(prev => prev.filter(toast => toast.id !== id));
   };
 
-  // Load Turnstile script and render widget
   useEffect(() => {
     const loadTurnstile = () => {
       if (window.turnstile && turnstileRef.current && !widgetIdRef.current) {
@@ -96,7 +91,7 @@ const Contact = () => {
       loadTurnstile();
     } else {
       if (document.getElementById('turnstile-script')) return;
-      
+
       const script = document.createElement('script');
       script.id = 'turnstile-script';
       script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
@@ -122,13 +117,11 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // === HONEYPOT CHECK ===
     if (formData.honeypot) {
       setIsSubmitting(false);
       return;
     }
 
-    // === TURNSTILE VALIDATION ===
     if (!turnstileToken) {
       setTurnstileError(true);
       setIsSubmitting(false);
@@ -136,43 +129,36 @@ const Contact = () => {
       return;
     }
 
-    // === SECURITY: SANITIZE ALL INPUTS ===
     const sanitizedFirstName = sanitizeInput(formData.firstName);
     const sanitizedLastName = sanitizeInput(formData.lastName);
     const sanitizedEmail = sanitizeInput(formData.email);
     const sanitizedPhone = sanitizeInput(formData.phone);
     const sanitizedMessage = sanitizeInput(formData.message);
 
-    // === SECURITY: STRICT VALIDATION ===
-    // Validate name lengths
     if (sanitizedFirstName.length > MAX_NAME_LENGTH || sanitizedLastName.length > MAX_NAME_LENGTH) {
       setIsSubmitting(false);
       addToast('error', 'Name is too long. Maximum 50 characters.');
       return;
     }
 
-    // Validate email format
     if (!EMAIL_REGEX.test(sanitizedEmail)) {
       setIsSubmitting(false);
       addToast('error', 'Invalid email format. Please use a valid email address.');
       return;
     }
 
-    // Validate phone format
     if (sanitizedPhone && !PHONE_REGEX.test(sanitizedPhone)) {
       setIsSubmitting(false);
       addToast('error', 'Invalid phone number format. Use only numbers, spaces, +, (), or -.');
       return;
     }
 
-    // Validate message length
     if (sanitizedMessage.length > MAX_MESSAGE_LENGTH) {
       setIsSubmitting(false);
       addToast('error', `Message is too long. Maximum ${MAX_MESSAGE_LENGTH} characters.`);
       return;
     }
 
-    // Validate message not empty
     if (sanitizedMessage.length === 0) {
       setIsSubmitting(false);
       addToast('error', 'Message cannot be empty.');
@@ -180,7 +166,6 @@ const Contact = () => {
     }
 
     try {
-      // === SEND EMAIL VIA EMAILJS ===
       const templateParams = {
         title: "New Inquiry from Portfolio",
         name: `${sanitizedFirstName} ${sanitizedLastName}`,
@@ -197,11 +182,10 @@ const Contact = () => {
         import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       );
 
-      // Success
       addToast('success', 'Message sent successfully! I\'ll get back to you soon.');
       setFormData({ firstName: '', lastName: '', email: '', phone: '', message: '', honeypot: '' });
       setTurnstileToken(null);
-      
+
       if (widgetIdRef.current && window.turnstile) {
         window.turnstile.reset(widgetIdRef.current);
       }
@@ -223,7 +207,6 @@ const Contact = () => {
 
   return (
     <section className="relative bg-transparent py-24 md:py-32 overflow-hidden">
-      {/* === TOAST NOTIFICATIONS === */}
       <div className="fixed top-6 right-6 z-50 flex flex-col gap-3">
         <AnimatePresence>
           {toasts.map((toast) => (
@@ -234,8 +217,8 @@ const Contact = () => {
               exit={{ opacity: 0, x: 100, scale: 0.9 }}
               transition={{ duration: 0.3, ease: [0.43, 0.13, 0.23, 0.96] }}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg backdrop-blur-md border ${
-                toast.type === 'success' 
-                  ? 'bg-green-500/20 border-green-500/30 text-green-400' 
+                toast.type === 'success'
+                  ? 'bg-green-500/20 border-green-500/30 text-green-400'
                   : 'bg-red-500/20 border-red-500/30 text-red-400'
               }`}
             >
@@ -245,7 +228,7 @@ const Contact = () => {
                 <XCircle className="w-5 h-5 flex-shrink-0" />
               )}
               <p className="text-sm font-medium pr-2">{toast.message}</p>
-              <button 
+              <button
                 onClick={() => removeToast(toast.id)}
                 className="ml-auto p-1 hover:bg-white/10 rounded-full transition-colors"
               >
@@ -258,8 +241,7 @@ const Contact = () => {
 
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
-          
-          {/* === LEFT COLUMN: INFO === */}
+
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -271,15 +253,14 @@ const Contact = () => {
               Let's work <br />
               together
             </h2>
-            
+
             <p className="text-slate-400 text-lg mb-12 max-w-md">
               Have a project in mind or just want to say hi? I'm always open to discussing new projects, or opportunities to be part of your visions.
             </p>
 
             <div className="space-y-8">
-              {/* EMAIL */}
-              <a 
-                href="mailto:hmumtaz70@gmail.com" 
+              <a
+                href="mailto:hmumtaz70@gmail.com"
                 className="group flex items-center gap-4 text-xl md:text-2xl text-white hover:text-white/80 transition-colors"
               >
                 <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
@@ -288,7 +269,6 @@ const Contact = () => {
                 <span>hmumtaz70@gmail.com</span>
               </a>
 
-              {/* SOCIALS */}
               <div className="flex gap-4">
                 {socialLinks.map((social, index) => (
                   <a
@@ -306,7 +286,6 @@ const Contact = () => {
             </div>
           </motion.div>
 
-          {/* === RIGHT COLUMN: FORM === */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -315,7 +294,6 @@ const Contact = () => {
             className="bg-white/[0.02] border border-white/10 rounded-3xl p-8 md:p-10"
           >
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* ROW 1 */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm text-slate-500 uppercase tracking-wider font-mono">First Name</label>
@@ -345,7 +323,6 @@ const Contact = () => {
                 </div>
               </div>
 
-              {/* ROW 2 */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm text-slate-500 uppercase tracking-wider font-mono">Email</label>
@@ -374,7 +351,6 @@ const Contact = () => {
                 </div>
               </div>
 
-              {/* MESSAGE */}
               <div className="space-y-2">
                 <label className="text-sm text-slate-500 uppercase tracking-wider font-mono">Message</label>
                 <textarea
@@ -392,7 +368,6 @@ const Contact = () => {
                 </p>
               </div>
 
-              {/* === HONEYPOT === */}
               <input
                 type="text"
                 name="honeypot"
@@ -402,10 +377,9 @@ const Contact = () => {
                 autoComplete="off"
               />
 
-              {/* === CLOUDFLARE TURNSTILE WIDGET === */}
               <div className="w-full">
-                <div 
-                  ref={turnstileRef} 
+                <div
+                  ref={turnstileRef}
                   className="flex justify-center"
                 />
                 {turnstileError && (
@@ -415,7 +389,6 @@ const Contact = () => {
                 )}
               </div>
 
-              {/* SUBMIT BUTTON */}
               <button
                 type="submit"
                 disabled={isSubmitting}

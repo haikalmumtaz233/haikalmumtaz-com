@@ -50,7 +50,6 @@ const TechStack = () => {
   return (
     <section className="relative bg-transparent py-13 md:py-21">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
-        {/* === HEADER === */}
         <motion.div
           variants={titleVariants}
           initial="hidden"
@@ -76,7 +75,6 @@ const TechStack = () => {
           </div>
         </motion.div>
 
-        {/* === TECH GRID === */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -90,7 +88,6 @@ const TechStack = () => {
               variants={itemVariants}
               className="flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-colors duration-300 group cursor-pointer"
             >
-              {/* === ICON WRAPPER === */}
               <div className="w-9 h-9 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-xl bg-black/50 flex items-center justify-center p-2 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
                 <img
                   src={tech.logo}

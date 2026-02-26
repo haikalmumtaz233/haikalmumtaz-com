@@ -55,7 +55,6 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
         isEven ? '' : 'lg:flex-row-reverse'
       }`}
     >
-      {/* === IMAGE CONTAINER === */}
       <div
         className={`relative ${
           isEven ? 'lg:order-1' : 'lg:order-2'
@@ -63,7 +62,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
       >
         <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/10 bg-black/50 shadow-2xl group">
           <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-30 pointer-events-none`} />
-          
+
           <img
             src={project.image}
             alt={`${project.name} - ${project.subtitle}`}
@@ -82,7 +81,6 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
         </div>
       </div>
 
-      {/* === CONTENT CONTAINER === */}
       <div
         className={`flex flex-col justify-center space-y-6 ${
           isEven ? 'lg:order-2' : 'lg:order-1'

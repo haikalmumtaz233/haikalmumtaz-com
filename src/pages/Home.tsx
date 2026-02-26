@@ -1,5 +1,4 @@
 import Hero from '../components/home/Hero';
-// import Identity from '../components/home/Identity';
 import FeaturedProjects from '../components/home/FeaturedProjects';
 import Experience from '../components/home/Experience';
 import TechStack from '../components/home/TechStack';
@@ -13,7 +12,6 @@ const Home = () => {
     <>
       <div className="relative z-10 space-y-24 md:space-y-32 pb-24 md:pb-32">
         <Hero />
-        {/* <Identity /> */}
 
         <div id="projects">
           <FeaturedProjects />
