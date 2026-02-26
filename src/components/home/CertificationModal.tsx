@@ -40,7 +40,7 @@ const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) 
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-hidden"
           onClick={onClose}
         >
           <motion.div
@@ -48,10 +48,9 @@ const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) 
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.92, opacity: 0 }}
             transition={{ duration: 0.3, ease: [0.43, 0.13, 0.23, 0.96] }}
-            className="relative max-w-4xl w-full max-h-[90vh] flex flex-col bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-hidden"
+            className="relative max-w-4xl w-full h-auto max-h-[90vh] flex flex-col bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close button */}
             <button
               onClick={onClose}
               className="absolute top-4 right-4 z-10 p-2 bg-black/60 backdrop-blur-md rounded-full border border-white/20 text-white hover:bg-white/20 transition-colors cursor-pointer"
@@ -59,8 +58,7 @@ const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) 
               <X size={20} />
             </button>
 
-            {/* Image */}
-            <div className="flex-1 overflow-auto flex items-center justify-center p-4 pt-14">
+            <div className="flex-1 flex items-center justify-center p-4 pt-14 overflow-hidden">
               <img
                 src={cert.image}
                 alt={`${cert.title} certificate from ${cert.issuer}`}
@@ -68,7 +66,6 @@ const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) 
               />
             </div>
 
-            {/* Info bar */}
             <div className="p-5 md:p-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div className="space-y-1 min-w-0">
                 <h3 className="text-lg font-bold text-white leading-tight">
