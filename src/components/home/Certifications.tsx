@@ -23,19 +23,19 @@ const Certifications = () => {
   const [selectedCert, setSelectedCert] = useState<Certification | null>(null);
 
   return (
-    <section className="relative bg-transparent py-12 md:py-16 2xl:py-20 overflow-hidden">
+    <section className="relative bg-transparent py-8 sm:py-12 md:py-16 2xl:py-20 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           variants={titleVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.5 }}
-          className="text-center mb-10 md:mb-14 2xl:mb-20"
+          className="text-center mb-8 sm:mb-12 md:mb-14 2xl:mb-20"
         >
-          <div className="overflow-hidden mb-4">
+          <div className="overflow-hidden mb-3">
             <motion.h2
               variants={wordVariants}
-              className="text-3xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black tracking-tight text-white uppercase"
+              className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black tracking-tight text-white uppercase"
             >
               CERTIFICATIONS
             </motion.h2>
@@ -43,7 +43,7 @@ const Certifications = () => {
           <div className="overflow-hidden">
             <motion.p
               variants={wordVariants}
-              className="text-slate-400 text-base md:text-lg 2xl:text-xl font-sans tracking-wide max-w-2xl mx-auto"
+              className="text-slate-400 text-sm sm:text-base md:text-lg 2xl:text-xl font-sans tracking-wide max-w-2xl mx-auto"
             >
               Records of achievements and credentials
             </motion.p>
@@ -119,7 +119,7 @@ const CertificateCard = ({
       onPointerDown={() => { dragRef.current = false; }}
       onPointerMove={() => { dragRef.current = true; }}
       onPointerUp={() => { if (!dragRef.current) onCertClick(cert); }}
-      className="flex-shrink-0 w-[250px] md:w-[280px] lg:w-[320px] 2xl:w-[360px] select-none cursor-pointer group"
+      className="flex-shrink-0 w-[220px] sm:w-[250px] md:w-[280px] lg:w-[320px] 2xl:w-[360px] select-none cursor-pointer group"
     >
       <div className="relative aspect-[3/4] rounded-xl overflow-hidden border border-white/10 bg-[#0a0a0a] shadow-2xl transition-colors duration-300 group-hover:border-white/30">
         <div className="absolute inset-0 bg-black/50">

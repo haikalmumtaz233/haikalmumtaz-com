@@ -11,28 +11,28 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-[#0a0a0a] pt-20 pb-10 border-t border-white/10">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-2 md:grid-cols-12 gap-12 md:gap-8 mb-16">
+    <footer className="bg-[#0a0a0a] pt-12 sm:pt-16 md:pt-20 pb-8 sm:pb-10 border-t border-white/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
+        <div className="grid grid-cols-2 md:grid-cols-12 gap-8 sm:gap-10 md:gap-8 mb-10 sm:mb-16">
 
           <div className="col-span-2 md:col-span-6 flex flex-col justify-between h-full">
             <div>
-              <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-4">
+              <h2 className="text-2xl sm:text-3xl md:text-5xl font-black text-white uppercase tracking-tighter mb-3">
                 Haikal Mumtaz
               </h2>
-              <p className="text-slate-400 text-lg max-w-sm">
+              <p className="text-slate-400 text-sm sm:text-base md:text-lg max-w-sm">
                 Fullstack Developer crafting digital experiences with code and creativity.
               </p>
             </div>
           </div>
 
           <div className="col-span-1 md:col-span-3">
-            <h3 className="text-sm font-mono text-slate-500 uppercase tracking-wider mb-6">Navigate</h3>
-            <ul className="space-y-4">
+            <h3 className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-4 sm:mb-6">Navigate</h3>
+            <ul className="space-y-3 sm:space-y-4">
               <li>
                 <button
                   onClick={() => handleNavigation('#top')}
-                  className="text-slate-300 hover:text-white transition-colors text-lg text-left"
+                  className="text-slate-300 hover:text-white transition-colors text-sm sm:text-base text-left"
                 >
                   Home
                 </button>
@@ -40,7 +40,7 @@ const Footer = () => {
               <li>
                 <button
                   onClick={() => handleNavigation('#projects')}
-                  className="text-slate-300 hover:text-white transition-colors text-lg text-left"
+                  className="text-slate-300 hover:text-white transition-colors text-sm sm:text-base text-left"
                 >
                   Projects
                 </button>
@@ -48,7 +48,7 @@ const Footer = () => {
               <li>
                 <button
                   onClick={() => handleNavigation('#experience')}
-                  className="text-slate-300 hover:text-white transition-colors text-lg text-left"
+                  className="text-slate-300 hover:text-white transition-colors text-sm sm:text-base text-left"
                 >
                   Experience
                 </button>
@@ -56,7 +56,7 @@ const Footer = () => {
               <li>
                 <button
                   onClick={() => handleNavigation('#contact')}
-                  className="text-slate-300 hover:text-white transition-colors text-lg text-left"
+                  className="text-slate-300 hover:text-white transition-colors text-sm sm:text-base text-left"
                 >
                   Contact
                 </button>
@@ -65,8 +65,8 @@ const Footer = () => {
           </div>
 
           <div className="col-span-1 md:col-span-3">
-            <h3 className="text-sm font-mono text-slate-500 uppercase tracking-wider mb-6">Connect</h3>
-            <ul className="space-y-4">
+            <h3 className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-4 sm:mb-6">Connect</h3>
+            <ul className="space-y-3 sm:space-y-4">
               {[
                 { name: 'LinkedIn', url: 'https://www.linkedin.com/in/haikal-mumtaz/' },
                 { name: 'GitHub', url: 'https://github.com/haikalmumtaz233' },
@@ -78,7 +78,7 @@ const Footer = () => {
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-slate-300 hover:text-white transition-colors text-lg flex items-center gap-2 group"
+                    className="text-slate-300 hover:text-white transition-colors text-sm sm:text-base flex items-center gap-2 group"
                   >
                     {link.name}
                     <span className="opacity-0 group-hover:opacity-100 transition-opacity">↗</span>

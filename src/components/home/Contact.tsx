@@ -206,7 +206,7 @@ const Contact = () => {
   ];
 
   return (
-    <section className="relative bg-transparent py-16 md:py-20 lg:py-24 overflow-hidden">
+    <section className="relative bg-transparent py-10 sm:py-14 md:py-16 lg:py-20 overflow-hidden">
       <div className="fixed top-6 right-6 z-50 flex flex-col gap-3">
         <AnimatePresence>
           {toasts.map((toast) => (
@@ -239,8 +239,8 @@ const Contact = () => {
         </AnimatePresence>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 2xl:gap-24">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 2xl:gap-24">
 
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -249,12 +249,12 @@ const Contact = () => {
             transition={{ duration: 0.8 }}
             className="flex flex-col justify-center"
           >
-            <h2 className="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black text-white uppercase tracking-tight leading-none mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black text-white uppercase tracking-tight leading-none mb-4 sm:mb-6">
               Let's work <br />
               together
             </h2>
 
-            <p className="text-slate-400 text-base 2xl:text-lg mb-8 max-w-md">
+            <p className="text-slate-400 text-sm sm:text-base 2xl:text-lg mb-6 sm:mb-8 max-w-md">
               Have a project in mind or just want to say hi? I'm always open to discussing new projects, or opportunities to be part of your visions.
             </p>
 

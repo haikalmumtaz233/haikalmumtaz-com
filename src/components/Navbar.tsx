@@ -45,7 +45,7 @@ const Navbar = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.5, duration: 0.4 }}
         onClick={toggleMenu}
-        className="fixed top-8 right-8 z-50 w-14 h-14 backdrop-blur-md bg-white/10 border border-white/20 rounded-full flex items-center justify-center hover:scale-110 hover:bg-white/20 transition-all duration-300 cursor-pointer"
+        className="fixed top-6 right-6 sm:top-8 sm:right-8 z-50 w-12 h-12 sm:w-14 sm:h-14 backdrop-blur-md bg-white/10 border border-white/20 rounded-full flex items-center justify-center hover:scale-110 hover:bg-white/20 transition-all duration-300 cursor-pointer"
         aria-label="Toggle menu"
       >
         <AnimatePresence mode="wait">
@@ -86,12 +86,12 @@ const Navbar = () => {
               stiffness: 300,
               mass: 0.8
             }}
-            className="fixed top-0 right-0 h-full w-full md:w-[480px] z-50 bg-black/80 backdrop-blur-2xl border-l border-white/10 shadow-2xl overflow-hidden"
+            className="fixed top-0 right-0 h-full w-full sm:w-[85vw] md:w-[480px] z-50 bg-black/80 backdrop-blur-2xl border-l border-white/10 shadow-2xl overflow-hidden"
           >
-            <div className="h-full flex flex-col justify-between p-8 md:p-12">
+            <div className="h-full flex flex-col justify-between p-6 sm:p-8 md:p-12">
 
               <nav className="flex-1 flex items-center">
-                <ul className="space-y-6 w-full">
+                <ul className="space-y-4 sm:space-y-6 w-full">
                   {navLinks.map((link, index) => (
                     <motion.li
                       key={link.name}
@@ -112,7 +112,7 @@ const Navbar = () => {
                         <motion.div
                           initial="initial"
                           whileHover="hovered"
-                          className="relative block overflow-hidden whitespace-nowrap text-4xl md:text-6xl font-black uppercase text-white"
+                          className="relative block overflow-hidden whitespace-nowrap text-3xl sm:text-4xl md:text-6xl font-black uppercase text-white"
                           style={{ lineHeight: 0.9 }}
                         >
                           <div>
@@ -170,7 +170,7 @@ const Navbar = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6, duration: 0.5 }}
-                className="space-y-8 border-t border-white/10 pt-8"
+                className="space-y-6 sm:space-y-8 border-t border-white/10 pt-6 sm:pt-8"
               >
                 <a
                   href="mailto:hmumtaz70@gmail.com"

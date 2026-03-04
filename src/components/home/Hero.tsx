@@ -117,23 +117,23 @@ const Hero = () => {
         )}
       </AnimatePresence>
 
-      <section className="relative h-screen max-h-screen bg-transparent text-white overflow-hidden flex flex-col items-center justify-between py-12 px-6">
+      <section className="relative h-screen max-h-screen bg-transparent text-white overflow-hidden flex flex-col items-center justify-between py-8 sm:py-12 px-4 sm:px-6">
         <div className="flex-shrink-0 h-20" />
 
         <div className="flex-grow flex items-center justify-center">
           <div className="text-center px-4">
-            <h2 className="text-xs md:text-sm font-bold uppercase tracking-[0.5em] text-slate-500 mb-6">
+            <h2 className="text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-[0.5em] text-slate-500 mb-4 sm:mb-6">
               MUHAMMAD RADITYA
             </h2>
 
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-8xl 2xl:text-9xl font-monument font-black uppercase leading-[0.9] tracking-tight text-white">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-8xl 2xl:text-9xl font-monument font-black uppercase leading-[0.9] tracking-tight text-white">
               <span className="inline-block">HAIKAL</span>{' '}
               <span className="inline-block">MUMTAZ</span>
             </h1>
           </div>
         </div>
 
-        <div className="w-full max-w-7xl px-6 pb-10">
+        <div className="w-full max-w-7xl px-4 sm:px-6 pb-6 sm:pb-10">
           <div className="flex flex-col items-center gap-6 lg:flex-row lg:items-center lg:justify-between">
 
             <AnimatePresence>

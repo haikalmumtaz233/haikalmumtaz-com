@@ -27,19 +27,19 @@ const Tools = () => {
   const toolsTrack = [...tools, ...tools];
 
   return (
-    <section className="relative bg-transparent py-12 md:py-16 2xl:py-20 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
+    <section className="relative bg-transparent py-8 sm:py-12 md:py-16 2xl:py-20 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
         <motion.div
           variants={titleVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.5 }}
-          className="text-center mb-10 2xl:mb-16"
+          className="text-center mb-8 sm:mb-10 2xl:mb-16"
         >
           <div className="overflow-hidden">
             <motion.h2
               variants={wordVariants}
-              className="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black text-white uppercase tracking-tight mb-3"
+              className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black text-white uppercase tracking-tight mb-3"
             >
               Tools & Software
             </motion.h2>
@@ -47,7 +47,7 @@ const Tools = () => {
           <div className="overflow-hidden">
             <motion.p
               variants={wordVariants}
-              className="text-slate-400 text-base md:text-lg 2xl:text-xl max-w-2xl mx-auto"
+              className="text-slate-400 text-sm sm:text-base md:text-lg 2xl:text-xl max-w-2xl mx-auto"
             >
               My tools for development and design.
             </motion.p>

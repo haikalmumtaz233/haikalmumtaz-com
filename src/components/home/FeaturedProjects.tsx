@@ -4,16 +4,16 @@ import { projects, type Project } from '../../data/projects';
 
 const FeaturedProjects = () => {
   return (
-    <section className="relative bg-transparent py-16 md:py-20 lg:py-28 2xl:py-32">
+    <section className="relative bg-transparent py-10 sm:py-14 md:py-20 lg:py-28 2xl:py-32">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="mb-12 md:mb-16 2xl:mb-24"
+          className="mb-8 sm:mb-12 md:mb-16 2xl:mb-24"
         >
-          <h2 className="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black tracking-tight text-white mb-3 uppercase">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black tracking-tight text-white mb-3 uppercase">
             FEATURED WORK
           </h2>
           <p className="text-slate-500 text-base md:text-lg 2xl:text-xl font-light">
@@ -21,7 +21,7 @@ const FeaturedProjects = () => {
           </p>
         </motion.div>
 
-        <div className="space-y-16 md:space-y-24 2xl:space-y-32">
+        <div className="space-y-10 sm:space-y-16 md:space-y-24 2xl:space-y-32">
           {projects.map((project, index) => (
             <ProjectCard
               key={project.id}
@@ -87,10 +87,10 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
         }`}
       >
         <div>
-          <h3 className="text-3xl md:text-4xl lg:text-5xl 2xl:text-6xl font-black text-white mb-2 tracking-tighter leading-tight">
+          <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl 2xl:text-6xl font-black text-white mb-2 tracking-tighter leading-tight">
             {project.name}
           </h3>
-          <p className="text-lg md:text-xl 2xl:text-2xl text-slate-400 font-light">
+          <p className="text-sm sm:text-base sm:text-lg md:text-xl 2xl:text-2xl text-slate-400 font-light">
             {project.subtitle}
           </p>
         </div>

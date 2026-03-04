@@ -48,19 +48,19 @@ const TechStack = () => {
   };
 
   return (
-    <section className="relative bg-transparent py-13 md:py-21">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
+    <section className="relative bg-transparent py-10 sm:py-12 md:py-16 2xl:py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
         <motion.div
           variants={titleVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.5 }}
-          className="text-center mb-10"
+          className="text-center mb-8 sm:mb-10 2xl:mb-16"
         >
           <div className="overflow-hidden">
             <motion.h2
               variants={wordVariants}
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black text-white uppercase tracking-tight mb-3"
+              className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black text-white uppercase tracking-tight mb-3"
             >
               Tech Stack
             </motion.h2>
@@ -68,7 +68,7 @@ const TechStack = () => {
           <div className="overflow-hidden">
             <motion.p
               variants={wordVariants}
-              className="text-slate-400 text-base md:text-lg 2xl:text-xl max-w-2xl mx-auto"
+              className="text-slate-400 text-sm sm:text-base md:text-lg 2xl:text-xl max-w-2xl mx-auto"
             >
               Technologies I use to develop, build, and deploy.
             </motion.p>
@@ -80,7 +80,7 @@ const TechStack = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 2xl:gap-6"
+          className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 2xl:gap-6"
         >
           {techStack.map((tech, index) => (
             <motion.div
