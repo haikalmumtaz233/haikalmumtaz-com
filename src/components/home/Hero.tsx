@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Download, ChevronDown, Briefcase } from 'lucide-react';
+import { ChevronDown, Briefcase } from 'lucide-react';
 
 const Hero = () => {
   const [isIntroComplete, setIsIntroComplete] = useState(false);
@@ -9,7 +9,7 @@ const Hero = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
 
-  const roles = ['Fullstack Developer', 'Machine Learning Engineer', 'Data Scientist', 'Game Developer'];
+  const roles = ['Application Developer Jr.', 'Fullstack Developer', 'Machine Learning Engineer', 'Data Scientist', 'Game Developer'];
 
   useEffect(() => {
     const completeTimer = setTimeout(() => {
@@ -133,34 +133,32 @@ const Hero = () => {
           </div>
         </div>
 
-        <div className="w-full max-w-7xl px-6 pb-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-center">
+        <div className="w-full max-w-7xl px-6 pb-10">
+          <div className="flex flex-col items-center gap-6 lg:flex-row lg:items-center lg:justify-between">
 
             <AnimatePresence>
               {showScrollIndicator && isIntroComplete && (
                 <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                   className="hidden lg:flex items-center gap-3"
                 >
                   <motion.div
-                    className="flex items-center justify-center w-10 h-10 rounded-full border border-white/30"
-                    animate={{
-                      y: [0, 8, 0],
-                    }}
+                    className="flex items-center justify-center w-10 h-10 rounded-full border border-white/20"
+                    animate={{ y: [0, 6, 0] }}
                     transition={{
-                      duration: 1.8,
+                      duration: 2,
                       repeat: Infinity,
                       ease: "easeInOut"
                     }}
                   >
-                    <ChevronDown className="w-5 h-5 text-white/70" />
+                    <ChevronDown className="w-4 h-4 text-white/50" />
                   </motion.div>
 
                   <div className="flex flex-col leading-none">
-                    <span className="text-xs font-medium uppercase tracking-wider text-white/90">
+                    <span className="text-[11px] font-medium uppercase tracking-wider text-white/70">
                       Scroll
                     </span>
                     <span className="text-[10px] font-normal uppercase tracking-widest text-slate-500">
@@ -171,7 +169,7 @@ const Hero = () => {
               )}
             </AnimatePresence>
 
-            <div className="flex items-center justify-center lg:justify-start">
+            <div className="flex items-center justify-center">
               <div className="font-mono text-sm md:text-base">
                 <span className="text-purple-500">&gt;</span>{' '}
                 <span className="text-white/90">{displayedText}</span>
@@ -183,24 +181,13 @@ const Hero = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-center lg:justify-end">
+            <div className="flex items-center justify-center">
               <a
                 href="#contact"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-black font-bold text-xs uppercase tracking-wider rounded-full hover:bg-white/90 transition-all duration-300 shadow-lg shadow-purple-500/20"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-white text-black font-bold text-xs uppercase tracking-wider rounded-full hover:bg-white/90 transition-all duration-300 shadow-lg shadow-purple-500/20"
               >
                 <Briefcase className="w-4 h-4" />
                 Business Inquiries
-              </a>
-            </div>
-
-            <div className="flex justify-center lg:justify-end">
-              <a
-                href="/CV.pdf"
-                download="Haikal_Mumtaz_CV.pdf"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-transparent border border-white/30 text-white font-bold text-xs uppercase tracking-wider rounded-full hover:bg-white hover:text-black transition-all duration-300 shadow-lg shadow-purple-500/10"
-              >
-                <Download className="w-4 h-4" />
-                Download CV
               </a>
             </div>
 

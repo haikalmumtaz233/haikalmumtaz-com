@@ -99,7 +99,7 @@ const ExperienceItem = ({ experience, index, hoveredIndex, setHoveredIndex }: Ex
         transition={{ duration: 0.6, delay: index * 0.1 }}
         onMouseEnter={() => setHoveredIndex(index)}
         onMouseLeave={() => setHoveredIndex(null)}
-        className="border-t border-white/20 pt-16 pb-16 lg:pl-12 transition-opacity duration-500 ease-in-out cursor-pointer"
+        className="border-t border-white/20 pt-16 pb-16 lg:pl-12 transition-opacity duration-500 ease-in-out"
         style={{
           opacity: isDimmed ? 0.2 : 1,
         }}
