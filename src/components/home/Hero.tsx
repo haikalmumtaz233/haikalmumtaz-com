@@ -126,7 +126,7 @@ const Hero = () => {
               MUHAMMAD RADITYA
             </h2>
 
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-8xl font-monument font-black uppercase leading-[0.9] tracking-tight text-white">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-8xl 2xl:text-9xl font-monument font-black uppercase leading-[0.9] tracking-tight text-white">
               <span className="inline-block">HAIKAL</span>{' '}
               <span className="inline-block">MUMTAZ</span>
             </h1>

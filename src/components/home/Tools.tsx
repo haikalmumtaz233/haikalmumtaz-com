@@ -27,19 +27,19 @@ const Tools = () => {
   const toolsTrack = [...tools, ...tools];
 
   return (
-    <section className="relative bg-transparent py-12 md:py-16 overflow-hidden">
+    <section className="relative bg-transparent py-12 md:py-16 2xl:py-20 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <motion.div
           variants={titleVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.5 }}
-          className="text-center mb-10"
+          className="text-center mb-10 2xl:mb-16"
         >
           <div className="overflow-hidden">
             <motion.h2
               variants={wordVariants}
-              className="text-4xl md:text-5xl lg:text-6xl font-monument font-black text-white uppercase tracking-tight mb-3"
+              className="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black text-white uppercase tracking-tight mb-3"
             >
               Tools & Software
             </motion.h2>
@@ -47,7 +47,7 @@ const Tools = () => {
           <div className="overflow-hidden">
             <motion.p
               variants={wordVariants}
-              className="text-slate-400 text-base md:text-lg max-w-2xl mx-auto"
+              className="text-slate-400 text-base md:text-lg 2xl:text-xl max-w-2xl mx-auto"
             >
               My tools for development and design.
             </motion.p>
@@ -70,9 +70,9 @@ const Tools = () => {
           {toolsTrack.map((tool, index) => (
             <div
               key={`t1-${index}`}
-              className="w-28 h-28 md:w-32 md:h-32 flex flex-col items-center justify-center gap-2 flex-shrink-0 hover:bg-white/5 rounded-xl transition-all duration-300 group cursor-pointer"
+              className="w-28 h-28 md:w-32 md:h-32 2xl:w-36 2xl:h-36 flex flex-col items-center justify-center gap-2 flex-shrink-0 hover:bg-white/5 rounded-xl transition-all duration-300 group cursor-pointer"
             >
-              <div className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center">
+              <div className="w-8 h-8 md:w-10 md:h-10 2xl:w-12 2xl:h-12 flex items-center justify-center">
                 <img
                   src={tool.logo}
                   alt={tool.name}
@@ -81,7 +81,7 @@ const Tools = () => {
                   className="w-full h-full object-contain filter grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
                 />
               </div>
-              <span className="text-xs md:text-sm font-mono text-slate-400 group-hover:text-white transition-colors duration-300 text-center px-2">
+              <span className="text-xs md:text-sm 2xl:text-base font-mono text-slate-400 group-hover:text-white transition-colors duration-300 text-center px-2">
                 {tool.name}
               </span>
             </div>
@@ -101,9 +101,9 @@ const Tools = () => {
           {toolsTrack.map((tool, index) => (
             <div
               key={`t2-${index}`}
-              className="w-28 h-28 md:w-32 md:h-32 flex flex-col items-center justify-center gap-2 flex-shrink-0 hover:bg-white/5 rounded-xl transition-all duration-300 group cursor-pointer"
+              className="w-28 h-28 md:w-32 md:h-32 2xl:w-36 2xl:h-36 flex flex-col items-center justify-center gap-2 flex-shrink-0 hover:bg-white/5 rounded-xl transition-all duration-300 group cursor-pointer"
             >
-              <div className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center">
+              <div className="w-8 h-8 md:w-10 md:h-10 2xl:w-12 2xl:h-12 flex items-center justify-center">
                 <img
                   src={tool.logo}
                   alt={tool.name}
@@ -112,7 +112,7 @@ const Tools = () => {
                   className="w-full h-full object-contain filter grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
                 />
               </div>
-              <span className="text-xs md:text-sm font-mono text-slate-400 group-hover:text-white transition-colors duration-300 text-center px-2">
+              <span className="text-xs md:text-sm 2xl:text-base font-mono text-slate-400 group-hover:text-white transition-colors duration-300 text-center px-2">
                 {tool.name}
               </span>
             </div>

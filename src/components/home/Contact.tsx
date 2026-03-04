@@ -240,7 +240,7 @@ const Contact = () => {
       </div>
 
       <div className="max-w-6xl mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 2xl:gap-24">
 
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -249,19 +249,19 @@ const Contact = () => {
             transition={{ duration: 0.8 }}
             className="flex flex-col justify-center"
           >
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-monument font-black text-white uppercase tracking-tight leading-none mb-6">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black text-white uppercase tracking-tight leading-none mb-6">
               Let's work <br />
               together
             </h2>
 
-            <p className="text-slate-400 text-base mb-8 max-w-md">
+            <p className="text-slate-400 text-base 2xl:text-lg mb-8 max-w-md">
               Have a project in mind or just want to say hi? I'm always open to discussing new projects, or opportunities to be part of your visions.
             </p>
 
             <div className="space-y-6">
               <a
                 href="mailto:hmumtaz70@gmail.com"
-                className="group flex items-center gap-3 text-base md:text-lg text-white hover:text-white/80 transition-colors"
+                className="group flex items-center gap-3 text-base md:text-lg 2xl:text-2xl text-white hover:text-white/80 transition-colors"
               >
                 <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
                   <Mail size={18} />
@@ -291,7 +291,7 @@ const Contact = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="bg-white/[0.02] border border-white/10 rounded-2xl p-5 md:p-6"
+            className="bg-white/[0.02] border border-white/10 rounded-2xl p-5 md:p-6 2xl:p-8"
           >
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

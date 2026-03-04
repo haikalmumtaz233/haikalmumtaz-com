@@ -23,19 +23,19 @@ const Certifications = () => {
   const [selectedCert, setSelectedCert] = useState<Certification | null>(null);
 
   return (
-    <section className="relative bg-transparent py-12 md:py-16 overflow-hidden">
+    <section className="relative bg-transparent py-12 md:py-16 2xl:py-20 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           variants={titleVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.5 }}
-          className="text-center mb-10 md:mb-14"
+          className="text-center mb-10 md:mb-14 2xl:mb-20"
         >
           <div className="overflow-hidden mb-4">
             <motion.h2
               variants={wordVariants}
-              className="text-3xl md:text-5xl lg:text-6xl font-monument font-black tracking-tight text-white uppercase"
+              className="text-3xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black tracking-tight text-white uppercase"
             >
               CERTIFICATIONS
             </motion.h2>
@@ -43,7 +43,7 @@ const Certifications = () => {
           <div className="overflow-hidden">
             <motion.p
               variants={wordVariants}
-              className="text-slate-400 text-base md:text-lg font-sans tracking-wide max-w-2xl mx-auto"
+              className="text-slate-400 text-base md:text-lg 2xl:text-xl font-sans tracking-wide max-w-2xl mx-auto"
             >
               Records of achievements and credentials
             </motion.p>
@@ -119,7 +119,7 @@ const CertificateCard = ({
       onPointerDown={() => { dragRef.current = false; }}
       onPointerMove={() => { dragRef.current = true; }}
       onPointerUp={() => { if (!dragRef.current) onCertClick(cert); }}
-      className="flex-shrink-0 w-[250px] md:w-[280px] lg:w-[320px] select-none cursor-pointer group"
+      className="flex-shrink-0 w-[250px] md:w-[280px] lg:w-[320px] 2xl:w-[360px] select-none cursor-pointer group"
     >
       <div className="relative aspect-[3/4] rounded-xl overflow-hidden border border-white/10 bg-[#0a0a0a] shadow-2xl transition-colors duration-300 group-hover:border-white/30">
         <div className="absolute inset-0 bg-black/50">
@@ -136,13 +136,13 @@ const CertificateCard = ({
 
         <div className="absolute inset-0 bg-white/[0.06] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
-        <div className="absolute bottom-0 left-0 right-0 p-4 lg:p-5 space-y-2">
+        <div className="absolute bottom-0 left-0 right-0 p-4 lg:p-5 2xl:p-6 space-y-2">
           <span className="inline-block px-2.5 py-1 bg-cyan-500/10 backdrop-blur-md rounded border border-cyan-400/30 text-[10px] font-mono text-cyan-400 tracking-wide">
             {cert.date}
           </span>
 
           <div className="space-y-1">
-            <h3 className="text-base lg:text-lg font-bold text-white leading-tight line-clamp-2">
+            <h3 className="text-base lg:text-lg 2xl:text-xl font-bold text-white leading-tight line-clamp-2">
               {cert.title}
             </h3>
             <p className="text-xs font-mono text-slate-400 line-clamp-1">
