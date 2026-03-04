@@ -206,7 +206,7 @@ const Contact = () => {
   ];
 
   return (
-    <section className="relative bg-transparent py-24 md:py-32 overflow-hidden">
+    <section className="relative bg-transparent py-16 md:py-20 lg:py-24 overflow-hidden">
       <div className="fixed top-6 right-6 z-50 flex flex-col gap-3">
         <AnimatePresence>
           {toasts.map((toast) => (
@@ -239,8 +239,8 @@ const Contact = () => {
         </AnimatePresence>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+      <div className="max-w-6xl mx-auto px-6 md:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
 
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -249,37 +249,37 @@ const Contact = () => {
             transition={{ duration: 0.8 }}
             className="flex flex-col justify-center"
           >
-            <h2 className="text-5xl md:text-6xl lg:text-7xl font-monument font-black text-white uppercase tracking-tight leading-none mb-8">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-monument font-black text-white uppercase tracking-tight leading-none mb-6">
               Let's work <br />
               together
             </h2>
 
-            <p className="text-slate-400 text-lg mb-12 max-w-md">
+            <p className="text-slate-400 text-base mb-8 max-w-md">
               Have a project in mind or just want to say hi? I'm always open to discussing new projects, or opportunities to be part of your visions.
             </p>
 
-            <div className="space-y-8">
+            <div className="space-y-6">
               <a
                 href="mailto:hmumtaz70@gmail.com"
-                className="group flex items-center gap-4 text-xl md:text-2xl text-white hover:text-white/80 transition-colors"
+                className="group flex items-center gap-3 text-base md:text-lg text-white hover:text-white/80 transition-colors"
               >
-                <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
-                  <Mail size={20} />
+                <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                  <Mail size={18} />
                 </div>
                 <span>hmumtaz70@gmail.com</span>
               </a>
 
-              <div className="flex gap-4">
+              <div className="flex gap-3">
                 {socialLinks.map((social, index) => (
                   <a
                     key={index}
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-300"
+                    className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-300"
                     aria-label={social.label}
                   >
-                    <social.icon size={20} />
+                    <social.icon size={18} />
                   </a>
                 ))}
               </div>
@@ -291,12 +291,12 @@ const Contact = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="bg-white/[0.02] border border-white/10 rounded-3xl p-8 md:p-10"
+            className="bg-white/[0.02] border border-white/10 rounded-2xl p-5 md:p-6"
           >
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm text-slate-500 uppercase tracking-wider font-mono">First Name</label>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-xs text-slate-500 uppercase tracking-wider font-mono">First Name</label>
                   <input
                     type="text"
                     name="firstName"
@@ -304,12 +304,12 @@ const Contact = () => {
                     maxLength={50}
                     value={formData.firstName}
                     onChange={handleChange}
-                    className="w-full bg-transparent border-b border-white/20 py-2 text-white focus:border-white focus:outline-none transition-colors"
+                    className="w-full bg-transparent border-b border-white/20 py-1.5 text-sm text-white focus:border-white focus:outline-none transition-colors"
                     placeholder="John"
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm text-slate-500 uppercase tracking-wider font-mono">Last Name</label>
+                <div className="space-y-1">
+                  <label className="text-xs text-slate-500 uppercase tracking-wider font-mono">Last Name</label>
                   <input
                     type="text"
                     name="lastName"
@@ -317,15 +317,15 @@ const Contact = () => {
                     maxLength={50}
                     value={formData.lastName}
                     onChange={handleChange}
-                    className="w-full bg-transparent border-b border-white/20 py-2 text-white focus:border-white focus:outline-none transition-colors"
+                    className="w-full bg-transparent border-b border-white/20 py-1.5 text-sm text-white focus:border-white focus:outline-none transition-colors"
                     placeholder="Doe"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm text-slate-500 uppercase tracking-wider font-mono">Email</label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-xs text-slate-500 uppercase tracking-wider font-mono">Email</label>
                   <input
                     type="email"
                     name="email"
@@ -333,37 +333,37 @@ const Contact = () => {
                     pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full bg-transparent border-b border-white/20 py-2 text-white focus:border-white focus:outline-none transition-colors"
+                    className="w-full bg-transparent border-b border-white/20 py-1.5 text-sm text-white focus:border-white focus:outline-none transition-colors"
                     placeholder="john@example.com"
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm text-slate-500 uppercase tracking-wider font-mono">Phone</label>
+                <div className="space-y-1">
+                  <label className="text-xs text-slate-500 uppercase tracking-wider font-mono">Phone</label>
                   <input
                     type="tel"
                     name="phone"
                     pattern="[\d\s+\-()]{10,}"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full bg-transparent border-b border-white/20 py-2 text-white focus:border-white focus:outline-none transition-colors"
+                    className="w-full bg-transparent border-b border-white/20 py-1.5 text-sm text-white focus:border-white focus:outline-none transition-colors"
                     placeholder="+62..."
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm text-slate-500 uppercase tracking-wider font-mono">Message</label>
+              <div className="space-y-1">
+                <label className="text-xs text-slate-500 uppercase tracking-wider font-mono">Message</label>
                 <textarea
                   name="message"
                   required
-                  rows={4}
+                  rows={3}
                   maxLength={2000}
                   value={formData.message}
                   onChange={handleChange}
-                  className="w-full bg-transparent border-b border-white/20 py-2 text-white focus:border-white focus:outline-none transition-colors resize-none"
+                  className="w-full bg-transparent border-b border-white/20 py-1.5 text-sm text-white focus:border-white focus:outline-none transition-colors resize-none"
                   placeholder="Tell me about your project..."
                 />
-                <p className="text-xs text-slate-500 text-right">
+                <p className="text-[10px] text-slate-500 text-right">
                   {formData.message.length}/{MAX_MESSAGE_LENGTH}
                 </p>
               </div>
@@ -392,7 +392,7 @@ const Contact = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full group bg-white text-black font-bold text-lg py-4 rounded-xl flex items-center justify-center gap-3 hover:bg-white/90 transition-all disabled:opacity-50"
+                className="w-full group bg-white text-black font-bold text-sm py-2.5 rounded-xl flex items-center justify-center gap-2 hover:bg-white/90 transition-all disabled:opacity-50"
               >
                 {isSubmitting ? 'Sending...' : 'Send Message'}
                 <ArrowUpRight className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
