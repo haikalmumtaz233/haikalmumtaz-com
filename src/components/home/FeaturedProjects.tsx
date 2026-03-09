@@ -90,7 +90,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
           <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl 2xl:text-6xl font-black text-white mb-2 tracking-tighter leading-tight">
             {project.name}
           </h3>
-          <p className="text-sm sm:text-base sm:text-lg md:text-xl 2xl:text-2xl text-slate-400 font-light">
+          <p className="text-sm sm:text-base md:text-xl 2xl:text-2xl text-slate-400 font-light">
             {project.subtitle}
           </p>
         </div>
