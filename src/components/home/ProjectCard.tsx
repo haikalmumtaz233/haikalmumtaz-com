@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import type { Project } from '../../data/projects';
@@ -8,47 +9,36 @@ interface ProjectCardProps {
   onClick: () => void;
 }
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay: i * 0.08,
-      duration: 0.6,
-      ease: [0.43, 0.13, 0.23, 0.96] as [number, number, number, number],
-    },
-  }),
-  exit: {
-    opacity: 0,
-    y: 20,
-    transition: { duration: 0.3, ease: 'easeInOut' as const },
-  },
-};
-
-const ProjectCard = ({ project, index, onClick }: ProjectCardProps) => {
+const ProjectCard = memo(({ project, index, onClick }: ProjectCardProps) => {
   const maxVisibleTech = 3;
   const extraTechCount = project.stack.length - maxVisibleTech;
 
   return (
     <motion.article
-      custom={index}
-      variants={cardVariants}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{
+        delay: index * 0.08,
+        duration: 0.6,
+        ease: [0.43, 0.13, 0.23, 0.96],
+      }}
       onClick={onClick}
-      className="group relative cursor-pointer rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden transition-colors duration-300 hover:border-white/20"
-      style={{
-        boxShadow: `0 0 0px transparent`,
-      }}
-      whileHover={{
-        scale: 1.02,
-        boxShadow: `0 0 30px ${project.accentColor}15, 0 0 60px ${project.accentColor}08`,
-        borderColor: `${project.accentColor}40`,
-      }}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
+      className="group relative cursor-pointer rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden transition-all duration-300"
+      style={
+        {
+          '--accent': project.accentColor,
+        } as React.CSSProperties
+      }
     >
+      {/* Border glow on hover (CSS-only, no layout thrash) */}
+      <div
+        className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30"
+        style={{
+          boxShadow: `inset 0 0 0 1.5px ${project.accentColor}, 0 0 25px ${project.accentColor}20, 0 0 50px ${project.accentColor}10`,
+        }}
+      />
+
       {/* Image */}
       <div className="relative aspect-[16/10] overflow-hidden">
         <div
@@ -59,7 +49,7 @@ const ProjectCard = ({ project, index, onClick }: ProjectCardProps) => {
           alt={project.name}
           loading="lazy"
           decoding="async"
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="w-full h-full object-cover"
         />
 
         {/* Category badge */}
@@ -67,7 +57,7 @@ const ProjectCard = ({ project, index, onClick }: ProjectCardProps) => {
           {project.category}
         </div>
 
-        {/* Hover overlay */}
+        {/* Hover overlay with "View Project" */}
         <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <span className="flex items-center gap-2 text-white text-sm font-semibold tracking-wide">
             View Project <ArrowUpRight size={16} />
@@ -110,6 +100,8 @@ const ProjectCard = ({ project, index, onClick }: ProjectCardProps) => {
       </div>
     </motion.article>
   );
-};
+});
+
+ProjectCard.displayName = 'ProjectCard';
 
 export default ProjectCard;

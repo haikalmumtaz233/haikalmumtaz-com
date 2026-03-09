@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useMemo, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import { projects } from '../../data/projects';
 import type { Project } from '../../data/projects';
 import CategoryFilter from './CategoryFilter';
@@ -19,6 +19,8 @@ const FeaturedProjects = () => {
     if (selectedCategory === 'All') return projects;
     return projects.filter((p) => p.category === selectedCategory);
   }, [selectedCategory]);
+
+  const handleCloseModal = useCallback(() => setSelectedProject(null), []);
 
   return (
     <section className="relative bg-transparent py-10 sm:py-14 md:py-20 lg:py-28 2xl:py-32">
@@ -47,26 +49,21 @@ const FeaturedProjects = () => {
         </motion.div>
 
         {/* Project grid */}
-        <motion.div
-          layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 2xl:gap-8"
-        >
-          <AnimatePresence mode="popLayout">
-            {filteredProjects.map((project, index) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                index={index}
-                onClick={() => setSelectedProject(project)}
-              />
-            ))}
-          </AnimatePresence>
-        </motion.div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 2xl:gap-8">
+          {filteredProjects.map((project, index) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              index={index}
+              onClick={() => setSelectedProject(project)}
+            />
+          ))}
+        </div>
 
         {/* Detail modal */}
         <ProjectModal
           project={selectedProject}
-          onClose={() => setSelectedProject(null)}
+          onClose={handleCloseModal}
         />
       </div>
     </section>
