@@ -7,6 +7,7 @@ export interface Project {
     stack: string[];
     image: string;
     gradient: string;
+    accentColor: string;
     repoLink: string;
     liveLink: string;
 }
@@ -22,6 +23,7 @@ export const projects: Project[] = [
         stack: ['Java Spring Boot', 'Java Spring Security', 'Thyemeleaf', 'MySQL', 'Bootstrap'],
         image: '/projects/tixnow.webp',
         gradient: 'from-purple-900/20 via-transparent to-blue-900/20',
+        accentColor: '#a855f7',
         repoLink: 'https://github.com/haikalmumtaz233/TixNow',
         liveLink: '#',
     },
@@ -35,6 +37,7 @@ export const projects: Project[] = [
         stack: ['Lua', 'Roblox Studio'],
         image: '/projects/streetBeats.webp',
         gradient: 'from-orange-900/20 via-transparent to-red-900/20',
+        accentColor: '#f97316',
         repoLink: 'https://discord.gg/sc6F4e8VhN',
         liveLink: 'https://www.roblox.com/games/98953012685374/Street-Beats',
     },
@@ -48,6 +51,7 @@ export const projects: Project[] = [
         stack: ['React', 'Framer Motion', 'Tailwind'],
         image: '/projects/portfolio.webp',
         gradient: 'from-pink-900/20 via-transparent to-orange-900/20',
+        accentColor: '#ec4899',
         repoLink: 'https://github.com/haikalmumtaz233/haikalmumtaz-com',
         liveLink: 'https://haikalmumtaz-com.vercel.app/',
     },
@@ -61,6 +65,7 @@ export const projects: Project[] = [
         stack: ['JavaScript', 'LeafletJS', 'HTML', 'CSS'],
         image: '/projects/vehicleroute.webp',
         gradient: 'from-pink-900/20 via-transparent to-orange-900/20',
+        accentColor: '#22d3ee',
         repoLink: 'https://github.com/haikalmumtaz233/vehicle-route-leafletjs',
         liveLink: 'https://haikalmumtaz233.github.io/vehicle-route-leafletjs/',
     },
@@ -74,6 +79,7 @@ export const projects: Project[] = [
         stack: ['Vue.js', 'Tailwind CSS'],
         image: '/projects/smpmuhdela.webp',
         gradient: 'from-pink-900/20 via-transparent to-orange-900/20',
+        accentColor: '#34d399',
         repoLink: '#',
         liveLink: '#',
     },
@@ -87,6 +93,7 @@ export const projects: Project[] = [
         stack: ['Vue.js', 'Tailwind CSS'],
         image: '/projects/cms.webp',
         gradient: 'from-pink-900/20 via-transparent to-orange-900/20',
+        accentColor: '#60a5fa',
         repoLink: '#',
         liveLink: '#',
     },
