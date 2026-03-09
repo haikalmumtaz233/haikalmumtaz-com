@@ -31,11 +31,17 @@ const ProjectCard = memo(({ project, index, onClick }: ProjectCardProps) => {
         } as React.CSSProperties
       }
     >
-      {/* Border glow on hover (CSS-only, no layout thrash) */}
+      {/* Border glow on hover — white fading into accent color */}
       <div
         className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30"
         style={{
-          boxShadow: `inset 0 0 0 1.5px ${project.accentColor}, 0 0 25px ${project.accentColor}20, 0 0 50px ${project.accentColor}10`,
+          boxShadow: `inset 0 0 0 1.5px rgba(255,255,255,0.5), 0 0 20px ${project.accentColor}25, 0 0 45px ${project.accentColor}12`,
+          background: `linear-gradient(135deg, rgba(255,255,255,0.12) 0%, ${project.accentColor}18 100%)`,
+          mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+          maskComposite: 'exclude',
+          WebkitMaskComposite: 'xor',
+          padding: '1.5px',
+          borderRadius: 'inherit',
         }}
       />
 
