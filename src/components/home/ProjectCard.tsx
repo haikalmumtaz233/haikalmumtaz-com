@@ -32,8 +32,6 @@ const ProjectCard = ({ project, index, onClick }: ProjectCardProps) => {
 
   return (
     <motion.article
-      layout
-      layoutId={`card-${project.id}`}
       custom={index}
       variants={cardVariants}
       initial="hidden"

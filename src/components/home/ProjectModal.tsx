@@ -1,6 +1,8 @@
 import { useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Github, ExternalLink } from 'lucide-react';
+import { useLenis } from 'lenis/react';
 import type { Project } from '../../data/projects';
 
 interface ProjectModalProps {
@@ -9,6 +11,8 @@ interface ProjectModalProps {
 }
 
 const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
+  const lenis = useLenis();
+
   const handleEscape = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -19,18 +23,22 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
   useEffect(() => {
     if (project) {
       document.body.style.overflow = 'hidden';
+      lenis?.stop();
       window.addEventListener('keydown', handleEscape);
+    } else {
+      lenis?.start();
     }
     return () => {
       document.body.style.overflow = '';
+      lenis?.start();
       window.removeEventListener('keydown', handleEscape);
     };
-  }, [project, handleEscape]);
+  }, [project, handleEscape, lenis]);
 
   const isRepoDisabled = !project?.repoLink || project.repoLink === '#';
   const isLiveDisabled = !project?.liveLink || project.liveLink === '#';
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {project && (
         <motion.div
@@ -46,8 +54,10 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
 
           {/* Modal content */}
           <motion.div
-            layout
-            layoutId={`card-${project.id}`}
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
             onClick={(e) => e.stopPropagation()}
             className="relative z-10 w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl border border-white/10 bg-[#0a0a0a] shadow-2xl"
             style={{
@@ -144,7 +154,8 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };
 
