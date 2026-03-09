@@ -84,7 +84,7 @@ export const projects: Project[] = [
         liveLink: '#',
     },
     {
-        id: 7,
+        id: 6,
         name: 'Content Management System',
         subtitle: 'School CMS Website',
         category: 'Frontend Development',
@@ -98,5 +98,4 @@ export const projects: Project[] = [
         liveLink: '#',
     },
     
-
 ];
