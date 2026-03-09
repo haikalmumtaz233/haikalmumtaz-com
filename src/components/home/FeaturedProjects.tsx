@@ -25,8 +25,7 @@ const FeaturedProjects = () => {
   return (
     <section className="relative bg-transparent py-10 sm:py-14 md:py-20 lg:py-28 2xl:py-32">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <motion.div
+<motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -39,17 +38,13 @@ const FeaturedProjects = () => {
           <p className="text-slate-500 text-base md:text-lg 2xl:text-xl font-light mb-8 sm:mb-10">
             My best projects
           </p>
-
-          {/* Filter tabs */}
-          <CategoryFilter
+<CategoryFilter
             categories={categories}
             selected={selectedCategory}
             onSelect={setSelectedCategory}
           />
         </motion.div>
-
-        {/* Project grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 2xl:gap-8">
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 2xl:gap-8">
           {filteredProjects.map((project, index) => (
             <ProjectCard
               key={project.id}
@@ -59,9 +54,7 @@ const FeaturedProjects = () => {
             />
           ))}
         </div>
-
-        {/* Detail modal */}
-        <ProjectModal
+<ProjectModal
           project={selectedProject}
           onClose={handleCloseModal}
         />

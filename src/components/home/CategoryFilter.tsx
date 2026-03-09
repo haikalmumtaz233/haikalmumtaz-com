@@ -22,8 +22,7 @@ const CategoryFilter = ({ categories, selected, onSelect }: CategoryFilterProps)
                 : 'text-slate-500 hover:text-slate-300'
             }`}
           >
-            {/* Active background pill */}
-            {isActive && (
+{isActive && (
               <motion.div
                 layoutId="activeFilter"
                 className="absolute inset-0 bg-white/10 border border-white/20 rounded-full"

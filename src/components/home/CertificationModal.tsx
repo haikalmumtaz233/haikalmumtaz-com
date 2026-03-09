@@ -1,6 +1,8 @@
 import { useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink } from 'lucide-react';
+import { useLenis } from 'lenis/react';
 import type { Certification } from '../../data/certifications';
 
 interface CertificationModalProps {
@@ -10,6 +12,8 @@ interface CertificationModalProps {
 }
 
 const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) => {
+  const lenis = useLenis();
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -21,18 +25,22 @@ const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) 
     if (isOpen) {
       document.addEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'hidden';
+      lenis?.stop();
+    } else {
+      lenis?.start();
     }
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = '';
+      lenis?.start();
     };
-  }, [isOpen, handleKeyDown]);
+  }, [isOpen, handleKeyDown, lenis]);
 
   const isOfficialLink =
     cert?.credentialLink &&
     !cert.credentialLink.includes('drive.google.com');
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && cert && (
         <motion.div
@@ -40,8 +48,9 @@ const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) 
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-hidden"
+          className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-hidden"
           onClick={onClose}
+          onWheel={(e) => e.stopPropagation()}
         >
           <motion.div
             initial={{ scale: 0.92, opacity: 0 }}
@@ -91,7 +100,8 @@ const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) 
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };
 

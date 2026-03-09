@@ -2,8 +2,8 @@ export interface Moment {
   id: number;
   title: string;
   year: string;
-  image: string; // Kembali ke single string
-  className: string; // Container sizing class
+  image: string; 
+  className: string; 
   alignment: 'start' | 'center' | 'end';
   textPos: 'below' | 'above' | 'side';
 }
@@ -72,15 +72,15 @@ export const moments: Moment[] = [
     alignment: 'end',
     textPos: 'above',
   },
-  // {
-  //   id: 8,
-  //   title: 'Lab Assistant 2025',
-  //   year: '2025',
-  //   image: 'public/moments/assistant2025.jpg',
-  //   className: 'aspect-[16/9] w-[580px] md:w-[580px]',
-  //   alignment: 'start',
-  //   textPos: 'below',
-  // },
+  
+  
+  
+  
+  
+  
+  
+  
+  
   {
     id: 8,
     title: 'Graduation Day',
