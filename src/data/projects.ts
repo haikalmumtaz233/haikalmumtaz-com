@@ -81,7 +81,7 @@ export const projects: Project[] = [
         gradient: 'from-pink-900/20 via-transparent to-orange-900/20',
         accentColor: '#34d399',
         repoLink: '#',
-        liveLink: '#',
+        liveLink: 'https://smpmuhdelajogja.sch.id/',
     },
     {
         id: 6,
