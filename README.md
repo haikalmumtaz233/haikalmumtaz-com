@@ -8,15 +8,15 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.17-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-[**🚀 Live Demo**](https://haikalmumtaz.com) · [**🐛 Report Bug**](https://github.com/haikalmumtaz233/haikalmumtaz-com/issues)
+[**Live Demo**](https://haikalmumtaz.com) · [**Report Bug**](https://github.com/haikalmumtaz233/haikalmumtaz-com/issues)
 
 </div>
 
 ---
 
-## 📖 About The Project
+## About The Project
 
-Welcome to the source code of my personal portfolio, **[haikalmumtaz.com](https://haikalmumtaz.com)**.
+Welcome to the source code of my personal portfolio.
 
 This website serves as a **digital archive** and a central hub to document my journey as a developer. I built this platform not only to display my projects but also to connect with others and share what I've learned along the way.
 
@@ -56,7 +56,7 @@ Ensure you have the following installed:
 
 ---
 
-## 🔧 Configuration
+## Configuration
 
 To enable the **Contact Form** functionality, you need to set up environment variables for EmailJS and Cloudflare Turnstile.
 
