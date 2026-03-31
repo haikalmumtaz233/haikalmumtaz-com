@@ -1,4 +1,4 @@
-# Haikal Mumtaz - Personal Portfolio (Beta)
+# Haikal Mumtaz - Personal Portfolio
 
 <div align="center">
 
