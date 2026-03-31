@@ -105,13 +105,13 @@ const Navbar = () => {
                       }}
                       className="overflow-hidden"
                     >
-                      <button
+                      <motion.button
                         onClick={() => handleNavigation(link.path)}
-                        className="block cursor-pointer text-left w-full group"
+                        initial="initial"
+                        whileHover="hovered"
+                        className="cursor-pointer text-left group"
                       >
-                        <motion.div
-                          initial="initial"
-                          whileHover="hovered"
+                        <div
                           className="relative block overflow-hidden whitespace-nowrap text-3xl sm:text-4xl md:text-6xl font-black uppercase text-white"
                           style={{ lineHeight: 0.9 }}
                         >
@@ -152,15 +152,9 @@ const Navbar = () => {
                               </motion.span>
                             ))}
                           </div>
-                        </motion.div>
+                        </div>
 
-                        <motion.div
-                          className="h-[2px] bg-gradient-to-r from-purple-500 to-cyan-500 mt-2"
-                          initial={{ width: 0 }}
-                          whileHover={{ width: "100%" }}
-                          transition={{ duration: 0.3 }}
-                        />
-                      </button>
+                      </motion.button>
                     </motion.li>
                   ))}
                 </ul>
@@ -174,7 +168,7 @@ const Navbar = () => {
               >
                 <a
                   href="mailto:hmumtaz70@gmail.com"
-                  className="block text-sm md:text-base text-slate-400 hover:text-white transition-colors font-mono"
+                  className="inline-block text-sm md:text-base text-slate-400 hover:text-white transition-colors font-mono"
                 >
                   hmumtaz70@gmail.com
                 </a>
