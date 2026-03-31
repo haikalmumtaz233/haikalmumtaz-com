@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Github, Linkedin, Instagram } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
-  { name: 'HOME', path: '#top' },
-  { name: 'PROJECTS', path: '#projects' },
-  { name: 'EXPERIENCE', path: '#experience' },
-  { name: 'CONTACT', path: '#contact' },
+  { name: 'HOME', path: '/', type: 'route' },
+  { name: 'PROJECTS', path: '/projects', type: 'route' },
+  { name: 'EXPERIENCE', path: '#experience', type: 'scroll' },
+  { name: 'CONTACT', path: '#contact', type: 'scroll' },
 ];
 
 const socialLinks = [
@@ -17,16 +18,27 @@ const socialLinks = [
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  const handleNavigation = (path: string) => {
+  const handleNavigation = (link: typeof navLinks[0]) => {
     setIsOpen(false);
-    if (path === '#top') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    if (link.type === 'route') {
+      navigate(link.path);
     } else {
-      const element = document.querySelector(path);
-      element?.scrollIntoView({ behavior: 'smooth' });
+      if (location.pathname !== '/') {
+        navigate('/');
+        setTimeout(() => {
+          const element = document.querySelector(link.path);
+          element?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      } else {
+        const element = document.querySelector(link.path);
+        element?.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 
@@ -106,7 +118,7 @@ const Navbar = () => {
                       className="overflow-hidden"
                     >
                       <motion.button
-                        onClick={() => handleNavigation(link.path)}
+                        onClick={() => handleNavigation(link)}
                         initial="initial"
                         whileHover="hovered"
                         className="cursor-pointer text-left group"

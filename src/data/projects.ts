@@ -10,6 +10,7 @@ export interface Project {
     accentColor: string;
     repoLink: string;
     liveLink: string;
+    isFeatured: boolean;
 }
 
 export const projects: Project[] = [
@@ -26,6 +27,7 @@ export const projects: Project[] = [
         accentColor: '#a855f7',
         repoLink: 'https://github.com/haikalmumtaz233/TixNow',
         liveLink: '#',
+        isFeatured: true,
     },
     {
         id: 2,
@@ -40,6 +42,7 @@ export const projects: Project[] = [
         accentColor: '#f97316',
         repoLink: 'https://discord.gg/sc6F4e8VhN',
         liveLink: 'https://www.roblox.com/games/98953012685374/Street-Beats',
+        isFeatured: true,
     },
     {
         id: 3,
@@ -54,6 +57,7 @@ export const projects: Project[] = [
         accentColor: '#ec4899',
         repoLink: 'https://github.com/haikalmumtaz233/haikalmumtaz-com',
         liveLink: 'https://haikalmumtaz-com.vercel.app/',
+        isFeatured: true,
     },
     {
         id: 4,
@@ -68,6 +72,7 @@ export const projects: Project[] = [
         accentColor: '#22d3ee',
         repoLink: 'https://github.com/haikalmumtaz233/vehicle-route-leafletjs',
         liveLink: 'https://haikalmumtaz233.github.io/vehicle-route-leafletjs/',
+        isFeatured: false,
     },
     {
         id: 5,
@@ -82,6 +87,7 @@ export const projects: Project[] = [
         accentColor: '#34d399',
         repoLink: '#',
         liveLink: 'https://smpmuhdelajogja.sch.id/',
+        isFeatured: false,
     },
     {
         id: 6,
@@ -96,6 +102,7 @@ export const projects: Project[] = [
         accentColor: '#60a5fa',
         repoLink: '#',
         liveLink: '#',
+        isFeatured: false,
     },
     
 ];
