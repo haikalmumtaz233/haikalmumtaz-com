@@ -23,7 +23,7 @@ export const experiences: Experience[] = [
         year: "2025",
         period: "NOV 2025 — FEB 2026",
         description:
-            "Building modern web solutions with Vue.js and Tailwind CSS. Developing responsive school profile websites with engaging UI/UX designs, collaborating closely with the team on fullstack development tasks to deliver polished digital experiences.",
+            "Developed the SIMASET asset management system covering inventory and procurement modules, and built a public profile website alongside a content management dashboard for SMP Muhammadiyah 8 Yogyakarta.",
     },
     {
         company: "Horus Technology",
@@ -31,7 +31,7 @@ export const experiences: Experience[] = [
         year: "2025",
         period: "OCT 2025 — NOV 2025",
         description:
-            "Contributed to the TING App using modern web technologies. Designed and developed compelling landing pages with pixel-perfect attention to detail, working across both frontend and backend to implement robust features.",
+            "Contributed to the development of the company's landing page and maintained features for the TING business application, specifically focusing on the Settings and Promotion modules.",
     },
     {
         company: "IT Club - UPN Veteran Yogyakarta",
