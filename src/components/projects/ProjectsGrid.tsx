@@ -29,7 +29,7 @@ const ProjectsGrid = () => {
       if (filterRef.current && containerRef.current) {
         const scrollWidth = filterRef.current.scrollWidth;
         const containerWidth = containerRef.current.offsetWidth;
-        setDragWidth(Math.max(0, scrollWidth - containerWidth));
+        setDragWidth(Math.max(0, scrollWidth - containerWidth + 32));
       }
     };
     updateWidth();

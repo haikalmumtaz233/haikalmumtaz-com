@@ -49,8 +49,8 @@ const FeaturedCard = memo(({ project, onClick }: FeaturedCardProps) => {
             {project.category}
           </div>
           <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <span className="flex items-center gap-2 text-white text-xs md:text-sm font-semibold tracking-wide backdrop-blur-sm px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-white/20 pointer-events-none">
-              View Project <ArrowUpRight size={14} />
+            <span className="flex items-center gap-1 text-white text-xs md:text-sm font-semibold tracking-wide px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-white/20 pointer-events-none">
+              View Project <ArrowUpRight className='transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5' size={18} />
             </span>
           </div>
         </div>
