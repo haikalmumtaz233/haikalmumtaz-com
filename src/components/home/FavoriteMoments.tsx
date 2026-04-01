@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { moments } from '../../data/moments';
+import OptimizedImage from '../ui/OptimizedImage';
 
 const FavoriteMoments = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -69,12 +70,11 @@ const FavoriteMoments = () => {
 
     const imageBlock = (
       <div className={`relative overflow-hidden rounded-lg ${moment.className} group`}>
-        <img
+        <OptimizedImage
           src={moment.image}
           alt={moment.title}
-          loading="lazy"
-          decoding="async"
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          containerClassName="w-full h-full"
         />
       </div>
     );

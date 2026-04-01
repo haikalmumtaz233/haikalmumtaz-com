@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import type { Project } from '../../data/projects';
+import OptimizedImage from '../ui/OptimizedImage';
 
 interface ProjectCardProps {
   project: Project;
@@ -46,12 +47,11 @@ const ProjectCard = memo(({ project, index, onClick }: ProjectCardProps) => {
         <div
           className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-40 z-10 pointer-events-none transition-opacity duration-300 group-hover:opacity-60`}
         />
-        <img
+        <OptimizedImage
           src={project.image}
           alt={project.name}
-          loading="lazy"
-          decoding="async"
           className="w-full h-full object-cover"
+          containerClassName="w-full h-full"
         />
         <div className="absolute top-3 left-3 z-20 px-2.5 py-1 bg-black/70 backdrop-blur-md text-slate-300 text-[11px] font-mono rounded-full tracking-wider uppercase border border-white/15">
           {project.category}

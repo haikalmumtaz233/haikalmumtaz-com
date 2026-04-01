@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { certifications, type Certification } from '../../data/certifications';
 import CertificationModal from './CertificationModal';
+import OptimizedImage from '../ui/OptimizedImage';
 
 const titleVariants = {
   hidden: { opacity: 0 },
@@ -124,12 +125,11 @@ const CertificateCard = ({
     >
       <div className="relative aspect-[3/4] rounded-xl overflow-hidden border border-white/10 bg-[#0a0a0a] shadow-2xl transition-colors duration-300 group-hover:border-white/30">
         <div className="absolute inset-0 bg-black/50">
-          <img
+          <OptimizedImage
             src={cert.image}
             alt={`${cert.title} certificate from ${cert.issuer}`}
-            loading="lazy"
-            decoding="async"
             className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+            containerClassName="w-full h-full"
           />
         </div>
 
