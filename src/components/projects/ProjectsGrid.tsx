@@ -2,8 +2,8 @@ import { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { projects } from '../../data/projects';
 import type { Project } from '../../data/projects';
-import ProjectCard from '../home/ProjectCard';
-import ProjectModal from '../home/ProjectModal';
+import ProjectCard from './ProjectCard';
+import ProjectModal from './ProjectModal';
 
 const ProjectsGrid = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -28,7 +28,7 @@ const ProjectsGrid = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="mb-8 sm:mb-12"
+          className="mb-6 sm:mb-8"
         >
           <div className="flex flex-wrap gap-2 sm:gap-3">
             {categories.map((category) => {

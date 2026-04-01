@@ -6,7 +6,7 @@ const ProjectsHero = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="relative pt-28 sm:pt-32 md:pt-40 pb-10 sm:pb-14 md:pb-20">
+    <section className="relative pt-32 sm:pt-36 md:pt-44 pb-6 sm:pb-8 md:pb-10">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.button
           initial={{ opacity: 0, x: -20 }}

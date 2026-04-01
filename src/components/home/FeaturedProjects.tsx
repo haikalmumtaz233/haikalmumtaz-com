@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { projects } from '../../data/projects';
 import type { Project } from '../../data/projects';
-import ProjectCard from './ProjectCard';
-import ProjectModal from './ProjectModal';
+import ProjectCard from '../projects/ProjectCard';
+import ProjectModal from '../projects/ProjectModal';
 
 const FeaturedProjects = () => {
   const navigate = useNavigate();
