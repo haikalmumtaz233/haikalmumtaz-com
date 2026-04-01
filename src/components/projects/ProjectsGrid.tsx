@@ -49,7 +49,7 @@ const ProjectsGrid = () => {
           <div ref={containerRef} className="overflow-hidden sm:overflow-visible -mx-4 px-4 sm:mx-0 sm:px-0">
             <motion.div 
               ref={filterRef}
-              className="flex gap-2 sm:gap-3 sm:flex-wrap cursor-grab active:cursor-grabbing sm:cursor-auto"
+              className="flex gap-2 sm:gap-3 sm:flex-wrap cursor-grab active:cursor-grabbing sm:cursor-auto pr-4 sm:pr-0"
               drag={dragWidth > 0 ? "x" : false}
               dragConstraints={{ right: 0, left: -dragWidth }}
               style={{ touchAction: 'pan-y' }}
