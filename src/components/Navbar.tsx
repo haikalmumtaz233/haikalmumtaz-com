@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
   { name: 'HOME', path: '/', type: 'route' },
-  { name: 'PROJECTS', path: '/projects', type: 'route' },
+  { name: 'PROJECTS', path: '#projects', type: 'scroll' },
   { name: 'EXPERIENCE', path: '#experience', type: 'scroll' },
   { name: 'CONTACT', path: '#contact', type: 'scroll' },
 ];
