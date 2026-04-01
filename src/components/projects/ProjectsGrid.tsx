@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { projects } from '../../data/projects';
 import type { Project } from '../../data/projects';
@@ -8,6 +8,9 @@ import ProjectModal from './ProjectModal';
 const ProjectsGrid = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [dragWidth, setDragWidth] = useState(0);
+  const filterRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const categories = useMemo(() => {
     const unique = [...new Set(projects.map((p) => p.category))];
@@ -21,6 +24,19 @@ const ProjectsGrid = () => {
 
   const handleCloseModal = useCallback(() => setSelectedProject(null), []);
 
+  useEffect(() => {
+    const updateWidth = () => {
+      if (filterRef.current && containerRef.current) {
+        const scrollWidth = filterRef.current.scrollWidth;
+        const containerWidth = containerRef.current.offsetWidth;
+        setDragWidth(Math.max(0, scrollWidth - containerWidth));
+      }
+    };
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, [categories]);
+
   return (
     <section className="relative pb-20 sm:pb-28 md:pb-36">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -30,45 +46,53 @@ const ProjectsGrid = () => {
           transition={{ delay: 0.2, duration: 0.6 }}
           className="mb-6 sm:mb-8"
         >
-          <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap sm:overflow-visible">
-            {categories.map((category) => {
-              const isActive = selectedCategory === category;
-              const count = category === 'All' 
-                ? projects.length 
-                : projects.filter(p => p.category === category).length;
+          <div ref={containerRef} className="overflow-hidden sm:overflow-visible -mx-4 px-4 sm:mx-0 sm:px-0">
+            <motion.div 
+              ref={filterRef}
+              className="flex gap-2 sm:gap-3 sm:flex-wrap cursor-grab active:cursor-grabbing sm:cursor-auto"
+              drag={dragWidth > 0 ? "x" : false}
+              dragConstraints={{ right: 0, left: -dragWidth }}
+              style={{ touchAction: 'pan-y' }}
+            >
+              {categories.map((category) => {
+                const isActive = selectedCategory === category;
+                const count = category === 'All' 
+                  ? projects.length 
+                  : projects.filter(p => p.category === category).length;
 
-              return (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`relative flex-shrink-0 px-4 py-2 text-xs sm:text-sm font-medium rounded-full transition-colors duration-300 ${
-                    isActive
-                      ? 'text-white'
-                      : 'text-slate-500 hover:text-slate-300'
-                  }`}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="projectsActiveFilter"
-                      className="absolute inset-0 bg-white/10 border border-white/20 rounded-full"
-                      transition={{
-                        type: 'spring',
-                        stiffness: 400,
-                        damping: 30,
-                      }}
-                    />
-                  )}
-                  <span className="relative z-10 flex items-center gap-2 whitespace-nowrap">
-                    {category}
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
-                      isActive ? 'bg-white/20' : 'bg-white/5'
-                    }`}>
-                      {count}
+                return (
+                  <button
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className={`relative flex-shrink-0 px-4 py-2 text-xs sm:text-sm font-medium rounded-full transition-colors duration-300 ${
+                      isActive
+                        ? 'text-white'
+                        : 'text-slate-500 hover:text-slate-300'
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="projectsActiveFilter"
+                        className="absolute inset-0 bg-white/10 border border-white/20 rounded-full"
+                        transition={{
+                          type: 'spring',
+                          stiffness: 400,
+                          damping: 30,
+                        }}
+                      />
+                    )}
+                    <span className="relative z-10 flex items-center gap-2 whitespace-nowrap">
+                      {category}
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+                        isActive ? 'bg-white/20' : 'bg-white/5'
+                      }`}>
+                        {count}
+                      </span>
                     </span>
-                  </span>
-                </button>
-              );
-            })}
+                  </button>
+                );
+              })}
+            </motion.div>
           </div>
         </motion.div>
 
