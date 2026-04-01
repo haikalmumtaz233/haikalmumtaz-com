@@ -43,13 +43,13 @@ const FeaturedCard = memo(({ project, onClick }: FeaturedCardProps) => {
             alt={project.name}
             loading="lazy"
             decoding="async"
-            className="w-full h-full object-cover transition-transform duration-400 group-hover:scale-105"
+            className="w-full h-full object-cover"
           />
           <div className="absolute top-2 left-2 md:top-3 md:left-3 z-20 px-2 py-0.5 md:px-2.5 md:py-1 bg-black/70 backdrop-blur-md text-slate-300 text-[9px] md:text-[10px] lg:text-[11px] font-mono rounded-full tracking-wider uppercase border border-white/15">
             {project.category}
           </div>
           <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <span className="flex items-center gap-2 text-white text-xs md:text-sm font-semibold tracking-wide bg-white/10 backdrop-blur-sm px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-white/20 pointer-events-none">
+            <span className="flex items-center gap-2 text-white text-xs md:text-sm font-semibold tracking-wide backdrop-blur-sm px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-white/20 pointer-events-none">
               View Project <ArrowUpRight size={14} />
             </span>
           </div>

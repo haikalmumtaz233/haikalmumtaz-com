@@ -30,7 +30,7 @@ const ProjectsGrid = () => {
           transition={{ delay: 0.2, duration: 0.6 }}
           className="mb-6 sm:mb-8"
         >
-          <div className="flex flex-wrap gap-2 sm:gap-3">
+          <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap sm:overflow-visible">
             {categories.map((category) => {
               const isActive = selectedCategory === category;
               const count = category === 'All' 
@@ -41,7 +41,7 @@ const ProjectsGrid = () => {
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`relative px-4 py-2 text-xs sm:text-sm font-medium rounded-full transition-colors duration-300 ${
+                  className={`relative flex-shrink-0 px-4 py-2 text-xs sm:text-sm font-medium rounded-full transition-colors duration-300 ${
                     isActive
                       ? 'text-white'
                       : 'text-slate-500 hover:text-slate-300'
@@ -58,7 +58,7 @@ const ProjectsGrid = () => {
                       }}
                     />
                   )}
-                  <span className="relative z-10 flex items-center gap-2">
+                  <span className="relative z-10 flex items-center gap-2 whitespace-nowrap">
                     {category}
                     <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
                       isActive ? 'bg-white/20' : 'bg-white/5'
