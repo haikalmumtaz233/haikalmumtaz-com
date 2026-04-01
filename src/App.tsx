@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import { ReactLenis } from 'lenis/react';
+import { ReactLenis, useLenis } from 'lenis/react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -9,21 +9,23 @@ import Background from './components/Background';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
+  const lenis = useLenis();
 
-  useLayoutEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-
-  return null;
-}
-
-function AppContent() {
   useLayoutEffect(() => {
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
     }
   }, []);
 
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+    lenis?.scrollTo(0, { immediate: true });
+  }, [pathname, lenis]);
+
+  return null;
+}
+
+function AppContent() {
   return (
     <ReactLenis root options={{ lerp: 0.1, duration: 1.5, smoothWheel: true }}>
       <Background />
