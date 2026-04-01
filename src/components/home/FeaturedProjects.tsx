@@ -19,14 +19,14 @@ const FeaturedProjects = () => {
 
   const handleCloseModal = useCallback(() => setSelectedProject(null), []);
 
+  const isFirstSlide = currentIndex === 0;
+  const isLastSlide = currentIndex === featuredProjects.length - 1;
+
   const paginate = (newDirection: number) => {
+    if (newDirection < 0 && isFirstSlide) return;
+    if (newDirection > 0 && isLastSlide) return;
     setDirection(newDirection);
-    setCurrentIndex((prev) => {
-      const nextIndex = prev + newDirection;
-      if (nextIndex < 0) return featuredProjects.length - 1;
-      if (nextIndex >= featuredProjects.length) return 0;
-      return nextIndex;
-    });
+    setCurrentIndex((prev) => prev + newDirection);
   };
 
   const cardVariants = {
@@ -72,57 +72,71 @@ const FeaturedProjects = () => {
                 My best projects
               </p>
             </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => paginate(-1)}
-                className="p-2.5 sm:p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
-              >
-                <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-              </button>
-              <button
-                onClick={() => paginate(1)}
-                className="p-2.5 sm:p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
-              >
-                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-              </button>
-            </div>
+            <button
+              onClick={() => navigate('/projects')}
+              className="group flex items-center gap-2 sm:gap-3 px-4 py-2 sm:px-6 sm:py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-full transition-all duration-300"
+            >
+              <span className="text-xs sm:text-sm font-medium text-white">
+                View All
+              </span>
+              <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white group-hover:translate-x-1 transition-transform duration-300" />
+            </button>
           </div>
         </motion.div>
 
-        <div className="relative h-[420px] sm:h-[460px] md:h-[500px] lg:h-[520px]" style={{ perspective: '1200px' }}>
-          <AnimatePresence initial={false} custom={direction} mode="popLayout">
-            <motion.div
-              key={currentIndex}
-              custom={direction}
-              variants={cardVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{
-                type: 'spring',
-                stiffness: 300,
-                damping: 30,
-                opacity: { duration: 0.3 },
-              }}
-              className="absolute inset-0 flex justify-center"
-              style={{ transformStyle: 'preserve-3d' }}
-            >
-              <div className="w-full max-w-[360px] sm:max-w-[400px] md:max-w-[450px] lg:max-w-[500px]">
-                <FeaturedCard
-                  project={featuredProjects[currentIndex]}
-                  index={currentIndex}
-                  onClick={() => setSelectedProject(featuredProjects[currentIndex])}
-                />
-              </div>
-            </motion.div>
-          </AnimatePresence>
+        <div className="flex items-center gap-3 sm:gap-4 md:gap-6">
+          <button
+            onClick={() => paginate(-1)}
+            disabled={isFirstSlide}
+            className={`flex-shrink-0 p-2.5 sm:p-3 md:p-4 rounded-full border transition-all duration-300 ${
+              isFirstSlide
+                ? 'bg-white/[0.02] border-white/5 cursor-not-allowed'
+                : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20'
+            }`}
+          >
+            <ChevronLeft className={`w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 ${isFirstSlide ? 'text-white/20' : 'text-white'}`} />
+          </button>
 
-          <div className="absolute -left-4 sm:left-0 top-1/2 -translate-y-1/2 w-16 sm:w-24 md:w-32 opacity-30 scale-90 blur-[1px] pointer-events-none hidden lg:block" style={{ transform: 'translateY(-50%) translateX(-20%) rotateY(25deg)', transformStyle: 'preserve-3d' }}>
-            <div className="rounded-2xl border border-white/5 bg-white/[0.02] aspect-[16/10]" />
+          <div className="flex-1 relative h-[280px] sm:h-[300px] md:h-[340px] lg:h-[380px]" style={{ perspective: '1200px' }}>
+            <AnimatePresence initial={false} custom={direction} mode="popLayout">
+              <motion.div
+                key={currentIndex}
+                custom={direction}
+                variants={cardVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  type: 'spring',
+                  stiffness: 300,
+                  damping: 30,
+                  opacity: { duration: 0.3 },
+                }}
+                className="absolute inset-0 flex justify-center items-center"
+                style={{ transformStyle: 'preserve-3d' }}
+              >
+                <div className="w-full max-w-[800px] lg:max-w-[900px] xl:max-w-[1000px]">
+                  <FeaturedCard
+                    project={featuredProjects[currentIndex]}
+                    index={currentIndex}
+                    onClick={() => setSelectedProject(featuredProjects[currentIndex])}
+                  />
+                </div>
+              </motion.div>
+            </AnimatePresence>
           </div>
-          <div className="absolute -right-4 sm:right-0 top-1/2 -translate-y-1/2 w-16 sm:w-24 md:w-32 opacity-30 scale-90 blur-[1px] pointer-events-none hidden lg:block" style={{ transform: 'translateY(-50%) translateX(20%) rotateY(-25deg)', transformStyle: 'preserve-3d' }}>
-            <div className="rounded-2xl border border-white/5 bg-white/[0.02] aspect-[16/10]" />
-          </div>
+
+          <button
+            onClick={() => paginate(1)}
+            disabled={isLastSlide}
+            className={`flex-shrink-0 p-2.5 sm:p-3 md:p-4 rounded-full border transition-all duration-300 ${
+              isLastSlide
+                ? 'bg-white/[0.02] border-white/5 cursor-not-allowed'
+                : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20'
+            }`}
+          >
+            <ChevronRight className={`w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 ${isLastSlide ? 'text-white/20' : 'text-white'}`} />
+          </button>
         </div>
 
         <div className="flex justify-center gap-2 mt-6">
@@ -139,24 +153,6 @@ const FeaturedProjects = () => {
             />
           ))}
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          className="mt-8 sm:mt-10 flex justify-center"
-        >
-          <button
-            onClick={() => navigate('/projects')}
-            className="group flex items-center gap-3 px-6 py-3 sm:px-8 sm:py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-full transition-all duration-300"
-          >
-            <span className="text-sm sm:text-base font-medium text-white">
-              View All Projects
-            </span>
-            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-white group-hover:translate-x-1 transition-transform duration-300" />
-          </button>
-        </motion.div>
 
         <ProjectModal
           project={selectedProject}
