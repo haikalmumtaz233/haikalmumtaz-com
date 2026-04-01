@@ -88,6 +88,7 @@ const FeaturedProjects = () => {
           <button
             onClick={() => paginate(-1)}
             disabled={isFirstSlide}
+            aria-label="Previous project"
             className={`flex-shrink-0 p-2 sm:p-2.5 md:p-3 lg:p-4 rounded-full border transition-all duration-300 ${
               isFirstSlide
                 ? 'bg-white/[0.02] border-white/5 cursor-not-allowed'
@@ -129,6 +130,7 @@ const FeaturedProjects = () => {
           <button
             onClick={() => paginate(1)}
             disabled={isLastSlide}
+            aria-label="Next project"
             className={`flex-shrink-0 p-2 sm:p-2.5 md:p-3 lg:p-4 rounded-full border transition-all duration-300 ${
               isLastSlide
                 ? 'bg-white/[0.02] border-white/5 cursor-not-allowed'
@@ -139,14 +141,17 @@ const FeaturedProjects = () => {
           </button>
         </div>
 
-        <div className="flex justify-center gap-1.5 sm:gap-2 mt-2 sm:mt-3 md:mt-4">
-          {featuredProjects.map((_, index) => (
+        <div className="flex justify-center gap-1.5 sm:gap-2 mt-2 sm:mt-3 md:mt-4" role="tablist" aria-label="Project slides">
+          {featuredProjects.map((project, index) => (
             <button
               key={index}
               onClick={() => {
                 setDirection(index > currentIndex ? 1 : -1);
                 setCurrentIndex(index);
               }}
+              role="tab"
+              aria-selected={index === currentIndex}
+              aria-label={`Go to project ${index + 1}: ${project.name}`}
               className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
                 index === currentIndex ? 'bg-white w-5 sm:w-6' : 'w-1.5 sm:w-2 bg-white/20 hover:bg-white/40'
               }`}
