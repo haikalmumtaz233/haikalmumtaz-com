@@ -61,7 +61,7 @@ const FeaturedProjects = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
-          className="mb-4 sm:mb-5 md:mb-6"
+          className="mb-2 sm:mb-3 md:mb-4"
         >
           <div className="flex items-center justify-between flex-wrap gap-3">
             <div>
@@ -139,7 +139,7 @@ const FeaturedProjects = () => {
           </button>
         </div>
 
-        <div className="flex justify-center gap-1.5 sm:gap-2 mt-4 sm:mt-5 md:mt-6">
+        <div className="flex justify-center gap-1.5 sm:gap-2 mt-2 sm:mt-3 md:mt-4">
           {featuredProjects.map((_, index) => (
             <button
               key={index}

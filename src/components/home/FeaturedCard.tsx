@@ -13,9 +13,8 @@ const FeaturedCard = memo(({ project, onClick }: FeaturedCardProps) => {
   return (
     <motion.article
       onClick={onClick}
-      whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
-      className="group relative cursor-pointer rounded-xl md:rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden h-full"
+      className="group relative cursor-pointer rounded-xl md:rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden h-[260px] md:h-[200px] lg:h-[240px] xl:h-[280px] 2xl:h-[320px]"
       style={
         {
           '--accent': project.accentColor,
@@ -50,7 +49,7 @@ const FeaturedCard = memo(({ project, onClick }: FeaturedCardProps) => {
             {project.category}
           </div>
           <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <span className="flex items-center gap-2 text-white text-xs md:text-sm font-semibold tracking-wide bg-white/10 backdrop-blur-sm px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-white/20">
+            <span className="flex items-center gap-2 text-white text-xs md:text-sm font-semibold tracking-wide bg-white/10 backdrop-blur-sm px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-white/20 pointer-events-none">
               View Project <ArrowUpRight size={14} />
             </span>
           </div>
