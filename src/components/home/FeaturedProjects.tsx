@@ -97,7 +97,7 @@ const FeaturedProjects = () => {
             <ChevronLeft className={`w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 ${isFirstSlide ? 'text-white/20' : 'text-white'}`} />
           </button>
 
-          <div className="flex-1 relative h-[200px] sm:h-[220px] md:h-[280px] lg:h-[320px] xl:h-[360px]" style={{ perspective: '1200px' }}>
+          <div className="flex-1 relative h-[320px] sm:h-[360px] md:h-[400px] lg:h-[420px] xl:h-[450px]" style={{ perspective: '1200px' }}>
             <AnimatePresence initial={false} custom={direction} mode="popLayout">
               <motion.div
                 key={currentIndex}
@@ -115,7 +115,7 @@ const FeaturedProjects = () => {
                 className="absolute inset-0 flex justify-center items-center"
                 style={{ transformStyle: 'preserve-3d' }}
               >
-                <div className="w-full max-w-[600px] md:max-w-[700px] lg:max-w-[850px] xl:max-w-[950px]">
+                <div className="w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px] lg:max-w-[380px] xl:max-w-[400px]">
                   <FeaturedCard
                     project={featuredProjects[currentIndex]}
                     index={currentIndex}
