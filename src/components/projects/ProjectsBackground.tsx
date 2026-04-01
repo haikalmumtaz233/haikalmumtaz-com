@@ -92,7 +92,7 @@ const ProjectsBackground = () => {
     };
 
     const animate = () => {
-      ctx.fillStyle = '#0a0a0a';
+      ctx.fillStyle = '#0d0a12';
       ctx.fillRect(0, 0, width, height);
 
       drawGrid();
