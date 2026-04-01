@@ -9,6 +9,7 @@ const ProjectsGrid = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [dragWidth, setDragWidth] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -26,10 +27,15 @@ const ProjectsGrid = () => {
 
   useEffect(() => {
     const updateWidth = () => {
-      if (filterRef.current && containerRef.current) {
+      const mobile = window.innerWidth < 640;
+      setIsMobile(mobile);
+      
+      if (filterRef.current && containerRef.current && mobile) {
         const scrollWidth = filterRef.current.scrollWidth;
         const containerWidth = containerRef.current.offsetWidth;
         setDragWidth(Math.max(0, scrollWidth - containerWidth + 32));
+      } else {
+        setDragWidth(0);
       }
     };
     updateWidth();
@@ -49,8 +55,8 @@ const ProjectsGrid = () => {
           <div ref={containerRef} className="overflow-hidden sm:overflow-visible -mx-4 px-4 sm:mx-0 sm:px-0">
             <motion.div 
               ref={filterRef}
-              className="flex gap-2 sm:gap-3 sm:flex-wrap cursor-grab active:cursor-grabbing sm:cursor-auto pr-4 sm:pr-0"
-              drag={dragWidth > 0 ? "x" : false}
+              className={`flex gap-2 sm:gap-3 sm:flex-wrap pr-4 sm:pr-0 ${isMobile && dragWidth > 0 ? 'cursor-grab active:cursor-grabbing' : ''}`}
+              drag={isMobile && dragWidth > 0 ? "x" : false}
               dragConstraints={{ right: 0, left: -dragWidth }}
               style={{ touchAction: 'pan-y' }}
             >
