@@ -49,18 +49,7 @@ const Background = () => {
         });
 
         gsap.to(orb1WrapperRef.current, {
-            y: '150vh',
-            ease: 'none',
-            scrollTrigger: {
-                trigger: document.body,
-                start: 'top top',
-                end: 'bottom bottom',
-                scrub: 1.5,
-            },
-        });
-
-        gsap.to(orb2WrapperRef.current, {
-            y: '80vh',
+            y: '50vh',
             ease: 'none',
             scrollTrigger: {
                 trigger: document.body,
@@ -70,14 +59,25 @@ const Background = () => {
             },
         });
 
-        gsap.to(orb3WrapperRef.current, {
-            y: '120vh',
+        gsap.to(orb2WrapperRef.current, {
+            y: '30vh',
             ease: 'none',
             scrollTrigger: {
                 trigger: document.body,
                 start: 'top top',
                 end: 'bottom bottom',
-                scrub: 1.5,
+                scrub: 2.5,
+            },
+        });
+
+        gsap.to(orb3WrapperRef.current, {
+            y: '40vh',
+            ease: 'none',
+            scrollTrigger: {
+                trigger: document.body,
+                start: 'top top',
+                end: 'bottom bottom',
+                scrub: 2,
             },
         });
     }, { scope: containerRef });

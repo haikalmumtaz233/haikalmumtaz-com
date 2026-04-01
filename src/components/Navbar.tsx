@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Github, Linkedin, Instagram } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
-  { name: 'HOME', path: '#top' },
-  { name: 'PROJECTS', path: '#projects' },
-  { name: 'EXPERIENCE', path: '#experience' },
-  { name: 'CONTACT', path: '#contact' },
+  { name: 'HOME', path: '/', type: 'route' },
+  { name: 'PROJECTS', path: '#projects', type: 'scroll' },
+  { name: 'EXPERIENCE', path: '#experience', type: 'scroll' },
+  { name: 'CONTACT', path: '#contact', type: 'scroll' },
 ];
 
 const socialLinks = [
@@ -17,16 +18,27 @@ const socialLinks = [
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  const handleNavigation = (path: string) => {
+  const handleNavigation = (link: typeof navLinks[0]) => {
     setIsOpen(false);
-    if (path === '#top') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    if (link.type === 'route') {
+      navigate(link.path);
     } else {
-      const element = document.querySelector(path);
-      element?.scrollIntoView({ behavior: 'smooth' });
+      if (location.pathname !== '/') {
+        navigate('/');
+        setTimeout(() => {
+          const element = document.querySelector(link.path);
+          element?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      } else {
+        const element = document.querySelector(link.path);
+        element?.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 
@@ -105,13 +117,13 @@ const Navbar = () => {
                       }}
                       className="overflow-hidden"
                     >
-                      <button
-                        onClick={() => handleNavigation(link.path)}
-                        className="block cursor-pointer text-left w-full group"
+                      <motion.button
+                        onClick={() => handleNavigation(link)}
+                        initial="initial"
+                        whileHover="hovered"
+                        className="cursor-pointer text-left group"
                       >
-                        <motion.div
-                          initial="initial"
-                          whileHover="hovered"
+                        <div
                           className="relative block overflow-hidden whitespace-nowrap text-3xl sm:text-4xl md:text-6xl font-black uppercase text-white"
                           style={{ lineHeight: 0.9 }}
                         >
@@ -152,15 +164,9 @@ const Navbar = () => {
                               </motion.span>
                             ))}
                           </div>
-                        </motion.div>
+                        </div>
 
-                        <motion.div
-                          className="h-[2px] bg-gradient-to-r from-purple-500 to-cyan-500 mt-2"
-                          initial={{ width: 0 }}
-                          whileHover={{ width: "100%" }}
-                          transition={{ duration: 0.3 }}
-                        />
-                      </button>
+                      </motion.button>
                     </motion.li>
                   ))}
                 </ul>
@@ -174,7 +180,7 @@ const Navbar = () => {
               >
                 <a
                   href="mailto:hmumtaz70@gmail.com"
-                  className="block text-sm md:text-base text-slate-400 hover:text-white transition-colors font-mono"
+                  className="inline-block text-sm md:text-base text-slate-400 hover:text-white transition-colors font-mono"
                 >
                   hmumtaz70@gmail.com
                 </a>

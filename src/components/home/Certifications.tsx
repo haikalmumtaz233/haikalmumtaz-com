@@ -1,7 +1,9 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { ArrowUpRight } from 'lucide-react';
 import { certifications, type Certification } from '../../data/certifications';
 import CertificationModal from './CertificationModal';
+import OptimizedImage from '../ui/OptimizedImage';
 
 const titleVariants = {
   hidden: { opacity: 0 },
@@ -123,18 +125,23 @@ const CertificateCard = ({
     >
       <div className="relative aspect-[3/4] rounded-xl overflow-hidden border border-white/10 bg-[#0a0a0a] shadow-2xl transition-colors duration-300 group-hover:border-white/30">
         <div className="absolute inset-0 bg-black/50">
-          <img
+          <OptimizedImage
             src={cert.image}
             alt={`${cert.title} certificate from ${cert.issuer}`}
-            loading="lazy"
-            decoding="async"
             className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+            containerClassName="w-full h-full"
           />
         </div>
 
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
 
         <div className="absolute inset-0 bg-white/[0.06] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span className="flex items-center gap-1 text-white text-xs md:text-sm font-semibold tracking-wide px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-white/20 pointer-events-none">
+            View Certificate <ArrowUpRight className='transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5' size={18} />
+          </span>
+        </div>
 
         <div className="absolute bottom-0 left-0 right-0 p-4 lg:p-5 2xl:p-6 space-y-2">
           <span className="inline-block px-2.5 py-1 bg-cyan-500/10 backdrop-blur-md rounded border border-cyan-400/30 text-[10px] font-mono text-cyan-400 tracking-wide">
