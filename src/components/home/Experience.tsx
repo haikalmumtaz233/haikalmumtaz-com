@@ -97,13 +97,14 @@ const ExperienceItem = ({ experience, index, hoveredIndex, setHoveredIndex }: Ex
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.5 }}
         transition={{ duration: 0.6, delay: index * 0.1 }}
-        onMouseEnter={() => setHoveredIndex(index)}
-        onMouseLeave={() => setHoveredIndex(null)}
-        className="border-t border-white/20 pt-6 pb-6 sm:pt-8 sm:pb-8 lg:pt-10 lg:pb-10 lg:pl-12 transition-opacity duration-500 ease-in-out"
-        style={{
-          opacity: isDimmed ? 0.2 : 1,
-        }}
       >
+        <motion.div
+          onMouseEnter={() => setHoveredIndex(index)}
+          onMouseLeave={() => setHoveredIndex(null)}
+          animate={{ opacity: isDimmed ? 0.2 : 1 }}
+          transition={{ duration: 0.5, ease: 'easeInOut' }}
+          className="border-t border-white/20 pt-6 pb-6 sm:pt-8 sm:pb-8 lg:pt-10 lg:pb-10 lg:pl-12"
+        >
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 md:gap-8">
           <div className="md:col-span-3">
             <div className="font-mono text-slate-500 text-sm tracking-wider">
@@ -133,6 +134,7 @@ const ExperienceItem = ({ experience, index, hoveredIndex, setHoveredIndex }: Ex
             </p>
           </div>
         </div>
+        </motion.div>
       </motion.div>
     </div>
   );
