@@ -128,4 +128,28 @@ export const projects: Project[] = [
         liveLink: 'https://haikalmumtaz233.github.io/vehicle-route-leafletjs/',
         isFeatured: false,
     },
+    {
+        id: 8,
+        name: 'SIMASET Asahan',
+        subtitle: 'Regional Asset Management System',
+        category: 'Frontend Development',
+        description:
+            'Web-based asset management system for Asahan Regency covering master data, KIB-based inventory, procurement transactions, maintenance workflows, and GIS-assisted asset mapping.',
+        stack: [
+            'Vue 3',
+            'Vite',
+            'Pinia',
+            'Vue Router',
+            'TanStack Query',
+            'Axios',
+            'Leaflet',
+            'Tailwind CSS',
+        ],
+        image: '/projects/simaset.webp',
+        gradient: 'from-indigo-900/20 via-transparent to-sky-900/20',
+        accentColor: '#2563eb',
+        repoLink: '#',
+        liveLink: '#',
+        isFeatured: false,
+    },
 ];
