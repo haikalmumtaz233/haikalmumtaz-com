@@ -104,5 +104,28 @@ export const projects: Project[] = [
         liveLink: '#',
         isFeatured: false,
     },
-    
+    {
+        id: 7,
+        name: 'KostKu',
+        subtitle: 'Kost Management Platform',
+        category: 'Fullstack Web Development',
+        description:
+            'Platform manajemen operasional kost untuk landlord dan tenant, mencakup auth, billing, inventory, notifikasi, dan analytics berbasis arsitektur microservices.',
+        stack: [
+            'Next.js',
+            'TypeScript',
+            'Tailwind CSS',
+            'Golang',
+            'Gin',
+            'PostgreSQL',
+            'Redis',
+            'NATS',
+        ],
+        image: '/projects/cms.webp',
+        gradient: 'from-emerald-900/20 via-transparent to-cyan-900/20',
+        accentColor: '#14b8a6',
+        repoLink: 'https://github.com/haikalmumtaz233/kostku-be',
+        liveLink: '#',
+        isFeatured: false,
+    },
 ];
