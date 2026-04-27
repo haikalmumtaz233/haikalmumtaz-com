@@ -72,15 +72,6 @@ export const moments: Moment[] = [
     alignment: 'end',
     textPos: 'above',
   },
-  
-  
-  
-  
-  
-  
-  
-  
-  
   {
     id: 8,
     title: 'Graduation Day',

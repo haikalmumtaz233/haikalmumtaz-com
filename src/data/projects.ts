@@ -21,7 +21,7 @@ export const projects: Project[] = [
         category: 'Fullstack Web Development',
         description:
             'End-to-end cinema ticketing system with admin dashboard and seamless user booking experience.',
-        stack: ['Java Spring Boot', 'Java Spring Security', 'Thyemeleaf', 'MySQL', 'Bootstrap'],
+        stack: ['Java Spring Boot', 'Java Spring Security', 'Thymeleaf', 'MySQL', 'Bootstrap'],
         image: '/projects/tixnow.webp',
         gradient: 'from-purple-900/20 via-transparent to-blue-900/20',
         accentColor: '#a855f7',
