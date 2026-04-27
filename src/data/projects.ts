@@ -21,7 +21,7 @@ export const projects: Project[] = [
         category: 'Fullstack Web Development',
         description:
             'End-to-end cinema ticketing system with admin dashboard and seamless user booking experience.',
-        stack: ['Java Spring Boot', 'Java Spring Security', 'Thyemeleaf', 'MySQL', 'Bootstrap'],
+        stack: ['Java Spring Boot', 'Java Spring Security', 'Thymeleaf', 'MySQL', 'Bootstrap'],
         image: '/projects/tixnow.webp',
         gradient: 'from-purple-900/20 via-transparent to-blue-900/20',
         accentColor: '#a855f7',
@@ -51,12 +51,12 @@ export const projects: Project[] = [
         category: 'Frontend Development',
         description:
             'Modern, interactive portfolio website showcasing projects with advanced animations and smooth user experience.',
-        stack: ['React', 'Framer Motion', 'Tailwind'],
+        stack: ['React', 'Framer Motion', 'Tailwind', 'GSAP', 'Lenis'],
         image: '/projects/portfolio.webp',
         gradient: 'from-pink-900/20 via-transparent to-orange-900/20',
         accentColor: '#ec4899',
         repoLink: 'https://github.com/haikalmumtaz233/haikalmumtaz-com',
-        liveLink: 'https://haikalmumtaz-com.vercel.app/',
+        liveLink: 'https://haikalmumtaz.com',
         isFeatured: true,
     },
     {
@@ -66,7 +66,12 @@ export const projects: Project[] = [
         category: 'Frontend Development',
         description:
             'Responsive school profile website for SMP Muhdela Yogyakarta',
-        stack: ['Vue.js', 'Tailwind CSS'],
+        stack: [
+            'Vue 3',
+            'Pinia',
+            'Axios',
+            'Tailwind CSS'
+        ],
         image: '/projects/smpmuhdela.webp',
         gradient: 'from-pink-900/20 via-transparent to-orange-900/20',
         accentColor: '#34d399',
@@ -83,9 +88,7 @@ export const projects: Project[] = [
             'Web-based asset management system for Asahan Regency covering master data, KIB-based inventory, procurement transactions, maintenance workflows, and GIS-assisted asset mapping.',
         stack: [
             'Vue 3',
-            'Vite',
             'Pinia',
-            'Vue Router',
             'TanStack Query',
             'Axios',
             'Leaflet',
@@ -105,7 +108,12 @@ export const projects: Project[] = [
         category: 'Frontend Development',
         description:
             'Content management system for SMP Muhdela Yogyakarta, enabling easy updates to school information, news, and events by non-technical staff.',
-        stack: ['Vue.js', 'Tailwind CSS'],
+        stack: [
+            'Vue 3',
+            'Vuexy',
+            'Axios',
+            'Tailwind CSS'
+        ],
         image: '/projects/cms.webp',
         gradient: 'from-pink-900/20 via-transparent to-orange-900/20',
         accentColor: '#60a5fa',
@@ -144,7 +152,7 @@ export const projects: Project[] = [
         category: 'Frontend Development',
         description:
             'Bus route mapping application using LeafletJS for interactive visualization and navigation of vehicle routes.',
-        stack: ['JavaScript', 'LeafletJS', 'HTML', 'CSS'],
+        stack: ['JavaScript', 'Leaflet', 'HTML', 'CSS'],
         image: '/projects/vehicleroute.webp',
         gradient: 'from-pink-900/20 via-transparent to-orange-900/20',
         accentColor: '#22d3ee',
