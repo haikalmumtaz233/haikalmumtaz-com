@@ -1,8 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
 
-/* --- MONUMENT EXTENDED FONT SETUP --- */
-
-/* Regular Weight */
+/* === MONUMENT EXTENDED FONT SETUP === */
 @font-face {
   font-family: 'Monument Extended';
   src: url('/fonts/MonumentExtended-Regular.otf') format('opentype');
@@ -11,11 +9,10 @@
   font-display: swap;
 }
 
-/* Ultrabold (Mapped to 800/900/Black) */
 @font-face {
   font-family: 'Monument Extended';
   src: url('/fonts/MonumentExtended-Ultrabold.otf') format('opentype');
-  font-weight: 900; /* We map Ultrabold to 900 so 'font-black' works */
+  font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
@@ -47,19 +44,11 @@ body {
   font-family: 'Plus Jakarta Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  /* PERBAIKAN PENTING: */
-  /* 1. Background jadi transparan supaya animasi bintang (Background.tsx) terlihat */
   background-color: transparent;
-
-  /* 2. Grid & Gradient dihapus total */
   background-image: none;
-
   position: relative;
   overflow-x: hidden;
 }
-
-/* Hapus body::before (Overlay lama) */
 
 #root {
   position: relative;
