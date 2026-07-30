@@ -31,7 +31,7 @@ const ProjectsHero = () => {
             transition: { duration: 0.8, ease: revealEase },
           })}
         >
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl font-monument font-black tracking-tight text-white mb-4 sm:mb-6 uppercase">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl font-display font-black tracking-tight text-white mb-4 sm:mb-6 uppercase">
             ALL PROJECTS
           </h1>
           <p className="text-slate-400 text-base sm:text-lg md:text-xl 2xl:text-2xl font-light max-w-2xl">

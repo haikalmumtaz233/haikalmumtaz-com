@@ -32,7 +32,7 @@ const Certifications = () => {
           <div className="overflow-hidden mb-3">
             <motion.h2
               variants={wordVariants}
-              className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black tracking-tight text-white uppercase"
+              className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl 2xl:text-7xl font-display font-black tracking-tight text-white uppercase"
             >
               CERTIFICATIONS
             </motion.h2>

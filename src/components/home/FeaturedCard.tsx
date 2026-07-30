@@ -61,7 +61,7 @@ const FeaturedCard = memo(({ project, onClick }: FeaturedCardProps) => {
         </div>
         <div className="p-3 md:p-4 lg:p-5 xl:p-6 flex flex-col flex-grow justify-center">
           <div className="mb-2 md:mb-3">
-            <h3 className="text-sm md:text-base lg:text-lg xl:text-xl font-monument font-black text-white tracking-tight leading-tight line-clamp-1 md:line-clamp-2">
+            <h3 className="text-sm md:text-base lg:text-lg xl:text-xl font-display font-black text-white tracking-tight leading-tight line-clamp-1 md:line-clamp-2">
               {project.name}
             </h3>
             <p className="text-slate-400 text-[10px] md:text-xs lg:text-sm font-light mt-0.5 md:mt-1 line-clamp-1 md:line-clamp-2">

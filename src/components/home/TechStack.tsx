@@ -28,7 +28,7 @@ const TechStack = () => {
           <div className="overflow-hidden">
             <motion.h2
               variants={wordVariants}
-              className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black text-white uppercase tracking-tight mb-3"
+              className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl 2xl:text-7xl font-display font-black text-white uppercase tracking-tight mb-3"
             >
               Tech Stack
             </motion.h2>
