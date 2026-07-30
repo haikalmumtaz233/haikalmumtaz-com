@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Projects from './pages/Projects';
+import NotFound from './pages/NotFound';
 import Background from './components/Background';
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
 
@@ -66,6 +67,7 @@ function AppShell() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/projects" element={<Projects />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
         <Footer />

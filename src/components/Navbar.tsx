@@ -4,6 +4,7 @@ import { Menu, X, Github, Linkedin, Instagram } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { useFocusTrap } from '../hooks/useFocusTrap';
+import { profile, socialProfiles } from '../data/profile';
 import { animatedProps } from '../lib/motion';
 
 const navLinks = [
@@ -13,11 +14,11 @@ const navLinks = [
   { name: 'CONTACT', path: '#contact', type: 'scroll' },
 ];
 
-const socialLinks = [
-  { Icon: Github, href: 'https://github.com/haikalmumtaz233', label: 'GitHub' },
-  { Icon: Linkedin, href: 'https://www.linkedin.com/in/haikal-mumtaz/', label: 'LinkedIn' },
-  { Icon: Instagram, href: 'https://www.instagram.com/haikal_mumtaz23/', label: 'Instagram' },
-];
+const socialIcons: Record<string, typeof Github> = {
+  GitHub: Github,
+  LinkedIn: Linkedin,
+  Instagram: Instagram,
+};
 
 const MENU_PANEL_ID = 'site-menu-panel';
 
@@ -225,16 +226,18 @@ const Navbar = () => {
                 className="space-y-6 sm:space-y-8 border-t border-white/10 pt-6 sm:pt-8"
               >
                 <a
-                  href="mailto:hmumtaz70@gmail.com"
+                  href={`mailto:${profile.email}`}
                   className="inline-block text-sm md:text-base text-slate-400 hover:text-white transition-colors font-mono"
                 >
-                  hmumtaz70@gmail.com
+                  {profile.email}
                 </a>
 
                 <div className="flex gap-4">
-                  {socialLinks.map(({ Icon, href, label }, i) => (
+                  {socialProfiles.map(({ href, label }) => {
+                    const Icon = socialIcons[label];
+                    return (
                     <motion.a
-                      key={i}
+                      key={label}
                       href={href}
                       target="_blank"
                       rel="noreferrer"
@@ -247,7 +250,8 @@ const Navbar = () => {
                     >
                       <Icon className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
                     </motion.a>
-                  ))}
+                    );
+                  })}
                 </div>
 
                 <div className="flex items-center gap-3 text-xs font-mono text-slate-400">

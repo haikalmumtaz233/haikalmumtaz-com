@@ -5,6 +5,7 @@ import emailjs from '@emailjs/browser';
 import DOMPurify from 'dompurify';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { animatedProps, revealEase } from '../../lib/motion';
+import { profile, socialProfiles } from '../../data/profile';
 
 declare global {
   interface Window {
@@ -21,6 +22,12 @@ declare global {
     };
   }
 }
+
+const socialIcons: Record<string, typeof Github> = {
+  GitHub: Github,
+  LinkedIn: Linkedin,
+  Instagram: Instagram,
+};
 
 type ToastType = 'success' | 'error';
 
@@ -202,11 +209,10 @@ const Contact = () => {
     }
   };
 
-  const socialLinks = [
-    { icon: Github, href: 'https://github.com/haikalmumtaz233', label: 'Github' },
-    { icon: Linkedin, href: 'https://www.linkedin.com/in/haikal-mumtaz/', label: 'LinkedIn' },
-    { icon: Instagram, href: 'https://www.instagram.com/haikal_mumtaz23/', label: 'Instagram' },
-  ];
+  const socialLinks = socialProfiles.map((social) => ({
+    ...social,
+    icon: socialIcons[social.label],
+  }));
 
   return (
     <section className="relative bg-transparent py-10 sm:py-14 md:py-16 lg:py-20 overflow-hidden">
@@ -270,13 +276,13 @@ const Contact = () => {
 
             <div className="space-y-6">
               <a
-                href="mailto:hmumtaz70@gmail.com"
+                href={`mailto:${profile.email}`}
                 className="group flex items-center gap-3 text-base md:text-lg 2xl:text-2xl text-white hover:text-white/80 transition-colors"
               >
                 <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
                   <Mail size={18} />
                 </div>
-                <span>hmumtaz70@gmail.com</span>
+                <span>{profile.email}</span>
               </a>
 
               <div className="flex gap-3">

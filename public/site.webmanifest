@@ -1,0 +1,22 @@
+{
+  "name": "Haikal Mumtaz — Application Developer",
+  "short_name": "Haikal Mumtaz",
+  "description": "Portfolio of Haikal Mumtaz, an Application Developer working on core banking systems in Jakarta.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "581x430",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo.webp",
+      "sizes": "581x430",
+      "type": "image/webp"
+    }
+  ]
+}
