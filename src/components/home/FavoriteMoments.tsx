@@ -3,12 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { moments } from '../../data/moments';
 import OptimizedImage from '../ui/OptimizedImage';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import {
-  animatedProps,
-  maskedWordVariants,
-  revealEase,
-  staggerContainerVariants,
-} from '../../lib/motion';
+import { maskedWordVariants, staggerContainerVariants } from '../../lib/motion';
 
 const withoutFixedWidth = (className: string) =>
   className
@@ -173,23 +168,13 @@ const FavoriteMoments = () => {
             </motion.div>
           </div>
 
-          {moments.map((moment, index) => (
-            <motion.div
+          {moments.map((moment) => (
+            <div
               key={moment.id}
-              {...animatedProps(prefersReducedMotion, {
-                initial: { opacity: 0, scale: 0.95 },
-                whileInView: { opacity: 1, scale: 1 },
-                viewport: { once: true, margin: '-100px' },
-                transition: {
-                  duration: 0.8,
-                  delay: index * 0.1,
-                  ease: revealEase,
-                },
-              })}
               className={`flex-shrink-0 flex flex-col h-[80vh] ${getAlignmentClass(moment.alignment)}`}
             >
               {renderContent(moment)}
-            </motion.div>
+            </div>
           ))}
         </motion.div>
       </div>

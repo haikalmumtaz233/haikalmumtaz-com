@@ -4,6 +4,7 @@ import { ArrowUpRight } from 'lucide-react';
 import type { Project } from '../../data/projects';
 import OptimizedImage from '../ui/OptimizedImage';
 import { activateOnEnterOrSpace } from '../../lib/keyboard';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 
 interface FeaturedCardProps {
   project: Project;
@@ -12,15 +13,18 @@ interface FeaturedCardProps {
 }
 
 const FeaturedCard = memo(({ project, onClick }: FeaturedCardProps) => {
+  const prefersReducedMotion = usePrefersReducedMotion();
+
   return (
     <motion.article
+      layoutId={prefersReducedMotion ? undefined : `project-${project.id}`}
       onClick={onClick}
       onKeyDown={activateOnEnterOrSpace(onClick)}
       role="button"
       tabIndex={0}
       aria-label={`Open details for ${project.name}`}
       transition={{ duration: 0.3, ease: 'easeOut' }}
-      className="group relative cursor-pointer rounded-xl md:rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden h-[260px] md:h-[200px] lg:h-[240px] xl:h-[280px] 2xl:h-[320px]"
+      className="group relative cursor-pointer rounded-xl md:rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden h-[220px] md:h-[240px] lg:h-[280px] xl:h-[310px] 2xl:h-[350px]"
       style={
         {
           '--accent': project.accentColor,

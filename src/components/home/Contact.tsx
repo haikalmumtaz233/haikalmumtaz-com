@@ -4,7 +4,7 @@ import { ArrowUpRight, Mail, Instagram, Linkedin, Github, CheckCircle, XCircle, 
 import emailjs from '@emailjs/browser';
 import DOMPurify from 'dompurify';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import { animatedProps, revealEase } from '../../lib/motion';
+import { revealEase } from '../../lib/motion';
 import { profile, socialProfiles } from '../../data/profile';
 
 declare global {
@@ -256,15 +256,7 @@ const Contact = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 2xl:gap-24">
 
-          <motion.div
-            {...animatedProps(prefersReducedMotion, {
-              initial: { opacity: 0, x: -50 },
-              whileInView: { opacity: 1, x: 0 },
-              viewport: { once: true },
-              transition: { duration: 0.8 },
-            })}
-            className="flex flex-col justify-center"
-          >
+          <div className="flex flex-col justify-center">
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black text-white uppercase tracking-tight leading-none mb-4 sm:mb-6">
               Let's work <br />
               together
@@ -300,17 +292,9 @@ const Contact = () => {
                 ))}
               </div>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            {...animatedProps(prefersReducedMotion, {
-              initial: { opacity: 0, x: 50 },
-              whileInView: { opacity: 1, x: 0 },
-              viewport: { once: true },
-              transition: { duration: 0.8, delay: 0.2 },
-            })}
-            className="bg-white/[0.02] border border-white/10 rounded-2xl p-5 md:p-6 2xl:p-8"
-          >
+          <div className="bg-white/[0.02] border border-white/10 rounded-2xl p-5 md:p-6 2xl:p-8">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1">
@@ -421,7 +405,7 @@ const Contact = () => {
                 <ArrowUpRight className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
               </button>
             </form>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

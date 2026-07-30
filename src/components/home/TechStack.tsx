@@ -2,19 +2,12 @@ import { motion } from 'framer-motion';
 import { techCategories } from '../../data/techStack';
 import TechIcon from '../ui/TechIcon';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import {
-  fadeUpVariants,
-  maskedWordVariants,
-  staggerContainerVariants,
-  staggeredFadeUpVariants,
-} from '../../lib/motion';
+import { maskedWordVariants, staggerContainerVariants } from '../../lib/motion';
 
 const TechStack = () => {
   const prefersReducedMotion = usePrefersReducedMotion();
   const titleVariants = staggerContainerVariants(prefersReducedMotion);
   const wordVariants = maskedWordVariants(prefersReducedMotion);
-  const categoryVariants = staggeredFadeUpVariants(prefersReducedMotion);
-  const chipVariants = fadeUpVariants(prefersReducedMotion, 16, 0.4);
 
   return (
     <section className="relative bg-transparent py-10 sm:py-12 md:py-16 2xl:py-20">
@@ -46,12 +39,8 @@ const TechStack = () => {
 
         <div>
           {techCategories.map((category) => (
-            <motion.div
+            <div
               key={category.title}
-              variants={categoryVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
               className="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-4 md:gap-10 py-6 md:py-8 2xl:py-10 border-t border-white/10 last:border-b"
             >
               <div className="flex items-baseline gap-3 md:flex-col md:gap-2">
@@ -65,9 +54,8 @@ const TechStack = () => {
 
               <div className="flex flex-wrap content-start gap-2 sm:gap-3 2xl:gap-4">
                 {category.items.map((tech) => (
-                  <motion.div
+                  <div
                     key={tech.name}
-                    variants={chipVariants}
                     className="group flex items-center gap-2.5 px-3 py-2 2xl:px-4 2xl:py-2.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/25 transition-colors duration-300 cursor-pointer"
                   >
                     <div className="w-5 h-5 md:w-6 md:h-6 2xl:w-7 2xl:h-7 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
@@ -76,10 +64,10 @@ const TechStack = () => {
                     <span className="text-slate-400 font-semibold text-xs md:text-sm 2xl:text-base whitespace-nowrap transition-colors duration-300 group-hover:text-white">
                       {tech.name}
                     </span>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

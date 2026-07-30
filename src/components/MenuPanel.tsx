@@ -40,7 +40,7 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
     onClose();
 
     if (link.type === 'route') {
-      navigate(link.path);
+      navigate(link.path, { viewTransition: true });
       return;
     }
 

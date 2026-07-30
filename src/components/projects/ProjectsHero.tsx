@@ -17,7 +17,7 @@ const ProjectsHero = () => {
             animate: { opacity: 1, x: 0 },
             transition: { duration: 0.5 },
           })}
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/', { viewTransition: true })}
           className="group flex items-center gap-2 text-slate-400 hover:text-white transition-colors duration-300 mb-8 sm:mb-12"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />

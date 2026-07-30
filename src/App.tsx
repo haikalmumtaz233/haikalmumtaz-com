@@ -10,6 +10,8 @@ const Projects = lazy(() => import('./pages/Projects'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
 import TechIconSprite from './components/ui/TechIconSprite';
+import CustomCursor from './components/CustomCursor';
+import { useHasFinePointer } from './hooks/useMediaQuery';
 
 const scrollPositions = new Map<string, number>();
 
@@ -59,8 +61,12 @@ function ScrollManager() {
 }
 
 function AppShell() {
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const hasFinePointer = useHasFinePointer();
+
   return (
     <>
+      {hasFinePointer && !prefersReducedMotion && <CustomCursor />}
       <TechIconSprite />
       <Background />
       <ScrollManager />

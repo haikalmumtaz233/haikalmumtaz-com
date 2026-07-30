@@ -35,7 +35,7 @@ const NotFound = () => {
           <div className="flex flex-wrap items-center gap-3">
             <button
               type="button"
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/', { viewTransition: true })}
               className="group inline-flex items-center gap-2 px-5 py-2.5 bg-white text-black font-bold text-xs uppercase tracking-wider rounded-full hover:bg-white/90 transition-colors duration-300"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
@@ -44,7 +44,7 @@ const NotFound = () => {
 
             <button
               type="button"
-              onClick={() => navigate('/projects')}
+              onClick={() => navigate('/projects', { viewTransition: true })}
               className="group inline-flex items-center gap-2 px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white font-medium text-xs uppercase tracking-wider rounded-full transition-colors duration-300"
             >
               Browse projects

@@ -5,12 +5,7 @@ import { certifications, type Certification } from '../../data/certifications';
 import CertificationModal from './CertificationModal';
 import OptimizedImage from '../ui/OptimizedImage';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import {
-  animatedProps,
-  maskedWordVariants,
-  revealEase,
-  staggerContainerVariants,
-} from '../../lib/motion';
+import { maskedWordVariants, revealEase, staggerContainerVariants } from '../../lib/motion';
 import { activateOnEnterOrSpace } from '../../lib/keyboard';
 import { accents } from '../../data/categoryAccents';
 
@@ -166,8 +161,8 @@ const HorizontalSlider = ({ onCertClick }: { onCertClick: (cert: Certification) 
           onDragEnd={() => setOffset(-x.get())}
           whileTap={{ cursor: 'grabbing' }}
         >
-          {certifications.map((cert, index) => (
-            <CertificateCard key={cert.id} cert={cert} index={index} onCertClick={onCertClick} />
+          {certifications.map((cert) => (
+            <CertificateCard key={cert.id} cert={cert} onCertClick={onCertClick} />
           ))}
         </motion.div>
       </div>
@@ -177,24 +172,15 @@ const HorizontalSlider = ({ onCertClick }: { onCertClick: (cert: Certification) 
 
 const CertificateCard = ({
   cert,
-  index,
   onCertClick,
 }: {
   cert: Certification;
-  index: number;
   onCertClick: (cert: Certification) => void;
 }) => {
-  const prefersReducedMotion = usePrefersReducedMotion();
   const dragRef = useRef(false);
 
   return (
     <motion.article
-      {...animatedProps(prefersReducedMotion, {
-        initial: { opacity: 0, x: 50 },
-        whileInView: { opacity: 1, x: 0 },
-        viewport: { once: true, amount: 0.1 },
-        transition: { duration: 0.6, delay: index * 0.1 },
-      })}
       onPointerDown={() => { dragRef.current = false; }}
       onPointerMove={() => { dragRef.current = true; }}
       onPointerUp={() => { if (!dragRef.current) onCertClick(cert); }}

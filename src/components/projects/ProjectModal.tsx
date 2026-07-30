@@ -6,7 +6,7 @@ import { useLenis } from 'lenis/react';
 import type { Project } from '../../data/projects';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
-import { animatedProps } from '../../lib/motion';
+import { animatedProps, revealEase } from '../../lib/motion';
 
 interface ProjectModalProps {
   project: Project | null;
@@ -57,13 +57,14 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
         >
 <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
 <motion.div
-            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95, y: 20 }}
-            animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
-            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95, y: 20 }}
+            layoutId={prefersReducedMotion ? undefined : `project-${project.id}`}
+            initial={prefersReducedMotion ? { opacity: 0 } : false}
+            animate={prefersReducedMotion ? { opacity: 1 } : undefined}
+            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0 }}
             transition={
               prefersReducedMotion
                 ? { duration: 0.2 }
-                : { type: 'spring', stiffness: 300, damping: 30 }
+                : { duration: 0.45, ease: revealEase }
             }
             ref={dialogRef}
             role="dialog"

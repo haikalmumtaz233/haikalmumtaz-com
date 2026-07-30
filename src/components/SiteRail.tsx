@@ -28,7 +28,7 @@ const SiteRail = () => {
 
   const goToSection = (id: string) => {
     if (!isHome) {
-      navigate('/');
+      navigate('/', { viewTransition: true });
       setTimeout(() => {
         document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
@@ -42,7 +42,7 @@ const SiteRail = () => {
       <div className="hidden lg:flex fixed left-0 top-0 z-40 h-screen w-rail-lg flex-col items-center justify-between border-r border-white/10 bg-black/30 backdrop-blur-md py-6">
         <motion.button
           type="button"
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/', { viewTransition: true })}
           style={{ opacity: prefersReducedMotion ? 1 : wordmarkOpacity }}
           className="font-monument text-[11px] font-black uppercase tracking-[0.3em] text-white/80 hover:text-white transition-colors"
           aria-label="Haikal Mumtaz, back to top"
@@ -119,7 +119,7 @@ const SiteRail = () => {
         <div className="flex items-center justify-between px-4 py-3">
           <button
             type="button"
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/', { viewTransition: true })}
             className="font-monument text-[10px] font-black uppercase tracking-[0.25em] text-white/80"
             aria-label="Haikal Mumtaz, back to top"
           >

@@ -4,31 +4,20 @@ import { ArrowUpRight } from 'lucide-react';
 import type { Project } from '../../data/projects';
 import OptimizedImage from '../ui/OptimizedImage';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import { animatedProps, revealEase } from '../../lib/motion';
 import { activateOnEnterOrSpace } from '../../lib/keyboard';
 
 interface ProjectCardProps {
   project: Project;
-  index: number;
   onClick: () => void;
 }
 
-const ProjectCard = memo(({ project, index, onClick }: ProjectCardProps) => {
+const ProjectCard = memo(({ project, onClick }: ProjectCardProps) => {
   const prefersReducedMotion = usePrefersReducedMotion();
   const maxVisibleTech = 3;
 
   return (
     <motion.article
-      {...animatedProps(prefersReducedMotion, {
-        initial: { opacity: 0, y: 40 },
-        whileInView: { opacity: 1, y: 0 },
-        viewport: { once: true, amount: 0.15 },
-        transition: {
-          delay: index * 0.08,
-          duration: 0.6,
-          ease: revealEase,
-        },
-      })}
+      layoutId={prefersReducedMotion ? undefined : `project-${project.id}`}
       onClick={onClick}
       onKeyDown={activateOnEnterOrSpace(onClick)}
       role="button"
