@@ -4,11 +4,14 @@ import { ChevronDown, Briefcase } from 'lucide-react';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { animatedProps } from '../../lib/motion';
 
-const currentRole = 'Application Developer · Core Banking COE · BNI via MII';
+const roles = ['Application Developer Jr.', 'Fullstack Developer', 'Machine Learning Engineer', 'Data Scientist', 'Game Developer'];
 
 const Hero = () => {
   const prefersReducedMotion = usePrefersReducedMotion();
   const [hasIntroElapsed, setHasIntroElapsed] = useState(false);
+  const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
+  const [displayedText, setDisplayedText] = useState(prefersReducedMotion ? roles[0] : '');
+  const [isDeleting, setIsDeleting] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
 
   const isIntroComplete = hasIntroElapsed || prefersReducedMotion;
@@ -40,6 +43,32 @@ const Hero = () => {
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (!isIntroComplete || prefersReducedMotion) return;
+
+    const currentRole = roles[currentRoleIndex];
+    const typeSpeed = isDeleting ? 50 : 100;
+
+    const timer = setTimeout(() => {
+      if (!isDeleting) {
+        if (displayedText.length < currentRole.length) {
+          setDisplayedText(currentRole.substring(0, displayedText.length + 1));
+        } else {
+          setTimeout(() => setIsDeleting(true), 2000);
+        }
+      } else {
+        if (displayedText.length > 0) {
+          setDisplayedText(displayedText.substring(0, displayedText.length - 1));
+        } else {
+          setIsDeleting(false);
+          setCurrentRoleIndex((prev) => (prev + 1) % roles.length);
+        }
+      }
+    }, typeSpeed);
+
+    return () => clearTimeout(timer);
+  }, [isIntroComplete, displayedText, isDeleting, currentRoleIndex, prefersReducedMotion]);
 
   return (
     <>
@@ -106,7 +135,7 @@ const Hero = () => {
               MUHAMMAD RADITYA
             </h2>
 
-            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-8xl 2xl:text-9xl font-display font-black uppercase leading-[0.9] tracking-tight text-white">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-8xl 2xl:text-9xl font-monument font-black uppercase leading-[0.9] tracking-tight text-white">
               <span className="inline-block">HAIKAL</span>{' '}
               <span className="inline-block">MUMTAZ</span>
             </h1>
@@ -154,7 +183,17 @@ const Hero = () => {
             </AnimatePresence>
 
             <div className="flex items-center justify-center">
-              <p className="text-data text-center text-white/90">{currentRole}</p>
+              <div className="font-mono text-sm md:text-base">
+                <span className="text-purple-500">&gt;</span>{' '}
+                <span className="text-white/90">{displayedText}</span>
+                <motion.span
+                  className="inline-block w-[2px] h-5 bg-purple-500 ml-1"
+                  {...animatedProps(prefersReducedMotion, {
+                    animate: { opacity: [1, 0, 1] },
+                    transition: { duration: 0.8, repeat: Infinity },
+                  })}
+                />
+              </div>
             </div>
 
             <div className="flex items-center justify-center">

@@ -24,7 +24,7 @@ const Experience = () => {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-100px" }}
               >
-                <h2 className="text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-display font-black text-white uppercase tracking-tight leading-none">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none">
                   <div className="overflow-hidden">
                     <motion.span variants={wordVariants} className="inline-block mr-3">
                       Professional

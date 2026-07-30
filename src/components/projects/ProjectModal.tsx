@@ -100,7 +100,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
               <div>
                 <h3
                   id="project-modal-title"
-                  className="text-2xl sm:text-3xl md:text-4xl font-display font-black text-white tracking-tight leading-tight"
+                  className="text-2xl sm:text-3xl md:text-4xl font-monument font-black text-white tracking-tight leading-tight"
                 >
                   {project.name}
                 </h3>

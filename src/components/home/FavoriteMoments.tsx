@@ -94,10 +94,10 @@ const FavoriteMoments = () => {
 
   const heading = (
     <>
-      <h2 className="text-3xl md:text-4xl lg:text-4xl 2xl:text-5xl font-display font-black text-white uppercase tracking-tight leading-none">
+      <h2 className="text-3xl md:text-4xl lg:text-4xl 2xl:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none">
         Favorite
       </h2>
-      <h2 className="text-3xl md:text-4xl lg:text-4xl 2xl:text-5xl font-display font-black text-white uppercase tracking-tight leading-none">
+      <h2 className="text-3xl md:text-4xl lg:text-4xl 2xl:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none">
         Moments
       </h2>
       <p className="text-slate-400 text-sm md:text-base 2xl:text-xl max-w-md font-light mt-4 md:mt-6">
@@ -147,7 +147,7 @@ const FavoriteMoments = () => {
               <div className="overflow-hidden">
                 <motion.h2
                   variants={wordVariants}
-                  className="text-3xl md:text-4xl lg:text-4xl 2xl:text-5xl font-display font-black text-white uppercase tracking-tight leading-none"
+                  className="text-3xl md:text-4xl lg:text-4xl 2xl:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none"
                 >
                   Favorite
                 </motion.h2>
@@ -156,7 +156,7 @@ const FavoriteMoments = () => {
               <div className="overflow-hidden">
                 <motion.h2
                   variants={wordVariants}
-                  className="text-3xl md:text-4xl lg:text-4xl 2xl:text-5xl font-display font-black text-white uppercase tracking-tight leading-none"
+                  className="text-3xl md:text-4xl lg:text-4xl 2xl:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none"
                 >
                   Moments
                 </motion.h2>

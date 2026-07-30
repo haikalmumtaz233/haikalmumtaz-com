@@ -51,7 +51,7 @@ export const projects: Project[] = [
         category: 'Frontend Development',
         description:
             'Modern, interactive portfolio website showcasing projects with advanced animations and smooth user experience.',
-        stack: ['React', 'TypeScript', 'Framer Motion', 'Tailwind', 'Lenis'],
+        stack: ['React', 'Framer Motion', 'Tailwind', 'GSAP', 'Lenis'],
         image: '/projects/portfolio.webp',
         gradient: 'from-pink-900/20 via-transparent to-orange-900/20',
         accentColor: '#ec4899',

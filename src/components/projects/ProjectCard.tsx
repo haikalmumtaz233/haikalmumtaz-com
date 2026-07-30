@@ -77,7 +77,7 @@ const ProjectCard = memo(({ project, index, onClick }: ProjectCardProps) => {
       </div>
       <div className="p-4 sm:p-5 flex flex-col flex-grow">
         <div className="mb-3">
-          <h3 className="text-lg sm:text-xl font-display font-black text-white tracking-tight leading-tight line-clamp-1">
+          <h3 className="text-lg sm:text-xl font-monument font-black text-white tracking-tight leading-tight line-clamp-1">
             {project.name}
           </h3>
           <p className="text-slate-400 text-xs sm:text-sm font-light mt-0.5 line-clamp-1">

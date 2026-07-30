@@ -265,7 +265,7 @@ const Contact = () => {
             })}
             className="flex flex-col justify-center"
           >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-display font-black text-white uppercase tracking-tight leading-none mb-4 sm:mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black text-white uppercase tracking-tight leading-none mb-4 sm:mb-6">
               Let's work <br />
               together
             </h2>
