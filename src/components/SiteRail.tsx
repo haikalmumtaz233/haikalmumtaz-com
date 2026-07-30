@@ -9,6 +9,8 @@ import MenuPanel, { MENU_PANEL_ID } from './MenuPanel';
 
 const sectionIds = homeSections.map((section) => section.id);
 
+const HERO_SECTION_ID = 'hero';
+
 const formatIndex = (value: number) => String(value).padStart(2, '0');
 
 const SiteRail = () => {
@@ -42,7 +44,7 @@ const SiteRail = () => {
       <div className="hidden lg:flex fixed left-0 top-0 z-40 h-screen w-rail-lg flex-col items-center justify-between border-r border-white/10 bg-black/30 backdrop-blur-md py-6">
         <motion.button
           type="button"
-          onClick={() => navigate('/', { viewTransition: true })}
+          onClick={() => goToSection(HERO_SECTION_ID)}
           style={{ opacity: prefersReducedMotion ? 1 : wordmarkOpacity }}
           className="font-monument text-[11px] font-black uppercase tracking-[0.3em] text-white/80 hover:text-white transition-colors"
           aria-label="Haikal Mumtaz, back to top"
@@ -119,8 +121,8 @@ const SiteRail = () => {
         <div className="flex items-center justify-between px-4 py-3">
           <button
             type="button"
-            onClick={() => navigate('/', { viewTransition: true })}
-            className="font-monument text-[10px] font-black uppercase tracking-[0.25em] text-white/80"
+            onClick={() => goToSection(HERO_SECTION_ID)}
+            className="font-monument text-[10px] font-black uppercase tracking-[0.25em] text-white/80 transition-colors hover:text-white"
             aria-label="Haikal Mumtaz, back to top"
           >
             HAIKAL MUMTAZ
