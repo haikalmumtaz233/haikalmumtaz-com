@@ -1,17 +1,22 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { animatedProps, revealEase } from '../../lib/motion';
 
 const ProjectsHero = () => {
   const navigate = useNavigate();
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   return (
     <section className="relative pt-4 sm:pt-8 md:pt-12 pb-6 sm:pb-8 md:pb-10">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.button
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
+          {...animatedProps(prefersReducedMotion, {
+            initial: { opacity: 0, x: -20 },
+            animate: { opacity: 1, x: 0 },
+            transition: { duration: 0.5 },
+          })}
           onClick={() => navigate('/')}
           className="group flex items-center gap-2 text-slate-400 hover:text-white transition-colors duration-300 mb-8 sm:mb-12"
         >
@@ -20,9 +25,11 @@ const ProjectsHero = () => {
         </motion.button>
 
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
+          {...animatedProps(prefersReducedMotion, {
+            initial: { opacity: 0, y: 30 },
+            animate: { opacity: 1, y: 0 },
+            transition: { duration: 0.8, ease: revealEase },
+          })}
         >
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl font-monument font-black tracking-tight text-white mb-4 sm:mb-6 uppercase">
             ALL PROJECTS

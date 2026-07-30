@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import type { Project } from '../../data/projects';
 import OptimizedImage from '../ui/OptimizedImage';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { animatedProps, revealEase } from '../../lib/motion';
 
 interface ProjectCardProps {
   project: Project;
@@ -11,18 +13,21 @@ interface ProjectCardProps {
 }
 
 const ProjectCard = memo(({ project, index, onClick }: ProjectCardProps) => {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const maxVisibleTech = 3;
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{
-        delay: index * 0.08,
-        duration: 0.6,
-        ease: [0.43, 0.13, 0.23, 0.96],
-      }}
+      {...animatedProps(prefersReducedMotion, {
+        initial: { opacity: 0, y: 40 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true, amount: 0.15 },
+        transition: {
+          delay: index * 0.08,
+          duration: 0.6,
+          ease: revealEase,
+        },
+      })}
       onClick={onClick}
       className="group relative cursor-pointer rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden transition-all duration-300 h-full flex flex-col"
       style={

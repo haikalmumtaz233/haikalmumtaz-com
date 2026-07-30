@@ -4,8 +4,11 @@ import { projects } from '../../data/projects';
 import type { Project } from '../../data/projects';
 import ProjectCard from './ProjectCard';
 import ProjectModal from './ProjectModal';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { animatedProps } from '../../lib/motion';
 
 const ProjectsGrid = () => {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [dragWidth, setDragWidth] = useState(0);
@@ -47,9 +50,11 @@ const ProjectsGrid = () => {
     <section className="relative pb-20 sm:pb-28 md:pb-36">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.6 }}
+          {...animatedProps(prefersReducedMotion, {
+            initial: { opacity: 0, y: 20 },
+            animate: { opacity: 1, y: 0 },
+            transition: { delay: 0.2, duration: 0.6 },
+          })}
           className="mb-6 sm:mb-8"
         >
           <div ref={containerRef} className="overflow-hidden sm:overflow-visible -mx-4 px-4 sm:mx-0 sm:px-0">
@@ -111,9 +116,9 @@ const ProjectsGrid = () => {
               <motion.div
                 key={project.id}
                 layout
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: prefersReducedMotion ? 1 : 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
+                exit={{ opacity: 0, scale: prefersReducedMotion ? 1 : 0.9 }}
                 transition={{ duration: 0.3 }}
               >
                 <ProjectCard

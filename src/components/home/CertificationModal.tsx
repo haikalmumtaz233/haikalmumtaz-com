@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink } from 'lucide-react';
 import { useLenis } from 'lenis/react';
 import type { Certification } from '../../data/certifications';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { revealEase } from '../../lib/motion';
 
 interface CertificationModalProps {
   cert: Certification | null;
@@ -12,6 +14,7 @@ interface CertificationModalProps {
 }
 
 const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) => {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const lenis = useLenis();
 
   const handleKeyDown = useCallback(
@@ -53,10 +56,10 @@ const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) 
           onWheel={(e) => e.stopPropagation()}
         >
           <motion.div
-            initial={{ scale: 0.92, opacity: 0 }}
+            initial={{ scale: prefersReducedMotion ? 1 : 0.92, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.92, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.43, 0.13, 0.23, 0.96] }}
+            exit={{ scale: prefersReducedMotion ? 1 : 0.92, opacity: 0 }}
+            transition={{ duration: 0.3, ease: revealEase }}
             className="relative max-w-4xl w-full h-auto max-h-[90vh] flex flex-col bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >

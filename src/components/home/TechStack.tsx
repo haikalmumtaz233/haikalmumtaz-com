@@ -1,54 +1,19 @@
 import { motion } from 'framer-motion';
 import { techCategories } from '../../data/techStack';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import {
+  fadeUpVariants,
+  maskedWordVariants,
+  staggerContainerVariants,
+  staggeredFadeUpVariants,
+} from '../../lib/motion';
 
 const TechStack = () => {
-  const titleVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.1,
-      },
-    },
-  };
-
-  const wordVariants = {
-    hidden: { y: '100%' },
-    visible: {
-      y: '0%',
-      transition: {
-        duration: 0.8,
-        ease: [0.43, 0.13, 0.23, 0.96] as const,
-      },
-    },
-  };
-
-  const categoryVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: [0.43, 0.13, 0.23, 0.96] as const,
-        staggerChildren: 0.04,
-        delayChildren: 0.1,
-      },
-    },
-  };
-
-  const chipVariants = {
-    hidden: { opacity: 0, y: 16 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.4,
-        ease: [0.43, 0.13, 0.23, 0.96] as const,
-      },
-    },
-  };
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const titleVariants = staggerContainerVariants(prefersReducedMotion);
+  const wordVariants = maskedWordVariants(prefersReducedMotion);
+  const categoryVariants = staggeredFadeUpVariants(prefersReducedMotion);
+  const chipVariants = fadeUpVariants(prefersReducedMotion, 16, 0.4);
 
   return (
     <section className="relative bg-transparent py-10 sm:py-12 md:py-16 2xl:py-20">

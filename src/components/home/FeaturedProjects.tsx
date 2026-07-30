@@ -6,9 +6,12 @@ import { projects } from '../../data/projects';
 import type { Project } from '../../data/projects';
 import ProjectModal from '../projects/ProjectModal';
 import FeaturedCard from './FeaturedCard';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { animatedProps, revealEase } from '../../lib/motion';
 
 const FeaturedProjects = () => {
   const navigate = useNavigate();
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
@@ -29,38 +32,46 @@ const FeaturedProjects = () => {
     setCurrentIndex((prev) => prev + newDirection);
   };
 
-  const cardVariants = {
-    enter: (direction: number) => ({
-      rotateY: direction > 0 ? 45 : -45,
-      x: direction > 0 ? 300 : -300,
-      opacity: 0,
-      scale: 0.8,
-      z: -200,
-    }),
-    center: {
-      rotateY: 0,
-      x: 0,
-      opacity: 1,
-      scale: 1,
-      z: 0,
-    },
-    exit: (direction: number) => ({
-      rotateY: direction > 0 ? -45 : 45,
-      x: direction > 0 ? -300 : 300,
-      opacity: 0,
-      scale: 0.8,
-      z: -200,
-    }),
-  };
+  const cardVariants = prefersReducedMotion
+    ? {
+        enter: { opacity: 0 },
+        center: { opacity: 1 },
+        exit: { opacity: 0 },
+      }
+    : {
+        enter: (direction: number) => ({
+          rotateY: direction > 0 ? 45 : -45,
+          x: direction > 0 ? 300 : -300,
+          opacity: 0,
+          scale: 0.8,
+          z: -200,
+        }),
+        center: {
+          rotateY: 0,
+          x: 0,
+          opacity: 1,
+          scale: 1,
+          z: 0,
+        },
+        exit: (direction: number) => ({
+          rotateY: direction > 0 ? -45 : 45,
+          x: direction > 0 ? -300 : 300,
+          opacity: 0,
+          scale: 0.8,
+          z: -200,
+        }),
+      };
 
   return (
     <section className="relative bg-transparent py-10 sm:py-14 md:py-20 lg:py-28 2xl:py-32 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
+          {...animatedProps(prefersReducedMotion, {
+            initial: { opacity: 0, y: 30 },
+            whileInView: { opacity: 1, y: 0 },
+            viewport: { once: true },
+            transition: { duration: 0.8, ease: revealEase },
+          })}
           className="mb-2 sm:mb-3 md:mb-4"
         >
           <div className="flex items-center justify-between flex-wrap gap-3">
@@ -107,12 +118,16 @@ const FeaturedProjects = () => {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{
-                  type: 'spring',
-                  stiffness: 300,
-                  damping: 30,
-                  opacity: { duration: 0.3 },
-                }}
+                transition={
+                  prefersReducedMotion
+                    ? { duration: 0.2 }
+                    : {
+                        type: 'spring',
+                        stiffness: 300,
+                        damping: 30,
+                        opacity: { duration: 0.3 },
+                      }
+                }
                 className="absolute inset-0 flex justify-center items-center"
                 style={{ transformStyle: 'preserve-3d' }}
               >

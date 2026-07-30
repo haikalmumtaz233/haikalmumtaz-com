@@ -4,24 +4,13 @@ import { ArrowUpRight } from 'lucide-react';
 import { certifications, type Certification } from '../../data/certifications';
 import CertificationModal from './CertificationModal';
 import OptimizedImage from '../ui/OptimizedImage';
-
-const titleVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.1 },
-  },
-};
-
-const wordVariants = {
-  hidden: { y: '100%' },
-  visible: {
-    y: '0%',
-    transition: { duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] as const },
-  },
-};
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { animatedProps, maskedWordVariants, staggerContainerVariants } from '../../lib/motion';
 
 const Certifications = () => {
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const titleVariants = staggerContainerVariants(prefersReducedMotion);
+  const wordVariants = maskedWordVariants(prefersReducedMotion);
   const [selectedCert, setSelectedCert] = useState<Certification | null>(null);
 
   return (
@@ -110,14 +99,17 @@ const CertificateCard = ({
   index: number;
   onCertClick: (cert: Certification) => void;
 }) => {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const dragRef = useRef(false);
 
   return (
     <motion.article
-      initial={{ opacity: 0, x: 50 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, amount: 0.1 }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
+      {...animatedProps(prefersReducedMotion, {
+        initial: { opacity: 0, x: 50 },
+        whileInView: { opacity: 1, x: 0 },
+        viewport: { once: true, amount: 0.1 },
+        transition: { duration: 0.6, delay: index * 0.1 },
+      })}
       onPointerDown={() => { dragRef.current = false; }}
       onPointerMove={() => { dragRef.current = true; }}
       onPointerUp={() => { if (!dragRef.current) onCertClick(cert); }}

@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Github, ExternalLink } from 'lucide-react';
 import { useLenis } from 'lenis/react';
 import type { Project } from '../../data/projects';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { animatedProps } from '../../lib/motion';
 
 interface ProjectModalProps {
   project: Project | null;
@@ -11,6 +13,7 @@ interface ProjectModalProps {
 }
 
 const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const lenis = useLenis();
 
   const handleEscape = useCallback(
@@ -52,10 +55,14 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
         >
 <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
 <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95, y: 20 }}
+            animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
+            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95, y: 20 }}
+            transition={
+              prefersReducedMotion
+                ? { duration: 0.2 }
+                : { type: 'spring', stiffness: 300, damping: 30 }
+            }
             onClick={(e) => e.stopPropagation()}
             className="relative z-10 w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl border border-white/10 bg-[#0a0a0a] shadow-2xl"
             style={{
@@ -115,8 +122,10 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                     href={project.repoLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    {...animatedProps(prefersReducedMotion, {
+                      whileHover: { scale: 1.05 },
+                      whileTap: { scale: 0.95 },
+                    })}
                     className="flex items-center justify-center gap-2 font-semibold text-sm px-5 py-2.5 rounded-xl border border-white/20 text-white hover:border-white/40 hover:bg-white/5 transition-colors"
                   >
                     <Github size={18} /> Repository
@@ -132,8 +141,10 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                     href={project.liveLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    {...animatedProps(prefersReducedMotion, {
+                      whileHover: { scale: 1.05 },
+                      whileTap: { scale: 0.95 },
+                    })}
                     className="flex items-center justify-center gap-2 font-semibold text-sm px-5 py-2.5 rounded-xl bg-white text-black hover:bg-white/90 transition-colors"
                   >
                     <ExternalLink size={18} /> Live Demo

@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight, Mail, Instagram, Linkedin, Github, CheckCircle, XCircle, X } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import DOMPurify from 'dompurify';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { animatedProps, revealEase } from '../../lib/motion';
 
 declare global {
   interface Window {
@@ -29,6 +31,7 @@ interface Toast {
 }
 
 const Contact = () => {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -212,10 +215,10 @@ const Contact = () => {
           {toasts.map((toast) => (
             <motion.div
               key={toast.id}
-              initial={{ opacity: 0, x: 100, scale: 0.9 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 100, scale: 0.9 }}
-              transition={{ duration: 0.3, ease: [0.43, 0.13, 0.23, 0.96] }}
+              initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: 100, scale: 0.9 }}
+              animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, x: 0, scale: 1 }}
+              exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: 100, scale: 0.9 }}
+              transition={{ duration: 0.3, ease: revealEase }}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg backdrop-blur-md border ${
                 toast.type === 'success'
                   ? 'bg-green-500/20 border-green-500/30 text-green-400'
@@ -243,10 +246,12 @@ const Contact = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 2xl:gap-24">
 
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            {...animatedProps(prefersReducedMotion, {
+              initial: { opacity: 0, x: -50 },
+              whileInView: { opacity: 1, x: 0 },
+              viewport: { once: true },
+              transition: { duration: 0.8 },
+            })}
             className="flex flex-col justify-center"
           >
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black text-white uppercase tracking-tight leading-none mb-4 sm:mb-6">
@@ -287,10 +292,12 @@ const Contact = () => {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            {...animatedProps(prefersReducedMotion, {
+              initial: { opacity: 0, x: 50 },
+              whileInView: { opacity: 1, x: 0 },
+              viewport: { once: true },
+              transition: { duration: 0.8, delay: 0.2 },
+            })}
             className="bg-white/[0.02] border border-white/10 rounded-2xl p-5 md:p-6 2xl:p-8"
           >
             <form onSubmit={handleSubmit} className="space-y-4">

@@ -1,23 +1,30 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Briefcase } from 'lucide-react';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { animatedProps } from '../../lib/motion';
+
+const roles = ['Application Developer Jr.', 'Fullstack Developer', 'Machine Learning Engineer', 'Data Scientist', 'Game Developer'];
 
 const Hero = () => {
-  const [isIntroComplete, setIsIntroComplete] = useState(false);
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const [hasIntroElapsed, setHasIntroElapsed] = useState(false);
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
-  const [displayedText, setDisplayedText] = useState('');
+  const [displayedText, setDisplayedText] = useState(prefersReducedMotion ? roles[0] : '');
   const [isDeleting, setIsDeleting] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
 
-  const roles = ['Application Developer Jr.', 'Fullstack Developer', 'Machine Learning Engineer', 'Data Scientist', 'Game Developer'];
+  const isIntroComplete = hasIntroElapsed || prefersReducedMotion;
 
   useEffect(() => {
+    if (prefersReducedMotion) return;
+
     const completeTimer = setTimeout(() => {
-      setIsIntroComplete(true);
+      setHasIntroElapsed(true);
     }, 2500);
 
     return () => clearTimeout(completeTimer);
-  }, []);
+  }, [prefersReducedMotion]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,7 +45,7 @@ const Hero = () => {
   }, []);
 
   useEffect(() => {
-    if (!isIntroComplete) return;
+    if (!isIntroComplete || prefersReducedMotion) return;
 
     const currentRole = roles[currentRoleIndex];
     const typeSpeed = isDeleting ? 50 : 100;
@@ -61,12 +68,12 @@ const Hero = () => {
     }, typeSpeed);
 
     return () => clearTimeout(timer);
-  }, [isIntroComplete, displayedText, isDeleting, currentRoleIndex]);
+  }, [isIntroComplete, displayedText, isDeleting, currentRoleIndex, prefersReducedMotion]);
 
   return (
     <>
       <AnimatePresence>
-        {!isIntroComplete && (
+        {!isIntroComplete && !prefersReducedMotion && (
           <>
             <motion.div
               className="fixed top-0 left-0 right-0 h-[50vh] bg-white z-50 flex items-end justify-center pb-2 md:pb-8 overflow-hidden"
@@ -141,20 +148,24 @@ const Hero = () => {
             <AnimatePresence>
               {showScrollIndicator && isIntroComplete && (
                 <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
+                  {...animatedProps(prefersReducedMotion, {
+                    initial: { opacity: 0, y: 10 },
+                    animate: { opacity: 1, y: 0 },
+                    exit: { opacity: 0, y: 10 },
+                    transition: { duration: 0.5, delay: 0.3 },
+                  })}
                   className="hidden lg:flex items-center gap-3"
                 >
                   <motion.div
                     className="flex items-center justify-center w-10 h-10 rounded-full border border-white/20"
-                    animate={{ y: [0, 6, 0] }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
+                    {...animatedProps(prefersReducedMotion, {
+                      animate: { y: [0, 6, 0] },
+                      transition: {
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: 'easeInOut' as const,
+                      },
+                    })}
                   >
                     <ChevronDown className="w-4 h-4 text-white/50" />
                   </motion.div>
@@ -177,8 +188,10 @@ const Hero = () => {
                 <span className="text-white/90">{displayedText}</span>
                 <motion.span
                   className="inline-block w-[2px] h-5 bg-purple-500 ml-1"
-                  animate={{ opacity: [1, 0, 1] }}
-                  transition={{ duration: 0.8, repeat: Infinity }}
+                  {...animatedProps(prefersReducedMotion, {
+                    animate: { opacity: [1, 0, 1] },
+                    transition: { duration: 0.8, repeat: Infinity },
+                  })}
                 />
               </div>
             </div>

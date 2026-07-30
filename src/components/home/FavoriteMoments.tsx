@@ -2,15 +2,29 @@ import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { moments } from '../../data/moments';
 import OptimizedImage from '../ui/OptimizedImage';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import {
+  animatedProps,
+  maskedWordVariants,
+  revealEase,
+  staggerContainerVariants,
+} from '../../lib/motion';
+
+const withoutFixedWidth = (className: string) =>
+  className
+    .split(' ')
+    .filter((token) => !token.includes('w-['))
+    .join(' ');
 
 const FavoriteMoments = () => {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [horizontalDistance, setHorizontalDistance] = useState(0);
 
   useEffect(() => {
     const track = trackRef.current;
-    if (!track) return;
+    if (!track || prefersReducedMotion) return;
 
     const measureOverflow = () => {
       setHorizontalDistance(Math.max(0, track.scrollWidth - window.innerWidth));
@@ -26,7 +40,7 @@ const FavoriteMoments = () => {
       resizeObserver.disconnect();
       window.removeEventListener('resize', measureOverflow);
     };
-  }, []);
+  }, [prefersReducedMotion]);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -35,27 +49,8 @@ const FavoriteMoments = () => {
 
   const x = useTransform(scrollYProgress, [0, 1], [0, -horizontalDistance]);
 
-  const titleVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.1,
-      },
-    },
-  };
-
-  const wordVariants = {
-    hidden: { y: '100%' },
-    visible: {
-      y: '0%',
-      transition: {
-        duration: 0.8,
-        ease: [0.43, 0.13, 0.23, 0.96] as const,
-      },
-    },
-  };
+  const titleVariants = staggerContainerVariants(prefersReducedMotion);
+  const wordVariants = maskedWordVariants(prefersReducedMotion);
 
   const getAlignmentClass = (alignment: 'start' | 'center' | 'end') => {
     switch (alignment) {
@@ -65,7 +60,7 @@ const FavoriteMoments = () => {
     }
   };
 
-  const renderContent = (moment: typeof moments[0]) => {
+  const renderContent = (moment: typeof moments[0], imageSizeClass = moment.className) => {
     const textBlock = (
       <div className="space-y-2 md:space-y-3">
         <p className="text-[9px] sm:text-[10px] md:text-xs font-mono tracking-[0.2em] text-slate-500 uppercase">
@@ -78,7 +73,7 @@ const FavoriteMoments = () => {
     );
 
     const imageBlock = (
-      <div className={`relative overflow-hidden rounded-lg ${moment.className} group`}>
+      <div className={`relative overflow-hidden rounded-lg ${imageSizeClass} group`}>
         <OptimizedImage
           src={moment.image}
           alt={moment.title}
@@ -96,6 +91,38 @@ const FavoriteMoments = () => {
       return <div className="flex items-center gap-4 md:gap-8">{imageBlock}{textBlock}</div>;
     }
   };
+
+  const heading = (
+    <>
+      <h2 className="text-3xl md:text-4xl lg:text-4xl 2xl:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none">
+        Favorite
+      </h2>
+      <h2 className="text-3xl md:text-4xl lg:text-4xl 2xl:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none">
+        Moments
+      </h2>
+      <p className="text-slate-400 text-sm md:text-base 2xl:text-xl max-w-md font-light mt-4 md:mt-6">
+        A collection of moments that shaped my journey through tech, education, and personal growth.
+      </p>
+    </>
+  );
+
+  if (prefersReducedMotion) {
+    return (
+      <section className="relative bg-transparent py-16 md:py-24">
+        <div className="max-w-5xl mx-auto px-4 md:px-12">
+          <div className="text-left mb-12 md:mb-16">{heading}</div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 md:gap-14">
+            {moments.map((moment) => (
+              <div key={moment.id}>
+                {renderContent(moment, `${withoutFixedWidth(moment.className)} w-full`)}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -149,14 +176,16 @@ const FavoriteMoments = () => {
           {moments.map((moment, index) => (
             <motion.div
               key={moment.id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: '-100px' }}
-              transition={{
-                duration: 0.8,
-                delay: index * 0.1,
-                ease: [0.43, 0.13, 0.23, 0.96] as const,
-              }}
+              {...animatedProps(prefersReducedMotion, {
+                initial: { opacity: 0, scale: 0.95 },
+                whileInView: { opacity: 1, scale: 1 },
+                viewport: { once: true, margin: '-100px' },
+                transition: {
+                  duration: 0.8,
+                  delay: index * 0.1,
+                  ease: revealEase,
+                },
+              })}
               className={`flex-shrink-0 flex flex-col h-[80vh] ${getAlignmentClass(moment.alignment)}`}
             >
               {renderContent(moment)}

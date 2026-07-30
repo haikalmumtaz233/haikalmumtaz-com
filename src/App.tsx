@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Projects from './pages/Projects';
 import Background from './components/Background';
+import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
 
 const scrollPositions = new Map<string, number>();
 
@@ -54,9 +55,9 @@ function ScrollManager() {
   return null;
 }
 
-function AppContent() {
+function AppShell() {
   return (
-    <ReactLenis root options={{ lerp: 0.1, duration: 1.5, smoothWheel: true }}>
+    <>
       <Background />
       <ScrollManager />
       <div className="min-h-screen flex flex-col">
@@ -69,6 +70,20 @@ function AppContent() {
         </main>
         <Footer />
       </div>
+    </>
+  );
+}
+
+function AppContent() {
+  const prefersReducedMotion = usePrefersReducedMotion();
+
+  if (prefersReducedMotion) {
+    return <AppShell />;
+  }
+
+  return (
+    <ReactLenis root options={{ lerp: 0.1, duration: 1.5, smoothWheel: true }}>
+      <AppShell />
     </ReactLenis>
   );
 }

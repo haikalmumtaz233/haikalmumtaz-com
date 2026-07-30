@@ -1,30 +1,14 @@
 import { motion } from 'framer-motion';
 import { tools } from '../../data/tools';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { animatedProps, maskedWordVariants, staggerContainerVariants } from '../../lib/motion';
 
 const Tools = () => {
-  const titleVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.1,
-      },
-    },
-  };
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const titleVariants = staggerContainerVariants(prefersReducedMotion);
+  const wordVariants = maskedWordVariants(prefersReducedMotion);
 
-  const wordVariants = {
-    hidden: { y: '100%' },
-    visible: {
-      y: '0%',
-      transition: {
-        duration: 0.8,
-        ease: [0.43, 0.13, 0.23, 0.96] as const,
-      },
-    },
-  }
-
-  const toolsTrack = [...tools, ...tools];
+  const toolsTrack = prefersReducedMotion ? tools : [...tools, ...tools];
 
   return (
     <section className="relative bg-transparent py-8 sm:py-12 md:py-16 2xl:py-20 overflow-hidden">
@@ -57,13 +41,15 @@ const Tools = () => {
 
       <div className="w-full overflow-hidden relative flex">
         <motion.div
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{
-            duration: 40,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          className="flex flex-shrink-0"
+          {...animatedProps(prefersReducedMotion, {
+            animate: { x: ['0%', '-50%'] },
+            transition: {
+              duration: 40,
+              repeat: Infinity,
+              ease: 'linear' as const,
+            },
+          })}
+          className={prefersReducedMotion ? 'flex flex-wrap justify-center' : 'flex flex-shrink-0'}
         >
           {toolsTrack.map((tool, index) => (
             <div

@@ -2,10 +2,12 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Background = () => {
+    const prefersReducedMotion = usePrefersReducedMotion();
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -18,6 +20,7 @@ const Background = () => {
     const orb3Ref = useRef<HTMLDivElement>(null);
 
     useGSAP(() => {
+        if (prefersReducedMotion) return;
         if (!orb1Ref.current || !orb2Ref.current || !orb3Ref.current) return;
         if (!orb1WrapperRef.current || !orb2WrapperRef.current || !orb3WrapperRef.current) return;
 
@@ -80,7 +83,7 @@ const Background = () => {
                 scrub: 2,
             },
         });
-    }, { scope: containerRef });
+    }, { scope: containerRef, dependencies: [prefersReducedMotion] });
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -117,10 +120,6 @@ const Background = () => {
         const handleScroll = () => {
             targetScrollY = window.scrollY;
         };
-
-        window.addEventListener('resize', handleResize);
-        window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('scroll', handleScroll);
 
         handleResize();
 
@@ -180,6 +179,25 @@ const Background = () => {
             stars.push(new Star());
         }
 
+        const drawStaticField = () => {
+            ctx.clearRect(0, 0, width, height);
+            stars.forEach(star => star.draw());
+        };
+
+        if (prefersReducedMotion) {
+            const handleStaticResize = () => {
+                handleResize();
+                drawStaticField();
+            };
+
+            drawStaticField();
+            window.addEventListener('resize', handleStaticResize);
+
+            return () => {
+                window.removeEventListener('resize', handleStaticResize);
+            };
+        }
+
         const advanceParallax = () => {
             mouseX += (targetMouseX - mouseX) * 0.05;
             mouseY += (targetMouseY - mouseY) * 0.05;
@@ -199,6 +217,10 @@ const Background = () => {
             animationFrameId = requestAnimationFrame(animate);
         };
 
+        window.addEventListener('resize', handleResize);
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('scroll', handleScroll);
+
         animate();
 
         return () => {
@@ -207,7 +229,7 @@ const Background = () => {
             window.removeEventListener('scroll', handleScroll);
             cancelAnimationFrame(animationFrameId);
         };
-    }, []);
+    }, [prefersReducedMotion]);
 
     return (
         <div ref={containerRef} className="fixed inset-0 z-[-1] bg-[#0a0a0a]">
