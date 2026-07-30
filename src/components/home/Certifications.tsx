@@ -226,7 +226,7 @@ const CertificateCard = ({
 
         <div className="absolute bottom-0 left-0 right-0 p-4 lg:p-5 2xl:p-6 space-y-2">
           <span
-            className="inline-block px-2.5 py-1 backdrop-blur-md rounded border text-[10px] font-mono tracking-wide"
+            className="inline-block px-2.5 py-1 backdrop-blur-md rounded border text-[10px] font-mono tabular-nums tracking-wide"
             style={{
               backgroundColor: `${accents.cyan}1a`,
               borderColor: `${accents.cyan}4d`,

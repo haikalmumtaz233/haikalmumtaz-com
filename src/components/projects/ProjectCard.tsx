@@ -71,9 +71,6 @@ const ProjectCard = memo(({ project, index, onClick }: ProjectCardProps) => {
             View Project <ArrowUpRight size={16} />
           </span>
         </div>
-        <div className="absolute bottom-2 right-3 z-10 text-5xl font-black text-white/[0.04] pointer-events-none select-none">
-          {String(index + 1).padStart(2, '0')}
-        </div>
       </div>
       <div className="p-4 sm:p-5 flex flex-col flex-grow">
         <div className="mb-3">
