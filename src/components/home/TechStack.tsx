@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { techCategories } from '../../data/techStack';
+import TechIcon from '../ui/TechIcon';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import {
   fadeUpVariants,
@@ -70,13 +71,7 @@ const TechStack = () => {
                     className="group flex items-center gap-2.5 px-3 py-2 2xl:px-4 2xl:py-2.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/25 transition-colors duration-300 cursor-pointer"
                   >
                     <div className="w-5 h-5 md:w-6 md:h-6 2xl:w-7 2xl:h-7 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                      <img
-                        src={tech.logo}
-                        alt={tech.name}
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full h-full object-contain"
-                      />
+                      <TechIcon icon={tech.icon} name={tech.name} />
                     </div>
                     <span className="text-slate-400 font-semibold text-xs md:text-sm 2xl:text-base whitespace-nowrap transition-colors duration-300 group-hover:text-white">
                       {tech.name}

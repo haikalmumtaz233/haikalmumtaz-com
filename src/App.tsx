@@ -8,6 +8,7 @@ import Projects from './pages/Projects';
 import NotFound from './pages/NotFound';
 import Background from './components/Background';
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
+import TechIconSprite from './components/ui/TechIconSprite';
 
 const scrollPositions = new Map<string, number>();
 
@@ -59,6 +60,7 @@ function ScrollManager() {
 function AppShell() {
   return (
     <>
+      <TechIconSprite />
       <Background />
       <ScrollManager />
       <div className="min-h-screen flex flex-col">

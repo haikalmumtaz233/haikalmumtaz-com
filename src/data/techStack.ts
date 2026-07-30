@@ -1,6 +1,8 @@
+import { imageIcon, spriteIcon, type TechIconSource } from './icons';
+
 export interface TechItem {
   name: string;
-  logo: string;
+  icon: TechIconSource;
 }
 
 export interface TechCategory {
@@ -12,70 +14,70 @@ export const techCategories: TechCategory[] = [
   {
     title: "Languages",
     items: [
-      { name: "JavaScript", logo: "https://cdn.simpleicons.org/javascript" },
-      { name: "TypeScript", logo: "https://cdn.simpleicons.org/typescript" },
-      { name: "PHP", logo: "https://cdn.simpleicons.org/php" },
-      { name: "Go", logo: "https://cdn.simpleicons.org/go" },
-      { name: "Lua", logo: "https://cdn.simpleicons.org/lua/white" },
-      { name: "C++", logo: "https://cdn.simpleicons.org/cplusplus" },
-      { name: "Python", logo: "https://cdn.simpleicons.org/python" },
-      { name: "Java", logo: "/techStack/java.webp" },
-      { name: "Kotlin", logo: "https://cdn.simpleicons.org/kotlin" },
+      { name: "JavaScript", icon: spriteIcon('tech-javascript') },
+      { name: "TypeScript", icon: spriteIcon('tech-typescript') },
+      { name: "PHP", icon: spriteIcon('tech-php') },
+      { name: "Go", icon: spriteIcon('tech-go') },
+      { name: "Lua", icon: spriteIcon('tech-lua-white') },
+      { name: "C++", icon: spriteIcon('tech-cplusplus') },
+      { name: "Python", icon: spriteIcon('tech-python') },
+      { name: "Java", icon: imageIcon('/techStack/java.webp') },
+      { name: "Kotlin", icon: spriteIcon('tech-kotlin') },
     ],
   },
   {
     title: "Frontend",
     items: [
-      { name: "React", logo: "https://cdn.simpleicons.org/react" },
-      { name: "Next.js", logo: "https://cdn.simpleicons.org/nextdotjs/white" },
-      { name: "Vue.js", logo: "https://cdn.simpleicons.org/vuedotjs" },
-      { name: "Flutter", logo: "https://cdn.simpleicons.org/flutter" },
-      { name: "Tailwind CSS", logo: "https://cdn.simpleicons.org/tailwindcss" },
-      { name: "PrimeVue", logo: "https://cdn.simpleicons.org/primevue" },
-      { name: "Bootstrap", logo: "https://cdn.simpleicons.org/bootstrap" },
-      { name: "Thymeleaf", logo: "https://cdn.simpleicons.org/thymeleaf" },
+      { name: "React", icon: spriteIcon('tech-react') },
+      { name: "Next.js", icon: spriteIcon('tech-nextdotjs-white') },
+      { name: "Vue.js", icon: spriteIcon('tech-vuedotjs') },
+      { name: "Flutter", icon: spriteIcon('tech-flutter') },
+      { name: "Tailwind CSS", icon: spriteIcon('tech-tailwindcss') },
+      { name: "PrimeVue", icon: spriteIcon('tech-primevue') },
+      { name: "Bootstrap", icon: spriteIcon('tech-bootstrap') },
+      { name: "Thymeleaf", icon: spriteIcon('tech-thymeleaf') },
     ],
   },
   {
     title: "Backend",
     items: [
-      { name: "Node.js", logo: "https://cdn.simpleicons.org/nodedotjs" },
-      { name: "Express.js", logo: "https://cdn.simpleicons.org/express/white" },
-      { name: "Gin", logo: "https://cdn.simpleicons.org/gin" },
-      { name: "Laravel", logo: "https://cdn.simpleicons.org/laravel" },
-      { name: "Flask", logo: "https://cdn.simpleicons.org/flask/white" },
-      { name: "FastAPI", logo: "https://cdn.simpleicons.org/fastapi" },
-      { name: "Spring Boot", logo: "https://cdn.simpleicons.org/springboot" },
+      { name: "Node.js", icon: spriteIcon('tech-nodedotjs') },
+      { name: "Express.js", icon: spriteIcon('tech-express-white') },
+      { name: "Gin", icon: spriteIcon('tech-gin') },
+      { name: "Laravel", icon: spriteIcon('tech-laravel') },
+      { name: "Flask", icon: spriteIcon('tech-flask-white') },
+      { name: "FastAPI", icon: spriteIcon('tech-fastapi') },
+      { name: "Spring Boot", icon: spriteIcon('tech-springboot') },
     ],
   },
   {
     title: "Databases",
     items: [
-      { name: "MySQL", logo: "https://cdn.simpleicons.org/mysql" },
-      { name: "PostgreSQL", logo: "https://cdn.simpleicons.org/postgresql" },
-      { name: "MongoDB", logo: "https://cdn.simpleicons.org/mongodb" },
-      { name: "Firebase", logo: "https://cdn.simpleicons.org/firebase" },
+      { name: "MySQL", icon: spriteIcon('tech-mysql') },
+      { name: "PostgreSQL", icon: spriteIcon('tech-postgresql') },
+      { name: "MongoDB", icon: spriteIcon('tech-mongodb') },
+      { name: "Firebase", icon: spriteIcon('tech-firebase') },
     ],
   },
   {
     title: "Data Science & AI",
     items: [
-      { name: "TensorFlow", logo: "https://cdn.simpleicons.org/tensorflow" },
-      { name: "Keras", logo: "https://cdn.simpleicons.org/keras" },
-      { name: "Scikit-Learn", logo: "https://cdn.simpleicons.org/scikitlearn" },
-      { name: "Pandas", logo: "https://cdn.simpleicons.org/pandas/white" },
-      { name: "Ultralytics", logo: "https://cdn.simpleicons.org/ultralytics/white" },
-      { name: "R", logo: "https://cdn.simpleicons.org/r" },
+      { name: "TensorFlow", icon: spriteIcon('tech-tensorflow') },
+      { name: "Keras", icon: spriteIcon('tech-keras') },
+      { name: "Scikit-Learn", icon: spriteIcon('tech-scikitlearn') },
+      { name: "Pandas", icon: spriteIcon('tech-pandas-white') },
+      { name: "Ultralytics", icon: spriteIcon('tech-ultralytics-white') },
+      { name: "R", icon: spriteIcon('tech-r') },
     ],
   },
   {
     title: "DevOps & Cloud",
     items: [
-      { name: "Docker", logo: "https://cdn.simpleicons.org/docker" },
-      { name: "Kubernetes", logo: "https://cdn.simpleicons.org/kubernetes" },
-      { name: "Jenkins", logo: "https://cdn.simpleicons.org/jenkins" },
-      { name: "GitLab", logo: "https://cdn.simpleicons.org/gitlab" },
-      { name: "Google Cloud", logo: "https://cdn.simpleicons.org/googlecloud" },
+      { name: "Docker", icon: spriteIcon('tech-docker') },
+      { name: "Kubernetes", icon: spriteIcon('tech-kubernetes') },
+      { name: "Jenkins", icon: spriteIcon('tech-jenkins') },
+      { name: "GitLab", icon: spriteIcon('tech-gitlab') },
+      { name: "Google Cloud", icon: spriteIcon('tech-googlecloud') },
     ],
   },
 ];

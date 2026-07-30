@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { tools } from '../../data/tools';
+import TechIcon from '../ui/TechIcon';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { animatedProps, maskedWordVariants, staggerContainerVariants } from '../../lib/motion';
 
@@ -57,12 +58,10 @@ const Tools = () => {
               className="w-28 h-28 md:w-32 md:h-32 2xl:w-36 2xl:h-36 mr-4 flex flex-col items-center justify-center gap-2 flex-shrink-0 hover:bg-white/5 rounded-xl transition-all duration-300 group cursor-pointer"
             >
               <div className="w-8 h-8 md:w-10 md:h-10 2xl:w-12 2xl:h-12 flex items-center justify-center">
-                <img
-                  src={tool.logo}
-                  alt={tool.name}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-full object-contain filter grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
+                <TechIcon
+                  icon={tool.icon}
+                  name={tool.name}
+                  className="object-contain filter grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
                 />
               </div>
               <span className="text-xs md:text-sm 2xl:text-base font-mono text-slate-400 group-hover:text-white transition-colors duration-300 text-center px-2">
