@@ -1,30 +1,24 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import { ChevronDown, Briefcase } from 'lucide-react';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { animatedProps } from '../../lib/motion';
+import Nameplate from './Nameplate';
 
 const roles = ['Application Developer Jr.', 'Fullstack Developer', 'Machine Learning Engineer', 'Data Scientist', 'Game Developer'];
 
 const Hero = () => {
   const prefersReducedMotion = usePrefersReducedMotion();
-  const [hasIntroElapsed, setHasIntroElapsed] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState(prefersReducedMotion ? roles[0] : '');
   const [isDeleting, setIsDeleting] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
 
-  const isIntroComplete = hasIntroElapsed || prefersReducedMotion;
-
-  useEffect(() => {
-    if (prefersReducedMotion) return;
-
-    const completeTimer = setTimeout(() => {
-      setHasIntroElapsed(true);
-    }, 2500);
-
-    return () => clearTimeout(completeTimer);
-  }, [prefersReducedMotion]);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,7 +39,7 @@ const Hero = () => {
   }, []);
 
   useEffect(() => {
-    if (!isIntroComplete || prefersReducedMotion) return;
+    if (prefersReducedMotion) return;
 
     const currentRole = roles[currentRoleIndex];
     const typeSpeed = isDeleting ? 50 : 100;
@@ -68,77 +62,22 @@ const Hero = () => {
     }, typeSpeed);
 
     return () => clearTimeout(timer);
-  }, [isIntroComplete, displayedText, isDeleting, currentRoleIndex, prefersReducedMotion]);
+  }, [displayedText, isDeleting, currentRoleIndex, prefersReducedMotion]);
 
   return (
-    <>
-      <AnimatePresence>
-        {!isIntroComplete && !prefersReducedMotion && (
-          <>
-            <motion.div
-              className="fixed top-0 left-0 right-0 h-[50vh] bg-white z-50 flex items-end justify-center pb-2 md:pb-8 overflow-hidden"
-              initial={{ y: 0 }}
-              exit={{ y: '-100%' }}
-              transition={{
-                duration: 1.2,
-                ease: [0.87, 0, 0.13, 1],
-                delay: 0.2
-              }}
-            >
-              <motion.span
-                aria-hidden="true"
-                initial={{ y: -100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{
-                  duration: 0.8,
-                  ease: [0.43, 0.13, 0.23, 0.96]
-                }}
-                className="block font-sans font-black text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-black uppercase tracking-tighter leading-[0.8]"
-              >
-                HAIKAL
-              </motion.span>
-            </motion.div>
-
-            <motion.div
-              className="fixed bottom-0 left-0 right-0 h-[50vh] bg-white z-50 flex items-start justify-center pt-2 md:pt-8 overflow-hidden"
-              initial={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{
-                duration: 1.2,
-                ease: [0.87, 0, 0.13, 1],
-                delay: 0.2
-              }}
-            >
-              <motion.span
-                aria-hidden="true"
-                initial={{ y: 100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{
-                  duration: 0.8,
-                  ease: [0.43, 0.13, 0.23, 0.96]
-                }}
-                className="block font-sans font-black text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-black uppercase tracking-tighter leading-[0.8]"
-              >
-                MUMTAZ
-              </motion.span>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-
-      <section className="relative h-screen max-h-screen bg-transparent text-white overflow-hidden flex flex-col items-center justify-between py-8 sm:py-12 px-4 sm:px-6">
+    <section
+      ref={sectionRef}
+      className="relative h-screen max-h-screen bg-transparent text-white overflow-hidden flex flex-col items-center justify-between py-8 sm:py-12 px-4 sm:px-6"
+    >
         <div className="flex-shrink-0 h-20" />
 
-        <div className="flex-grow flex items-center justify-center">
-          <div className="text-center px-4">
+        <div className="flex-grow flex w-full items-center justify-center">
+          <div className="w-full text-center">
             <h2 className="text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-[0.5em] text-slate-400 mb-4 sm:mb-6">
               MUHAMMAD RADITYA
             </h2>
 
-            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-8xl 2xl:text-9xl font-monument font-black uppercase leading-[0.9] tracking-tight text-white">
-              <span className="inline-block">HAIKAL</span>{' '}
-              <span className="inline-block">MUMTAZ</span>
-            </h1>
+            <Nameplate scrollProgress={scrollYProgress} />
           </div>
         </div>
 
@@ -146,7 +85,7 @@ const Hero = () => {
           <div className="flex flex-col items-center gap-6 lg:flex-row lg:items-center lg:justify-between">
 
             <AnimatePresence>
-              {showScrollIndicator && isIntroComplete && (
+              {showScrollIndicator && (
                 <motion.div
                   {...animatedProps(prefersReducedMotion, {
                     initial: { opacity: 0, y: 10 },
@@ -208,8 +147,7 @@ const Hero = () => {
 
           </div>
         </div>
-      </section>
-    </>
+    </section>
   );
 };
 
