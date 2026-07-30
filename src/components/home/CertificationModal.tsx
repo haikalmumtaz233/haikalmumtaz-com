@@ -4,6 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink } from 'lucide-react';
 import { useLenis } from 'lenis/react';
 import type { Certification } from '../../data/certifications';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
+import { revealEase } from '../../lib/motion';
 
 interface CertificationModalProps {
   cert: Certification | null;
@@ -12,6 +15,8 @@ interface CertificationModalProps {
 }
 
 const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) => {
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const dialogRef = useFocusTrap<HTMLDivElement>(isOpen && cert !== null);
   const lenis = useLenis();
 
   const handleKeyDown = useCallback(
@@ -53,10 +58,15 @@ const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) 
           onWheel={(e) => e.stopPropagation()}
         >
           <motion.div
-            initial={{ scale: 0.92, opacity: 0 }}
+            initial={{ scale: prefersReducedMotion ? 1 : 0.92, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.92, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.43, 0.13, 0.23, 0.96] }}
+            exit={{ scale: prefersReducedMotion ? 1 : 0.92, opacity: 0 }}
+            transition={{ duration: 0.3, ease: revealEase }}
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="certification-modal-title"
+            tabIndex={-1}
             className="relative max-w-4xl w-full h-auto max-h-[90vh] flex flex-col bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
@@ -77,7 +87,7 @@ const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) 
 
             <div className="p-5 md:p-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div className="space-y-1 min-w-0">
-                <h3 className="text-lg font-bold text-white leading-tight">
+                <h3 id="certification-modal-title" className="text-lg font-bold text-white leading-tight">
                   {cert.title}
                 </h3>
                 <p className="text-xs font-mono text-slate-400">

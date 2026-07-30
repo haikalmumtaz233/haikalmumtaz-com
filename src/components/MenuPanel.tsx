@@ -1,7 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, Github, Linkedin, Instagram } from 'lucide-react';
+import { Github, Linkedin, Instagram } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
+import { useFocusTrap } from '../hooks/useFocusTrap';
+import { profile, socialProfiles } from '../data/profile';
+import { animatedProps } from '../lib/motion';
 
 const navLinks = [
   { name: 'HOME', path: '/', type: 'route' },
@@ -10,69 +14,67 @@ const navLinks = [
   { name: 'CONTACT', path: '#contact', type: 'scroll' },
 ];
 
-const socialLinks = [
-  { Icon: Github, href: 'https://github.com/haikalmumtaz233', label: 'GitHub' },
-  { Icon: Linkedin, href: 'https://www.linkedin.com/in/haikal-mumtaz/', label: 'LinkedIn' },
-  { Icon: Instagram, href: 'https://www.instagram.com/haikal_mumtaz23/', label: 'Instagram' },
-];
+const socialIcons: Record<string, typeof Github> = {
+  GitHub: Github,
+  LinkedIn: Linkedin,
+  Instagram: Instagram,
+};
 
-const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+export const MENU_PANEL_ID = 'site-menu-panel';
+
+const LETTER_DURATION = 0.25;
+const LETTER_STAGGER = 0.025;
+
+interface MenuPanelProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const panelRef = useFocusTrap<HTMLDivElement>(isOpen);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const toggleMenu = () => setIsOpen(!isOpen);
-
   const handleNavigation = (link: typeof navLinks[0]) => {
-    setIsOpen(false);
-    
+    onClose();
+
     if (link.type === 'route') {
-      navigate(link.path);
-    } else {
-      if (location.pathname !== '/') {
-        navigate('/');
-        setTimeout(() => {
-          const element = document.querySelector(link.path);
-          element?.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-      } else {
+      navigate(link.path, { viewTransition: true });
+      return;
+    }
+
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
         const element = document.querySelector(link.path);
         element?.scrollIntoView({ behavior: 'smooth' });
-      }
+      }, 100);
+      return;
     }
-  };
 
-  const DURATION = 0.25;
-  const STAGGER = 0.025;
+    const element = document.querySelector(link.path);
+    element?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : 'unset';
     return () => { document.body.style.overflow = 'unset'; };
   }, [isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOpen, onClose]);
+
   return (
     <>
-      <motion.button
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.5, duration: 0.4 }}
-        onClick={toggleMenu}
-        className="fixed top-6 right-6 sm:top-8 sm:right-8 z-50 w-12 h-12 sm:w-14 sm:h-14 backdrop-blur-md bg-white/10 border border-white/20 rounded-full flex items-center justify-center hover:scale-110 hover:bg-white/20 transition-all duration-300 cursor-pointer"
-        aria-label="Toggle menu"
-      >
-        <AnimatePresence mode="wait">
-          {isOpen ? (
-            <motion.div key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }}>
-              <X className="w-6 h-6 text-white" />
-            </motion.div>
-          ) : (
-            <motion.div key="menu" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }}>
-              <Menu className="w-6 h-6 text-white" />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.button>
-
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -80,7 +82,7 @@ const Navbar = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            onClick={() => setIsOpen(false)}
+            onClick={onClose}
             className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
           />
         )}
@@ -89,15 +91,25 @@ const Navbar = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ x: "100%" }}
-            animate={{ x: "0%" }}
-            exit={{ x: "100%" }}
-            transition={{
-              type: "spring",
-              damping: 30,
-              stiffness: 300,
-              mass: 0.8
-            }}
+            initial={prefersReducedMotion ? { opacity: 0 } : { x: '100%' }}
+            animate={prefersReducedMotion ? { opacity: 1 } : { x: '0%' }}
+            exit={prefersReducedMotion ? { opacity: 0 } : { x: '100%' }}
+            transition={
+              prefersReducedMotion
+                ? { duration: 0.2 }
+                : {
+                    type: 'spring',
+                    damping: 30,
+                    stiffness: 300,
+                    mass: 0.8,
+                  }
+            }
+            ref={panelRef}
+            id={MENU_PANEL_ID}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site menu"
+            tabIndex={-1}
             className="fixed top-0 right-0 h-full w-full sm:w-[85vw] md:w-[480px] z-50 bg-black/80 backdrop-blur-2xl border-l border-white/10 shadow-2xl overflow-hidden"
           >
             <div className="h-full flex flex-col justify-between p-6 sm:p-8 md:p-12">
@@ -107,20 +119,22 @@ const Navbar = () => {
                   {navLinks.map((link, index) => (
                     <motion.li
                       key={link.name}
-                      initial={{ opacity: 0, x: 50 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{
-                        delay: 0.1 + index * 0.1,
-                        duration: 0.5,
-                        type: "spring",
-                        damping: 20
-                      }}
+                      {...animatedProps(prefersReducedMotion, {
+                        initial: { opacity: 0, x: 50 },
+                        animate: { opacity: 1, x: 0 },
+                        transition: {
+                          delay: 0.1 + index * 0.1,
+                          duration: 0.5,
+                          type: 'spring' as const,
+                          damping: 20,
+                        },
+                      })}
                       className="overflow-hidden"
                     >
                       <motion.button
                         onClick={() => handleNavigation(link)}
                         initial="initial"
-                        whileHover="hovered"
+                        whileHover={prefersReducedMotion ? undefined : 'hovered'}
                         className="cursor-pointer text-left group"
                       >
                         <div
@@ -135,8 +149,8 @@ const Navbar = () => {
                                   hovered: { y: "-100%" }
                                 }}
                                 transition={{
-                                  duration: DURATION,
-                                  delay: STAGGER * i
+                                  duration: LETTER_DURATION,
+                                  delay: LETTER_STAGGER * i
                                 }}
                                 className="inline-block"
                                 key={i}
@@ -154,8 +168,8 @@ const Navbar = () => {
                                   hovered: { y: 0 }
                                 }}
                                 transition={{
-                                  duration: DURATION,
-                                  delay: STAGGER * i
+                                  duration: LETTER_DURATION,
+                                  delay: LETTER_STAGGER * i
                                 }}
                                 className="inline-block text-purple-400"
                                 key={i}
@@ -173,36 +187,43 @@ const Navbar = () => {
               </nav>
 
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6, duration: 0.5 }}
+                {...animatedProps(prefersReducedMotion, {
+                  initial: { opacity: 0, y: 20 },
+                  animate: { opacity: 1, y: 0 },
+                  transition: { delay: 0.6, duration: 0.5 },
+                })}
                 className="space-y-6 sm:space-y-8 border-t border-white/10 pt-6 sm:pt-8"
               >
                 <a
-                  href="mailto:hmumtaz70@gmail.com"
+                  href={`mailto:${profile.email}`}
                   className="inline-block text-sm md:text-base text-slate-400 hover:text-white transition-colors font-mono"
                 >
-                  hmumtaz70@gmail.com
+                  {profile.email}
                 </a>
 
                 <div className="flex gap-4">
-                  {socialLinks.map(({ Icon, href, label }, i) => (
+                  {socialProfiles.map(({ href, label }) => {
+                    const Icon = socialIcons[label];
+                    return (
                     <motion.a
-                      key={i}
+                      key={label}
                       href={href}
                       target="_blank"
                       rel="noreferrer"
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      whileTap={{ scale: 0.95 }}
+                      {...animatedProps(prefersReducedMotion, {
+                        whileHover: { scale: 1.1, rotate: 5 },
+                        whileTap: { scale: 0.95 },
+                      })}
                       className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/20 transition-all group"
                       aria-label={label}
                     >
                       <Icon className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
                     </motion.a>
-                  ))}
+                    );
+                  })}
                 </div>
 
-                <div className="flex items-center gap-3 text-xs font-mono text-slate-500">
+                <div className="flex items-center gap-3 text-xs font-mono text-slate-400">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                   <span>Available for opportunities</span>
                 </div>
@@ -215,4 +236,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default MenuPanel;

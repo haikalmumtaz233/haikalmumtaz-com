@@ -1,32 +1,16 @@
 import { motion } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { experiences } from '../../data/experience';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { animatedProps, maskedWordVariants, staggerContainerVariants } from '../../lib/motion';
 
 const Experience = () => {
   const sectionRef = useRef(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  const titleVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.1,
-      },
-    },
-  };
-
-  const wordVariants = {
-    hidden: { y: '100%' },
-    visible: {
-      y: '0%',
-      transition: {
-        duration: 0.8,
-        ease: [0.43, 0.13, 0.23, 0.96] as const,
-      },
-    },
-  };
+  const titleVariants = staggerContainerVariants(prefersReducedMotion, 0.15);
+  const wordVariants = maskedWordVariants(prefersReducedMotion);
 
   return (
     <section ref={sectionRef} className="relative bg-transparent pt-10 sm:pt-16 md:pt-24 2xl:pt-32 pb-8 w-full overflow-x-clip">
@@ -37,7 +21,7 @@ const Experience = () => {
               <motion.div
                 variants={titleVariants}
                 initial="hidden"
-                animate="visible"
+                whileInView="visible"
                 viewport={{ once: true, margin: "-100px" }}
               >
                 <h2 className="text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none">
@@ -88,15 +72,18 @@ interface ExperienceItemProps {
 }
 
 const ExperienceItem = ({ experience, index, hoveredIndex, setHoveredIndex }: ExperienceItemProps) => {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const isDimmed = hoveredIndex !== null && hoveredIndex !== index;
 
   return (
     <div className="min-h-0 sm:min-h-[40vh] lg:min-h-[60vh] 2xl:min-h-[70vh] flex flex-col justify-center">
       <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.5 }}
-        transition={{ duration: 0.6, delay: index * 0.1 }}
+        {...animatedProps(prefersReducedMotion, {
+          initial: { opacity: 0, y: 50 },
+          whileInView: { opacity: 1, y: 0 },
+          viewport: { once: true, amount: 0.5 },
+          transition: { duration: 0.6, delay: index * 0.1 },
+        })}
       >
         <motion.div
           onMouseEnter={() => setHoveredIndex(index)}
@@ -107,7 +94,7 @@ const ExperienceItem = ({ experience, index, hoveredIndex, setHoveredIndex }: Ex
         >
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 md:gap-8">
           <div className="md:col-span-3">
-            <div className="font-mono text-slate-500 text-sm tracking-wider">
+            <div className="font-mono text-slate-400 text-sm tracking-wider">
               <div className="text-white font-bold text-base md:text-lg 2xl:text-xl">{experience.year}</div>
               <div className="mt-1 text-xs md:text-sm">{experience.period}</div>
             </div>
@@ -119,7 +106,7 @@ const ExperienceItem = ({ experience, index, hoveredIndex, setHoveredIndex }: Ex
                 {experience.company}
               </h3>
               {experience.subtitle && (
-                <p className="text-sm md:text-base text-slate-500 font-medium">
+                <p className="text-sm md:text-base text-slate-400 font-medium">
                   {experience.subtitle}
                 </p>
               )}

@@ -1,3 +1,5 @@
+import { accentForCategory, gradientForCategory } from './categoryAccents';
+
 export interface Project {
     id: number;
     name: string;
@@ -13,7 +15,9 @@ export interface Project {
     isFeatured: boolean;
 }
 
-export const projects: Project[] = [
+type ProjectSeed = Omit<Project, 'accentColor' | 'gradient'>;
+
+const projectSeeds: ProjectSeed[] = [
     {
         id: 1,
         name: 'TixNow',
@@ -23,8 +27,6 @@ export const projects: Project[] = [
             'End-to-end cinema ticketing system with admin dashboard and seamless user booking experience.',
         stack: ['Java Spring Boot', 'Java Spring Security', 'Thymeleaf', 'MySQL', 'Bootstrap'],
         image: '/projects/tixnow.webp',
-        gradient: 'from-purple-900/20 via-transparent to-blue-900/20',
-        accentColor: '#a855f7',
         repoLink: 'https://github.com/haikalmumtaz233/TixNow',
         liveLink: '#',
         isFeatured: true,
@@ -38,8 +40,6 @@ export const projects: Project[] = [
             'Multiplayer rhythm game on Roblox platform where players hit notes in sync with music tracks to score points and compete on leaderboards.',
         stack: ['Lua', 'Roblox Studio'],
         image: '/projects/streetBeats.webp',
-        gradient: 'from-orange-900/20 via-transparent to-red-900/20',
-        accentColor: '#f97316',
         repoLink: 'https://discord.gg/sc6F4e8VhN',
         liveLink: 'https://www.roblox.com/games/98953012685374/Street-Beats',
         isFeatured: true,
@@ -53,8 +53,6 @@ export const projects: Project[] = [
             'Modern, interactive portfolio website showcasing projects with advanced animations and smooth user experience.',
         stack: ['React', 'Framer Motion', 'Tailwind', 'GSAP', 'Lenis'],
         image: '/projects/portfolio.webp',
-        gradient: 'from-pink-900/20 via-transparent to-orange-900/20',
-        accentColor: '#ec4899',
         repoLink: 'https://github.com/haikalmumtaz233/haikalmumtaz-com',
         liveLink: 'https://haikalmumtaz.com',
         isFeatured: true,
@@ -73,8 +71,6 @@ export const projects: Project[] = [
             'Tailwind CSS'
         ],
         image: '/projects/smpmuhdela.webp',
-        gradient: 'from-pink-900/20 via-transparent to-orange-900/20',
-        accentColor: '#34d399',
         repoLink: '#',
         liveLink: 'https://smpmuhdelajogja.sch.id/',
         isFeatured: true,
@@ -95,8 +91,6 @@ export const projects: Project[] = [
             'Tailwind CSS',
         ],
         image: '/projects/simaset.webp',
-        gradient: 'from-indigo-900/20 via-transparent to-sky-900/20',
-        accentColor: '#2563eb',
         repoLink: '#',
         liveLink: '#',
         isFeatured: false,
@@ -115,8 +109,6 @@ export const projects: Project[] = [
             'Tailwind CSS'
         ],
         image: '/projects/cms.webp',
-        gradient: 'from-pink-900/20 via-transparent to-orange-900/20',
-        accentColor: '#60a5fa',
         repoLink: '#',
         liveLink: '#',
         isFeatured: false,
@@ -139,8 +131,6 @@ export const projects: Project[] = [
             'NATS',
         ],
         image: '/projects/kostku.webp',
-        gradient: 'from-emerald-900/20 via-transparent to-cyan-900/20',
-        accentColor: '#14b8a6',
         repoLink: '#',
         liveLink: '#',
         isFeatured: false,
@@ -154,10 +144,14 @@ export const projects: Project[] = [
             'Bus route mapping application using LeafletJS for interactive visualization and navigation of vehicle routes.',
         stack: ['JavaScript', 'Leaflet', 'HTML', 'CSS'],
         image: '/projects/vehicleroute.webp',
-        gradient: 'from-pink-900/20 via-transparent to-orange-900/20',
-        accentColor: '#22d3ee',
         repoLink: 'https://github.com/haikalmumtaz233/vehicle-route-leafletjs',
         liveLink: 'https://haikalmumtaz233.github.io/vehicle-route-leafletjs/',
         isFeatured: false,
     },
 ];
+
+export const projects: Project[] = projectSeeds.map((seed) => ({
+  ...seed,
+  accentColor: accentForCategory(seed.category),
+  gradient: gradientForCategory(seed.category),
+}));

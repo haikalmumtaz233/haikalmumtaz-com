@@ -1,23 +1,24 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import { ChevronDown, Briefcase } from 'lucide-react';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { animatedProps } from '../../lib/motion';
+import Nameplate from './Nameplate';
+
+const roles = ['Application Developer Jr.', 'Fullstack Developer', 'Machine Learning Engineer', 'Data Scientist', 'Game Developer'];
 
 const Hero = () => {
-  const [isIntroComplete, setIsIntroComplete] = useState(false);
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
-  const [displayedText, setDisplayedText] = useState('');
+  const [displayedText, setDisplayedText] = useState(prefersReducedMotion ? roles[0] : '');
   const [isDeleting, setIsDeleting] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
 
-  const roles = ['Application Developer Jr.', 'Fullstack Developer', 'Machine Learning Engineer', 'Data Scientist', 'Game Developer'];
-
-  useEffect(() => {
-    const completeTimer = setTimeout(() => {
-      setIsIntroComplete(true);
-    }, 2500);
-
-    return () => clearTimeout(completeTimer);
-  }, []);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,7 +39,7 @@ const Hero = () => {
   }, []);
 
   useEffect(() => {
-    if (!isIntroComplete) return;
+    if (prefersReducedMotion) return;
 
     const currentRole = roles[currentRoleIndex];
     const typeSpeed = isDeleting ? 50 : 100;
@@ -61,75 +62,23 @@ const Hero = () => {
     }, typeSpeed);
 
     return () => clearTimeout(timer);
-  }, [isIntroComplete, displayedText, isDeleting, currentRoleIndex]);
+  }, [displayedText, isDeleting, currentRoleIndex, prefersReducedMotion]);
 
   return (
-    <>
-      <AnimatePresence>
-        {!isIntroComplete && (
-          <>
-            <motion.div
-              className="fixed top-0 left-0 right-0 h-[50vh] bg-white z-50 flex items-end justify-center pb-2 md:pb-8 overflow-hidden"
-              initial={{ y: 0 }}
-              exit={{ y: '-100%' }}
-              transition={{
-                duration: 1.2,
-                ease: [0.87, 0, 0.13, 1],
-                delay: 0.2
-              }}
-            >
-              <motion.h1
-                initial={{ y: -100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{
-                  duration: 0.8,
-                  ease: [0.43, 0.13, 0.23, 0.96]
-                }}
-                className="font-sans font-black text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-black uppercase tracking-tighter leading-[0.8]"
-              >
-                HAIKAL
-              </motion.h1>
-            </motion.div>
-
-            <motion.div
-              className="fixed bottom-0 left-0 right-0 h-[50vh] bg-white z-50 flex items-start justify-center pt-2 md:pt-8 overflow-hidden"
-              initial={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{
-                duration: 1.2,
-                ease: [0.87, 0, 0.13, 1],
-                delay: 0.2
-              }}
-            >
-              <motion.h1
-                initial={{ y: 100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{
-                  duration: 0.8,
-                  ease: [0.43, 0.13, 0.23, 0.96]
-                }}
-                className="font-sans font-black text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-black uppercase tracking-tighter leading-[0.8]"
-              >
-                MUMTAZ
-              </motion.h1>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-
-      <section className="relative h-screen max-h-screen bg-transparent text-white overflow-hidden flex flex-col items-center justify-between py-8 sm:py-12 px-4 sm:px-6">
+    <section
+      id="hero"
+      ref={sectionRef}
+      className="relative h-screen max-h-screen bg-transparent text-white overflow-hidden flex flex-col items-center justify-between py-8 sm:py-12 px-4 sm:px-6"
+    >
         <div className="flex-shrink-0 h-20" />
 
-        <div className="flex-grow flex items-center justify-center">
-          <div className="text-center px-4">
-            <h2 className="text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-[0.5em] text-slate-500 mb-4 sm:mb-6">
+        <div className="flex-grow flex w-full items-center justify-center">
+          <div className="w-full text-center">
+            <h2 className="text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-[0.5em] text-slate-400 mb-4 sm:mb-6">
               MUHAMMAD RADITYA
             </h2>
 
-            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-8xl 2xl:text-9xl font-monument font-black uppercase leading-[0.9] tracking-tight text-white">
-              <span className="inline-block">HAIKAL</span>{' '}
-              <span className="inline-block">MUMTAZ</span>
-            </h1>
+            <Nameplate scrollProgress={scrollYProgress} />
           </div>
         </div>
 
@@ -137,22 +86,26 @@ const Hero = () => {
           <div className="flex flex-col items-center gap-6 lg:flex-row lg:items-center lg:justify-between">
 
             <AnimatePresence>
-              {showScrollIndicator && isIntroComplete && (
+              {showScrollIndicator && (
                 <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
+                  {...animatedProps(prefersReducedMotion, {
+                    initial: { opacity: 0, y: 10 },
+                    animate: { opacity: 1, y: 0 },
+                    exit: { opacity: 0, y: 10 },
+                    transition: { duration: 0.5, delay: 0.3 },
+                  })}
                   className="hidden lg:flex items-center gap-3"
                 >
                   <motion.div
                     className="flex items-center justify-center w-10 h-10 rounded-full border border-white/20"
-                    animate={{ y: [0, 6, 0] }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
+                    {...animatedProps(prefersReducedMotion, {
+                      animate: { y: [0, 6, 0] },
+                      transition: {
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: 'easeInOut' as const,
+                      },
+                    })}
                   >
                     <ChevronDown className="w-4 h-4 text-white/50" />
                   </motion.div>
@@ -161,7 +114,7 @@ const Hero = () => {
                     <span className="text-[11px] font-medium uppercase tracking-wider text-white/70">
                       Scroll
                     </span>
-                    <span className="text-[10px] font-normal uppercase tracking-widest text-slate-500">
+                    <span className="text-[10px] font-normal uppercase tracking-widest text-slate-400">
                       To Explore
                     </span>
                   </div>
@@ -175,8 +128,10 @@ const Hero = () => {
                 <span className="text-white/90">{displayedText}</span>
                 <motion.span
                   className="inline-block w-[2px] h-5 bg-purple-500 ml-1"
-                  animate={{ opacity: [1, 0, 1] }}
-                  transition={{ duration: 0.8, repeat: Infinity }}
+                  {...animatedProps(prefersReducedMotion, {
+                    animate: { opacity: [1, 0, 1] },
+                    transition: { duration: 0.8, repeat: Infinity },
+                  })}
                 />
               </div>
             </div>
@@ -193,8 +148,7 @@ const Hero = () => {
 
           </div>
         </div>
-      </section>
-    </>
+    </section>
   );
 };
 

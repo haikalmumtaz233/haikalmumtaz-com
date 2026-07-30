@@ -1,59 +1,61 @@
+import { imageIcon, spriteIcon, type TechIconSource } from './icons';
+
 export interface Tool {
   name: string;
-  logo: string;
+  icon: TechIconSource;
 }
 
 export const tools: Tool[] = [
   {
     name: 'Git',
-    logo: 'https://cdn.simpleicons.org/git',
+    icon: spriteIcon('tech-git'),
   },
   {
     name: 'GitHub',
-    logo: 'https://cdn.simpleicons.org/github/white',
+    icon: spriteIcon('tech-github-white'),
   },
   {
     name: 'VS Code',
-    logo: '/tools/vscode.svg',
+    icon: imageIcon('/tools/vscode.svg'),
   },
   {
     name: 'Google Colab',
-    logo: 'https://cdn.simpleicons.org/googlecolab',
+    icon: spriteIcon('tech-googlecolab'),
   },
   {
     name: 'Google Cloud',
-    logo: 'https://cdn.simpleicons.org/googlecloud',
+    icon: spriteIcon('tech-googlecloud'),
   },
   {
     name: 'Cursor',
-    logo: 'https://cdn.simpleicons.org/cursor/white',
+    icon: spriteIcon('tech-cursor-white'),
   },
   {
     name: 'Android Studio',
-    logo: 'https://cdn.simpleicons.org/androidstudio',
+    icon: spriteIcon('tech-androidstudio'),
   },
   {
     name: 'Laragon',
-    logo: 'https://cdn.simpleicons.org/laragon',
+    icon: spriteIcon('tech-laragon'),
   },
   {
     name: 'Postman',
-    logo: 'https://cdn.simpleicons.org/postman',
+    icon: spriteIcon('tech-postman'),
   },
   {
     name: 'Apidog',
-    logo: '/tools/apidog.svg',
+    icon: imageIcon('/tools/apidog.svg'),
   },
   {
     name: 'Canva',
-    logo: '/tools/canva.svg',
+    icon: imageIcon('/tools/canva.svg'),
   },
   {
     name: 'Figma',
-    logo: 'https://cdn.simpleicons.org/figma',
+    icon: spriteIcon('tech-figma'),
   },
   {
     name: 'CapCut',
-    logo: '/tools/capcut.svg',
+    icon: imageIcon('/tools/capcut.svg'),
   },
 ];
