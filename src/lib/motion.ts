@@ -1,6 +1,11 @@
 import type { Variants } from 'framer-motion';
+import { durationsMs, easingCurves } from '../design/tokens';
 
-export const revealEase = [0.43, 0.13, 0.23, 0.96] as const;
+export const easing = easingCurves;
+
+export const seconds = (name: keyof typeof durationsMs) => durationsMs[name] / 1000;
+
+export const revealEase = easingCurves.smooth;
 
 const noMotion: Variants = { hidden: {}, visible: {} };
 
