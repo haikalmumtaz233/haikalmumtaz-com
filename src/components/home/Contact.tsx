@@ -3,6 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight, Mail, Instagram, Linkedin, Github, CheckCircle, XCircle, X } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import DOMPurify from 'dompurify';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { revealEase } from '../../lib/motion';
+import { profile, socialProfiles } from '../../data/profile';
 
 declare global {
   interface Window {
@@ -20,6 +23,12 @@ declare global {
   }
 }
 
+const socialIcons: Record<string, typeof Github> = {
+  GitHub: Github,
+  LinkedIn: Linkedin,
+  Instagram: Instagram,
+};
+
 type ToastType = 'success' | 'error';
 
 interface Toast {
@@ -29,6 +38,7 @@ interface Toast {
 }
 
 const Contact = () => {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -199,23 +209,27 @@ const Contact = () => {
     }
   };
 
-  const socialLinks = [
-    { icon: Github, href: 'https://github.com/haikalmumtaz233', label: 'Github' },
-    { icon: Linkedin, href: 'https://www.linkedin.com/in/haikal-mumtaz/', label: 'LinkedIn' },
-    { icon: Instagram, href: 'https://www.instagram.com/haikal_mumtaz23/', label: 'Instagram' },
-  ];
+  const socialLinks = socialProfiles.map((social) => ({
+    ...social,
+    icon: socialIcons[social.label],
+  }));
 
   return (
     <section className="relative bg-transparent py-10 sm:py-14 md:py-16 lg:py-20 overflow-hidden">
-      <div className="fixed top-6 right-6 z-50 flex flex-col gap-3">
+      <div
+        className="fixed top-6 right-6 z-50 flex flex-col gap-3"
+        role="status"
+        aria-live="polite"
+        aria-atomic="false"
+      >
         <AnimatePresence>
           {toasts.map((toast) => (
             <motion.div
               key={toast.id}
-              initial={{ opacity: 0, x: 100, scale: 0.9 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 100, scale: 0.9 }}
-              transition={{ duration: 0.3, ease: [0.43, 0.13, 0.23, 0.96] }}
+              initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: 100, scale: 0.9 }}
+              animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, x: 0, scale: 1 }}
+              exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: 100, scale: 0.9 }}
+              transition={{ duration: 0.3, ease: revealEase }}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg backdrop-blur-md border ${
                 toast.type === 'success'
                   ? 'bg-green-500/20 border-green-500/30 text-green-400'
@@ -242,13 +256,7 @@ const Contact = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 2xl:gap-24">
 
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="flex flex-col justify-center"
-          >
+          <div className="flex flex-col justify-center">
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black text-white uppercase tracking-tight leading-none mb-4 sm:mb-6">
               Let's work <br />
               together
@@ -260,13 +268,13 @@ const Contact = () => {
 
             <div className="space-y-6">
               <a
-                href="mailto:hmumtaz70@gmail.com"
+                href={`mailto:${profile.email}`}
                 className="group flex items-center gap-3 text-base md:text-lg 2xl:text-2xl text-white hover:text-white/80 transition-colors"
               >
                 <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
                   <Mail size={18} />
                 </div>
-                <span>hmumtaz70@gmail.com</span>
+                <span>{profile.email}</span>
               </a>
 
               <div className="flex gap-3">
@@ -284,21 +292,16 @@ const Contact = () => {
                 ))}
               </div>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="bg-white/[0.02] border border-white/10 rounded-2xl p-5 md:p-6 2xl:p-8"
-          >
+          <div className="bg-white/[0.02] border border-white/10 rounded-2xl p-5 md:p-6 2xl:p-8">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs text-slate-500 uppercase tracking-wider font-mono">First Name</label>
+                  <label htmlFor="contact-first-name" className="text-xs text-slate-400 uppercase tracking-wider font-mono">First Name</label>
                   <input
                     type="text"
+                    id="contact-first-name"
                     name="firstName"
                     required
                     maxLength={50}
@@ -309,9 +312,10 @@ const Contact = () => {
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs text-slate-500 uppercase tracking-wider font-mono">Last Name</label>
+                  <label htmlFor="contact-last-name" className="text-xs text-slate-400 uppercase tracking-wider font-mono">Last Name</label>
                   <input
                     type="text"
+                    id="contact-last-name"
                     name="lastName"
                     required
                     maxLength={50}
@@ -325,9 +329,10 @@ const Contact = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs text-slate-500 uppercase tracking-wider font-mono">Email</label>
+                  <label htmlFor="contact-email" className="text-xs text-slate-400 uppercase tracking-wider font-mono">Email</label>
                   <input
                     type="email"
+                    id="contact-email"
                     name="email"
                     required
                     pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
@@ -338,9 +343,10 @@ const Contact = () => {
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs text-slate-500 uppercase tracking-wider font-mono">Phone</label>
+                  <label htmlFor="contact-phone" className="text-xs text-slate-400 uppercase tracking-wider font-mono">Phone</label>
                   <input
                     type="tel"
+                    id="contact-phone"
                     name="phone"
                     pattern="[\d\s+\-()]{10,}"
                     value={formData.phone}
@@ -352,9 +358,10 @@ const Contact = () => {
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs text-slate-500 uppercase tracking-wider font-mono">Message</label>
+                <label htmlFor="contact-message" className="text-xs text-slate-400 uppercase tracking-wider font-mono">Message</label>
                 <textarea
-                  name="message"
+                  id="contact-message"
+                    name="message"
                   required
                   rows={3}
                   maxLength={2000}
@@ -363,7 +370,7 @@ const Contact = () => {
                   className="w-full bg-transparent border-b border-white/20 py-1.5 text-sm text-white focus:border-white focus:outline-none transition-colors resize-none"
                   placeholder="Tell me about your project..."
                 />
-                <p className="text-[10px] text-slate-500 text-right">
+                <p className="text-[10px] text-slate-400 text-right">
                   {formData.message.length}/{MAX_MESSAGE_LENGTH}
                 </p>
               </div>
@@ -398,7 +405,7 @@ const Contact = () => {
                 <ArrowUpRight className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
               </button>
             </form>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

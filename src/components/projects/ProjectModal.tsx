@@ -4,6 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Github, ExternalLink } from 'lucide-react';
 import { useLenis } from 'lenis/react';
 import type { Project } from '../../data/projects';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
+import { animatedProps, revealEase } from '../../lib/motion';
 
 interface ProjectModalProps {
   project: Project | null;
@@ -11,6 +14,8 @@ interface ProjectModalProps {
 }
 
 const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const dialogRef = useFocusTrap<HTMLDivElement>(project !== null);
   const lenis = useLenis();
 
   const handleEscape = useCallback(
@@ -52,10 +57,20 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
         >
 <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
 <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            layoutId={prefersReducedMotion ? undefined : `project-${project.id}`}
+            initial={prefersReducedMotion ? { opacity: 0 } : false}
+            animate={prefersReducedMotion ? { opacity: 1 } : undefined}
+            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0 }}
+            transition={
+              prefersReducedMotion
+                ? { duration: 0.2 }
+                : { duration: 0.45, ease: revealEase }
+            }
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="project-modal-title"
+            tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
             className="relative z-10 w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl border border-white/10 bg-[#0a0a0a] shadow-2xl"
             style={{
@@ -84,7 +99,10 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
             </div>
 <div className="p-6 sm:p-8 space-y-5">
               <div>
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-monument font-black text-white tracking-tight leading-tight">
+                <h3
+                  id="project-modal-title"
+                  className="text-2xl sm:text-3xl md:text-4xl font-monument font-black text-white tracking-tight leading-tight"
+                >
                   {project.name}
                 </h3>
                 <p className="text-slate-400 text-sm sm:text-base font-light mt-1">
@@ -92,7 +110,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                 </p>
               </div>
 
-              <p className="text-slate-500 text-sm sm:text-base leading-relaxed">
+              <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
                 {project.description}
               </p>
 <div className="flex flex-wrap gap-2">
@@ -115,8 +133,10 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                     href={project.repoLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    {...animatedProps(prefersReducedMotion, {
+                      whileHover: { scale: 1.05 },
+                      whileTap: { scale: 0.95 },
+                    })}
                     className="flex items-center justify-center gap-2 font-semibold text-sm px-5 py-2.5 rounded-xl border border-white/20 text-white hover:border-white/40 hover:bg-white/5 transition-colors"
                   >
                     <Github size={18} /> Repository
@@ -132,8 +152,10 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                     href={project.liveLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    {...animatedProps(prefersReducedMotion, {
+                      whileHover: { scale: 1.05 },
+                      whileTap: { scale: 0.95 },
+                    })}
                     className="flex items-center justify-center gap-2 font-semibold text-sm px-5 py-2.5 rounded-xl bg-white text-black hover:bg-white/90 transition-colors"
                   >
                     <ExternalLink size={18} /> Live Demo

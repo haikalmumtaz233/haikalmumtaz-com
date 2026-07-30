@@ -1,14 +1,16 @@
-import { useState, useMemo, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useMemo, useCallback, type KeyboardEvent as ReactKeyboardEvent } from 'react';
+import { motion, AnimatePresence, type PanInfo } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { projects } from '../../data/projects';
 import type { Project } from '../../data/projects';
 import ProjectModal from '../projects/ProjectModal';
 import FeaturedCard from './FeaturedCard';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 
 const FeaturedProjects = () => {
   const navigate = useNavigate();
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
@@ -29,51 +31,69 @@ const FeaturedProjects = () => {
     setCurrentIndex((prev) => prev + newDirection);
   };
 
-  const cardVariants = {
-    enter: (direction: number) => ({
-      rotateY: direction > 0 ? 45 : -45,
-      x: direction > 0 ? 300 : -300,
-      opacity: 0,
-      scale: 0.8,
-      z: -200,
-    }),
-    center: {
-      rotateY: 0,
-      x: 0,
-      opacity: 1,
-      scale: 1,
-      z: 0,
-    },
-    exit: (direction: number) => ({
-      rotateY: direction > 0 ? -45 : 45,
-      x: direction > 0 ? -300 : 300,
-      opacity: 0,
-      scale: 0.8,
-      z: -200,
-    }),
+  const handleCarouselKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      paginate(1);
+      return;
+    }
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      paginate(-1);
+    }
   };
 
+  const handleDragEnd = (_event: unknown, info: PanInfo) => {
+    const threshold = 60;
+    if (info.offset.x < -threshold) paginate(1);
+    else if (info.offset.x > threshold) paginate(-1);
+  };
+
+  const cardVariants = prefersReducedMotion
+    ? {
+        enter: { opacity: 0 },
+        center: { opacity: 1 },
+        exit: { opacity: 0 },
+      }
+    : {
+        enter: (direction: number) => ({
+          rotateY: direction > 0 ? 45 : -45,
+          x: direction > 0 ? 300 : -300,
+          opacity: 0,
+          scale: 0.8,
+          z: -200,
+        }),
+        center: {
+          rotateY: 0,
+          x: 0,
+          opacity: 1,
+          scale: 1,
+          z: 0,
+        },
+        exit: (direction: number) => ({
+          rotateY: direction > 0 ? -45 : 45,
+          x: direction > 0 ? -300 : 300,
+          opacity: 0,
+          scale: 0.8,
+          z: -200,
+        }),
+      };
+
   return (
-    <section id="projects" className="relative bg-transparent py-10 sm:py-14 md:py-20 lg:py-28 2xl:py-32 overflow-hidden">
+    <section className="relative bg-transparent py-10 sm:py-14 md:py-20 lg:py-28 2xl:py-32 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
-          className="mb-2 sm:mb-3 md:mb-4"
-        >
+        <div className="mb-2 sm:mb-3 md:mb-4">
           <div className="flex items-center justify-between flex-wrap gap-3">
             <div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-monument font-black tracking-tight text-white mb-1 sm:mb-2 uppercase">
                 FEATURED WORK
               </h2>
-              <p className="text-slate-500 text-sm sm:text-base md:text-lg 2xl:text-xl font-light">
+              <p className="text-slate-400 text-sm sm:text-base md:text-lg 2xl:text-xl font-light">
                 My best projects
               </p>
             </div>
             <button
-              onClick={() => navigate('/projects')}
+              onClick={() => navigate('/projects', { viewTransition: true })}
               className="group flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 md:px-5 md:py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-full transition-all duration-300"
             >
               <span className="text-[11px] sm:text-xs md:text-sm font-medium text-white">
@@ -82,7 +102,7 @@ const FeaturedProjects = () => {
               <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 text-white group-hover:translate-x-1 transition-transform duration-300" />
             </button>
           </div>
-        </motion.div>
+        </div>
 
         <div className="flex items-center gap-2 sm:gap-3 md:gap-4 lg:gap-6">
           <button
@@ -98,7 +118,15 @@ const FeaturedProjects = () => {
             <ChevronLeft className={`w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 ${isFirstSlide ? 'text-white/20' : 'text-white'}`} />
           </button>
 
-          <div className="flex-1 relative h-[280px] md:h-[240px] lg:h-[280px] xl:h-[320px] 2xl:h-[360px]" style={{ perspective: '1200px' }}>
+          <div
+            className="flex-1 relative h-[240px] md:h-[260px] lg:h-[300px] xl:h-[330px] 2xl:h-[370px] focus:outline-none"
+            style={{ perspective: '1200px' }}
+            role="group"
+            aria-roledescription="carousel"
+            aria-label="Featured projects"
+            tabIndex={0}
+            onKeyDown={handleCarouselKeyDown}
+          >
             <AnimatePresence initial={false} custom={direction} mode="popLayout">
               <motion.div
                 key={currentIndex}
@@ -107,14 +135,22 @@ const FeaturedProjects = () => {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{
-                  type: 'spring',
-                  stiffness: 300,
-                  damping: 30,
-                  opacity: { duration: 0.3 },
-                }}
+                transition={
+                  prefersReducedMotion
+                    ? { duration: 0.2 }
+                    : {
+                        type: 'spring',
+                        stiffness: 300,
+                        damping: 30,
+                        opacity: { duration: 0.3 },
+                      }
+                }
                 className="absolute inset-0 flex justify-center items-center"
                 style={{ transformStyle: 'preserve-3d' }}
+                drag={prefersReducedMotion ? false : 'x'}
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.18}
+                onDragEnd={handleDragEnd}
               >
                 <div className="w-full max-w-[260px] md:max-w-[580px] lg:max-w-[700px] xl:max-w-[800px] 2xl:max-w-[900px]">
                   <FeaturedCard

@@ -1,11 +1,17 @@
-import { useLayoutEffect, useRef, useEffect } from 'react';
+import { useLayoutEffect, useRef, useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, useNavigationType } from 'react-router-dom';
 import { ReactLenis, useLenis } from 'lenis/react';
-import Navbar from './components/Navbar';
+import SiteRail from './components/SiteRail';
 import Footer from './components/Footer';
 import Home from './pages/Home';
-import Projects from './pages/Projects';
 import Background from './components/Background';
+
+const Projects = lazy(() => import('./pages/Projects'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
+import TechIconSprite from './components/ui/TechIconSprite';
+import CustomCursor from './components/CustomCursor';
+import { useHasFinePointer } from './hooks/useMediaQuery';
 
 const scrollPositions = new Map<string, number>();
 
@@ -54,21 +60,43 @@ function ScrollManager() {
   return null;
 }
 
-function AppContent() {
+function AppShell() {
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const hasFinePointer = useHasFinePointer();
+
   return (
-    <ReactLenis root options={{ lerp: 0.1, duration: 1.5, smoothWheel: true }}>
+    <>
+      {hasFinePointer && !prefersReducedMotion && <CustomCursor />}
+      <TechIconSprite />
       <Background />
       <ScrollManager />
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
+      <div className="min-h-screen flex flex-col pb-16 lg:pb-0 lg:pl-rail-lg">
+        <SiteRail />
         <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/projects" element={<Projects />} />
-          </Routes>
+          <Suspense fallback={<div className="min-h-[60vh]" />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
         </main>
         <Footer />
       </div>
+    </>
+  );
+}
+
+function AppContent() {
+  const prefersReducedMotion = usePrefersReducedMotion();
+
+  if (prefersReducedMotion) {
+    return <AppShell />;
+  }
+
+  return (
+    <ReactLenis root options={{ lerp: 0.1, duration: 1.5, smoothWheel: true }}>
+      <AppShell />
     </ReactLenis>
   );
 }

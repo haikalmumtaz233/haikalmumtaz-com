@@ -1,86 +1,43 @@
 import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 
-gsap.registerPlugin(ScrollTrigger);
+const STAR_DENSITY = 8000;
+const SCROLL_PARALLAX = 0.08;
+
+interface Star {
+    x: number;
+    y: number;
+    depth: number;
+    size: number;
+    baseAlpha: number;
+    alpha: number;
+    twinkleSpeed: number;
+    color: string;
+}
+
+const wrap = (value: number, max: number) => ((value % max) + max) % max;
 
 const Background = () => {
+    const prefersReducedMotion = usePrefersReducedMotion();
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
+    const { scrollYProgress } = useScroll();
 
-    const orb1WrapperRef = useRef<HTMLDivElement>(null);
-    const orb2WrapperRef = useRef<HTMLDivElement>(null);
-    const orb3WrapperRef = useRef<HTMLDivElement>(null);
+    const orb1Y = useTransform(scrollYProgress, [0, 1], ['0vh', '50vh']);
+    const orb2Y = useTransform(scrollYProgress, [0, 1], ['0vh', '30vh']);
+    const orb3Y = useTransform(scrollYProgress, [0, 1], ['0vh', '40vh']);
 
-    const orb1Ref = useRef<HTMLDivElement>(null);
-    const orb2Ref = useRef<HTMLDivElement>(null);
-    const orb3Ref = useRef<HTMLDivElement>(null);
-
-    useGSAP(() => {
-        if (!orb1Ref.current || !orb2Ref.current || !orb3Ref.current) return;
-        if (!orb1WrapperRef.current || !orb2WrapperRef.current || !orb3WrapperRef.current) return;
-
-        gsap.to(orb1Ref.current, {
-            x: 'random(-50, 50)',
-            y: 'random(-30, 30)',
-            duration: 15,
-            repeat: -1,
-            yoyo: true,
-            ease: 'sine.inOut',
-        });
-
-        gsap.to(orb2Ref.current, {
-            x: 'random(-40, 40)',
-            y: 'random(-40, 40)',
-            duration: 18,
-            repeat: -1,
-            yoyo: true,
-            ease: 'sine.inOut',
-        });
-
-        gsap.to(orb3Ref.current, {
-            x: 'random(-60, 60)',
-            y: 'random(-50, 50)',
-            duration: 12,
-            repeat: -1,
-            yoyo: true,
-            ease: 'sine.inOut',
-        });
-
-        gsap.to(orb1WrapperRef.current, {
-            y: '50vh',
-            ease: 'none',
-            scrollTrigger: {
-                trigger: document.body,
-                start: 'top top',
-                end: 'bottom bottom',
-                scrub: 2,
-            },
-        });
-
-        gsap.to(orb2WrapperRef.current, {
-            y: '30vh',
-            ease: 'none',
-            scrollTrigger: {
-                trigger: document.body,
-                start: 'top top',
-                end: 'bottom bottom',
-                scrub: 2.5,
-            },
-        });
-
-        gsap.to(orb3WrapperRef.current, {
-            y: '40vh',
-            ease: 'none',
-            scrollTrigger: {
-                trigger: document.body,
-                start: 'top top',
-                end: 'bottom bottom',
-                scrub: 2,
-            },
-        });
-    }, { scope: containerRef });
+    const idleDrift = (range: number, duration: number) =>
+        prefersReducedMotion
+            ? {}
+            : {
+                  animate: { x: [-range, range, -range] },
+                  transition: {
+                      duration,
+                      repeat: Infinity,
+                      ease: 'easeInOut' as const,
+                  },
+              };
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -89,7 +46,7 @@ const Background = () => {
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        let animationFrameId: number;
+        let animationFrameId = 0;
         let width = window.innerWidth;
         let height = window.innerHeight;
 
@@ -98,150 +55,159 @@ const Background = () => {
         let targetMouseX = 0;
         let targetMouseY = 0;
 
-        let scrollY = window.scrollY;
-        let targetScrollY = window.scrollY;
-        let scrollVelocity = 0;
+        let smoothScrollY = window.scrollY;
+
+        const stars: Star[] = [];
+
+        const populate = () => {
+            stars.length = 0;
+            const starCount = Math.floor((width * height) / STAR_DENSITY);
+            const colors = ['255, 255, 255', '220, 250, 255', '240, 230, 255'];
+
+            for (let i = 0; i < starCount; i++) {
+                const baseAlpha = Math.random() * 0.55 + 0.4;
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    depth: Math.random() * 1.5 + 0.5,
+                    size: Math.random() * 1.2,
+                    baseAlpha,
+                    alpha: baseAlpha,
+                    twinkleSpeed: Math.random() * 0.01 + 0.002,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                });
+            }
+        };
 
         const handleResize = () => {
             width = window.innerWidth;
             height = window.innerHeight;
             canvas.width = width;
             canvas.height = height;
+            populate();
         };
 
-        const handleMouseMove = (e: MouseEvent) => {
-            targetMouseX = (e.clientX - width / 2) * 0.02;
-            targetMouseY = (e.clientY - height / 2) * 0.02;
+        const handleMouseMove = (event: MouseEvent) => {
+            targetMouseX = (event.clientX - width / 2) * 0.02;
+            targetMouseY = (event.clientY - height / 2) * 0.02;
         };
-
-        const handleScroll = () => {
-            targetScrollY = window.scrollY;
-        };
-
-        window.addEventListener('resize', handleResize);
-        window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('scroll', handleScroll);
 
         handleResize();
 
-        class Star {
-            x: number;
-            y: number;
-            z: number;
-            size: number;
-            baseAlpha: number;
-            alpha: number;
-            twinkleSpeed: number;
-            color: string;
+        const drawStar = (star: Star) => {
+            const parallax = smoothScrollY * star.depth * SCROLL_PARALLAX;
+            ctx.beginPath();
+            ctx.arc(
+                wrap(star.x, width),
+                wrap(star.y - parallax, height),
+                star.size * (star.depth * 0.8),
+                0,
+                Math.PI * 2
+            );
+            ctx.fillStyle = `rgba(${star.color}, ${Math.max(0, star.alpha)})`;
+            ctx.fill();
+        };
 
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.z = Math.random() * 1.5 + 0.5;
-                this.size = Math.random() * 1.2;
-                this.baseAlpha = Math.random() * 0.55 + 0.4;
-                this.alpha = this.baseAlpha;
-                this.twinkleSpeed = Math.random() * 0.01 + 0.002;
-                const colors = ['255, 255, 255', '220, 250, 255', '240, 230, 255'];
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-            }
+        const renderStaticField = () => {
+            ctx.clearRect(0, 0, width, height);
+            stars.forEach(drawStar);
+        };
 
-            update() {
-                this.alpha += this.twinkleSpeed;
-                if (this.alpha > 1 || this.alpha < this.baseAlpha - 0.15) {
-                    this.twinkleSpeed = -this.twinkleSpeed;
-                }
+        if (prefersReducedMotion) {
+            const handleStaticResize = () => {
+                handleResize();
+                renderStaticField();
+            };
 
-                mouseX += (targetMouseX - mouseX) * 0.05;
-                mouseY += (targetMouseY - mouseY) * 0.05;
-                this.x -= mouseX * this.z * 0.05;
-                this.y -= mouseY * this.z * 0.05;
+            renderStaticField();
+            window.addEventListener('resize', handleStaticResize);
 
-                const scrollDiff = targetScrollY - scrollY;
-                scrollVelocity += (scrollDiff - scrollVelocity) * 0.1;
-                scrollY += scrollVelocity;
-                this.y += scrollVelocity * this.z * 0.2;
-
-                this.y -= 0.2 * this.z;
-
-                if (this.x < 0) this.x = width;
-                if (this.x > width) this.x = 0;
-                if (this.y < 0) this.y = height;
-                if (this.y > height) this.y = 0;
-            }
-
-            draw() {
-                if (!ctx) return;
-                ctx.beginPath();
-                const renderSize = this.size * (this.z * 0.8);
-                ctx.arc(this.x, this.y, renderSize, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(${this.color}, ${Math.max(0, this.alpha)})`;
-                ctx.fill();
-            }
-        }
-
-        const stars: Star[] = [];
-        const starCount = Math.floor((width * height) / 8000);
-        for (let i = 0; i < starCount; i++) {
-            stars.push(new Star());
+            return () => {
+                window.removeEventListener('resize', handleStaticResize);
+            };
         }
 
         const animate = () => {
             ctx.clearRect(0, 0, width, height);
-            stars.forEach(star => {
-                star.update();
-                star.draw();
-            });
+
+            mouseX += (targetMouseX - mouseX) * 0.05;
+            mouseY += (targetMouseY - mouseY) * 0.05;
+            smoothScrollY += (window.scrollY - smoothScrollY) * 0.08;
+
+            for (const star of stars) {
+                star.alpha += star.twinkleSpeed;
+                if (star.alpha > 1 || star.alpha < star.baseAlpha - 0.15) {
+                    star.twinkleSpeed = -star.twinkleSpeed;
+                }
+
+                star.x -= mouseX * star.depth * 0.05;
+                star.y -= mouseY * star.depth * 0.05;
+                star.y -= 0.2 * star.depth;
+
+                drawStar(star);
+            }
+
             animationFrameId = requestAnimationFrame(animate);
         };
+
+        window.addEventListener('resize', handleResize);
+        window.addEventListener('mousemove', handleMouseMove);
 
         animate();
 
         return () => {
             window.removeEventListener('resize', handleResize);
             window.removeEventListener('mousemove', handleMouseMove);
-            window.removeEventListener('scroll', handleScroll);
             cancelAnimationFrame(animationFrameId);
         };
-    }, []);
+    }, [prefersReducedMotion]);
 
     return (
-        <div ref={containerRef} className="fixed inset-0 z-[-1] bg-[#0a0a0a]">
+        <div className="fixed inset-0 z-[-1] bg-[#0a0a0a]">
             <canvas
                 ref={canvasRef}
                 className="absolute inset-0 block"
             />
 
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div ref={orb1WrapperRef} className="absolute -top-[20%] -left-[10%]" style={{ willChange: 'transform' }}>
-                    <div
-                        ref={orb1Ref}
+                <motion.div
+                    className="absolute -top-[20%] -left-[10%]"
+                    style={{ y: prefersReducedMotion ? 0 : orb1Y, willChange: 'transform' }}
+                >
+                    <motion.div
+                        {...idleDrift(50, 15)}
                         className="w-[600px] h-[600px] rounded-full bg-purple-600 mix-blend-screen filter blur-[100px] opacity-40"
                         style={{ willChange: 'transform' }}
                     />
-                </div>
+                </motion.div>
 
-                <div ref={orb2WrapperRef} className="absolute -bottom-[10%] -right-[5%]" style={{ willChange: 'transform' }}>
-                    <div
-                        ref={orb2Ref}
+                <motion.div
+                    className="absolute -bottom-[10%] -right-[5%]"
+                    style={{ y: prefersReducedMotion ? 0 : orb2Y, willChange: 'transform' }}
+                >
+                    <motion.div
+                        {...idleDrift(40, 18)}
                         className="w-[400px] h-[400px] rounded-full bg-cyan-500 mix-blend-screen filter blur-[100px] opacity-40"
                         style={{ willChange: 'transform' }}
                     />
-                </div>
+                </motion.div>
 
-                <div ref={orb3WrapperRef} className="absolute top-[30%] right-[10%]" style={{ willChange: 'transform' }}>
-                    <div
-                        ref={orb3Ref}
+                <motion.div
+                    className="absolute top-[30%] right-[10%]"
+                    style={{ y: prefersReducedMotion ? 0 : orb3Y, willChange: 'transform' }}
+                >
+                    <motion.div
+                        {...idleDrift(60, 12)}
                         className="w-[250px] h-[250px] rounded-full bg-fuchsia-500 mix-blend-screen filter blur-[100px] opacity-40"
                         style={{ willChange: 'transform' }}
                     />
-                </div>
+                </motion.div>
             </div>
 
             <div
                 className="absolute bottom-0 left-0 right-0 h-[60vh] pointer-events-none opacity-70"
                 style={{
-                    background: 'linear-gradient(to top, rgba(217, 70, 239, 0.3) 0%, rgba(168, 85, 247, 0.1) 50%, transparent 100%',
+                    background: 'linear-gradient(to top, rgba(217, 70, 239, 0.3) 0%, rgba(168, 85, 247, 0.1) 50%, transparent 100%)',
                 }}
             />
 

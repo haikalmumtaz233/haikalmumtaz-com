@@ -27,7 +27,7 @@ const Footer = () => {
           </div>
 
           <div className="col-span-1 md:col-span-3">
-            <h3 className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-4 sm:mb-6">Navigate</h3>
+            <h3 className="text-xs font-mono text-slate-400 uppercase tracking-wider mb-4 sm:mb-6">Navigate</h3>
             <ul className="space-y-3 sm:space-y-4">
               <li>
                 <button
@@ -65,7 +65,7 @@ const Footer = () => {
           </div>
 
           <div className="col-span-1 md:col-span-3">
-            <h3 className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-4 sm:mb-6">Connect</h3>
+            <h3 className="text-xs font-mono text-slate-400 uppercase tracking-wider mb-4 sm:mb-6">Connect</h3>
             <ul className="space-y-3 sm:space-y-4">
               {[
                 { name: 'LinkedIn', url: 'https://www.linkedin.com/in/haikal-mumtaz/' },
@@ -90,12 +90,12 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/10 gap-4">
-          <p className="text-slate-500 text-sm">
+          <p className="text-slate-400 text-sm">
             © {currentYear} Haikal Mumtaz. All rights reserved.
           </p>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span className="text-slate-500 text-sm font-mono">
+            <span className="text-slate-400 text-sm font-mono">
               Jakarta, Indonesia
             </span>
           </div>

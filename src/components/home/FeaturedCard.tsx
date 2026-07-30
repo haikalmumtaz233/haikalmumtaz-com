@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import type { Project } from '../../data/projects';
 import OptimizedImage from '../ui/OptimizedImage';
+import { activateOnEnterOrSpace } from '../../lib/keyboard';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 
 interface FeaturedCardProps {
   project: Project;
@@ -11,11 +13,18 @@ interface FeaturedCardProps {
 }
 
 const FeaturedCard = memo(({ project, onClick }: FeaturedCardProps) => {
+  const prefersReducedMotion = usePrefersReducedMotion();
+
   return (
     <motion.article
+      layoutId={prefersReducedMotion ? undefined : `project-${project.id}`}
       onClick={onClick}
+      onKeyDown={activateOnEnterOrSpace(onClick)}
+      role="button"
+      tabIndex={0}
+      aria-label={`Open details for ${project.name}`}
       transition={{ duration: 0.3, ease: 'easeOut' }}
-      className="group relative cursor-pointer rounded-xl md:rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden h-[260px] md:h-[200px] lg:h-[240px] xl:h-[280px] 2xl:h-[320px]"
+      className="group relative cursor-pointer rounded-xl md:rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden h-[220px] md:h-[240px] lg:h-[280px] xl:h-[310px] 2xl:h-[350px]"
       style={
         {
           '--accent': project.accentColor,
@@ -59,7 +68,7 @@ const FeaturedCard = memo(({ project, onClick }: FeaturedCardProps) => {
             <h3 className="text-sm md:text-base lg:text-lg xl:text-xl font-monument font-black text-white tracking-tight leading-tight line-clamp-1 md:line-clamp-2">
               {project.name}
             </h3>
-            <p className="text-slate-500 text-[10px] md:text-xs lg:text-sm font-light mt-0.5 md:mt-1 line-clamp-1 md:line-clamp-2">
+            <p className="text-slate-400 text-[10px] md:text-xs lg:text-sm font-light mt-0.5 md:mt-1 line-clamp-1 md:line-clamp-2">
               {project.subtitle}
             </p>
           </div>
@@ -76,7 +85,7 @@ const FeaturedCard = memo(({ project, onClick }: FeaturedCardProps) => {
               </span>
             ))}
             {project.stack.length > 3 && (
-              <span className="hidden lg:inline-block px-2 py-1 bg-white/5 border border-white/10 text-slate-500 text-[10px] lg:text-[11px] rounded-md font-mono">
+              <span className="hidden lg:inline-block px-2 py-1 bg-white/5 border border-white/10 text-slate-400 text-[10px] lg:text-[11px] rounded-md font-mono">
                 +{project.stack.length - 3}
               </span>
             )}
