@@ -1,291 +1,309 @@
 import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
+import { palette } from '../design/tokens';
+import { hexToRgbChannels } from '../lib/color';
 
-gsap.registerPlugin(ScrollTrigger);
+const STAR_DENSITY = 8000;
+const PARTICLE_DENSITY = 22000;
+const LINK_DISTANCE = 150;
+const GRID_SIZE = 60;
+
+const nilaChannels = hexToRgbChannels(palette.nila);
+const jadeChannels = hexToRgbChannels(palette.jade);
+
+interface Star {
+  x: number;
+  y: number;
+  depth: number;
+  size: number;
+  baseAlpha: number;
+  alpha: number;
+  twinkleSpeed: number;
+  color: string;
+}
+
+interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  alpha: number;
+  color: string;
+}
 
 const Background = () => {
-    const prefersReducedMotion = usePrefersReducedMotion();
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { scrollYProgress } = useScroll();
+  const lightY = useTransform(scrollYProgress, [0, 1], ['-8%', '38%']);
+  const lightOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.45, 0.32, 0.2]);
 
-    const orb1WrapperRef = useRef<HTMLDivElement>(null);
-    const orb2WrapperRef = useRef<HTMLDivElement>(null);
-    const orb3WrapperRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-    const orb1Ref = useRef<HTMLDivElement>(null);
-    const orb2Ref = useRef<HTMLDivElement>(null);
-    const orb3Ref = useRef<HTMLDivElement>(null);
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-    useGSAP(() => {
-        if (prefersReducedMotion) return;
-        if (!orb1Ref.current || !orb2Ref.current || !orb3Ref.current) return;
-        if (!orb1WrapperRef.current || !orb2WrapperRef.current || !orb3WrapperRef.current) return;
+    let animationFrameId = 0;
+    let width = window.innerWidth;
+    let height = window.innerHeight;
 
-        gsap.to(orb1Ref.current, {
-            x: 'random(-50, 50)',
-            y: 'random(-30, 30)',
-            duration: 15,
-            repeat: -1,
-            yoyo: true,
-            ease: 'sine.inOut',
-        });
+    let mouseX = 0;
+    let mouseY = 0;
+    let targetMouseX = 0;
+    let targetMouseY = 0;
 
-        gsap.to(orb2Ref.current, {
-            x: 'random(-40, 40)',
-            y: 'random(-40, 40)',
-            duration: 18,
-            repeat: -1,
-            yoyo: true,
-            ease: 'sine.inOut',
-        });
+    let scrollY = window.scrollY;
+    let targetScrollY = window.scrollY;
+    let scrollVelocity = 0;
 
-        gsap.to(orb3Ref.current, {
-            x: 'random(-60, 60)',
-            y: 'random(-50, 50)',
-            duration: 12,
-            repeat: -1,
-            yoyo: true,
-            ease: 'sine.inOut',
-        });
+    const stars: Star[] = [];
+    const particles: Particle[] = [];
 
-        gsap.to(orb1WrapperRef.current, {
-            y: '50vh',
-            ease: 'none',
-            scrollTrigger: {
-                trigger: document.body,
-                start: 'top top',
-                end: 'bottom bottom',
-                scrub: 2,
-            },
-        });
+    const createStar = (): Star => {
+      const colors = ['255, 255, 255', '220, 250, 255', '240, 230, 255'];
+      return {
+        x: Math.random() * width,
+        y: Math.random() * height,
+        depth: Math.random() * 1.5 + 0.5,
+        size: Math.random() * 1.2,
+        baseAlpha: Math.random() * 0.55 + 0.4,
+        alpha: Math.random() * 0.55 + 0.4,
+        twinkleSpeed: Math.random() * 0.01 + 0.002,
+        color: colors[Math.floor(Math.random() * colors.length)],
+      };
+    };
 
-        gsap.to(orb2WrapperRef.current, {
-            y: '30vh',
-            ease: 'none',
-            scrollTrigger: {
-                trigger: document.body,
-                start: 'top top',
-                end: 'bottom bottom',
-                scrub: 2.5,
-            },
-        });
+    const createParticle = (): Particle => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      size: Math.random() * 1.6 + 0.8,
+      alpha: Math.random() * 0.4 + 0.15,
+      color: Math.random() > 0.85 ? jadeChannels : nilaChannels,
+    });
 
-        gsap.to(orb3WrapperRef.current, {
-            y: '40vh',
-            ease: 'none',
-            scrollTrigger: {
-                trigger: document.body,
-                start: 'top top',
-                end: 'bottom bottom',
-                scrub: 2,
-            },
-        });
-    }, { scope: containerRef, dependencies: [prefersReducedMotion] });
+    const populate = () => {
+      stars.length = 0;
+      particles.length = 0;
+      const starCount = Math.floor((width * height) / STAR_DENSITY);
+      const particleCount = Math.floor((width * height) / PARTICLE_DENSITY);
+      for (let i = 0; i < starCount; i++) stars.push(createStar());
+      for (let i = 0; i < particleCount; i++) particles.push(createParticle());
+    };
 
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
+    const handleResize = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      populate();
+    };
 
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
+    const handleMouseMove = (event: MouseEvent) => {
+      targetMouseX = (event.clientX - width / 2) * 0.02;
+      targetMouseY = (event.clientY - height / 2) * 0.02;
+    };
 
-        let animationFrameId: number;
-        let width = window.innerWidth;
-        let height = window.innerHeight;
+    const handleScroll = () => {
+      targetScrollY = window.scrollY;
+    };
 
-        let mouseX = 0;
-        let mouseY = 0;
-        let targetMouseX = 0;
-        let targetMouseY = 0;
+    handleResize();
 
-        let scrollY = window.scrollY;
-        let targetScrollY = window.scrollY;
-        let scrollVelocity = 0;
+    const drawStar = (star: Star) => {
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.size * (star.depth * 0.8), 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${star.color}, ${Math.max(0, star.alpha)})`;
+      ctx.fill();
+    };
 
-        const handleResize = () => {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            canvas.width = width;
-            canvas.height = height;
-        };
+    const drawParticle = (particle: Particle) => {
+      ctx.beginPath();
+      ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${particle.color}, ${particle.alpha})`;
+      ctx.fill();
+    };
 
-        const handleMouseMove = (e: MouseEvent) => {
-            targetMouseX = (e.clientX - width / 2) * 0.02;
-            targetMouseY = (e.clientY - height / 2) * 0.02;
-        };
+    const linkNeighbours = () => {
+      const columns = Math.max(1, Math.ceil(width / LINK_DISTANCE));
+      const rows = Math.max(1, Math.ceil(height / LINK_DISTANCE));
+      const buckets: number[][] = Array.from({ length: columns * rows }, () => []);
 
-        const handleScroll = () => {
-            targetScrollY = window.scrollY;
-        };
+      for (let index = 0; index < particles.length; index++) {
+        const particle = particles[index];
+        const column = Math.min(columns - 1, Math.max(0, Math.floor(particle.x / LINK_DISTANCE)));
+        const row = Math.min(rows - 1, Math.max(0, Math.floor(particle.y / LINK_DISTANCE)));
+        buckets[row * columns + column].push(index);
+      }
 
-        handleResize();
+      ctx.lineWidth = 0.5;
 
-        class Star {
-            x: number;
-            y: number;
-            z: number;
-            size: number;
-            baseAlpha: number;
-            alpha: number;
-            twinkleSpeed: number;
-            color: string;
+      for (let row = 0; row < rows; row++) {
+        for (let column = 0; column < columns; column++) {
+          const bucket = buckets[row * columns + column];
+          if (bucket.length === 0) continue;
 
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.z = Math.random() * 1.5 + 0.5;
-                this.size = Math.random() * 1.2;
-                this.baseAlpha = Math.random() * 0.55 + 0.4;
-                this.alpha = this.baseAlpha;
-                this.twinkleSpeed = Math.random() * 0.01 + 0.002;
-                const colors = ['255, 255, 255', '220, 250, 255', '240, 230, 255'];
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-            }
+          for (let neighbourRow = row; neighbourRow <= row + 1; neighbourRow++) {
+            if (neighbourRow >= rows) continue;
 
-            update() {
-                this.alpha += this.twinkleSpeed;
-                if (this.alpha > 1 || this.alpha < this.baseAlpha - 0.15) {
-                    this.twinkleSpeed = -this.twinkleSpeed;
+            for (let neighbourColumn = column - 1; neighbourColumn <= column + 1; neighbourColumn++) {
+              if (neighbourColumn < 0 || neighbourColumn >= columns) continue;
+              if (neighbourRow === row && neighbourColumn < column) continue;
+
+              const neighbourBucket = buckets[neighbourRow * columns + neighbourColumn];
+              const sameBucket = neighbourRow === row && neighbourColumn === column;
+
+              for (let a = 0; a < bucket.length; a++) {
+                const startIndex = sameBucket ? a + 1 : 0;
+
+                for (let b = startIndex; b < neighbourBucket.length; b++) {
+                  const first = particles[bucket[a]];
+                  const second = particles[neighbourBucket[b]];
+                  const dx = first.x - second.x;
+                  const dy = first.y - second.y;
+                  const squaredDistance = dx * dx + dy * dy;
+                  if (squaredDistance >= LINK_DISTANCE * LINK_DISTANCE) continue;
+
+                  const opacity = (1 - Math.sqrt(squaredDistance) / LINK_DISTANCE) * 0.14;
+                  ctx.beginPath();
+                  ctx.strokeStyle = `rgba(${nilaChannels}, ${opacity})`;
+                  ctx.moveTo(first.x, first.y);
+                  ctx.lineTo(second.x, second.y);
+                  ctx.stroke();
                 }
-
-                this.x -= mouseX * this.z * 0.05;
-                this.y -= mouseY * this.z * 0.05;
-                this.y += scrollVelocity * this.z * 0.2;
-
-                this.y -= 0.2 * this.z;
-
-                if (this.x < 0) this.x = width;
-                if (this.x > width) this.x = 0;
-                if (this.y < 0) this.y = height;
-                if (this.y > height) this.y = 0;
+              }
             }
+          }
+        }
+      }
+    };
 
-            draw() {
-                if (!ctx) return;
-                ctx.beginPath();
-                const renderSize = this.size * (this.z * 0.8);
-                ctx.arc(this.x, this.y, renderSize, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(${this.color}, ${Math.max(0, this.alpha)})`;
-                ctx.fill();
-            }
+    const renderStaticField = () => {
+      ctx.clearRect(0, 0, width, height);
+      stars.forEach(drawStar);
+      particles.forEach(drawParticle);
+      linkNeighbours();
+    };
+
+    if (prefersReducedMotion) {
+      const handleStaticResize = () => {
+        handleResize();
+        renderStaticField();
+      };
+
+      renderStaticField();
+      window.addEventListener('resize', handleStaticResize);
+
+      return () => {
+        window.removeEventListener('resize', handleStaticResize);
+      };
+    }
+
+    const advanceParallax = () => {
+      mouseX += (targetMouseX - mouseX) * 0.05;
+      mouseY += (targetMouseY - mouseY) * 0.05;
+
+      const scrollDiff = targetScrollY - scrollY;
+      scrollVelocity += (scrollDiff - scrollVelocity) * 0.1;
+      scrollY += scrollVelocity;
+    };
+
+    const wrap = (value: number, max: number) => {
+      if (value < 0) return max;
+      if (value > max) return 0;
+      return value;
+    };
+
+    const animate = () => {
+      ctx.clearRect(0, 0, width, height);
+      advanceParallax();
+
+      for (const star of stars) {
+        star.alpha += star.twinkleSpeed;
+        if (star.alpha > 1 || star.alpha < star.baseAlpha - 0.15) {
+          star.twinkleSpeed = -star.twinkleSpeed;
         }
 
-        const stars: Star[] = [];
-        const starCount = Math.floor((width * height) / 8000);
-        for (let i = 0; i < starCount; i++) {
-            stars.push(new Star());
-        }
+        star.x -= mouseX * star.depth * 0.05;
+        star.y -= mouseY * star.depth * 0.05;
+        star.y += scrollVelocity * star.depth * 0.2;
+        star.y -= 0.2 * star.depth;
 
-        const drawStaticField = () => {
-            ctx.clearRect(0, 0, width, height);
-            stars.forEach(star => star.draw());
-        };
+        star.x = wrap(star.x, width);
+        star.y = wrap(star.y, height);
 
-        if (prefersReducedMotion) {
-            const handleStaticResize = () => {
-                handleResize();
-                drawStaticField();
-            };
+        drawStar(star);
+      }
 
-            drawStaticField();
-            window.addEventListener('resize', handleStaticResize);
+      for (const particle of particles) {
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+        particle.x = wrap(particle.x, width);
+        particle.y = wrap(particle.y, height);
+        drawParticle(particle);
+      }
 
-            return () => {
-                window.removeEventListener('resize', handleStaticResize);
-            };
-        }
+      linkNeighbours();
 
-        const advanceParallax = () => {
-            mouseX += (targetMouseX - mouseX) * 0.05;
-            mouseY += (targetMouseY - mouseY) * 0.05;
+      animationFrameId = requestAnimationFrame(animate);
+    };
 
-            const scrollDiff = targetScrollY - scrollY;
-            scrollVelocity += (scrollDiff - scrollVelocity) * 0.1;
-            scrollY += scrollVelocity;
-        };
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('scroll', handleScroll);
 
-        const animate = () => {
-            ctx.clearRect(0, 0, width, height);
-            advanceParallax();
-            stars.forEach(star => {
-                star.update();
-                star.draw();
-            });
-            animationFrameId = requestAnimationFrame(animate);
-        };
+    animate();
 
-        window.addEventListener('resize', handleResize);
-        window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('scroll', handleScroll);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [prefersReducedMotion]);
 
-        animate();
+  return (
+    <div className="fixed inset-0 z-[-1] bg-ink">
+      <canvas ref={canvasRef} className="absolute inset-0 block" />
 
-        return () => {
-            window.removeEventListener('resize', handleResize);
-            window.removeEventListener('mousemove', handleMouseMove);
-            window.removeEventListener('scroll', handleScroll);
-            cancelAnimationFrame(animationFrameId);
-        };
-    }, [prefersReducedMotion]);
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `linear-gradient(to right, rgba(${nilaChannels}, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(${nilaChannels}, 0.05) 1px, transparent 1px)`,
+          backgroundSize: `${GRID_SIZE}px ${GRID_SIZE}px`,
+        }}
+      />
 
-    return (
-        <div ref={containerRef} className="fixed inset-0 z-[-1] bg-[#0a0a0a]">
-            <canvas
-                ref={canvasRef}
-                className="absolute inset-0 block"
-            />
+      <motion.div
+        className="absolute inset-x-0 -top-[10%] h-[70vh] pointer-events-none"
+        style={{
+          y: prefersReducedMotion ? '0%' : lightY,
+          opacity: prefersReducedMotion ? 0.34 : lightOpacity,
+          background: `radial-gradient(60% 55% at 68% 0%, rgba(${hexToRgbChannels(palette.sogan)}, 0.28) 0%, rgba(${nilaChannels}, 0.16) 45%, transparent 78%)`,
+        }}
+      />
 
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div ref={orb1WrapperRef} className="absolute -top-[20%] -left-[10%]" style={{ willChange: 'transform' }}>
-                    <div
-                        ref={orb1Ref}
-                        className="w-[600px] h-[600px] rounded-full bg-purple-600 mix-blend-screen filter blur-[100px] opacity-40"
-                        style={{ willChange: 'transform' }}
-                    />
-                </div>
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(circle at 50% 50%, transparent 25%, ${palette.ink} 100%)`,
+        }}
+      />
 
-                <div ref={orb2WrapperRef} className="absolute -bottom-[10%] -right-[5%]" style={{ willChange: 'transform' }}>
-                    <div
-                        ref={orb2Ref}
-                        className="w-[400px] h-[400px] rounded-full bg-cyan-500 mix-blend-screen filter blur-[100px] opacity-40"
-                        style={{ willChange: 'transform' }}
-                    />
-                </div>
-
-                <div ref={orb3WrapperRef} className="absolute top-[30%] right-[10%]" style={{ willChange: 'transform' }}>
-                    <div
-                        ref={orb3Ref}
-                        className="w-[250px] h-[250px] rounded-full bg-fuchsia-500 mix-blend-screen filter blur-[100px] opacity-40"
-                        style={{ willChange: 'transform' }}
-                    />
-                </div>
-            </div>
-
-            <div
-                className="absolute bottom-0 left-0 right-0 h-[60vh] pointer-events-none opacity-70"
-                style={{
-                    background: 'linear-gradient(to top, rgba(217, 70, 239, 0.3) 0%, rgba(168, 85, 247, 0.1) 50%, transparent 100%',
-                }}
-            />
-
-            <div
-                className="absolute inset-0 opacity-30 pointer-events-none"
-                style={{
-                    background: 'radial-gradient(circle at 50% 50%, transparent 20%, #0a0a0a 100%)'
-                }}
-            />
-
-            <div
-                className="absolute inset-0 opacity-[0.04] pointer-events-none"
-                style={{
-                    backgroundImage: 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iMSIvPjwvc3ZnPg==)',
-                }}
-            />
-        </div>
-    );
+      <div
+        className="absolute inset-0 opacity-[0.04] pointer-events-none"
+        style={{
+          backgroundImage:
+            'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iMSIvPjwvc3ZnPg==)',
+        }}
+      />
+    </div>
+  );
 };
 
 export default Background;
