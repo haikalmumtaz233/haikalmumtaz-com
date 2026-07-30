@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Github, Linkedin, Instagram } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 import { animatedProps } from '../lib/motion';
 
 const navLinks = [
@@ -18,9 +19,12 @@ const socialLinks = [
   { Icon: Instagram, href: 'https://www.instagram.com/haikal_mumtaz23/', label: 'Instagram' },
 ];
 
+const MENU_PANEL_ID = 'site-menu-panel';
+
 const Navbar = () => {
   const prefersReducedMotion = usePrefersReducedMotion();
   const [isOpen, setIsOpen] = useState(false);
+  const panelRef = useFocusTrap<HTMLDivElement>(isOpen);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -53,6 +57,17 @@ const Navbar = () => {
     return () => { document.body.style.overflow = 'unset'; };
   }, [isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsOpen(false);
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOpen]);
+
   return (
     <>
       <motion.button
@@ -63,7 +78,9 @@ const Navbar = () => {
         })}
         onClick={toggleMenu}
         className="fixed top-6 right-6 sm:top-8 sm:right-8 z-50 w-12 h-12 sm:w-14 sm:h-14 backdrop-blur-md bg-white/10 border border-white/20 rounded-full flex items-center justify-center hover:scale-110 hover:bg-white/20 transition-all duration-300 cursor-pointer"
-        aria-label="Toggle menu"
+        aria-label={isOpen ? 'Close menu' : 'Open menu'}
+        aria-expanded={isOpen}
+        aria-controls={MENU_PANEL_ID}
       >
         <AnimatePresence mode="wait">
           {isOpen ? (
@@ -117,6 +134,12 @@ const Navbar = () => {
                     mass: 0.8,
                   }
             }
+            ref={panelRef}
+            id={MENU_PANEL_ID}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site menu"
+            tabIndex={-1}
             className="fixed top-0 right-0 h-full w-full sm:w-[85vw] md:w-[480px] z-50 bg-black/80 backdrop-blur-2xl border-l border-white/10 shadow-2xl overflow-hidden"
           >
             <div className="h-full flex flex-col justify-between p-6 sm:p-8 md:p-12">
@@ -227,7 +250,7 @@ const Navbar = () => {
                   ))}
                 </div>
 
-                <div className="flex items-center gap-3 text-xs font-mono text-slate-500">
+                <div className="flex items-center gap-3 text-xs font-mono text-slate-400">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                   <span>Available for opportunities</span>
                 </div>

@@ -63,7 +63,7 @@ const FavoriteMoments = () => {
   const renderContent = (moment: typeof moments[0], imageSizeClass = moment.className) => {
     const textBlock = (
       <div className="space-y-2 md:space-y-3">
-        <p className="text-[9px] sm:text-[10px] md:text-xs font-mono tracking-[0.2em] text-slate-500 uppercase">
+        <p className="text-[9px] sm:text-[10px] md:text-xs font-mono tracking-[0.2em] text-slate-400 uppercase">
           {moment.year}
         </p>
         <h3 className="text-base sm:text-lg md:text-3xl 2xl:text-4xl font-black text-white uppercase tracking-tight leading-none">

@@ -57,7 +57,7 @@ const TechStack = () => {
                 <h3 className="font-mono text-xs md:text-sm 2xl:text-base font-semibold uppercase tracking-[0.2em] text-slate-300">
                   {category.title}
                 </h3>
-                <span className="font-mono text-xs 2xl:text-sm text-slate-600">
+                <span className="font-mono text-xs 2xl:text-sm text-slate-400">
                   {String(category.items.length).padStart(2, '0')}
                 </span>
               </div>

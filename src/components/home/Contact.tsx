@@ -210,7 +210,12 @@ const Contact = () => {
 
   return (
     <section className="relative bg-transparent py-10 sm:py-14 md:py-16 lg:py-20 overflow-hidden">
-      <div className="fixed top-6 right-6 z-50 flex flex-col gap-3">
+      <div
+        className="fixed top-6 right-6 z-50 flex flex-col gap-3"
+        role="status"
+        aria-live="polite"
+        aria-atomic="false"
+      >
         <AnimatePresence>
           {toasts.map((toast) => (
             <motion.div
@@ -303,9 +308,10 @@ const Contact = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs text-slate-500 uppercase tracking-wider font-mono">First Name</label>
+                  <label htmlFor="contact-first-name" className="text-xs text-slate-400 uppercase tracking-wider font-mono">First Name</label>
                   <input
                     type="text"
+                    id="contact-first-name"
                     name="firstName"
                     required
                     maxLength={50}
@@ -316,9 +322,10 @@ const Contact = () => {
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs text-slate-500 uppercase tracking-wider font-mono">Last Name</label>
+                  <label htmlFor="contact-last-name" className="text-xs text-slate-400 uppercase tracking-wider font-mono">Last Name</label>
                   <input
                     type="text"
+                    id="contact-last-name"
                     name="lastName"
                     required
                     maxLength={50}
@@ -332,9 +339,10 @@ const Contact = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs text-slate-500 uppercase tracking-wider font-mono">Email</label>
+                  <label htmlFor="contact-email" className="text-xs text-slate-400 uppercase tracking-wider font-mono">Email</label>
                   <input
                     type="email"
+                    id="contact-email"
                     name="email"
                     required
                     pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
@@ -345,9 +353,10 @@ const Contact = () => {
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs text-slate-500 uppercase tracking-wider font-mono">Phone</label>
+                  <label htmlFor="contact-phone" className="text-xs text-slate-400 uppercase tracking-wider font-mono">Phone</label>
                   <input
                     type="tel"
+                    id="contact-phone"
                     name="phone"
                     pattern="[\d\s+\-()]{10,}"
                     value={formData.phone}
@@ -359,9 +368,10 @@ const Contact = () => {
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs text-slate-500 uppercase tracking-wider font-mono">Message</label>
+                <label htmlFor="contact-message" className="text-xs text-slate-400 uppercase tracking-wider font-mono">Message</label>
                 <textarea
-                  name="message"
+                  id="contact-message"
+                    name="message"
                   required
                   rows={3}
                   maxLength={2000}
@@ -370,7 +380,7 @@ const Contact = () => {
                   className="w-full bg-transparent border-b border-white/20 py-1.5 text-sm text-white focus:border-white focus:outline-none transition-colors resize-none"
                   placeholder="Tell me about your project..."
                 />
-                <p className="text-[10px] text-slate-500 text-right">
+                <p className="text-[10px] text-slate-400 text-right">
                   {formData.message.length}/{MAX_MESSAGE_LENGTH}
                 </p>
               </div>

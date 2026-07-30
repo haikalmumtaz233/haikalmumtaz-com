@@ -5,6 +5,7 @@ import { X, Github, ExternalLink } from 'lucide-react';
 import { useLenis } from 'lenis/react';
 import type { Project } from '../../data/projects';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
 import { animatedProps } from '../../lib/motion';
 
 interface ProjectModalProps {
@@ -14,6 +15,7 @@ interface ProjectModalProps {
 
 const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
   const prefersReducedMotion = usePrefersReducedMotion();
+  const dialogRef = useFocusTrap<HTMLDivElement>(project !== null);
   const lenis = useLenis();
 
   const handleEscape = useCallback(
@@ -63,6 +65,11 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                 ? { duration: 0.2 }
                 : { type: 'spring', stiffness: 300, damping: 30 }
             }
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="project-modal-title"
+            tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
             className="relative z-10 w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl border border-white/10 bg-[#0a0a0a] shadow-2xl"
             style={{
@@ -91,7 +98,10 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
             </div>
 <div className="p-6 sm:p-8 space-y-5">
               <div>
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-monument font-black text-white tracking-tight leading-tight">
+                <h3
+                  id="project-modal-title"
+                  className="text-2xl sm:text-3xl md:text-4xl font-monument font-black text-white tracking-tight leading-tight"
+                >
                   {project.name}
                 </h3>
                 <p className="text-slate-400 text-sm sm:text-base font-light mt-1">
@@ -99,7 +109,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                 </p>
               </div>
 
-              <p className="text-slate-500 text-sm sm:text-base leading-relaxed">
+              <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
                 {project.description}
               </p>
 <div className="flex flex-wrap gap-2">

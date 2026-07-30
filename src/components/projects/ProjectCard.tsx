@@ -5,6 +5,7 @@ import type { Project } from '../../data/projects';
 import OptimizedImage from '../ui/OptimizedImage';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { animatedProps, revealEase } from '../../lib/motion';
+import { activateOnEnterOrSpace } from '../../lib/keyboard';
 
 interface ProjectCardProps {
   project: Project;
@@ -29,6 +30,10 @@ const ProjectCard = memo(({ project, index, onClick }: ProjectCardProps) => {
         },
       })}
       onClick={onClick}
+      onKeyDown={activateOnEnterOrSpace(onClick)}
+      role="button"
+      tabIndex={0}
+      aria-label={`Open details for ${project.name}`}
       className="group relative cursor-pointer rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden transition-all duration-300 h-full flex flex-col"
       style={
         {
@@ -75,7 +80,7 @@ const ProjectCard = memo(({ project, index, onClick }: ProjectCardProps) => {
           <h3 className="text-lg sm:text-xl font-monument font-black text-white tracking-tight leading-tight line-clamp-1">
             {project.name}
           </h3>
-          <p className="text-slate-500 text-xs sm:text-sm font-light mt-0.5 line-clamp-1">
+          <p className="text-slate-400 text-xs sm:text-sm font-light mt-0.5 line-clamp-1">
             {project.subtitle}
           </p>
         </div>

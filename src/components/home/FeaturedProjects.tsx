@@ -79,7 +79,7 @@ const FeaturedProjects = () => {
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-monument font-black tracking-tight text-white mb-1 sm:mb-2 uppercase">
                 FEATURED WORK
               </h2>
-              <p className="text-slate-500 text-sm sm:text-base md:text-lg 2xl:text-xl font-light">
+              <p className="text-slate-400 text-sm sm:text-base md:text-lg 2xl:text-xl font-light">
                 My best projects
               </p>
             </div>

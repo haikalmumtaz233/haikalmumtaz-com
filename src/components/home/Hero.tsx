@@ -131,7 +131,7 @@ const Hero = () => {
 
         <div className="flex-grow flex items-center justify-center">
           <div className="text-center px-4">
-            <h2 className="text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-[0.5em] text-slate-500 mb-4 sm:mb-6">
+            <h2 className="text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-[0.5em] text-slate-400 mb-4 sm:mb-6">
               MUHAMMAD RADITYA
             </h2>
 
@@ -174,7 +174,7 @@ const Hero = () => {
                     <span className="text-[11px] font-medium uppercase tracking-wider text-white/70">
                       Scroll
                     </span>
-                    <span className="text-[10px] font-normal uppercase tracking-widest text-slate-500">
+                    <span className="text-[10px] font-normal uppercase tracking-widest text-slate-400">
                       To Explore
                     </span>
                   </div>

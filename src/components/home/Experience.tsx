@@ -94,7 +94,7 @@ const ExperienceItem = ({ experience, index, hoveredIndex, setHoveredIndex }: Ex
         >
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 md:gap-8">
           <div className="md:col-span-3">
-            <div className="font-mono text-slate-500 text-sm tracking-wider">
+            <div className="font-mono text-slate-400 text-sm tracking-wider">
               <div className="text-white font-bold text-base md:text-lg 2xl:text-xl">{experience.year}</div>
               <div className="mt-1 text-xs md:text-sm">{experience.period}</div>
             </div>
@@ -106,7 +106,7 @@ const ExperienceItem = ({ experience, index, hoveredIndex, setHoveredIndex }: Ex
                 {experience.company}
               </h3>
               {experience.subtitle && (
-                <p className="text-sm md:text-base text-slate-500 font-medium">
+                <p className="text-sm md:text-base text-slate-400 font-medium">
                   {experience.subtitle}
                 </p>
               )}

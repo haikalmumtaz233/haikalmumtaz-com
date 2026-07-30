@@ -19,7 +19,7 @@ const CategoryFilter = ({ categories, selected, onSelect }: CategoryFilterProps)
             className={`relative px-4 py-2 text-xs sm:text-sm font-medium rounded-full transition-colors duration-300 ${
               isActive
                 ? 'text-white'
-                : 'text-slate-500 hover:text-slate-300'
+                : 'text-slate-400 hover:text-slate-300'
             }`}
           >
 {isActive && (
