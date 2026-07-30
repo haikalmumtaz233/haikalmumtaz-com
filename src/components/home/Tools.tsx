@@ -56,52 +56,19 @@ const Tools = () => {
       </div>
 
       <div className="w-full overflow-hidden relative flex">
-
         <motion.div
-          initial={{ x: "-100%" }}
-          animate={{ x: "0%" }}
+          animate={{ x: ["0%", "-50%"] }}
           transition={{
-            duration: 20,
+            duration: 40,
             repeat: Infinity,
             ease: "linear"
           }}
-          className="flex gap-4 pr-4 flex-shrink-0"
+          className="flex flex-shrink-0"
         >
           {toolsTrack.map((tool, index) => (
             <div
-              key={`t1-${index}`}
-              className="w-28 h-28 md:w-32 md:h-32 2xl:w-36 2xl:h-36 flex flex-col items-center justify-center gap-2 flex-shrink-0 hover:bg-white/5 rounded-xl transition-all duration-300 group cursor-pointer"
-            >
-              <div className="w-8 h-8 md:w-10 md:h-10 2xl:w-12 2xl:h-12 flex items-center justify-center">
-                <img
-                  src={tool.logo}
-                  alt={tool.name}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-full object-contain filter grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
-                />
-              </div>
-              <span className="text-xs md:text-sm 2xl:text-base font-mono text-slate-400 group-hover:text-white transition-colors duration-300 text-center px-2">
-                {tool.name}
-              </span>
-            </div>
-          ))}
-        </motion.div>
-
-        <motion.div
-          initial={{ x: "-100%" }}
-          animate={{ x: "0%" }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          className="flex gap-4 pr-4 flex-shrink-0"
-        >
-          {toolsTrack.map((tool, index) => (
-            <div
-              key={`t2-${index}`}
-              className="w-28 h-28 md:w-32 md:h-32 2xl:w-36 2xl:h-36 flex flex-col items-center justify-center gap-2 flex-shrink-0 hover:bg-white/5 rounded-xl transition-all duration-300 group cursor-pointer"
+              key={`${tool.name}-${index}`}
+              className="w-28 h-28 md:w-32 md:h-32 2xl:w-36 2xl:h-36 mr-4 flex flex-col items-center justify-center gap-2 flex-shrink-0 hover:bg-white/5 rounded-xl transition-all duration-300 group cursor-pointer"
             >
               <div className="w-8 h-8 md:w-10 md:h-10 2xl:w-12 2xl:h-12 flex items-center justify-center">
                 <img

@@ -78,17 +78,18 @@ const Hero = () => {
                 delay: 0.2
               }}
             >
-              <motion.h1
+              <motion.span
+                aria-hidden="true"
                 initial={{ y: -100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{
                   duration: 0.8,
                   ease: [0.43, 0.13, 0.23, 0.96]
                 }}
-                className="font-sans font-black text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-black uppercase tracking-tighter leading-[0.8]"
+                className="block font-sans font-black text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-black uppercase tracking-tighter leading-[0.8]"
               >
                 HAIKAL
-              </motion.h1>
+              </motion.span>
             </motion.div>
 
             <motion.div
@@ -101,17 +102,18 @@ const Hero = () => {
                 delay: 0.2
               }}
             >
-              <motion.h1
+              <motion.span
+                aria-hidden="true"
                 initial={{ y: 100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{
                   duration: 0.8,
                   ease: [0.43, 0.13, 0.23, 0.96]
                 }}
-                className="font-sans font-black text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-black uppercase tracking-tighter leading-[0.8]"
+                className="block font-sans font-black text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-black uppercase tracking-tighter leading-[0.8]"
               >
                 MUMTAZ
-              </motion.h1>
+              </motion.span>
             </motion.div>
           </>
         )}

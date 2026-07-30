@@ -5,16 +5,27 @@ import OptimizedImage from '../ui/OptimizedImage';
 
 const FavoriteMoments = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [horizontalDistance, setHorizontalDistance] = useState(0);
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+    const track = trackRef.current;
+    if (!track) return;
+
+    const measureOverflow = () => {
+      setHorizontalDistance(Math.max(0, track.scrollWidth - window.innerWidth));
     };
 
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    measureOverflow();
+
+    const resizeObserver = new ResizeObserver(measureOverflow);
+    resizeObserver.observe(track);
+    window.addEventListener('resize', measureOverflow);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', measureOverflow);
+    };
   }, []);
 
   const { scrollYProgress } = useScroll({
@@ -22,9 +33,7 @@ const FavoriteMoments = () => {
     offset: ['start start', 'end end'],
   });
 
-  const xDesktop = useTransform(scrollYProgress, [0, 1], ['0%', '-78%']);
-  const xMobile = useTransform(scrollYProgress, [0, 1], ['0%', '-88%']);
-  const x = isMobile ? xMobile : xDesktop;
+  const x = useTransform(scrollYProgress, [0, 1], [0, -horizontalDistance]);
 
   const titleVariants = {
     hidden: { opacity: 0 },
@@ -91,10 +100,12 @@ const FavoriteMoments = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-transparent h-[400vh]"
+      className="relative bg-transparent"
+      style={{ height: `calc(100vh + ${horizontalDistance}px)` }}
     >
       <div className="sticky top-0 h-screen overflow-hidden flex items-center">
         <motion.div
+          ref={trackRef}
           style={{ x }}
           className="flex items-stretch gap-6 md:gap-16 lg:gap-24 2xl:gap-32 px-4 md:px-12 pr-12 md:pr-24 2xl:pr-32"
         >

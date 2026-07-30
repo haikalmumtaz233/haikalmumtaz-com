@@ -152,14 +152,8 @@ const Background = () => {
                     this.twinkleSpeed = -this.twinkleSpeed;
                 }
 
-                mouseX += (targetMouseX - mouseX) * 0.05;
-                mouseY += (targetMouseY - mouseY) * 0.05;
                 this.x -= mouseX * this.z * 0.05;
                 this.y -= mouseY * this.z * 0.05;
-
-                const scrollDiff = targetScrollY - scrollY;
-                scrollVelocity += (scrollDiff - scrollVelocity) * 0.1;
-                scrollY += scrollVelocity;
                 this.y += scrollVelocity * this.z * 0.2;
 
                 this.y -= 0.2 * this.z;
@@ -186,8 +180,18 @@ const Background = () => {
             stars.push(new Star());
         }
 
+        const advanceParallax = () => {
+            mouseX += (targetMouseX - mouseX) * 0.05;
+            mouseY += (targetMouseY - mouseY) * 0.05;
+
+            const scrollDiff = targetScrollY - scrollY;
+            scrollVelocity += (scrollDiff - scrollVelocity) * 0.1;
+            scrollY += scrollVelocity;
+        };
+
         const animate = () => {
             ctx.clearRect(0, 0, width, height);
+            advanceParallax();
             stars.forEach(star => {
                 star.update();
                 star.draw();

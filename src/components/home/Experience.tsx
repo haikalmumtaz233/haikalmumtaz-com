@@ -37,7 +37,7 @@ const Experience = () => {
               <motion.div
                 variants={titleVariants}
                 initial="hidden"
-                animate="visible"
+                whileInView="visible"
                 viewport={{ once: true, margin: "-100px" }}
               >
                 <h2 className="text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none">
