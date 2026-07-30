@@ -23,6 +23,10 @@ export default {
         sans: ['Plus Jakarta Sans Variable', 'Plus Jakarta Sans', 'Inter', 'sans-serif'],
         monument: ['Monument Extended', 'sans-serif'],
       },
+      spacing: {
+        rail: '3rem',
+        'rail-lg': '4.5rem',
+      },
       transitionDuration: Object.fromEntries(
         Object.entries(durationsMs).map(([name, value]) => [name, `${value}ms`])
       ),

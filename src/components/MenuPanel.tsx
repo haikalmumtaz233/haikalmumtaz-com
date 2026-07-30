@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, Github, Linkedin, Instagram } from 'lucide-react';
+import { Github, Linkedin, Instagram } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { useFocusTrap } from '../hooks/useFocusTrap';
@@ -20,38 +20,42 @@ const socialIcons: Record<string, typeof Github> = {
   Instagram: Instagram,
 };
 
-const MENU_PANEL_ID = 'site-menu-panel';
+export const MENU_PANEL_ID = 'site-menu-panel';
 
-const Navbar = () => {
+const LETTER_DURATION = 0.25;
+const LETTER_STAGGER = 0.025;
+
+interface MenuPanelProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
   const prefersReducedMotion = usePrefersReducedMotion();
-  const [isOpen, setIsOpen] = useState(false);
   const panelRef = useFocusTrap<HTMLDivElement>(isOpen);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const toggleMenu = () => setIsOpen(!isOpen);
-
   const handleNavigation = (link: typeof navLinks[0]) => {
-    setIsOpen(false);
-    
+    onClose();
+
     if (link.type === 'route') {
       navigate(link.path);
-    } else {
-      if (location.pathname !== '/') {
-        navigate('/');
-        setTimeout(() => {
-          const element = document.querySelector(link.path);
-          element?.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-      } else {
+      return;
+    }
+
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
         const element = document.querySelector(link.path);
         element?.scrollIntoView({ behavior: 'smooth' });
-      }
+      }, 100);
+      return;
     }
-  };
 
-  const DURATION = 0.25;
-  const STAGGER = 0.025;
+    const element = document.querySelector(link.path);
+    element?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : 'unset';
@@ -62,50 +66,15 @@ const Navbar = () => {
     if (!isOpen) return;
 
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setIsOpen(false);
+      if (event.key === 'Escape') onClose();
     };
 
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
-  }, [isOpen]);
+  }, [isOpen, onClose]);
 
   return (
     <>
-      <motion.button
-        {...animatedProps(prefersReducedMotion, {
-          initial: { opacity: 0, scale: 0.8 },
-          animate: { opacity: 1, scale: 1 },
-          transition: { delay: 0.5, duration: 0.4 },
-        })}
-        onClick={toggleMenu}
-        className="fixed top-6 right-6 sm:top-8 sm:right-8 z-50 w-12 h-12 sm:w-14 sm:h-14 backdrop-blur-md bg-white/10 border border-white/20 rounded-full flex items-center justify-center hover:scale-110 hover:bg-white/20 transition-all duration-300 cursor-pointer"
-        aria-label={isOpen ? 'Close menu' : 'Open menu'}
-        aria-expanded={isOpen}
-        aria-controls={MENU_PANEL_ID}
-      >
-        <AnimatePresence mode="wait">
-          {isOpen ? (
-            <motion.div
-              key="close"
-              initial={{ rotate: prefersReducedMotion ? 0 : -90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: prefersReducedMotion ? 0 : 90, opacity: 0 }}
-            >
-              <X className="w-6 h-6 text-white" />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="menu"
-              initial={{ rotate: prefersReducedMotion ? 0 : 90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: prefersReducedMotion ? 0 : -90, opacity: 0 }}
-            >
-              <Menu className="w-6 h-6 text-white" />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.button>
-
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -113,7 +82,7 @@ const Navbar = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            onClick={() => setIsOpen(false)}
+            onClick={onClose}
             className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
           />
         )}
@@ -180,8 +149,8 @@ const Navbar = () => {
                                   hovered: { y: "-100%" }
                                 }}
                                 transition={{
-                                  duration: DURATION,
-                                  delay: STAGGER * i
+                                  duration: LETTER_DURATION,
+                                  delay: LETTER_STAGGER * i
                                 }}
                                 className="inline-block"
                                 key={i}
@@ -199,8 +168,8 @@ const Navbar = () => {
                                   hovered: { y: 0 }
                                 }}
                                 transition={{
-                                  duration: DURATION,
-                                  delay: STAGGER * i
+                                  duration: LETTER_DURATION,
+                                  delay: LETTER_STAGGER * i
                                 }}
                                 className="inline-block text-purple-400"
                                 key={i}
@@ -267,4 +236,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default MenuPanel;
