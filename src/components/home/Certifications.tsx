@@ -12,6 +12,7 @@ import {
   staggerContainerVariants,
 } from '../../lib/motion';
 import { activateOnEnterOrSpace } from '../../lib/keyboard';
+import { accents } from '../../data/categoryAccents';
 
 const Certifications = () => {
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -224,7 +225,14 @@ const CertificateCard = ({
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 p-4 lg:p-5 2xl:p-6 space-y-2">
-          <span className="inline-block px-2.5 py-1 bg-cyan-500/10 backdrop-blur-md rounded border border-cyan-400/30 text-[10px] font-mono text-cyan-400 tracking-wide">
+          <span
+            className="inline-block px-2.5 py-1 backdrop-blur-md rounded border text-[10px] font-mono tracking-wide"
+            style={{
+              backgroundColor: `${accents.cyan}1a`,
+              borderColor: `${accents.cyan}4d`,
+              color: accents.cyan,
+            }}
+          >
             {cert.date}
           </span>
 
