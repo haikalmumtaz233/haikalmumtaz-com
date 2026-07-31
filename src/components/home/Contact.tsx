@@ -4,6 +4,7 @@ import { ArrowUpRight, Mail, Instagram, Linkedin, Github, CheckCircle, XCircle, 
 import emailjs from '@emailjs/browser';
 import DOMPurify from 'dompurify';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import SectionArrival from '../../journey/SectionArrival';
 import { revealEase } from '../../lib/motion';
 import { profile, socialProfiles } from '../../data/profile';
 
@@ -257,10 +258,12 @@ const Contact = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 2xl:gap-24">
 
           <div className="flex flex-col justify-center">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black text-white uppercase tracking-tight leading-none mb-4 sm:mb-6">
-              Let's work <br />
-              together
-            </h2>
+            <SectionArrival>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black text-white uppercase tracking-tight leading-none mb-4 sm:mb-6">
+                Let's work <br />
+                together
+              </h2>
+            </SectionArrival>
 
             <p className="text-slate-400 text-sm sm:text-base 2xl:text-lg mb-6 sm:mb-8 max-w-md">
               Have a project in mind or just want to say hi? I'm always open to discussing new projects, or opportunities to be part of your visions.

@@ -68,7 +68,7 @@ const Hero = () => {
     <section
       id="hero"
       ref={sectionRef}
-      className="relative h-screen max-h-screen bg-transparent text-white overflow-hidden flex flex-col items-center justify-between py-8 sm:py-12 px-4 sm:px-6"
+      className="relative h-[100svh] max-h-[100svh] bg-transparent text-white overflow-hidden flex flex-col items-center justify-between py-8 sm:py-12 px-4 sm:px-6"
     >
         <div className="flex-shrink-0 h-20" />
 

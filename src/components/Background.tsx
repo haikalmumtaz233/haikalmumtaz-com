@@ -1,9 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
+import { useJourney } from '../journey/useJourney';
 
 const STAR_DENSITY = 8000;
 const SCROLL_PARALLAX = 0.08;
+const ARRIVAL_START = 0.75;
+const ARRIVAL_DRIFT = 0.3;
 
 interface Star {
     x: number;
@@ -21,11 +24,16 @@ const wrap = (value: number, max: number) => ((value % max) + max) % max;
 const Background = () => {
     const prefersReducedMotion = usePrefersReducedMotion();
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const { progress } = useJourney();
     const { scrollYProgress } = useScroll();
 
     const orb1Y = useTransform(scrollYProgress, [0, 1], ['0vh', '50vh']);
     const orb2Y = useTransform(scrollYProgress, [0, 1], ['0vh', '30vh']);
     const orb3Y = useTransform(scrollYProgress, [0, 1], ['0vh', '40vh']);
+
+    const orb1Opacity = useTransform(progress, [0, 0.45, 1], [0.4, 0.22, 0.15]);
+    const orb2Opacity = useTransform(progress, [0, 0.45, 1], [0.18, 0.4, 0.22]);
+    const orb3Opacity = useTransform(progress, [0, 0.55, 1], [0.15, 0.22, 0.4]);
 
     const idleDrift = (range: number, duration: number) =>
         prefersReducedMotion
@@ -134,6 +142,12 @@ const Background = () => {
             mouseY += (targetMouseY - mouseY) * 0.05;
             smoothScrollY += (window.scrollY - smoothScrollY) * 0.08;
 
+            const arrival = Math.min(
+                1,
+                Math.max(0, (progress.get() - ARRIVAL_START) / (1 - ARRIVAL_START))
+            );
+            const driftScale = 1 - (1 - ARRIVAL_DRIFT) * arrival;
+
             for (const star of stars) {
                 star.alpha += star.twinkleSpeed;
                 if (star.alpha > 1 || star.alpha < star.baseAlpha - 0.15) {
@@ -142,7 +156,7 @@ const Background = () => {
 
                 star.x -= mouseX * star.depth * 0.05;
                 star.y -= mouseY * star.depth * 0.05;
-                star.y -= 0.2 * star.depth;
+                star.y -= 0.2 * star.depth * driftScale;
 
                 drawStar(star);
             }
@@ -160,7 +174,7 @@ const Background = () => {
             window.removeEventListener('mousemove', handleMouseMove);
             cancelAnimationFrame(animationFrameId);
         };
-    }, [prefersReducedMotion]);
+    }, [prefersReducedMotion, progress]);
 
     return (
         <div className="fixed inset-0 z-[-1] bg-[#0a0a0a]">
@@ -176,8 +190,11 @@ const Background = () => {
                 >
                     <motion.div
                         {...idleDrift(50, 15)}
-                        className="w-[600px] h-[600px] rounded-full bg-purple-600 mix-blend-screen filter blur-[100px] opacity-40"
-                        style={{ willChange: 'transform' }}
+                        className="w-[600px] h-[600px] rounded-full bg-purple-600 mix-blend-screen filter blur-[100px]"
+                        style={{
+                            opacity: prefersReducedMotion ? 0.4 : orb1Opacity,
+                            willChange: 'transform',
+                        }}
                     />
                 </motion.div>
 
@@ -187,8 +204,11 @@ const Background = () => {
                 >
                     <motion.div
                         {...idleDrift(40, 18)}
-                        className="w-[400px] h-[400px] rounded-full bg-cyan-500 mix-blend-screen filter blur-[100px] opacity-40"
-                        style={{ willChange: 'transform' }}
+                        className="w-[400px] h-[400px] rounded-full bg-cyan-500 mix-blend-screen filter blur-[100px]"
+                        style={{
+                            opacity: prefersReducedMotion ? 0.4 : orb2Opacity,
+                            willChange: 'transform',
+                        }}
                     />
                 </motion.div>
 
@@ -198,8 +218,11 @@ const Background = () => {
                 >
                     <motion.div
                         {...idleDrift(60, 12)}
-                        className="w-[250px] h-[250px] rounded-full bg-fuchsia-500 mix-blend-screen filter blur-[100px] opacity-40"
-                        style={{ willChange: 'transform' }}
+                        className="w-[250px] h-[250px] rounded-full bg-fuchsia-500 mix-blend-screen filter blur-[100px]"
+                        style={{
+                            opacity: prefersReducedMotion ? 0.4 : orb3Opacity,
+                            willChange: 'transform',
+                        }}
                     />
                 </motion.div>
             </div>

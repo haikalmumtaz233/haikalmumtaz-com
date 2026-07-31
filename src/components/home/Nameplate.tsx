@@ -1,10 +1,9 @@
 import { motion, useTransform, type MotionValue } from 'framer-motion';
 import { useFittedTextSize } from '../../hooks/useFittedTextSize';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import { easing, seconds } from '../../lib/motion';
+import { CONDENSED_SCALE, easing, seconds } from '../../lib/motion';
 
 const NAMEPLATE_TEXT = 'HAIKAL MUMTAZ';
-const CONDENSED_SCALE = 0.62;
 
 interface NameplateProps {
   scrollProgress: MotionValue<number>;

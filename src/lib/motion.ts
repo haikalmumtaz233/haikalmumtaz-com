@@ -5,6 +5,10 @@ export const easing = easingCurves;
 
 export const seconds = (name: keyof typeof durationsMs) => durationsMs[name] / 1000;
 
+export const CONDENSED_SCALE = 0.62;
+
+export const ARRIVAL_DROP = 40;
+
 export const revealEase = easingCurves.smooth;
 
 const noMotion: Variants = { hidden: {}, visible: {} };

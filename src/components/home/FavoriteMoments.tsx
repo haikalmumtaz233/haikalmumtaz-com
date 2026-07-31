@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { moments } from '../../data/moments';
 import OptimizedImage from '../ui/OptimizedImage';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import SectionArrival from '../../journey/SectionArrival';
 import { maskedWordVariants, staggerContainerVariants } from '../../lib/motion';
 
 const withoutFixedWidth = (className: string) =>
@@ -89,12 +90,14 @@ const FavoriteMoments = () => {
 
   const heading = (
     <>
-      <h2 className="text-3xl md:text-4xl lg:text-4xl 2xl:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none">
-        Favorite
-      </h2>
-      <h2 className="text-3xl md:text-4xl lg:text-4xl 2xl:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none">
-        Moments
-      </h2>
+      <SectionArrival>
+        <h2 className="text-3xl md:text-4xl lg:text-4xl 2xl:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none">
+          Favorite
+        </h2>
+        <h2 className="text-3xl md:text-4xl lg:text-4xl 2xl:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none">
+          Moments
+        </h2>
+      </SectionArrival>
       <p className="text-slate-400 text-sm md:text-base 2xl:text-xl max-w-md font-light mt-4 md:mt-6">
         A collection of moments that shaped my journey through tech, education, and personal growth.
       </p>

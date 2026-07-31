@@ -58,8 +58,14 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
   };
 
   useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : 'unset';
-    return () => { document.body.style.overflow = 'unset'; };
+    if (!isOpen) return;
+
+    const previous = document.body.style.overflowY;
+    document.body.style.overflowY = 'hidden';
+
+    return () => {
+      document.body.style.overflowY = previous;
+    };
   }, [isOpen]);
 
   useEffect(() => {
