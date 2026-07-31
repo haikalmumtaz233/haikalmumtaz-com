@@ -6,6 +6,7 @@ import { projects } from '../../data/projects';
 import type { Project } from '../../data/projects';
 import ProjectModal from '../projects/ProjectModal';
 import FeaturedCard from './FeaturedCard';
+import SectionArrival from '../../journey/SectionArrival';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 
 const FeaturedProjects = () => {
@@ -85,9 +86,11 @@ const FeaturedProjects = () => {
         <div className="mb-2 sm:mb-3 md:mb-4">
           <div className="flex items-center justify-between flex-wrap gap-3">
             <div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-monument font-black tracking-tight text-white mb-1 sm:mb-2 uppercase">
-                FEATURED WORK
-              </h2>
+              <SectionArrival>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-monument font-black tracking-tight text-white mb-1 sm:mb-2 uppercase">
+                  FEATURED WORK
+                </h2>
+              </SectionArrival>
               <p className="text-slate-400 text-sm sm:text-base md:text-lg 2xl:text-xl font-light">
                 My best projects
               </p>

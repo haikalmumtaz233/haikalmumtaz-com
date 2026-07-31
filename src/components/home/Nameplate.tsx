@@ -1,10 +1,11 @@
 import { motion, useTransform, type MotionValue } from 'framer-motion';
 import { useFittedTextSize } from '../../hooks/useFittedTextSize';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import { easing, seconds } from '../../lib/motion';
+import { CONDENSED_SCALE, DEPARTURE_LIFT, easing, seconds } from '../../lib/motion';
 
 const NAMEPLATE_TEXT = 'HAIKAL MUMTAZ';
-const CONDENSED_SCALE = 0.62;
+const DEPARTURE_BLUR = 6;
 
 interface NameplateProps {
   scrollProgress: MotionValue<number>;
@@ -12,11 +13,18 @@ interface NameplateProps {
 
 const Nameplate = ({ scrollProgress }: NameplateProps) => {
   const prefersReducedMotion = usePrefersReducedMotion();
+  const allowBlur = useMediaQuery('(min-width: 768px)');
   const { containerRef, measureRef, fittedSize, referenceFontSize } =
     useFittedTextSize(NAMEPLATE_TEXT);
 
   const collapseScaleX = useTransform(scrollProgress, [0, 1], [1, CONDENSED_SCALE]);
   const collapseOpacity = useTransform(scrollProgress, [0, 0.85], [1, 0]);
+  const collapseY = useTransform(scrollProgress, [0, 1], [0, DEPARTURE_LIFT]);
+  const collapseBlur = useTransform(
+    scrollProgress,
+    [0, 1],
+    ['blur(0px)', `blur(${DEPARTURE_BLUR}px)`]
+  );
 
   const hasMeasured = fittedSize > 0;
 
@@ -42,7 +50,10 @@ const Nameplate = ({ scrollProgress }: NameplateProps) => {
         style={{
           scaleX: prefersReducedMotion ? 1 : collapseScaleX,
           opacity: prefersReducedMotion ? 1 : collapseOpacity,
+          y: prefersReducedMotion ? 0 : collapseY,
+          filter: prefersReducedMotion || !allowBlur ? 'none' : collapseBlur,
           transformOrigin: 'center',
+          willChange: 'transform, opacity, filter',
         }}
       >
         <motion.h1

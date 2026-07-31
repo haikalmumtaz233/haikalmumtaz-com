@@ -5,6 +5,7 @@ import SiteRail from './components/SiteRail';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Background from './components/Background';
+import JourneyProvider from './journey/JourneyProvider';
 
 const Projects = lazy(() => import('./pages/Projects'));
 const NotFound = lazy(() => import('./pages/NotFound'));
@@ -60,7 +61,7 @@ function ScrollManager() {
 
 function AppShell() {
   return (
-    <>
+    <JourneyProvider>
       <TechIconSprite />
       <Background />
       <ScrollManager />
@@ -77,7 +78,7 @@ function AppShell() {
         </main>
         <Footer />
       </div>
-    </>
+    </JourneyProvider>
   );
 }
 
