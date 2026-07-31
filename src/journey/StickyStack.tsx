@@ -10,9 +10,14 @@ import { motion, useTransform } from 'framer-motion';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { useJourney } from './useJourney';
 
+const ENTRY_SCALE = 1.03;
 const RECEDE_SCALE = 0.94;
 const RECEDE_LIFT = -32;
+const PARALLAX_DRIFT = 14;
 const FADE_SPAN = 0.5;
+const EDGE_OPACITY = 0.9;
+const EDGE_HOLD = 0.7;
+const PIN_TOLERANCE = 2;
 
 interface StackRange {
     start: number;
@@ -20,7 +25,12 @@ interface StackRange {
     pinned: boolean;
 }
 
-const StackContext = createContext<StackRange[]>([]);
+interface StackMetrics {
+    ranges: StackRange[];
+    viewport: number;
+}
+
+const StackContext = createContext<StackMetrics>({ ranges: [], viewport: 0 });
 
 interface StickyStackProps {
     children: ReactNode;
@@ -29,30 +39,38 @@ interface StickyStackProps {
 
 export const StickyStack = ({ children, className }: StickyStackProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const [ranges, setRanges] = useState<StackRange[]>([]);
+    const [metrics, setMetrics] = useState<StackMetrics>({ ranges: [], viewport: 0 });
 
     useEffect(() => {
         const node = containerRef.current;
         if (!node) return;
+
+        let lastWidth = window.innerWidth;
 
         const measure = () => {
             const viewport = window.innerHeight;
             const items = Array.from(node.children) as HTMLElement[];
             let cursor = node.getBoundingClientRect().top + window.scrollY;
 
-            setRanges(
-                items.map((item, index) => {
-                    const height = item.offsetHeight;
-                    const start = cursor;
-                    cursor += height;
+            const ranges = items.map((item, index) => {
+                const height = item.offsetHeight;
+                const start = cursor;
+                cursor += height;
 
-                    return {
-                        start,
-                        end: start + height,
-                        pinned: height <= viewport && index < items.length - 1,
-                    };
-                })
-            );
+                return {
+                    start,
+                    end: start + height,
+                    pinned: height <= viewport + PIN_TOLERANCE && index < items.length - 1,
+                };
+            });
+
+            setMetrics({ ranges, viewport });
+        };
+
+        const handleResize = () => {
+            if (window.innerWidth === lastWidth) return;
+            lastWidth = window.innerWidth;
+            measure();
         };
 
         measure();
@@ -60,16 +78,16 @@ export const StickyStack = ({ children, className }: StickyStackProps) => {
         const observer = new ResizeObserver(measure);
         observer.observe(node);
         Array.from(node.children).forEach((child) => observer.observe(child));
-        window.addEventListener('resize', measure);
+        window.addEventListener('resize', handleResize);
 
         return () => {
             observer.disconnect();
-            window.removeEventListener('resize', measure);
+            window.removeEventListener('resize', handleResize);
         };
     }, []);
 
     return (
-        <StackContext.Provider value={ranges}>
+        <StackContext.Provider value={metrics}>
             <div ref={containerRef} className={className}>
                 {children}
             </div>
@@ -85,27 +103,56 @@ interface StickyStackItemProps {
 
 export const StickyStackItem = ({ index, id, children }: StickyStackItemProps) => {
     const prefersReducedMotion = usePrefersReducedMotion();
-    const ranges = useContext(StackContext);
+    const { ranges, viewport } = useContext(StackContext);
     const { scrollY } = useJourney();
 
     const range = ranges[index];
+    const still = prefersReducedMotion || !range;
+    const pinned = Boolean(range?.pinned) && !still;
+    const covering = Boolean(ranges[index - 1]?.pinned) && !still;
+
+    const span = Math.max(viewport, 1);
     const start = range?.start ?? 0;
-    const end = range ? Math.max(range.end, range.start + 1) : 1;
+    const end = Math.max(range?.end ?? 1, start + 1);
+    const enterStart = start - span;
     const fadeEnd = start + (end - start) * FADE_SPAN;
-    const active = Boolean(range?.pinned) && !prefersReducedMotion;
 
-    const scale = useTransform(scrollY, [start, end], [1, RECEDE_SCALE]);
-    const opacity = useTransform(scrollY, [start, fadeEnd], [1, 0]);
-    const y = useTransform(scrollY, [start, end], [0, RECEDE_LIFT]);
+    const scale = useTransform(
+        scrollY,
+        pinned ? [enterStart, start, end] : [enterStart, start],
+        pinned
+            ? [covering ? ENTRY_SCALE : 1, 1, RECEDE_SCALE]
+            : [covering ? ENTRY_SCALE : 1, 1]
+    );
+    const opacity = useTransform(scrollY, [start, fadeEnd], pinned ? [1, 0] : [1, 1]);
+    const y = useTransform(scrollY, [start, end], pinned ? [0, RECEDE_LIFT] : [0, 0]);
+    const contentY = useTransform(scrollY, [start, end], pinned ? [0, PARALLAX_DRIFT] : [0, 0]);
+    const edgeOpacity = useTransform(
+        scrollY,
+        [enterStart, enterStart + span * EDGE_HOLD, start],
+        [EDGE_OPACITY, EDGE_OPACITY, 0]
+    );
 
-    if (!active) {
-        return <div id={id}>{children}</div>;
+    if (still) {
+        return (
+            <div id={id} className="relative">
+                {children}
+            </div>
+        );
     }
 
     return (
-        <div id={id} className="sticky top-0">
+        <div id={id} className={pinned ? 'sticky top-0' : 'relative'}>
+            {covering && (
+                <motion.div
+                    aria-hidden="true"
+                    style={{ opacity: edgeOpacity }}
+                    className="pointer-events-none absolute inset-x-0 top-0 h-16 sm:h-24 md:h-36 bg-gradient-to-b from-[#0a0a0a] via-[#0a0a0a]/55 to-transparent"
+                />
+            )}
+
             <motion.div style={{ scale, opacity, y, transformOrigin: 'center top' }}>
-                {children}
+                <motion.div style={{ y: contentY }}>{children}</motion.div>
             </motion.div>
         </div>
     );

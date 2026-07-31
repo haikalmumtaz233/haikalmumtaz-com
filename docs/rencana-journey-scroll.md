@@ -338,6 +338,26 @@ Section memilih sendiri apakah ikut menumpuk. `StickyStack` mengukur tinggi tiap
 
 Latar bintang sengaja dibiarkan tembus. Kartu tumpukan yang benar-benar buram akan menutup starfield, dan itu justru membuang identitas visual situs ini. Karena itu section yang mundur diberi peredupan sampai habis sebelum section berikutnya benar-benar menutupinya, bukan ditutup dengan panel buram.
 
+Tiga mekanisme tambahan menyusul, semuanya digantung pada satu syarat: **section sebelumnya sedang menempel.** Kalau tidak ada yang menempel, tidak ada yang ditimpa, jadi tidak ada yang perlu dianimasikan.
+
+| Mekanisme | Milik | Aktif saat |
+|---|---|---|
+| Bibir kartu | Section yang masuk | Section sebelumnya menempel |
+| Skala masuk `1.03 → 1` | Section yang masuk | Section sebelumnya menempel |
+| Parallax isi `0 → +14px` | Section yang menempel | Section itu sendiri menempel |
+
+Bibir kartu digambar **di belakang** isi section, bukan di atasnya. Kalau di atas, gradiennya akan meredupkan judul section yang baru masuk, terutama di mobile yang padding atasnya cuma 32px sementara bibirnya 64px.
+
+### Kenapa mobile dapat lebih sedikit
+
+Menempel hanya masuk akal untuk section yang muat satu layar. Kalau section lebih tinggi dari layar lalu dipaksa menempel di `top: 0`, bagian bawahnya tidak akan pernah bisa dibaca. Di layar sempit, lebih banyak section yang jadi tinggi, jadi lebih sedikit yang menempel.
+
+Itu perilaku yang benar, bukan celah. Dua section yang sama-sama tidak menempel tidak pernah saling menimpa, jadi memberi mereka bibir kartu justru salah: akan muncul pita gelap yang tidak menutupi apa pun.
+
+Satu hal yang harus diperbaiki supaya mobile tetap dapat transisi: Hero dulu memakai `h-screen`. Di iOS Safari `100vh` mengacu ke tinggi layar **tanpa** address bar, jadi Hero selalu lebih tinggi dari `window.innerHeight` saat address bar tampil, dan tidak pernah lolos cek menempel. Diganti ke `h-[100svh]` supaya Hero selalu muat, dan transisi Hero ke Projects tetap hidup di HP.
+
+`window.resize` juga hanya memicu pengukuran ulang kalau **lebarnya** berubah. Di HP, menyembunyikan address bar mengubah tinggi viewport terus-menerus; kalau itu dipakai mengukur ulang, keputusan menempel bisa berbalik di tengah scroll dan layout melompat.
+
 ---
 
 ## Catatan eksekusi
