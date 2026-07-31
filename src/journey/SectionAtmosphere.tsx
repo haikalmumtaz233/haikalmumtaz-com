@@ -1,14 +1,19 @@
 const layers = [
-    'radial-gradient(125% 62% at 50% 96%, rgba(124, 58, 237, 0.30), transparent 68%)',
+    'radial-gradient(120% 62% at 50% 60%, rgba(124, 58, 237, 0.32), transparent 70%)',
     'radial-gradient(70% 45% at 50% 4%, rgba(34, 211, 238, 0.12), transparent 66%)',
-    'linear-gradient(to top, rgba(168, 85, 247, 0.10), transparent 55%)',
 ];
+
+const fade = 'linear-gradient(to bottom, #000 0%, #000 52%, transparent 100%)';
 
 const SectionAtmosphere = () => (
     <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 overflow-hidden"
-        style={{ backgroundImage: layers.join(', ') }}
+        style={{
+            backgroundImage: layers.join(', '),
+            WebkitMaskImage: fade,
+            maskImage: fade,
+        }}
     />
 );
 
