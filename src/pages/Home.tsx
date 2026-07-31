@@ -6,12 +6,13 @@ import Tools from '../components/home/Tools';
 import Certifications from '../components/home/Certifications';
 import FavoriteMoments from '../components/home/FavoriteMoments';
 import Contact from '../components/home/Contact';
+import SectionAtmosphere from '../journey/SectionAtmosphere';
 import { StickyStack, StickyStackItem } from '../journey/StickyStack';
 
 const Home = () => {
   return (
     <StickyStack className="relative z-10">
-      <StickyStackItem index={0}>
+      <StickyStackItem index={0} pin atmosphere={<SectionAtmosphere variant="departure" />}>
         <Hero />
       </StickyStackItem>
 
@@ -31,7 +32,12 @@ const Home = () => {
         <Tools />
       </StickyStackItem>
 
-      <StickyStackItem index={5} id="certifications">
+      <StickyStackItem
+        index={5}
+        id="certifications"
+        pin
+        atmosphere={<SectionAtmosphere variant="record" />}
+      >
         <Certifications />
       </StickyStackItem>
 

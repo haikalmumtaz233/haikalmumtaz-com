@@ -65,7 +65,7 @@ function AppShell() {
       <TechIconSprite />
       <Background />
       <ScrollManager />
-      <div className="min-h-screen flex flex-col pb-16 lg:pb-0 lg:pl-rail-lg">
+      <div className="min-h-screen flex flex-col pb-16">
         <SiteRail />
         <main className="flex-grow">
           <Suspense fallback={<div className="min-h-[60vh]" />}>

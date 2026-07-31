@@ -17,12 +17,12 @@ const PARALLAX_DRIFT = 14;
 const FADE_SPAN = 0.5;
 const EDGE_OPACITY = 0.9;
 const EDGE_HOLD = 0.7;
-const PIN_TOLERANCE = 2;
 
 interface StackRange {
     start: number;
     end: number;
     pinned: boolean;
+    stickyTop: number;
 }
 
 interface StackMetrics {
@@ -60,7 +60,8 @@ export const StickyStack = ({ children, className }: StickyStackProps) => {
                 return {
                     start,
                     end: start + height,
-                    pinned: height <= viewport + PIN_TOLERANCE && index < items.length - 1,
+                    pinned: item.dataset.pin === 'true' && index < items.length - 1,
+                    stickyTop: Math.min(0, viewport - height),
                 };
             });
 
@@ -98,10 +99,18 @@ export const StickyStack = ({ children, className }: StickyStackProps) => {
 interface StickyStackItemProps {
     index: number;
     id?: string;
+    pin?: boolean;
+    atmosphere?: ReactNode;
     children: ReactNode;
 }
 
-export const StickyStackItem = ({ index, id, children }: StickyStackItemProps) => {
+export const StickyStackItem = ({
+    index,
+    id,
+    pin = false,
+    atmosphere,
+    children,
+}: StickyStackItemProps) => {
     const prefersReducedMotion = usePrefersReducedMotion();
     const { ranges, viewport } = useContext(StackContext);
     const { scrollY } = useJourney();
@@ -115,18 +124,30 @@ export const StickyStackItem = ({ index, id, children }: StickyStackItemProps) =
     const start = range?.start ?? 0;
     const end = Math.max(range?.end ?? 1, start + 1);
     const enterStart = start - span;
-    const fadeEnd = start + (end - start) * FADE_SPAN;
+    const recedeStart = Math.max(start, end - span);
+    const holds = recedeStart > start;
+    const fadeEnd = recedeStart + (end - recedeStart) * FADE_SPAN;
+    const entryScale = covering ? ENTRY_SCALE : 1;
 
-    const scale = useTransform(
+    const scaleKeys = pinned
+        ? holds
+            ? [enterStart, start, recedeStart, end]
+            : [enterStart, start, end]
+        : [enterStart, start];
+    const scaleValues = pinned
+        ? holds
+            ? [entryScale, 1, 1, RECEDE_SCALE]
+            : [entryScale, 1, RECEDE_SCALE]
+        : [entryScale, 1];
+
+    const scale = useTransform(scrollY, scaleKeys, scaleValues);
+    const opacity = useTransform(scrollY, [recedeStart, fadeEnd], pinned ? [1, 0] : [1, 1]);
+    const y = useTransform(scrollY, [recedeStart, end], pinned ? [0, RECEDE_LIFT] : [0, 0]);
+    const contentY = useTransform(
         scrollY,
-        pinned ? [enterStart, start, end] : [enterStart, start],
-        pinned
-            ? [covering ? ENTRY_SCALE : 1, 1, RECEDE_SCALE]
-            : [covering ? ENTRY_SCALE : 1, 1]
+        [recedeStart, end],
+        pinned ? [0, PARALLAX_DRIFT] : [0, 0]
     );
-    const opacity = useTransform(scrollY, [start, fadeEnd], pinned ? [1, 0] : [1, 1]);
-    const y = useTransform(scrollY, [start, end], pinned ? [0, RECEDE_LIFT] : [0, 0]);
-    const contentY = useTransform(scrollY, [start, end], pinned ? [0, PARALLAX_DRIFT] : [0, 0]);
     const edgeOpacity = useTransform(
         scrollY,
         [enterStart, enterStart + span * EDGE_HOLD, start],
@@ -135,14 +156,20 @@ export const StickyStackItem = ({ index, id, children }: StickyStackItemProps) =
 
     if (still) {
         return (
-            <div id={id} className="relative">
+            <div id={id} data-pin={pin ? 'true' : 'false'} className="relative">
+                {atmosphere}
                 {children}
             </div>
         );
     }
 
     return (
-        <div id={id} className={pinned ? 'sticky top-0' : 'relative'}>
+        <div
+            id={id}
+            data-pin={pin ? 'true' : 'false'}
+            className={pinned ? 'sticky' : 'relative'}
+            style={pinned ? { top: range?.stickyTop ?? 0 } : undefined}
+        >
             {covering && (
                 <motion.div
                     aria-hidden="true"
@@ -151,7 +178,15 @@ export const StickyStackItem = ({ index, id, children }: StickyStackItemProps) =
                 />
             )}
 
-            <motion.div style={{ scale, opacity, y, transformOrigin: 'center top' }}>
+            <motion.div
+                style={{
+                    scale,
+                    opacity,
+                    y,
+                    transformOrigin: holds ? 'center bottom' : 'center top',
+                }}
+            >
+                {atmosphere}
                 <motion.div style={{ y: contentY }}>{children}</motion.div>
             </motion.div>
         </div>
