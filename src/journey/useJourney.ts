@@ -2,9 +2,8 @@ import { createContext, useContext } from 'react';
 import type { MotionValue } from 'framer-motion';
 
 export interface JourneyValue {
+    scrollY: MotionValue<number>;
     progress: MotionValue<number>;
-    velocity: MotionValue<number>;
-    warp: MotionValue<number>;
 }
 
 export const JourneyContext = createContext<JourneyValue | null>(null);

@@ -304,6 +304,42 @@ Setelah Fase 1 selesai, efek utamanya sudah terasa dan bisa dinilai. Berhenti di
 
 ---
 
+## Koreksi arah
+
+Rancangan di atas salah membaca apa yang dimaksud "perjalanan". Aku menerjemahkannya jadi metafora warp dan kecepatan; yang dimaksud sebenarnya adalah **sticky stacking** — section yang menempel di atas lalu ditimpa section berikutnya, sehingga perpindahan antar section terasa sebagai transisi, bukan sebagai gulungan biasa.
+
+Yang dibatalkan:
+
+- **Streak bintang** dihapus seluruhnya. Efeknya bikin pusing, dan memang bukan itu yang diminta. `Background.tsx` kembali menggambar bintang sebagai titik.
+- **Blur keberangkatan nameplate** dihapus. Itu bagian dari bahasa warp yang sama.
+- `velocity` dan `warp` dikeluarkan dari `JourneyProvider` karena tidak ada lagi yang memakainya. Provider sekarang hanya menyalurkan `scrollY` dan `progress`.
+
+Yang tetap dipakai karena tidak bergantung pada warp: perlambatan bintang saat mendekati Contact, urutan dominasi orb, dan gerakan kedatangan judul.
+
+## Mekanisme transisi yang sekarang dipakai
+
+Satu mekanisme, dipakai konsisten di setiap perpindahan: **mundur ke belakang tumpukan**.
+
+```
+        ┌──────────────────┐
+        │  TECH STACK      │  ← menempel di atas
+        │                  │     scale 1 → 0.94
+        │                  │     opacity 1 → 0
+        │                  │     lift 0 → −32px
+        └──────────────────┘
+     ┌──────────────────────┐
+     │  TOOLS               │  ← naik menutupi
+     └──────────────────────┘
+```
+
+Section yang ditinggalkan tidak ikut tergulung keluar layar. Dia menempel di `top: 0`, lalu mengecil, meredup, dan sedikit terangkat sementara section berikutnya naik menutupinya.
+
+Section memilih sendiri apakah ikut menumpuk. `StickyStack` mengukur tinggi tiap anak; yang tingginya melebihi satu layar tidak di-pin karena bagian bawahnya akan terpotong, dan section terakhir juga tidak di-pin karena tidak ada yang menutupinya. Jadi `Experience` yang panjang dan `Contact` yang paling bawah otomatis mengalir normal tanpa perlu dikecualikan manual.
+
+Latar bintang sengaja dibiarkan tembus. Kartu tumpukan yang benar-benar buram akan menutup starfield, dan itu justru membuang identitas visual situs ini. Karena itu section yang mundur diberi peredupan sampai habis sebelum section berikutnya benar-benar menutupinya, bukan ditutup dengan panel buram.
+
+---
+
 ## Catatan eksekusi
 
 Dua hal berubah dari rancangan awal setelah ketemu kondisi kode aslinya.

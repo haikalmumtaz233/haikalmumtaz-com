@@ -6,42 +6,43 @@ import Tools from '../components/home/Tools';
 import Certifications from '../components/home/Certifications';
 import FavoriteMoments from '../components/home/FavoriteMoments';
 import Contact from '../components/home/Contact';
+import { StickyStack, StickyStackItem } from '../journey/StickyStack';
 
 const Home = () => {
   return (
-    <>
-      <div className="relative z-10 space-y-24 md:space-y-32 pb-24 md:pb-32">
+    <StickyStack className="relative z-10">
+      <StickyStackItem index={0}>
         <Hero />
+      </StickyStackItem>
 
-        <div id="projects">
-          <FeaturedProjects />
-        </div>
+      <StickyStackItem index={1} id="projects">
+        <FeaturedProjects />
+      </StickyStackItem>
 
-        <div id="experience">
-          <Experience />
-        </div>
+      <StickyStackItem index={2} id="experience">
+        <Experience />
+      </StickyStackItem>
 
-        <div id="techstack">
-          <TechStack />
-        </div>
+      <StickyStackItem index={3} id="techstack">
+        <TechStack />
+      </StickyStackItem>
 
-        <div id="tools">
-          <Tools />
-        </div>
+      <StickyStackItem index={4} id="tools">
+        <Tools />
+      </StickyStackItem>
 
-        <div id="certifications">
-          <Certifications />
-        </div>
+      <StickyStackItem index={5} id="certifications">
+        <Certifications />
+      </StickyStackItem>
 
-        <div id="favoritemoments">
-          <FavoriteMoments />
-        </div>
+      <StickyStackItem index={6} id="favoritemoments">
+        <FavoriteMoments />
+      </StickyStackItem>
 
-        <div id="contact">
-          <Contact />
-        </div>
-      </div>
-    </>
+      <StickyStackItem index={7} id="contact">
+        <Contact />
+      </StickyStackItem>
+    </StickyStack>
   );
 };
 

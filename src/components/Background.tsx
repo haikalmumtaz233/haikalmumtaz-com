@@ -5,11 +5,6 @@ import { useJourney } from '../journey/useJourney';
 
 const STAR_DENSITY = 8000;
 const SCROLL_PARALLAX = 0.08;
-const MIN_STREAK = 0.5;
-const MAX_STREAK_DESKTOP = 55;
-const MAX_STREAK_COMPACT = 28;
-const WARP_BOOST = 1.6;
-const COMPACT_BREAKPOINT = 768;
 const ARRIVAL_START = 0.75;
 const ARRIVAL_DRIFT = 0.3;
 
@@ -29,7 +24,7 @@ const wrap = (value: number, max: number) => ((value % max) + max) % max;
 const Background = () => {
     const prefersReducedMotion = usePrefersReducedMotion();
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const { progress, velocity, warp } = useJourney();
+    const { progress } = useJourney();
     const { scrollYProgress } = useScroll();
 
     const orb1Y = useTransform(scrollYProgress, [0, 1], ['0vh', '50vh']);
@@ -107,30 +102,17 @@ const Background = () => {
 
         handleResize();
 
-        let streakUnit = 0;
-
         const drawStar = (star: Star) => {
             const parallax = smoothScrollY * star.depth * SCROLL_PARALLAX;
-            const x = wrap(star.x, width);
-            const y = wrap(star.y - parallax, height);
-            const radius = star.size * (star.depth * 0.8);
-            const alpha = Math.max(0, star.alpha);
-            const streak = streakUnit * star.depth;
-
-            if (Math.abs(streak) > MIN_STREAK) {
-                ctx.beginPath();
-                ctx.strokeStyle = `rgba(${star.color}, ${alpha})`;
-                ctx.lineWidth = Math.max(0.4, radius * 2);
-                ctx.lineCap = 'round';
-                ctx.moveTo(x, y);
-                ctx.lineTo(x, y + streak);
-                ctx.stroke();
-                return;
-            }
-
             ctx.beginPath();
-            ctx.arc(x, y, radius, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(${star.color}, ${alpha})`;
+            ctx.arc(
+                wrap(star.x, width),
+                wrap(star.y - parallax, height),
+                star.size * (star.depth * 0.8),
+                0,
+                Math.PI * 2
+            );
+            ctx.fillStyle = `rgba(${star.color}, ${Math.max(0, star.alpha)})`;
             ctx.fill();
         };
 
@@ -159,11 +141,6 @@ const Background = () => {
             mouseX += (targetMouseX - mouseX) * 0.05;
             mouseY += (targetMouseY - mouseY) * 0.05;
             smoothScrollY += (window.scrollY - smoothScrollY) * 0.08;
-
-            const maxStreak =
-                width < COMPACT_BREAKPOINT ? MAX_STREAK_COMPACT : MAX_STREAK_DESKTOP;
-            const warpBoost = 1 + (WARP_BOOST - 1) * Math.sin(warp.get() * Math.PI);
-            streakUnit = velocity.get() * maxStreak * warpBoost;
 
             const arrival = Math.min(
                 1,
@@ -197,7 +174,7 @@ const Background = () => {
             window.removeEventListener('mousemove', handleMouseMove);
             cancelAnimationFrame(animationFrameId);
         };
-    }, [prefersReducedMotion, progress, velocity, warp]);
+    }, [prefersReducedMotion, progress]);
 
     return (
         <div className="fixed inset-0 z-[-1] bg-[#0a0a0a]">
