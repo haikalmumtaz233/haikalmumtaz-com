@@ -304,6 +304,30 @@ Setelah Fase 1 selesai, efek utamanya sudah terasa dan bisa dinilai. Berhenti di
 
 ---
 
+## Catatan eksekusi
+
+Dua hal berubah dari rancangan awal setelah ketemu kondisi kode aslinya.
+
+**Fase 2 — empat judul tidak dikonversi.**
+Rancangan awal bilang semua judul section ikut gerakan memampat. Ternyata `TechStack`, `Tools`, `Certifications`, dan `Experience` sudah punya masked slide-up sendiri lewat `maskedWordVariants`, dan keempatnya sudah konsisten satu sama lain.
+
+Mengubahnya jadi gerakan memampat justru merugikan: kalau gerakan gerbang diulang tujuh kali, dia berhenti terasa seperti gerbang. Boldness-nya dihabiskan di satu tempat — operan Hero ke Projects — dan sisanya dibiarkan tenang.
+
+Tambahan alasan teknis untuk `Experience`: judulnya `sticky top-1/2`, jadi elemennya ikut bergerak saat discroll. `useScroll({ target })` mengukur posisi elemen, dan pada elemen sticky pengukurannya jadi tidak bisa dipercaya.
+
+Jadi `SectionArrival` hanya dipasang di tiga judul yang memang belum punya gerakan apa pun: `FEATURED WORK`, `Favorite Moments`, dan `Let's work together`.
+
+**Fase 3 — `GradualBlur` tidak jadi dipasang.**
+Rancangan sudah menandai ini bersyarat: "uji di HP dulu sebelum diputuskan". Ujinya tidak bisa dilakukan di sesi ini, dan menurutku memang sebaiknya tidak dipasang.
+
+`GradualBlur` bekerja dengan menumpuk beberapa lapis `backdrop-filter`. Halaman ini sudah menanggung canvas starfield 60fps, tiga orb `blur-[100px]`, lapisan noise, Lenis, dan sekarang transform judul yang di-scrub. Menambah 6–8 lapis `backdrop-filter` di atas itu risikonya nyata, dan efeknya akan mengaburkan teks yang justru harus terbaca.
+
+Niat aslinya — kesan kedalaman atmosfer — sebenarnya sudah dikerjakan oleh gradien bawah dan vignette yang sudah ada di `Background.tsx`. Menambah lapisan ketiga untuk tujuan yang sama itu redundan.
+
+Kalau nanti mau dicoba, ini paling gampang ditambahkan belakangan dan dihapus lagi tanpa menyentuh apa pun dari Fase 1–2.
+
+---
+
 ## Sumber
 
 - [React Bits](https://reactbits.dev/) — katalog komponen

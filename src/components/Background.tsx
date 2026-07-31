@@ -36,6 +36,10 @@ const Background = () => {
     const orb2Y = useTransform(scrollYProgress, [0, 1], ['0vh', '30vh']);
     const orb3Y = useTransform(scrollYProgress, [0, 1], ['0vh', '40vh']);
 
+    const orb1Opacity = useTransform(progress, [0, 0.45, 1], [0.4, 0.22, 0.15]);
+    const orb2Opacity = useTransform(progress, [0, 0.45, 1], [0.18, 0.4, 0.22]);
+    const orb3Opacity = useTransform(progress, [0, 0.55, 1], [0.15, 0.22, 0.4]);
+
     const idleDrift = (range: number, duration: number) =>
         prefersReducedMotion
             ? {}
@@ -209,8 +213,11 @@ const Background = () => {
                 >
                     <motion.div
                         {...idleDrift(50, 15)}
-                        className="w-[600px] h-[600px] rounded-full bg-purple-600 mix-blend-screen filter blur-[100px] opacity-40"
-                        style={{ willChange: 'transform' }}
+                        className="w-[600px] h-[600px] rounded-full bg-purple-600 mix-blend-screen filter blur-[100px]"
+                        style={{
+                            opacity: prefersReducedMotion ? 0.4 : orb1Opacity,
+                            willChange: 'transform',
+                        }}
                     />
                 </motion.div>
 
@@ -220,8 +227,11 @@ const Background = () => {
                 >
                     <motion.div
                         {...idleDrift(40, 18)}
-                        className="w-[400px] h-[400px] rounded-full bg-cyan-500 mix-blend-screen filter blur-[100px] opacity-40"
-                        style={{ willChange: 'transform' }}
+                        className="w-[400px] h-[400px] rounded-full bg-cyan-500 mix-blend-screen filter blur-[100px]"
+                        style={{
+                            opacity: prefersReducedMotion ? 0.4 : orb2Opacity,
+                            willChange: 'transform',
+                        }}
                     />
                 </motion.div>
 
@@ -231,8 +241,11 @@ const Background = () => {
                 >
                     <motion.div
                         {...idleDrift(60, 12)}
-                        className="w-[250px] h-[250px] rounded-full bg-fuchsia-500 mix-blend-screen filter blur-[100px] opacity-40"
-                        style={{ willChange: 'transform' }}
+                        className="w-[250px] h-[250px] rounded-full bg-fuchsia-500 mix-blend-screen filter blur-[100px]"
+                        style={{
+                            opacity: prefersReducedMotion ? 0.4 : orb3Opacity,
+                            willChange: 'transform',
+                        }}
                     />
                 </motion.div>
             </div>
