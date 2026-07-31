@@ -10,6 +10,8 @@ const MAX_STREAK_DESKTOP = 55;
 const MAX_STREAK_COMPACT = 28;
 const WARP_BOOST = 1.6;
 const COMPACT_BREAKPOINT = 768;
+const ARRIVAL_START = 0.75;
+const ARRIVAL_DRIFT = 0.3;
 
 interface Star {
     x: number;
@@ -27,7 +29,7 @@ const wrap = (value: number, max: number) => ((value % max) + max) % max;
 const Background = () => {
     const prefersReducedMotion = usePrefersReducedMotion();
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const { velocity, warp } = useJourney();
+    const { progress, velocity, warp } = useJourney();
     const { scrollYProgress } = useScroll();
 
     const orb1Y = useTransform(scrollYProgress, [0, 1], ['0vh', '50vh']);
@@ -159,6 +161,12 @@ const Background = () => {
             const warpBoost = 1 + (WARP_BOOST - 1) * Math.sin(warp.get() * Math.PI);
             streakUnit = velocity.get() * maxStreak * warpBoost;
 
+            const arrival = Math.min(
+                1,
+                Math.max(0, (progress.get() - ARRIVAL_START) / (1 - ARRIVAL_START))
+            );
+            const driftScale = 1 - (1 - ARRIVAL_DRIFT) * arrival;
+
             for (const star of stars) {
                 star.alpha += star.twinkleSpeed;
                 if (star.alpha > 1 || star.alpha < star.baseAlpha - 0.15) {
@@ -167,7 +175,7 @@ const Background = () => {
 
                 star.x -= mouseX * star.depth * 0.05;
                 star.y -= mouseY * star.depth * 0.05;
-                star.y -= 0.2 * star.depth;
+                star.y -= 0.2 * star.depth * driftScale;
 
                 drawStar(star);
             }
@@ -185,7 +193,7 @@ const Background = () => {
             window.removeEventListener('mousemove', handleMouseMove);
             cancelAnimationFrame(animationFrameId);
         };
-    }, [prefersReducedMotion, velocity, warp]);
+    }, [prefersReducedMotion, progress, velocity, warp]);
 
     return (
         <div className="fixed inset-0 z-[-1] bg-[#0a0a0a]">

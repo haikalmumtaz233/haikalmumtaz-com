@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useTransform } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { homeSections } from '../data/sections';
 import { useActiveSection } from '../hooks/useActiveSection';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
+import { useJourney } from '../journey/useJourney';
 import MenuPanel, { MENU_PANEL_ID } from './MenuPanel';
 
 const sectionIds = homeSections.map((section) => section.id);
@@ -22,9 +23,9 @@ const SiteRail = () => {
   const isHome = location.pathname === '/';
   const activeId = useActiveSection(sectionIds, isHome);
 
-  const { scrollYProgress } = useScroll();
-  const progressScale = scrollYProgress;
-  const wordmarkOpacity = useTransform(scrollYProgress, [0, 0.06], [0, 1]);
+  const { progress } = useJourney();
+  const progressScale = progress;
+  const wordmarkOpacity = useTransform(progress, [0, 0.06], [0, 1]);
 
   const activeIndex = activeId ? sectionIds.indexOf(activeId) + 1 : 0;
 
