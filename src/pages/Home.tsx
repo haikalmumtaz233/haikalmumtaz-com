@@ -12,7 +12,7 @@ import { StickyStack, StickyStackItem } from '../journey/StickyStack';
 const Home = () => {
   return (
     <StickyStack className="relative z-10">
-      <StickyStackItem index={0} pin atmosphere={<SectionAtmosphere variant="departure" />}>
+      <StickyStackItem index={0} pin atmosphere={<SectionAtmosphere />}>
         <Hero />
       </StickyStackItem>
 
@@ -32,12 +32,7 @@ const Home = () => {
         <Tools />
       </StickyStackItem>
 
-      <StickyStackItem
-        index={5}
-        id="certifications"
-        pin
-        atmosphere={<SectionAtmosphere variant="record" />}
-      >
+      <StickyStackItem index={5} id="certifications" pin>
         <Certifications />
       </StickyStackItem>
 

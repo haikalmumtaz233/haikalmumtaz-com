@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, useNavigationType } from 'react-router-dom';
 import { ReactLenis, useLenis } from 'lenis/react';
-import SiteRail from './components/SiteRail';
+import MenuToggle from './components/MenuToggle';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Background from './components/Background';
@@ -65,8 +65,8 @@ function AppShell() {
       <TechIconSprite />
       <Background />
       <ScrollManager />
-      <div className="min-h-screen flex flex-col pb-16">
-        <SiteRail />
+      <div className="min-h-screen flex flex-col">
+        <MenuToggle />
         <main className="flex-grow">
           <Suspense fallback={<div className="min-h-[60vh]" />}>
             <Routes>

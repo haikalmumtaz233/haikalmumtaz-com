@@ -15,8 +15,6 @@ const RECEDE_SCALE = 0.94;
 const RECEDE_LIFT = -32;
 const PARALLAX_DRIFT = 14;
 const FADE_SPAN = 0.5;
-const EDGE_OPACITY = 0.9;
-const EDGE_HOLD = 0.7;
 
 interface StackRange {
     start: number;
@@ -148,12 +146,6 @@ export const StickyStackItem = ({
         [recedeStart, end],
         pinned ? [0, PARALLAX_DRIFT] : [0, 0]
     );
-    const edgeOpacity = useTransform(
-        scrollY,
-        [enterStart, enterStart + span * EDGE_HOLD, start],
-        [EDGE_OPACITY, EDGE_OPACITY, 0]
-    );
-
     if (still) {
         return (
             <div id={id} data-pin={pin ? 'true' : 'false'} className="relative">
@@ -170,14 +162,6 @@ export const StickyStackItem = ({
             className={pinned ? 'sticky' : 'relative'}
             style={pinned ? { top: range?.stickyTop ?? 0 } : undefined}
         >
-            {covering && (
-                <motion.div
-                    aria-hidden="true"
-                    style={{ opacity: edgeOpacity }}
-                    className="pointer-events-none absolute inset-x-0 top-0 h-16 sm:h-24 md:h-36 bg-gradient-to-b from-[#0a0a0a] via-[#0a0a0a]/55 to-transparent"
-                />
-            )}
-
             <motion.div
                 style={{
                     scale,
