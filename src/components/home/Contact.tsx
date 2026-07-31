@@ -10,7 +10,8 @@ import { profile, socialProfiles } from '../../data/profile';
 
 declare global {
   interface Window {
-    turnstile: {
+    turnstile?: {
+      ready: (callback: () => void) => void;
       render: (container: HTMLElement, options: {
         sitekey: string;
         callback: (token: string) => void;
@@ -21,8 +22,13 @@ declare global {
       reset: (widgetId: string) => void;
       remove: (widgetId: string) => void;
     };
+    onloadTurnstileCallback?: () => void;
   }
 }
+
+const TURNSTILE_SCRIPT_ID = 'turnstile-script';
+const TURNSTILE_SRC =
+  'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback';
 
 const socialIcons: Record<string, typeof Github> = {
   GitHub: Github,
@@ -79,40 +85,49 @@ const Contact = () => {
   };
 
   useEffect(() => {
-    const loadTurnstile = () => {
-      if (window.turnstile && turnstileRef.current && !widgetIdRef.current) {
-        widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
-          sitekey: import.meta.env.VITE_TURNSTILE_SITE_KEY,
-          callback: (token: string) => {
-            setTurnstileToken(token);
-            setTurnstileError(false);
-          },
-          'expired-callback': () => {
-            setTurnstileToken(null);
-          },
-          'error-callback': () => {
-            setTurnstileError(true);
-          },
-          theme: 'dark',
-        });
-      }
+    let cancelled = false;
+
+    const renderWidget = () => {
+      if (cancelled || !window.turnstile || !turnstileRef.current || widgetIdRef.current) return;
+
+      widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
+        sitekey: import.meta.env.VITE_TURNSTILE_SITE_KEY,
+        callback: (token: string) => {
+          setTurnstileToken(token);
+          setTurnstileError(false);
+        },
+        'expired-callback': () => {
+          setTurnstileToken(null);
+        },
+        'error-callback': () => {
+          setTurnstileError(true);
+        },
+        theme: 'dark',
+      });
     };
 
     if (window.turnstile) {
-      loadTurnstile();
+      window.turnstile.ready(renderWidget);
     } else {
-      if (document.getElementById('turnstile-script')) return;
+      window.onloadTurnstileCallback = renderWidget;
 
-      const script = document.createElement('script');
-      script.id = 'turnstile-script';
-      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
-      script.async = true;
-      script.defer = true;
-      script.onload = loadTurnstile;
-      document.head.appendChild(script);
+      if (!document.getElementById(TURNSTILE_SCRIPT_ID)) {
+        const script = document.createElement('script');
+        script.id = TURNSTILE_SCRIPT_ID;
+        script.src = TURNSTILE_SRC;
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+      }
     }
 
     return () => {
+      cancelled = true;
+
+      if (window.onloadTurnstileCallback === renderWidget) {
+        delete window.onloadTurnstileCallback;
+      }
+
       if (widgetIdRef.current && window.turnstile) {
         window.turnstile.remove(widgetIdRef.current);
         widgetIdRef.current = null;
