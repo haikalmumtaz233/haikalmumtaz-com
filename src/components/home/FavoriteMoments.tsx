@@ -5,6 +5,8 @@ import OptimizedImage from '../ui/OptimizedImage';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import RuleReveal from '../../journey/RuleReveal';
 import FadeIn from '../../journey/FadeIn';
+import { useIsMobile } from '../../hooks/useMediaQuery';
+import MomentsScatter from './MomentsScatter';
 
 const withoutFixedWidth = (className: string) =>
   className
@@ -12,7 +14,7 @@ const withoutFixedWidth = (className: string) =>
     .filter((token) => !token.includes('w-['))
     .join(' ');
 
-const FavoriteMoments = () => {
+const HorizontalMoments = () => {
   const prefersReducedMotion = usePrefersReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -149,6 +151,14 @@ const FavoriteMoments = () => {
       </div>
     </section>
   );
+};
+
+const FavoriteMoments = () => {
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const isMobile = useIsMobile();
+
+  if (isMobile && !prefersReducedMotion) return <MomentsScatter />;
+  return <HorizontalMoments />;
 };
 
 export default FavoriteMoments;
