@@ -148,6 +148,29 @@ const projectSeeds: ProjectSeed[] = [
         liveLink: 'https://haikalmumtaz233.github.io/vehicle-route-leafletjs/',
         isFeatured: false,
     },
+    {
+        id: 9,
+        name: 'Pocky',
+        subtitle: 'Personal Finance Management App',
+        category: 'Fullstack Web Development',
+        description:
+            'Personal finance app for tracking multiple assets, budgets, savings goals, and recurring transactions, with offline-first transaction sync, built on Go microservices communicating over gRPC and RabbitMQ.',
+        stack: [
+            'Next.js',
+            'TypeScript',
+            'TanStack Query',
+            'Tailwind CSS',
+            'Golang',
+            'gRPC',
+            'PostgreSQL',
+            'RabbitMQ',
+            'Docker',
+        ],
+        image: '/projects/pocky.webp',
+        repoLink: '#',
+        liveLink: '#',
+        isFeatured: false,
+    },
 ];
 
 export const projects: Project[] = projectSeeds.map((seed) => ({
