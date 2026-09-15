@@ -105,6 +105,19 @@ select:focus-visible,
   }
 }
 
+/* === SNAP RAIL === */
+
+.snap-rail {
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.snap-rail::-webkit-scrollbar {
+  display: none;
+}
+
 @layer utilities {
   .text-gradient {
     background: linear-gradient(135deg, #06b6d4 0%, #a855f7 100%);

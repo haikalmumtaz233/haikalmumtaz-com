@@ -6,6 +6,8 @@ import { projects } from '../../data/projects';
 import type { Project } from '../../data/projects';
 import ProjectModal from '../projects/ProjectModal';
 import FeaturedCard from './FeaturedCard';
+import FeaturedDeck from './FeaturedDeck';
+import { useIsMobile } from '../../hooks/useMediaQuery';
 import SectionHeader from '../ui/SectionHeader';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { easing } from '../../lib/motion';
@@ -16,6 +18,7 @@ const SWIPE_THRESHOLD = 60;
 const FeaturedProjects = () => {
   const navigate = useNavigate();
   const prefersReducedMotion = usePrefersReducedMotion();
+  const isMobile = useIsMobile();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
@@ -131,6 +134,9 @@ const FeaturedProjects = () => {
           }
         />
 
+        {isMobile ? (
+          <FeaturedDeck projects={featuredProjects} onOpen={setSelectedProject} />
+        ) : (
         <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-7 lg:order-2">
             <div
@@ -235,6 +241,7 @@ const FeaturedProjects = () => {
             })}
           </div>
         </div>
+        )}
 
         <ProjectModal project={selectedProject} onClose={handleCloseModal} />
       </div>
