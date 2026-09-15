@@ -5,43 +5,30 @@ import { certifications, type Certification } from '../../data/certifications';
 import CertificationModal from './CertificationModal';
 import OptimizedImage from '../ui/OptimizedImage';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import { maskedWordVariants, revealEase, staggerContainerVariants } from '../../lib/motion';
+import { revealEase } from '../../lib/motion';
+import RuleReveal from '../../journey/RuleReveal';
+import FadeIn from '../../journey/FadeIn';
 import { activateOnEnterOrSpace } from '../../lib/keyboard';
 import { accents } from '../../data/categoryAccents';
 
 const Certifications = () => {
-  const prefersReducedMotion = usePrefersReducedMotion();
-  const titleVariants = staggerContainerVariants(prefersReducedMotion);
-  const wordVariants = maskedWordVariants(prefersReducedMotion);
   const [selectedCert, setSelectedCert] = useState<Certification | null>(null);
 
   return (
     <section className="relative bg-transparent py-8 sm:py-12 md:py-16 2xl:py-20 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          variants={titleVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.5 }}
-          className="text-center mb-8 sm:mb-12 md:mb-14 2xl:mb-20"
-        >
-          <div className="overflow-hidden mb-3">
-            <motion.h2
-              variants={wordVariants}
-              className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black tracking-tight text-white uppercase"
-            >
-              CERTIFICATIONS
-            </motion.h2>
-          </div>
-          <div className="overflow-hidden">
-            <motion.p
-              variants={wordVariants}
-              className="text-slate-400 text-sm sm:text-base md:text-lg 2xl:text-xl font-sans tracking-wide max-w-2xl mx-auto"
-            >
+        <div className="text-center mb-8 sm:mb-12 md:mb-14 2xl:mb-20">
+          <RuleReveal
+            lines={['CERTIFICATIONS']}
+            align="center"
+            className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black tracking-tight text-white uppercase mb-3"
+          />
+          <FadeIn>
+            <p className="text-slate-400 text-sm sm:text-base md:text-lg 2xl:text-xl font-sans tracking-wide max-w-2xl mx-auto">
               Records of achievements and credentials
-            </motion.p>
-          </div>
-        </motion.div>
+            </p>
+          </FadeIn>
+        </div>
 
         <HorizontalSlider onCertClick={setSelectedCert} />
       </div>

@@ -1,41 +1,24 @@
-import { motion } from 'framer-motion';
 import { techCategories } from '../../data/techStack';
 import TechIcon from '../ui/TechIcon';
-import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import { maskedWordVariants, staggerContainerVariants } from '../../lib/motion';
+import RuleReveal from '../../journey/RuleReveal';
+import FadeIn from '../../journey/FadeIn';
 
 const TechStack = () => {
-  const prefersReducedMotion = usePrefersReducedMotion();
-  const titleVariants = staggerContainerVariants(prefersReducedMotion);
-  const wordVariants = maskedWordVariants(prefersReducedMotion);
-
   return (
     <section className="relative bg-transparent py-10 sm:py-12 md:py-16 2xl:py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
-        <motion.div
-          variants={titleVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.5 }}
-          className="text-center mb-8 sm:mb-10 2xl:mb-16"
-        >
-          <div className="overflow-hidden">
-            <motion.h2
-              variants={wordVariants}
-              className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black text-white uppercase tracking-tight mb-3"
-            >
-              Tech Stack
-            </motion.h2>
-          </div>
-          <div className="overflow-hidden">
-            <motion.p
-              variants={wordVariants}
-              className="text-slate-400 text-sm sm:text-base md:text-lg 2xl:text-xl max-w-2xl mx-auto"
-            >
+        <div className="text-center mb-8 sm:mb-10 2xl:mb-16">
+          <RuleReveal
+            lines={['Tech Stack']}
+            align="center"
+            className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black text-white uppercase tracking-tight mb-3"
+          />
+          <FadeIn>
+            <p className="text-slate-400 text-sm sm:text-base md:text-lg 2xl:text-xl max-w-2xl mx-auto">
               Technologies I use to develop, build, and deploy.
-            </motion.p>
-          </div>
-        </motion.div>
+            </p>
+          </FadeIn>
+        </div>
 
         <div>
           {techCategories.map((category) => (

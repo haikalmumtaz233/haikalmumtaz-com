@@ -2,15 +2,12 @@ import { motion } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { experiences } from '../../data/experience';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import { animatedProps, maskedWordVariants, staggerContainerVariants } from '../../lib/motion';
+import { animatedProps } from '../../lib/motion';
+import RuleReveal from '../../journey/RuleReveal';
 
 const Experience = () => {
   const sectionRef = useRef(null);
-  const prefersReducedMotion = usePrefersReducedMotion();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-
-  const titleVariants = staggerContainerVariants(prefersReducedMotion, 0.15);
-  const wordVariants = maskedWordVariants(prefersReducedMotion);
 
   return (
     <section ref={sectionRef} className="relative bg-transparent pt-10 sm:pt-16 md:pt-24 2xl:pt-32 pb-8 w-full overflow-x-clip">
@@ -18,23 +15,10 @@ const Experience = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-12 items-stretch">
           <div className="lg:col-span-5 min-h-full">
             <div className="sticky top-1/2 -translate-y-1/2 py-8 text-left border-l-2 border-white/20 pl-8 md:pl-12">
-              <motion.div
-                variants={titleVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-100px" }}
-              >
-                <h2 className="text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none">
-                  <div className="overflow-hidden">
-                    <motion.span variants={wordVariants} className="inline-block mr-3">
-                      Professional
-                    </motion.span>
-                    <motion.span variants={wordVariants} className="inline-block ">
-                      Experience
-                    </motion.span>
-                  </div>
-                </h2>
-              </motion.div>
+              <RuleReveal
+                lines={['Professional', 'Experience']}
+                className="text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none"
+              />
             </div>
           </div>
 

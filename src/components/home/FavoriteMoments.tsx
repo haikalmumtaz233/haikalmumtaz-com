@@ -3,8 +3,8 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { moments } from '../../data/moments';
 import OptimizedImage from '../ui/OptimizedImage';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import SectionArrival from '../../journey/SectionArrival';
-import { maskedWordVariants, staggerContainerVariants } from '../../lib/motion';
+import RuleReveal from '../../journey/RuleReveal';
+import FadeIn from '../../journey/FadeIn';
 
 const withoutFixedWidth = (className: string) =>
   className
@@ -44,9 +44,6 @@ const FavoriteMoments = () => {
   });
 
   const x = useTransform(scrollYProgress, [0, 1], [0, -horizontalDistance]);
-
-  const titleVariants = staggerContainerVariants(prefersReducedMotion);
-  const wordVariants = maskedWordVariants(prefersReducedMotion);
 
   const getAlignmentClass = (alignment: 'start' | 'center' | 'end') => {
     switch (alignment) {
@@ -90,17 +87,15 @@ const FavoriteMoments = () => {
 
   const heading = (
     <>
-      <SectionArrival>
-        <h2 className="text-3xl md:text-4xl lg:text-4xl 2xl:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none">
-          Favorite
-        </h2>
-        <h2 className="text-3xl md:text-4xl lg:text-4xl 2xl:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none">
-          Moments
-        </h2>
-      </SectionArrival>
-      <p className="text-slate-400 text-sm md:text-base 2xl:text-xl max-w-md font-light mt-4 md:mt-6">
-        A collection of moments that shaped my journey through tech, education, and personal growth.
-      </p>
+      <RuleReveal
+        lines={['Favorite', 'Moments']}
+        className="text-3xl md:text-4xl lg:text-4xl 2xl:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none"
+      />
+      <FadeIn>
+        <p className="text-slate-400 text-sm md:text-base 2xl:text-xl max-w-md font-light mt-4 md:mt-6">
+          A collection of moments that shaped my journey through tech, education, and personal growth.
+        </p>
+      </FadeIn>
     </>
   );
 
@@ -135,40 +130,7 @@ const FavoriteMoments = () => {
           className="flex items-stretch gap-6 md:gap-16 lg:gap-24 2xl:gap-32 px-4 md:px-12 pr-12 md:pr-24 2xl:pr-32"
         >
           <div className="flex-shrink-0 flex items-center justify-center w-[85vw] md:w-[420px] 2xl:w-[500px] h-[80vh]">
-            <motion.div
-              variants={titleVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="text-left"
-            >
-              <div className="overflow-hidden">
-                <motion.h2
-                  variants={wordVariants}
-                  className="text-3xl md:text-4xl lg:text-4xl 2xl:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none"
-                >
-                  Favorite
-                </motion.h2>
-              </div>
-
-              <div className="overflow-hidden">
-                <motion.h2
-                  variants={wordVariants}
-                  className="text-3xl md:text-4xl lg:text-4xl 2xl:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none"
-                >
-                  Moments
-                </motion.h2>
-              </div>
-
-              <div className="overflow-hidden mt-4 md:mt-6">
-                <motion.p
-                  variants={wordVariants}
-                  className="text-slate-400 text-sm md:text-base 2xl:text-xl max-w-md font-light"
-                >
-                  A collection of moments that shaped my journey through tech, education, and personal growth.
-                </motion.p>
-              </div>
-            </motion.div>
+            <div className="text-left">{heading}</div>
           </div>
 
           {moments.map((moment) => (

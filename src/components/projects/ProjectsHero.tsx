@@ -2,7 +2,9 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import { animatedProps, revealEase } from '../../lib/motion';
+import { animatedProps, easing } from '../../lib/motion';
+import RuleReveal from '../../journey/RuleReveal';
+import FadeIn from '../../journey/FadeIn';
 
 const ProjectsHero = () => {
   const navigate = useNavigate();
@@ -13,9 +15,9 @@ const ProjectsHero = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.button
           {...animatedProps(prefersReducedMotion, {
-            initial: { opacity: 0, x: -20 },
+            initial: { opacity: 0, x: -12 },
             animate: { opacity: 1, x: 0 },
-            transition: { duration: 0.5 },
+            transition: { duration: 0.8, ease: easing.expo },
           })}
           onClick={() => navigate('/', { viewTransition: true })}
           className="group flex items-center gap-2 text-slate-400 hover:text-white transition-colors duration-300 mb-8 sm:mb-12"
@@ -24,20 +26,17 @@ const ProjectsHero = () => {
           <span className="text-sm font-medium">Back to Home</span>
         </motion.button>
 
-        <motion.div
-          {...animatedProps(prefersReducedMotion, {
-            initial: { opacity: 0, y: 30 },
-            animate: { opacity: 1, y: 0 },
-            transition: { duration: 0.8, ease: revealEase },
-          })}
-        >
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl font-monument font-black tracking-tight text-white mb-4 sm:mb-6 uppercase">
-            ALL PROJECTS
-          </h1>
+        <RuleReveal
+          as="h1"
+          lines={['ALL PROJECTS']}
+          delay={0.15}
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl font-monument font-black tracking-tight text-white mb-4 sm:mb-6 uppercase"
+        />
+        <FadeIn delay={0.85}>
           <p className="text-slate-400 text-base sm:text-lg md:text-xl 2xl:text-2xl font-light max-w-2xl">
             A complete collection of my work across different technologies and domains.
           </p>
-        </motion.div>
+        </FadeIn>
       </div>
     </section>
   );
