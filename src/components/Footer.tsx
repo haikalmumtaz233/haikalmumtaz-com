@@ -1,105 +1,34 @@
+import { ArrowUp } from 'lucide-react';
+import { useLenis } from 'lenis/react';
+import { profile } from '../data/profile';
+
 const Footer = () => {
+  const lenis = useLenis();
   const currentYear = new Date().getFullYear();
 
-  const handleNavigation = (path: string) => {
-    if (path === '#top') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      const element = document.querySelector(path);
-      element?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToTop = () => {
+    if (lenis) {
+      lenis.scrollTo(0);
+      return;
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <footer className="bg-[#0a0a0a] pt-12 sm:pt-16 md:pt-20 pb-8 sm:pb-10 border-t border-white/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
-        <div className="grid grid-cols-2 md:grid-cols-12 gap-8 sm:gap-10 md:gap-8 mb-10 sm:mb-16">
-
-          <div className="col-span-2 md:col-span-6 flex flex-col justify-between h-full">
-            <div>
-              <h2 className="text-2xl sm:text-3xl md:text-5xl font-black text-white uppercase tracking-tighter mb-3">
-                Haikal Mumtaz
-              </h2>
-              <p className="text-slate-400 text-sm sm:text-base md:text-lg max-w-sm">
-                Fullstack Developer crafting digital experiences with code and creativity.
-              </p>
-            </div>
-          </div>
-
-          <div className="col-span-1 md:col-span-3">
-            <h3 className="text-xs font-mono text-slate-400 uppercase tracking-wider mb-4 sm:mb-6">Navigate</h3>
-            <ul className="space-y-3 sm:space-y-4">
-              <li>
-                <button
-                  onClick={() => handleNavigation('#top')}
-                  className="text-slate-300 hover:text-white transition-colors text-sm sm:text-base text-left"
-                >
-                  Home
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => handleNavigation('#projects')}
-                  className="text-slate-300 hover:text-white transition-colors text-sm sm:text-base text-left"
-                >
-                  Projects
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => handleNavigation('#experience')}
-                  className="text-slate-300 hover:text-white transition-colors text-sm sm:text-base text-left"
-                >
-                  Experience
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => handleNavigation('#contact')}
-                  className="text-slate-300 hover:text-white transition-colors text-sm sm:text-base text-left"
-                >
-                  Contact
-                </button>
-              </li>
-            </ul>
-          </div>
-
-          <div className="col-span-1 md:col-span-3">
-            <h3 className="text-xs font-mono text-slate-400 uppercase tracking-wider mb-4 sm:mb-6">Connect</h3>
-            <ul className="space-y-3 sm:space-y-4">
-              {[
-                { name: 'LinkedIn', url: 'https://www.linkedin.com/in/haikal-mumtaz/' },
-                { name: 'GitHub', url: 'https://github.com/haikalmumtaz233' },
-                { name: 'Instagram', url: 'https://www.instagram.com/haikal_mumtaz23/' },
-                { name: 'Email', url: 'mailto:hmumtaz70@gmail.com' },
-              ].map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-slate-300 hover:text-white transition-colors text-sm sm:text-base flex items-center gap-2 group"
-                  >
-                    {link.name}
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity">↗</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/10 gap-4">
-          <p className="text-slate-400 text-sm">
-            © {currentYear} Haikal Mumtaz. All rights reserved.
-          </p>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span className="text-slate-400 text-sm font-mono">
-              Jakarta, Indonesia
-            </span>
-          </div>
-        </div>
+    <footer className="relative border-t border-white/10 bg-[#09080e]">
+      <div className="shell flex flex-wrap items-center justify-between gap-x-10 gap-y-4 py-8 md:py-10">
+        <p className="text-sm text-white/50">
+          &copy; {currentYear} {profile.name}
+        </p>
+        <p className="order-3 w-full text-sm text-white/50 sm:order-none sm:w-auto">{profile.location}</p>
+        <button
+          type="button"
+          onClick={scrollToTop}
+          className="group inline-flex items-center gap-2 text-sm text-white/60 transition-colors duration-300 hover:text-white"
+        >
+          Back to top
+          <ArrowUp className="h-4 w-4 transition-transform duration-500 ease-expo group-hover:-translate-y-0.5" />
+        </button>
       </div>
     </footer>
   );
