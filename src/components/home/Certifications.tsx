@@ -1,49 +1,24 @@
 import { useRef, useState, useEffect, type KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { animate, motion, useMotionValue } from 'framer-motion';
-import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { certifications, type Certification } from '../../data/certifications';
 import CertificationModal from './CertificationModal';
 import OptimizedImage from '../ui/OptimizedImage';
+import SectionHeader from '../ui/SectionHeader';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import { revealEase } from '../../lib/motion';
-import RuleReveal from '../../journey/RuleReveal';
-import FadeIn from '../../journey/FadeIn';
+import { easing } from '../../lib/motion';
 import { activateOnEnterOrSpace } from '../../lib/keyboard';
-import { accents } from '../../data/categoryAccents';
+
+const navButtonClass = (isDisabled: boolean) =>
+  `flex h-11 w-11 items-center justify-center rounded-full border transition-colors duration-300 ${
+    isDisabled
+      ? 'cursor-not-allowed border-white/5 text-white/20'
+      : 'border-white/20 text-white hover:border-white/50 hover:bg-white/5'
+  }`;
 
 const Certifications = () => {
-  const [selectedCert, setSelectedCert] = useState<Certification | null>(null);
-
-  return (
-    <section className="relative bg-transparent py-8 sm:py-12 md:py-16 2xl:py-20 overflow-hidden">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-8 sm:mb-12 md:mb-14 2xl:mb-20">
-          <RuleReveal
-            lines={['CERTIFICATIONS']}
-            align="center"
-            className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black tracking-tight text-white uppercase mb-3"
-          />
-          <FadeIn>
-            <p className="text-slate-400 text-sm sm:text-base md:text-lg 2xl:text-xl font-sans tracking-wide max-w-2xl mx-auto">
-              Records of achievements and credentials
-            </p>
-          </FadeIn>
-        </div>
-
-        <HorizontalSlider onCertClick={setSelectedCert} />
-      </div>
-
-      <CertificationModal
-        cert={selectedCert}
-        isOpen={selectedCert !== null}
-        onClose={() => setSelectedCert(null)}
-      />
-    </section>
-  );
-};
-
-const HorizontalSlider = ({ onCertClick }: { onCertClick: (cert: Certification) => void }) => {
   const prefersReducedMotion = usePrefersReducedMotion();
+  const [selectedCert, setSelectedCert] = useState<Certification | null>(null);
   const [maxOffset, setMaxOffset] = useState(0);
   const [step, setStep] = useState(0);
   const [offset, setOffset] = useState(0);
@@ -60,33 +35,28 @@ const HorizontalSlider = ({ onCertClick }: { onCertClick: (cert: Certification) 
       setMaxOffset(Math.max(0, slider.scrollWidth - container.offsetWidth));
       const firstCard = slider.firstElementChild as HTMLElement | null;
       const secondCard = firstCard?.nextElementSibling as HTMLElement | null;
-      const measuredStep =
-        firstCard && secondCard
-          ? secondCard.offsetLeft - firstCard.offsetLeft
-          : firstCard?.offsetWidth ?? 0;
-      setStep(measuredStep);
+      setStep(
+        firstCard && secondCard ? secondCard.offsetLeft - firstCard.offsetLeft : firstCard?.offsetWidth ?? 0
+      );
     };
 
     measure();
 
     const resizeObserver = new ResizeObserver(measure);
     resizeObserver.observe(slider);
-    window.addEventListener('resize', measure);
+    resizeObserver.observe(container);
 
-    return () => {
-      resizeObserver.disconnect();
-      window.removeEventListener('resize', measure);
-    };
+    return () => resizeObserver.disconnect();
   }, []);
 
   const slideTo = (nextOffset: number) => {
     const clamped = Math.min(maxOffset, Math.max(0, nextOffset));
     setOffset(clamped);
-    animate(x, -clamped, prefersReducedMotion ? { duration: 0 } : { duration: 0.5, ease: revealEase });
+    animate(x, -clamped, prefersReducedMotion ? { duration: 0 } : { duration: 0.9, ease: easing.expo });
   };
 
-  const isAtStart = offset <= 0;
-  const isAtEnd = maxOffset === 0 || offset >= maxOffset;
+  const isAtStart = offset <= 1;
+  const isAtEnd = maxOffset === 0 || offset >= maxOffset - 1;
 
   const handleKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'ArrowRight') {
@@ -101,59 +71,62 @@ const HorizontalSlider = ({ onCertClick }: { onCertClick: (cert: Certification) 
   };
 
   return (
-    <div className="relative">
-      <div className="flex justify-end gap-2 mb-4">
-        <button
-          type="button"
-          onClick={() => slideTo(offset - step)}
-          disabled={isAtStart}
-          aria-label="Previous certificate"
-          className={`p-2.5 rounded-full border transition-colors duration-300 ${
-            isAtStart
-              ? 'bg-white/[0.02] border-white/5 text-white/20 cursor-not-allowed'
-              : 'bg-white/5 border-white/10 text-white hover:bg-white/10 hover:border-white/20'
-          }`}
+    <section className="relative section-space overflow-x-clip">
+      <div className="shell">
+        <SectionHeader
+          title={['Certifications']}
+          meta={
+            <div className="flex items-center gap-4">
+              <span className="text-sm md:text-base text-white/55">{certifications.length} credentials</span>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => slideTo(offset - step)}
+                  disabled={isAtStart}
+                  aria-label="Previous certificates"
+                  className={navButtonClass(isAtStart)}
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => slideTo(offset + step)}
+                  disabled={isAtEnd}
+                  aria-label="Next certificates"
+                  className={navButtonClass(isAtEnd)}
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+          }
+        />
+
+        <div
+          ref={containerRef}
+          role="group"
+          aria-label="Certificates"
+          tabIndex={0}
+          onKeyDown={handleKeyDown}
+          className="rounded-lg"
         >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <button
-          type="button"
-          onClick={() => slideTo(offset + step)}
-          disabled={isAtEnd}
-          aria-label="Next certificate"
-          className={`p-2.5 rounded-full border transition-colors duration-300 ${
-            isAtEnd
-              ? 'bg-white/[0.02] border-white/5 text-white/20 cursor-not-allowed'
-              : 'bg-white/5 border-white/10 text-white hover:bg-white/10 hover:border-white/20'
-          }`}
-        >
-          <ChevronRight className="w-5 h-5" />
-        </button>
+          <motion.div
+            ref={sliderRef}
+            className="flex cursor-grab gap-5 active:cursor-grabbing md:gap-8"
+            style={{ touchAction: 'pan-y', x }}
+            drag="x"
+            dragConstraints={{ right: 0, left: -maxOffset }}
+            onDragEnd={() => setOffset(-x.get())}
+          >
+            {certifications.map((cert) => (
+              <CertificateCard key={cert.id} cert={cert} onCertClick={setSelectedCert} />
+            ))}
+          </motion.div>
+        </div>
       </div>
 
-      <div
-        className="relative"
-        ref={containerRef}
-        role="group"
-        aria-label="Certificates carousel"
-        tabIndex={0}
-        onKeyDown={handleKeyDown}
-      >
-        <motion.div
-          className="flex gap-4 md:gap-6 lg:gap-8 cursor-grab active:cursor-grabbing pb-8 pr-4 md:pr-8"
-          style={{ touchAction: 'pan-y', x }}
-          ref={sliderRef}
-          drag="x"
-          dragConstraints={{ right: 0, left: -maxOffset }}
-          onDragEnd={() => setOffset(-x.get())}
-          whileTap={{ cursor: 'grabbing' }}
-        >
-          {certifications.map((cert) => (
-            <CertificateCard key={cert.id} cert={cert} onCertClick={onCertClick} />
-          ))}
-        </motion.div>
-      </div>
-    </div>
+      <CertificationModal cert={selectedCert} isOpen={selectedCert !== null} onClose={() => setSelectedCert(null)} />
+    </section>
   );
 };
 
@@ -167,59 +140,36 @@ const CertificateCard = ({
   const dragRef = useRef(false);
 
   return (
-    <motion.article
-      onPointerDown={() => { dragRef.current = false; }}
-      onPointerMove={() => { dragRef.current = true; }}
-      onPointerUp={() => { if (!dragRef.current) onCertClick(cert); }}
+    <article
+      onPointerDown={() => {
+        dragRef.current = false;
+      }}
+      onPointerMove={(event) => {
+        if (event.buttons > 0) dragRef.current = true;
+      }}
+      onPointerUp={() => {
+        if (!dragRef.current) onCertClick(cert);
+      }}
       onKeyDown={activateOnEnterOrSpace(() => onCertClick(cert))}
       role="button"
       tabIndex={0}
       aria-label={`View ${cert.title} certificate from ${cert.issuer}`}
-      className="flex-shrink-0 w-[220px] sm:w-[250px] md:w-[280px] lg:w-[320px] 2xl:w-[360px] select-none cursor-pointer group"
+      className="group w-[76vw] max-w-[340px] flex-shrink-0 cursor-pointer select-none sm:w-[300px] lg:w-[340px]"
     >
-      <div className="relative aspect-[3/4] rounded-xl overflow-hidden border border-white/10 bg-[#0a0a0a] shadow-2xl transition-colors duration-300 group-hover:border-white/30">
-        <div className="absolute inset-0 bg-black/50">
-          <OptimizedImage
-            src={cert.image}
-            alt={`${cert.title} certificate from ${cert.issuer}`}
-            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
-            containerClassName="w-full h-full"
-          />
-        </div>
-
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-
-        <div className="absolute inset-0 bg-white/[0.06] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-
-        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <span className="flex items-center gap-1 text-white text-xs md:text-sm font-semibold tracking-wide px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-white/20 pointer-events-none">
-            View Certificate <ArrowUpRight className='transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5' size={18} />
-          </span>
-        </div>
-
-        <div className="absolute bottom-0 left-0 right-0 p-4 lg:p-5 2xl:p-6 space-y-2">
-          <span
-            className="inline-block px-2.5 py-1 backdrop-blur-md rounded border text-[10px] font-mono tabular-nums tracking-wide"
-            style={{
-              backgroundColor: `${accents.cyan}1a`,
-              borderColor: `${accents.cyan}4d`,
-              color: accents.cyan,
-            }}
-          >
-            {cert.date}
-          </span>
-
-          <div className="space-y-1">
-            <h3 className="text-base lg:text-lg 2xl:text-xl font-bold text-white leading-tight line-clamp-2">
-              {cert.title}
-            </h3>
-            <p className="text-xs font-mono text-slate-400 line-clamp-1">
-              {cert.issuer}
-            </p>
-          </div>
-        </div>
+      <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-white/10 bg-white/[0.04] transition-colors duration-500 group-hover:border-white/30">
+        <OptimizedImage
+          src={cert.image}
+          alt=""
+          className="h-full w-full object-cover object-top opacity-85 transition-[transform,opacity] duration-700 ease-expo group-hover:scale-[1.04] group-hover:opacity-100"
+          containerClassName="h-full w-full"
+        />
       </div>
-    </motion.article>
+      <div className="mt-4 flex items-start justify-between gap-4">
+        <h3 className="text-base font-semibold leading-snug text-white line-clamp-2 md:text-[17px]">{cert.title}</h3>
+        <span className="pt-0.5 text-sm tabular-nums text-white/40">{cert.date}</span>
+      </div>
+      <p className="mt-1 text-sm text-white/50 line-clamp-1">{cert.issuer}</p>
+    </article>
   );
 };
 
