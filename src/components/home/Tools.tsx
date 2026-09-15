@@ -12,7 +12,6 @@ import {
 import { tools } from '../../data/tools';
 import TechIcon from '../ui/TechIcon';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import RuleReveal from '../../journey/RuleReveal';
 import FadeIn from '../../journey/FadeIn';
 
 const BASE_SPEED = 1.6;
@@ -73,40 +72,32 @@ const Tools = () => {
   const toolTiles = toolsTrack.map((tool, index) => (
     <div
       key={`${tool.name}-${index}`}
-      className="w-28 h-28 md:w-32 md:h-32 2xl:w-36 2xl:h-36 mr-4 flex flex-col items-center justify-center gap-2 flex-shrink-0 hover:bg-white/5 rounded-xl transition-all duration-300 group cursor-pointer"
+      className="group mr-3 flex h-14 flex-shrink-0 items-center gap-3 rounded-full border border-white/10 px-5 transition-colors duration-300 hover:border-white/30 md:mr-4 md:h-16 md:px-6"
     >
-      <div className="w-8 h-8 md:w-10 md:h-10 2xl:w-12 2xl:h-12 flex items-center justify-center transition-transform duration-500 ease-expo group-hover:-translate-y-1 group-hover:scale-110">
+      <span className="flex h-6 w-6 items-center justify-center transition-transform duration-500 ease-expo group-hover:scale-110 md:h-7 md:w-7">
         <TechIcon
           icon={tool.icon}
           name={tool.name}
-          className="object-contain filter grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
+          className="object-contain grayscale opacity-60 transition-[filter,opacity] duration-300 group-hover:grayscale-0 group-hover:opacity-100"
         />
-      </div>
-      <span className="text-xs md:text-sm 2xl:text-base font-mono text-slate-400 group-hover:text-white transition-colors duration-300 text-center px-2">
+      </span>
+      <span className="whitespace-nowrap text-[15px] text-white/60 transition-colors duration-300 group-hover:text-white md:text-base">
         {tool.name}
       </span>
     </div>
   ));
 
   return (
-    <section className="relative bg-transparent py-8 sm:py-12 md:py-16 2xl:py-20 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
-        <div className="text-center mb-8 sm:mb-10 2xl:mb-16">
-          <RuleReveal
-            lines={['Tools & Software']}
-            align="center"
-            className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-monument font-black text-white uppercase tracking-tight mb-3"
-          />
-          <FadeIn>
-            <p className="text-slate-400 text-sm sm:text-base md:text-lg 2xl:text-xl max-w-2xl mx-auto">
-              My tools for development and design.
-            </p>
-          </FadeIn>
-        </div>
+    <section className="relative overflow-hidden pb-24 md:pb-32 2xl:pb-40">
+      <div className="shell">
+        <FadeIn delay={0.1} className="mb-6 flex items-baseline justify-between gap-4 border-t border-white/15 pt-5 md:mb-8">
+          <h3 className="text-base font-semibold text-white md:text-lg">Everyday tools</h3>
+          <span className="text-sm tabular-nums text-white/40">{tools.length}</span>
+        </FadeIn>
       </div>
 
       {prefersReducedMotion ? (
-        <div className="flex flex-wrap justify-center">{toolTiles}</div>
+        <div className="shell flex flex-wrap gap-y-3">{toolTiles}</div>
       ) : (
         <Marquee>{toolTiles}</Marquee>
       )}
