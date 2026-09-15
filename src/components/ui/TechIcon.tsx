@@ -15,6 +15,7 @@ const TechIcon = ({ icon, name, className = '' }: TechIconProps) => {
         aria-hidden="true"
         loading="lazy"
         decoding="async"
+        draggable={false}
         width={24}
         height={24}
         className={`block w-full h-full object-contain ${className}`}

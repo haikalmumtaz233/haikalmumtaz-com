@@ -56,6 +56,7 @@ const OptimizedImage = memo(({
           alt={alt}
           loading={eager ? 'eager' : 'lazy'}
           decoding="async"
+          draggable={false}
           onLoad={() => setIsLoaded(true)}
           className={`${className} ${
             isLoaded ? 'opacity-100' : 'opacity-0'

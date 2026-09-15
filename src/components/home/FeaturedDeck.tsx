@@ -85,6 +85,7 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
                 alt=""
                 loading={index < 2 ? 'eager' : 'lazy'}
                 decoding="async"
+                draggable={false}
                 data-rail-image
                 className="h-full w-full object-cover"
               />
