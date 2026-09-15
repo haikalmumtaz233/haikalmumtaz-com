@@ -1,6 +1,6 @@
 export type EasingCurve = readonly [number, number, number, number];
 
-export type EasingName = 'smooth' | 'entrance' | 'exit' | 'inout';
+export type EasingName = 'smooth' | 'entrance' | 'exit' | 'inout' | 'expo' | 'wipe';
 
 export type DurationName = 'instant' | 'quick' | 'base' | 'slow' | 'reveal';
 

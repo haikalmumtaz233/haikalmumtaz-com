@@ -6,6 +6,7 @@ interface OptimizedImageProps {
   className?: string;
   blurClassName?: string;
   containerClassName?: string;
+  eager?: boolean;
 }
 
 const OptimizedImage = memo(({
@@ -14,13 +15,14 @@ const OptimizedImage = memo(({
   className = '',
   blurClassName = '',
   containerClassName = '',
+  eager = false,
 }: OptimizedImageProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isInView, setIsInView] = useState(false);
-  const imgRef = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(eager);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!imgRef.current) return;
+    if (eager || !containerRef.current) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -35,25 +37,26 @@ const OptimizedImage = memo(({
       }
     );
 
-    observer.observe(imgRef.current);
+    observer.observe(containerRef.current);
 
     return () => observer.disconnect();
-  }, []);
+  }, [eager]);
 
   return (
-    <div ref={imgRef} className={`relative overflow-hidden ${containerClassName}`}>
+    <div ref={containerRef} className={`relative overflow-hidden ${containerClassName}`}>
       <div
         className={`absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900 ${blurClassName} ${
           isLoaded ? 'opacity-0' : 'opacity-100'
         } transition-opacity duration-500 pointer-events-none`}
       />
-      
+
       {isInView && (
         <img
           src={src}
           alt={alt}
-          loading="lazy"
+          loading={eager ? 'eager' : 'lazy'}
           decoding="async"
+          draggable={false}
           onLoad={() => setIsLoaded(true)}
           className={`${className} ${
             isLoaded ? 'opacity-100' : 'opacity-0'

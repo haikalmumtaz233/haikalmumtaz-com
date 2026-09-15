@@ -1,129 +1,154 @@
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion, useScroll, useSpring } from 'framer-motion';
 import { useRef, useState } from 'react';
-import { experiences } from '../../data/experience';
+import { Plus } from 'lucide-react';
+import { experiences, type Experience as ExperienceEntry } from '../../data/experience';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import { animatedProps, maskedWordVariants, staggerContainerVariants } from '../../lib/motion';
+import { easing } from '../../lib/motion';
+import SectionHeader from '../ui/SectionHeader';
+
+const firstYear = experiences[experiences.length - 1]?.period.match(/\d{4}/)?.[0];
 
 const Experience = () => {
-  const sectionRef = useRef(null);
+  const listRef = useRef<HTMLOListElement>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
-  const titleVariants = staggerContainerVariants(prefersReducedMotion, 0.15);
-  const wordVariants = maskedWordVariants(prefersReducedMotion);
+  const { scrollYProgress } = useScroll({
+    target: listRef,
+    offset: ['start 0.7', 'end 0.5'],
+  });
+  const spine = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.4 });
 
   return (
-    <section ref={sectionRef} className="relative bg-transparent pt-10 sm:pt-16 md:pt-24 2xl:pt-32 pb-8 w-full overflow-x-clip">
-      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-12 items-stretch">
-          <div className="lg:col-span-5 min-h-full">
-            <div className="sticky top-1/2 -translate-y-1/2 py-8 text-left border-l-2 border-white/20 pl-8 md:pl-12">
-              <motion.div
-                variants={titleVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-100px" }}
-              >
-                <h2 className="text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none">
-                  <div className="overflow-hidden">
-                    <motion.span variants={wordVariants} className="inline-block mr-3">
-                      Professional
-                    </motion.span>
-                    <motion.span variants={wordVariants} className="inline-block ">
-                      Experience
-                    </motion.span>
-                  </div>
-                </h2>
-              </motion.div>
-            </div>
-          </div>
+    <section className="relative section-space overflow-x-clip">
+      <div className="shell">
+        <SectionHeader
+          title={['Experience']}
+          meta={
+            <p className="text-sm md:text-base text-white/55">
+              {experiences.length} roles since {firstYear}
+            </p>
+          }
+        />
 
-          <div className="lg:col-span-7 relative">
-            <div className="max-w-3xl">
-              {experiences.map((exp, index) => (
-                <ExperienceItem
-                  key={index}
-                  experience={exp}
-                  index={index}
-                  hoveredIndex={hoveredIndex}
-                  setHoveredIndex={setHoveredIndex}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
+        <ol ref={listRef} className="relative border-b border-white/10">
+          <span aria-hidden="true" className="absolute left-[3px] top-0 bottom-0 w-px bg-white/10" />
+          {!prefersReducedMotion && (
+            <motion.span
+              aria-hidden="true"
+              className="absolute left-[3px] top-0 bottom-0 w-px origin-top bg-white/70"
+              style={{ scaleY: spine }}
+            />
+          )}
+          {experiences.map((entry, index) => (
+            <ExperienceItem
+              key={entry.company}
+              entry={entry}
+              index={index}
+              isOpen={openIndex === index}
+              onToggle={() => setOpenIndex((current) => (current === index ? null : index))}
+            />
+          ))}
+        </ol>
       </div>
     </section>
   );
 };
 
 interface ExperienceItemProps {
-  experience: {
-    company: string;
-    subtitle?: string;
-    role: string;
-    year: string;
-    period: string;
-    description: string;
-  };
+  entry: ExperienceEntry;
   index: number;
-  hoveredIndex: number | null;
-  setHoveredIndex: (index: number | null) => void;
+  isOpen: boolean;
+  onToggle: () => void;
 }
 
-const ExperienceItem = ({ experience, index, hoveredIndex, setHoveredIndex }: ExperienceItemProps) => {
+const ExperienceItem = ({ entry, index, isOpen, onToggle }: ExperienceItemProps) => {
   const prefersReducedMotion = usePrefersReducedMotion();
-  const isDimmed = hoveredIndex !== null && hoveredIndex !== index;
+  const panelId = `experience-panel-${index}`;
+  const isCurrent = entry.period.includes('Present');
 
   return (
-    <div className="min-h-0 sm:min-h-[40vh] lg:min-h-[60vh] 2xl:min-h-[70vh] flex flex-col justify-center">
-      <motion.div
-        {...animatedProps(prefersReducedMotion, {
-          initial: { opacity: 0, y: 50 },
-          whileInView: { opacity: 1, y: 0 },
-          viewport: { once: true, amount: 0.5 },
-          transition: { duration: 0.6, delay: index * 0.1 },
-        })}
-      >
-        <motion.div
-          onMouseEnter={() => setHoveredIndex(index)}
-          onMouseLeave={() => setHoveredIndex(null)}
-          animate={{ opacity: isDimmed ? 0.2 : 1 }}
-          transition={{ duration: 0.5, ease: 'easeInOut' }}
-          className="border-t border-white/20 pt-6 pb-6 sm:pt-8 sm:pb-8 lg:pt-10 lg:pb-10 lg:pl-12"
-        >
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 md:gap-8">
-          <div className="md:col-span-3">
-            <div className="font-mono text-slate-400 text-sm tracking-wider">
-              <div className="text-white font-bold text-base md:text-lg 2xl:text-xl">{experience.year}</div>
-              <div className="mt-1 text-xs md:text-sm">{experience.period}</div>
-            </div>
-          </div>
+    <motion.li
+      className="relative pl-8 md:pl-12"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.5 }}
+    >
+      <motion.span
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 h-px origin-left bg-white/10"
+        variants={{
+          hidden: { scaleX: prefersReducedMotion ? 1 : 0 },
+          visible: { scaleX: 1, transition: { duration: 1.1, ease: easing.wipe } },
+        }}
+      />
+      <span
+        aria-hidden="true"
+        className={`absolute left-0 top-[1.9rem] md:top-[2.35rem] h-[7px] w-[7px] rounded-full transition-colors duration-500 ${
+          isOpen ? 'bg-white' : 'bg-white/30'
+        }`}
+      />
 
-          <div className="md:col-span-9">
-            <div className="space-y-1 mb-4">
-              <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-bold text-white">
-                {experience.company}
-              </h3>
-              {experience.subtitle && (
-                <p className="text-sm md:text-base text-slate-400 font-medium">
-                  {experience.subtitle}
-                </p>
+      <motion.div
+        variants={{
+          hidden: prefersReducedMotion ? {} : { opacity: 0, y: 24 },
+          visible: { opacity: 1, y: 0, transition: { duration: 1, ease: easing.expo, delay: 0.15 } },
+        }}
+      >
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-expanded={isOpen}
+          aria-controls={panelId}
+          className="group grid w-full grid-cols-[1fr_auto] items-start gap-x-6 gap-y-1 py-6 text-left md:grid-cols-12 md:py-8"
+        >
+          <span className="col-span-1 text-sm tabular-nums text-white/50 md:col-span-3 md:pt-2 md:text-base">
+            {entry.period}
+          </span>
+          <span className="col-start-1 row-start-2 md:col-span-8 md:col-start-4 md:row-start-1">
+            <span className="block text-xl font-semibold leading-snug text-white transition-colors duration-300 group-hover:text-white/80 md:text-2xl 2xl:text-3xl">
+              {entry.company}
+            </span>
+            <span className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[15px] text-white/60 md:text-base">
+              {entry.role}
+              {isCurrent && (
+                <span className="inline-flex items-center gap-1.5 text-sm text-emerald-300/90">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                  Current
+                </span>
               )}
-            </div>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full mb-4 transition-all duration-300">
-              <p className="text-xs md:text-sm font-medium text-white tracking-wider">
-                {experience.role}
-              </p>
-            </div>
-            <p className="text-slate-400 text-sm md:text-base lg:text-lg 2xl:text-xl leading-relaxed max-w-3xl">
-              {experience.description}
-            </p>
-          </div>
-        </div>
-        </motion.div>
+            </span>
+          </span>
+          <span className="col-start-2 row-span-2 row-start-1 flex h-9 w-9 items-center justify-center self-center rounded-full border border-white/15 transition-colors duration-300 group-hover:border-white/40 md:col-span-1 md:col-start-12 md:justify-self-end">
+            <Plus
+              className={`h-4 w-4 text-white transition-transform duration-500 ease-expo ${isOpen ? 'rotate-45' : ''}`}
+            />
+          </span>
+        </button>
+
+        <AnimatePresence initial={false}>
+          {isOpen && (
+            <motion.div
+              id={panelId}
+              className="overflow-hidden"
+              initial={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
+              animate={prefersReducedMotion ? { opacity: 1 } : { height: 'auto', opacity: 1 }}
+              exit={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
+              transition={{ duration: 0.7, ease: easing.expo }}
+            >
+              <div className="pb-8 md:grid md:grid-cols-12 md:gap-x-6 md:pb-10">
+                <div className="md:col-span-7 md:col-start-4">
+                  {entry.subtitle && <p className="mb-2 text-sm text-white/45">{entry.subtitle}</p>}
+                  <p className="max-w-[62ch] text-[15px] leading-relaxed text-white/65 md:text-base 2xl:text-lg">
+                    {entry.description}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
-    </div>
+    </motion.li>
   );
 };
 

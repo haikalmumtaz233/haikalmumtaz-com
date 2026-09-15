@@ -93,7 +93,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                 alt={project.name}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute top-4 left-4 z-20 px-3 py-1.5 bg-black/70 backdrop-blur-md text-slate-300 text-xs font-mono rounded-full tracking-wider uppercase border border-white/15">
+              <div className="absolute top-4 left-4 z-20 px-3 py-1.5 bg-black/70 text-white/80 text-sm rounded-full border border-white/15">
                 {project.category}
               </div>
             </div>
@@ -117,7 +117,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                 {project.stack.map((tech, i) => (
                   <span
                     key={i}
-                    className="px-3 py-1.5 bg-white/5 border border-white/10 text-slate-300 text-sm rounded-lg font-mono"
+                    className="px-3 py-1 border border-white/10 text-white/70 text-sm rounded-full"
                   >
                     {tech}
                   </span>

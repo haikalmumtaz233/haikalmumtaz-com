@@ -6,11 +6,12 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Background from './components/Background';
 import JourneyProvider from './journey/JourneyProvider';
+import Intro from './components/Intro';
+import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
+import TechIconSprite from './components/ui/TechIconSprite';
 
 const Projects = lazy(() => import('./pages/Projects'));
 const NotFound = lazy(() => import('./pages/NotFound'));
-import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
-import TechIconSprite from './components/ui/TechIconSprite';
 
 const scrollPositions = new Map<string, number>();
 
@@ -62,6 +63,7 @@ function ScrollManager() {
 function AppShell() {
   return (
     <JourneyProvider>
+      <Intro />
       <TechIconSprite />
       <Background />
       <ScrollManager />

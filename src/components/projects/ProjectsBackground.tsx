@@ -31,11 +31,13 @@ const ProjectsBackground = () => {
     let height = window.innerHeight;
 
     const particles: Particle[] = [];
+    let topGlow: CanvasGradient | null = null;
+    let bottomGlow: CanvasGradient | null = null;
 
     const populate = () => {
       particles.length = 0;
       const particleCount = Math.floor((width * height) / PARTICLE_DENSITY);
-      const colors = ['6, 182, 212', '168, 85, 247', '236, 72, 153'];
+      const colors = ['rgb(6, 182, 212)', 'rgb(168, 85, 247)', 'rgb(236, 72, 153)'];
 
       for (let i = 0; i < particleCount; i++) {
         particles.push({
@@ -56,6 +58,14 @@ const ProjectsBackground = () => {
       canvas.width = width;
       canvas.height = height;
       populate();
+
+      topGlow = ctx.createRadialGradient(width * 0.8, height * 0.2, 0, width * 0.8, height * 0.2, 400);
+      topGlow.addColorStop(0, 'rgba(6, 182, 212, 0.1)');
+      topGlow.addColorStop(1, 'transparent');
+
+      bottomGlow = ctx.createRadialGradient(width * 0.2, height * 0.8, 0, width * 0.2, height * 0.8, 300);
+      bottomGlow.addColorStop(0, 'rgba(168, 85, 247, 0.08)');
+      bottomGlow.addColorStop(1, 'transparent');
     };
 
     handleResize();
@@ -73,6 +83,7 @@ const ProjectsBackground = () => {
       }
 
       ctx.lineWidth = 0.5;
+      ctx.strokeStyle = 'rgb(6, 182, 212)';
 
       for (let row = 0; row < rows; row++) {
         for (let column = 0; column < columns; column++) {
@@ -100,9 +111,8 @@ const ProjectsBackground = () => {
                   const squaredDistance = dx * dx + dy * dy;
                   if (squaredDistance >= LINK_DISTANCE * LINK_DISTANCE) continue;
 
-                  const opacity = (1 - Math.sqrt(squaredDistance) / LINK_DISTANCE) * 0.15;
+                  ctx.globalAlpha = (1 - Math.sqrt(squaredDistance) / LINK_DISTANCE) * 0.15;
                   ctx.beginPath();
-                  ctx.strokeStyle = `rgba(6, 182, 212, ${opacity})`;
                   ctx.moveTo(first.x, first.y);
                   ctx.lineTo(second.x, second.y);
                   ctx.stroke();
@@ -112,12 +122,15 @@ const ProjectsBackground = () => {
           }
         }
       }
+
+      ctx.globalAlpha = 1;
     };
 
     const drawParticle = (particle: Particle) => {
       ctx.beginPath();
       ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${particle.color}, ${particle.alpha})`;
+      ctx.globalAlpha = particle.alpha;
+      ctx.fillStyle = particle.color;
       ctx.fill();
     };
 
@@ -126,19 +139,15 @@ const ProjectsBackground = () => {
       ctx.fillRect(0, 0, width, height);
 
       particles.forEach(drawParticle);
+      ctx.globalAlpha = 1;
       linkNeighbours();
 
-      const topGlow = ctx.createRadialGradient(width * 0.8, height * 0.2, 0, width * 0.8, height * 0.2, 400);
-      topGlow.addColorStop(0, 'rgba(6, 182, 212, 0.1)');
-      topGlow.addColorStop(1, 'transparent');
-      ctx.fillStyle = topGlow;
-      ctx.fillRect(0, 0, width, height);
-
-      const bottomGlow = ctx.createRadialGradient(width * 0.2, height * 0.8, 0, width * 0.2, height * 0.8, 300);
-      bottomGlow.addColorStop(0, 'rgba(168, 85, 247, 0.08)');
-      bottomGlow.addColorStop(1, 'transparent');
-      ctx.fillStyle = bottomGlow;
-      ctx.fillRect(0, 0, width, height);
+      if (topGlow && bottomGlow) {
+        ctx.fillStyle = topGlow;
+        ctx.fillRect(0, 0, width, height);
+        ctx.fillStyle = bottomGlow;
+        ctx.fillRect(0, 0, width, height);
+      }
     };
 
     if (prefersReducedMotion) {

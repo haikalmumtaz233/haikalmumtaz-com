@@ -1,207 +1,249 @@
-import { useState, useMemo, useCallback, type KeyboardEvent as ReactKeyboardEvent } from 'react';
+import { useState, useMemo, useCallback, useEffect, useRef, type KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { motion, AnimatePresence, type PanInfo } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { projects } from '../../data/projects';
 import type { Project } from '../../data/projects';
 import ProjectModal from '../projects/ProjectModal';
 import FeaturedCard from './FeaturedCard';
-import SectionArrival from '../../journey/SectionArrival';
+import FeaturedDeck from './FeaturedDeck';
+import { useIsMobile } from '../../hooks/useMediaQuery';
+import SectionHeader from '../ui/SectionHeader';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { easing } from '../../lib/motion';
+
+const VISIBLE_STACK = 4;
+const SWIPE_THRESHOLD = 60;
 
 const FeaturedProjects = () => {
   const navigate = useNavigate();
   const prefersReducedMotion = usePrefersReducedMotion();
+  const isMobile = useIsMobile();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const sectionRef = useRef<HTMLElement>(null);
 
-  const featuredProjects = useMemo(() => {
-    return projects.filter((p) => p.isFeatured);
-  }, []);
+  const featuredProjects = useMemo(() => projects.filter((p) => p.isFeatured), []);
+  const activeProject = featuredProjects[currentIndex];
 
   const handleCloseModal = useCallback(() => setSelectedProject(null), []);
 
-  const isFirstSlide = currentIndex === 0;
-  const isLastSlide = currentIndex === featuredProjects.length - 1;
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
 
-  const paginate = (newDirection: number) => {
-    if (newDirection < 0 && isFirstSlide) return;
-    if (newDirection > 0 && isLastSlide) return;
-    setDirection(newDirection);
-    setCurrentIndex((prev) => prev + newDirection);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        featuredProjects.forEach((project) => {
+          const image = new Image();
+          image.decoding = 'async';
+          image.src = project.image;
+        });
+      },
+      { rootMargin: '600px 0px' }
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, [featuredProjects]);
+
+  const select = (index: number) => {
+    if (index === currentIndex || index < 0 || index >= featuredProjects.length) return;
+    setDirection(index > currentIndex ? 1 : -1);
+    setCurrentIndex(index);
   };
 
-  const handleCarouselKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'ArrowRight') {
-      event.preventDefault();
-      paginate(1);
-      return;
-    }
-    if (event.key === 'ArrowLeft') {
-      event.preventDefault();
-      paginate(-1);
-    }
+  const handleTabKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    const keyMap: Record<string, number> = {
+      ArrowDown: currentIndex + 1,
+      ArrowRight: currentIndex + 1,
+      ArrowUp: currentIndex - 1,
+      ArrowLeft: currentIndex - 1,
+      Home: 0,
+      End: featuredProjects.length - 1,
+    };
+    const next = keyMap[event.key];
+    if (next === undefined) return;
+    event.preventDefault();
+    const clamped = Math.min(featuredProjects.length - 1, Math.max(0, next));
+    select(clamped);
+    tabRefs.current[clamped]?.focus();
   };
 
   const handleDragEnd = (_event: unknown, info: PanInfo) => {
-    const threshold = 60;
-    if (info.offset.x < -threshold) paginate(1);
-    else if (info.offset.x > threshold) paginate(-1);
+    if (info.offset.x < -SWIPE_THRESHOLD) select(currentIndex + 1);
+    else if (info.offset.x > SWIPE_THRESHOLD) select(currentIndex - 1);
   };
 
-  const cardVariants = prefersReducedMotion
+  const previewVariants = prefersReducedMotion
     ? {
         enter: { opacity: 0 },
         center: { opacity: 1 },
         exit: { opacity: 0 },
       }
     : {
-        enter: (direction: number) => ({
-          rotateY: direction > 0 ? 45 : -45,
-          x: direction > 0 ? 300 : -300,
-          opacity: 0,
-          scale: 0.8,
-          z: -200,
+        enter: (dir: number) => ({
+          clipPath: dir > 0 ? 'inset(0% 0% 0% 100%)' : 'inset(0% 100% 0% 0%)',
+          x: dir > 0 ? 90 : -90,
+          opacity: 1,
+          scale: 1,
+          zIndex: 2,
         }),
         center: {
-          rotateY: 0,
+          clipPath: 'inset(0% 0% 0% 0%)',
           x: 0,
           opacity: 1,
           scale: 1,
-          z: 0,
+          zIndex: 2,
+          transition: {
+            clipPath: { duration: 1.05, ease: easing.expo },
+            x: { duration: 1.2, ease: easing.expo },
+          },
         },
-        exit: (direction: number) => ({
-          rotateY: direction > 0 ? -45 : 45,
-          x: direction > 0 ? -300 : 300,
+        exit: (dir: number) => ({
+          clipPath: 'inset(0% 0% 0% 0%)',
+          x: dir > 0 ? -140 : 140,
           opacity: 0,
-          scale: 0.8,
-          z: -200,
+          scale: 0.92,
+          zIndex: 1,
+          transition: {
+            default: { duration: 0.9, ease: easing.inout },
+            opacity: { duration: 0.6, ease: easing.exit, delay: 0.15 },
+          },
         }),
       };
 
   return (
-    <section className="relative bg-transparent py-10 sm:py-14 md:py-20 lg:py-28 2xl:py-32 overflow-hidden">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-2 sm:mb-3 md:mb-4">
-          <div className="flex items-center justify-between flex-wrap gap-3">
-            <div>
-              <SectionArrival>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-monument font-black tracking-tight text-white mb-1 sm:mb-2 uppercase">
-                  FEATURED WORK
-                </h2>
-              </SectionArrival>
-              <p className="text-slate-400 text-sm sm:text-base md:text-lg 2xl:text-xl font-light">
-                My best projects
-              </p>
-            </div>
+    <section ref={sectionRef} className="relative section-space overflow-x-clip">
+      <div className="shell">
+        <SectionHeader
+          title={['Featured work']}
+          meta={
             <button
+              type="button"
               onClick={() => navigate('/projects', { viewTransition: true })}
-              className="group flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 md:px-5 md:py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-full transition-all duration-300"
+              className="group inline-flex items-center gap-2 border-b border-white/25 pb-1 text-sm md:text-base font-medium text-white transition-colors duration-300 hover:border-white"
             >
-              <span className="text-[11px] sm:text-xs md:text-sm font-medium text-white">
-                View All
-              </span>
-              <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 text-white group-hover:translate-x-1 transition-transform duration-300" />
+              Browse all {projects.length} projects
+              <ArrowUpRight className="h-4 w-4 transition-transform duration-500 ease-expo group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </button>
-          </div>
-        </div>
+          }
+        />
 
-        <div className="flex items-center gap-2 sm:gap-3 md:gap-4 lg:gap-6">
-          <button
-            onClick={() => paginate(-1)}
-            disabled={isFirstSlide}
-            aria-label="Previous project"
-            className={`flex-shrink-0 p-2 sm:p-2.5 md:p-3 lg:p-4 rounded-full border transition-all duration-300 ${
-              isFirstSlide
-                ? 'bg-white/[0.02] border-white/5 cursor-not-allowed'
-                : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20'
-            }`}
-          >
-            <ChevronLeft className={`w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 ${isFirstSlide ? 'text-white/20' : 'text-white'}`} />
-          </button>
+        {isMobile ? (
+          <FeaturedDeck projects={featuredProjects} onOpen={setSelectedProject} />
+        ) : (
+        <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-7 lg:order-2">
+            <div
+              id="featured-preview"
+              role="tabpanel"
+              aria-labelledby={`featured-tab-${currentIndex}`}
+              className="relative aspect-[16/10]"
+            >
+              <AnimatePresence initial={false} custom={direction} mode="popLayout">
+                <motion.div
+                  key={currentIndex}
+                  custom={direction}
+                  variants={previewVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={prefersReducedMotion ? { duration: 0.2 } : undefined}
+                  className="absolute inset-0"
+                  drag={prefersReducedMotion ? false : 'x'}
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.18}
+                  onDragEnd={handleDragEnd}
+                  style={{ touchAction: 'pan-y' }}
+                >
+                  <FeaturedCard project={activeProject} onClick={() => setSelectedProject(activeProject)} />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            <div className="mt-5 flex items-start justify-between gap-6">
+              <ul className="flex flex-wrap gap-2" aria-label={`${activeProject.name} stack`}>
+                {activeProject.stack.slice(0, VISIBLE_STACK).map((tech) => (
+                  <li
+                    key={tech}
+                    className="rounded-full border border-white/10 px-3 py-1 text-[13px] text-white/70"
+                  >
+                    {tech}
+                  </li>
+                ))}
+              </ul>
+              <span className="shrink-0 pt-1 text-sm tabular-nums text-white/45">
+                {currentIndex + 1} / {featuredProjects.length}
+              </span>
+            </div>
+          </div>
 
           <div
-            className="flex-1 relative h-[240px] md:h-[260px] lg:h-[300px] xl:h-[330px] 2xl:h-[370px] focus:outline-none"
-            style={{ perspective: '1200px' }}
-            role="group"
-            aria-roledescription="carousel"
+            role="tablist"
             aria-label="Featured projects"
-            tabIndex={0}
-            onKeyDown={handleCarouselKeyDown}
+            aria-orientation="vertical"
+            onKeyDown={handleTabKeyDown}
+            className="border-b border-white/10 lg:col-span-5 lg:order-1"
           >
-            <AnimatePresence initial={false} custom={direction} mode="popLayout">
-              <motion.div
-                key={currentIndex}
-                custom={direction}
-                variants={cardVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={
-                  prefersReducedMotion
-                    ? { duration: 0.2 }
-                    : {
-                        type: 'spring',
-                        stiffness: 300,
-                        damping: 30,
-                        opacity: { duration: 0.3 },
-                      }
-                }
-                className="absolute inset-0 flex justify-center items-center"
-                style={{ transformStyle: 'preserve-3d' }}
-                drag={prefersReducedMotion ? false : 'x'}
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.18}
-                onDragEnd={handleDragEnd}
-              >
-                <div className="w-full max-w-[260px] md:max-w-[580px] lg:max-w-[700px] xl:max-w-[800px] 2xl:max-w-[900px]">
-                  <FeaturedCard
-                    project={featuredProjects[currentIndex]}
-                    index={currentIndex}
-                    onClick={() => setSelectedProject(featuredProjects[currentIndex])}
-                  />
-                </div>
-              </motion.div>
-            </AnimatePresence>
+            {featuredProjects.map((project, index) => {
+              const isActive = index === currentIndex;
+              return (
+                <button
+                  key={project.id}
+                  ref={(node) => {
+                    tabRefs.current[index] = node;
+                  }}
+                  id={`featured-tab-${index}`}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  aria-controls="featured-preview"
+                  tabIndex={isActive ? 0 : -1}
+                  onClick={() => select(index)}
+                  className="group relative block w-full border-t border-white/10 py-5 text-left md:py-6"
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId={prefersReducedMotion ? undefined : 'featured-active-rule'}
+                      aria-hidden="true"
+                      className="absolute -top-px left-0 h-px w-full bg-white"
+                      transition={{ duration: 0.8, ease: easing.expo }}
+                    />
+                  )}
+                  <span
+                    className={`block font-monument text-lg font-black uppercase leading-tight tracking-tight transition-colors duration-500 sm:text-xl md:text-2xl ${
+                      isActive ? 'text-white' : 'text-white/35 group-hover:text-white/70'
+                    }`}
+                  >
+                    {project.name}
+                  </span>
+                  <AnimatePresence initial={false}>
+                    {isActive && (
+                      <motion.span
+                        className="block overflow-hidden"
+                        initial={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
+                        animate={prefersReducedMotion ? { opacity: 1 } : { height: 'auto', opacity: 1 }}
+                        exit={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
+                        transition={{ duration: 0.6, ease: easing.expo }}
+                      >
+                        <span className="block pt-3 text-[15px] text-white/65 md:text-base">{project.subtitle}</span>
+                        <span className="mt-1 block text-sm text-white/40">{project.category}</span>
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </button>
+              );
+            })}
           </div>
-
-          <button
-            onClick={() => paginate(1)}
-            disabled={isLastSlide}
-            aria-label="Next project"
-            className={`flex-shrink-0 p-2 sm:p-2.5 md:p-3 lg:p-4 rounded-full border transition-all duration-300 ${
-              isLastSlide
-                ? 'bg-white/[0.02] border-white/5 cursor-not-allowed'
-                : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20'
-            }`}
-          >
-            <ChevronRight className={`w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 ${isLastSlide ? 'text-white/20' : 'text-white'}`} />
-          </button>
         </div>
+        )}
 
-        <div className="flex justify-center gap-1.5 sm:gap-2 mt-2 sm:mt-3 md:mt-4" role="tablist" aria-label="Project slides">
-          {featuredProjects.map((project, index) => (
-            <button
-              key={index}
-              onClick={() => {
-                setDirection(index > currentIndex ? 1 : -1);
-                setCurrentIndex(index);
-              }}
-              role="tab"
-              aria-selected={index === currentIndex}
-              aria-label={`Go to project ${index + 1}: ${project.name}`}
-              className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
-                index === currentIndex ? 'bg-white w-5 sm:w-6' : 'w-1.5 sm:w-2 bg-white/20 hover:bg-white/40'
-              }`}
-            />
-          ))}
-        </div>
-
-        <ProjectModal
-          project={selectedProject}
-          onClose={handleCloseModal}
-        />
+        <ProjectModal project={selectedProject} onClose={handleCloseModal} />
       </div>
     </section>
   );

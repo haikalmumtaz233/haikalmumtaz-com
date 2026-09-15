@@ -1,25 +1,36 @@
 import { useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
+import { easing } from '../lib/motion';
 import { useJourney } from '../journey/useJourney';
 
 const STAR_DENSITY = 8000;
 const SCROLL_PARALLAX = 0.08;
 const ARRIVAL_START = 0.75;
 const ARRIVAL_DRIFT = 0.3;
+const ROUND_STAR_RADIUS = 1.1;
+const STAR_COLORS = ['rgb(255, 255, 255)', 'rgb(220, 250, 255)', 'rgb(240, 230, 255)'];
 
 interface Star {
     x: number;
     y: number;
     depth: number;
-    size: number;
+    radius: number;
     baseAlpha: number;
     alpha: number;
     twinkleSpeed: number;
-    color: string;
+    color: number;
 }
 
 const wrap = (value: number, max: number) => ((value % max) + max) % max;
+
+const glow = (rgb: string) => `radial-gradient(circle at center, rgba(${rgb}, 1) 0%, rgba(${rgb}, 0.55) 28%, rgba(${rgb}, 0) 68%)`;
+
+const orbs = [
+    { position: '-top-[32%] -left-[22%]', size: 'w-[900px] h-[900px]', color: glow('147, 51, 234'), drift: [50, 15] as const },
+    { position: '-bottom-[26%] -right-[16%]', size: 'w-[640px] h-[640px]', color: glow('6, 182, 212'), drift: [40, 18] as const },
+    { position: 'top-[16%] right-[0%]', size: 'w-[460px] h-[460px]', color: glow('217, 70, 239'), drift: [60, 12] as const },
+];
 
 const Background = () => {
     const prefersReducedMotion = usePrefersReducedMotion();
@@ -27,31 +38,23 @@ const Background = () => {
     const { progress } = useJourney();
     const { scrollYProgress } = useScroll();
 
-    const orb1Y = useTransform(scrollYProgress, [0, 1], ['0vh', '50vh']);
-    const orb2Y = useTransform(scrollYProgress, [0, 1], ['0vh', '30vh']);
-    const orb3Y = useTransform(scrollYProgress, [0, 1], ['0vh', '40vh']);
+    const orbY = [
+        useTransform(scrollYProgress, [0, 1], ['0vh', '50vh']),
+        useTransform(scrollYProgress, [0, 1], ['0vh', '30vh']),
+        useTransform(scrollYProgress, [0, 1], ['0vh', '40vh']),
+    ];
 
-    const orb1Opacity = useTransform(progress, [0, 0.45, 1], [0.4, 0.22, 0.15]);
-    const orb2Opacity = useTransform(progress, [0, 0.45, 1], [0.18, 0.4, 0.22]);
-    const orb3Opacity = useTransform(progress, [0, 0.55, 1], [0.15, 0.22, 0.4]);
-
-    const idleDrift = (range: number, duration: number) =>
-        prefersReducedMotion
-            ? {}
-            : {
-                  animate: { x: [-range, range, -range] },
-                  transition: {
-                      duration,
-                      repeat: Infinity,
-                      ease: 'easeInOut' as const,
-                  },
-              };
+    const orbOpacity = [
+        useTransform(progress, [0, 0.45, 1], [0.4, 0.22, 0.15]),
+        useTransform(progress, [0, 0.45, 1], [0.18, 0.4, 0.22]),
+        useTransform(progress, [0, 0.55, 1], [0.15, 0.22, 0.4]),
+    ];
 
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { alpha: true });
         if (!ctx) return;
 
         let animationFrameId = 0;
@@ -70,21 +73,23 @@ const Background = () => {
         const populate = () => {
             stars.length = 0;
             const starCount = Math.floor((width * height) / STAR_DENSITY);
-            const colors = ['255, 255, 255', '220, 250, 255', '240, 230, 255'];
 
             for (let i = 0; i < starCount; i++) {
                 const baseAlpha = Math.random() * 0.55 + 0.4;
+                const depth = Math.random() * 1.5 + 0.5;
                 stars.push({
                     x: Math.random() * width,
                     y: Math.random() * height,
-                    depth: Math.random() * 1.5 + 0.5,
-                    size: Math.random() * 1.2,
+                    depth,
+                    radius: Math.random() * 1.2 * depth * 0.8,
                     baseAlpha,
                     alpha: baseAlpha,
                     twinkleSpeed: Math.random() * 0.01 + 0.002,
-                    color: colors[Math.floor(Math.random() * colors.length)],
+                    color: Math.floor(Math.random() * STAR_COLORS.length),
                 });
             }
+
+            stars.sort((a, b) => a.color - b.color);
         };
 
         const handleResize = () => {
@@ -102,32 +107,40 @@ const Background = () => {
 
         handleResize();
 
-        const drawStar = (star: Star) => {
-            const parallax = smoothScrollY * star.depth * SCROLL_PARALLAX;
-            ctx.beginPath();
-            ctx.arc(
-                wrap(star.x, width),
-                wrap(star.y - parallax, height),
-                star.size * (star.depth * 0.8),
-                0,
-                Math.PI * 2
-            );
-            ctx.fillStyle = `rgba(${star.color}, ${Math.max(0, star.alpha)})`;
-            ctx.fill();
-        };
-
-        const renderStaticField = () => {
+        const drawField = () => {
             ctx.clearRect(0, 0, width, height);
-            stars.forEach(drawStar);
+            let activeColor = -1;
+
+            for (const star of stars) {
+                if (star.color !== activeColor) {
+                    activeColor = star.color;
+                    ctx.fillStyle = STAR_COLORS[activeColor];
+                }
+
+                const x = wrap(star.x, width);
+                const y = wrap(star.y - smoothScrollY * star.depth * SCROLL_PARALLAX, height);
+                ctx.globalAlpha = star.alpha > 0 ? star.alpha : 0;
+
+                if (star.radius > ROUND_STAR_RADIUS) {
+                    ctx.beginPath();
+                    ctx.arc(x, y, star.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    const diameter = star.radius * 2;
+                    ctx.fillRect(x - star.radius, y - star.radius, diameter, diameter);
+                }
+            }
+
+            ctx.globalAlpha = 1;
         };
 
         if (prefersReducedMotion) {
             const handleStaticResize = () => {
                 handleResize();
-                renderStaticField();
+                drawField();
             };
 
-            renderStaticField();
+            drawField();
             window.addEventListener('resize', handleStaticResize);
 
             return () => {
@@ -136,8 +149,6 @@ const Background = () => {
         }
 
         const animate = () => {
-            ctx.clearRect(0, 0, width, height);
-
             mouseX += (targetMouseX - mouseX) * 0.05;
             mouseY += (targetMouseY - mouseY) * 0.05;
             smoothScrollY += (window.scrollY - smoothScrollY) * 0.08;
@@ -146,7 +157,9 @@ const Background = () => {
                 1,
                 Math.max(0, (progress.get() - ARRIVAL_START) / (1 - ARRIVAL_START))
             );
-            const driftScale = 1 - (1 - ARRIVAL_DRIFT) * arrival;
+            const drift = 0.2 * (1 - (1 - ARRIVAL_DRIFT) * arrival);
+            const pullX = mouseX * 0.05;
+            const pullY = mouseY * 0.05;
 
             for (const star of stars) {
                 star.alpha += star.twinkleSpeed;
@@ -154,18 +167,16 @@ const Background = () => {
                     star.twinkleSpeed = -star.twinkleSpeed;
                 }
 
-                star.x -= mouseX * star.depth * 0.05;
-                star.y -= mouseY * star.depth * 0.05;
-                star.y -= 0.2 * star.depth * driftScale;
-
-                drawStar(star);
+                star.x -= pullX * star.depth;
+                star.y -= (pullY + drift) * star.depth;
             }
 
+            drawField();
             animationFrameId = requestAnimationFrame(animate);
         };
 
         window.addEventListener('resize', handleResize);
-        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
         animate();
 
@@ -177,55 +188,44 @@ const Background = () => {
     }, [prefersReducedMotion, progress]);
 
     return (
-        <div className="fixed inset-0 z-[-1] bg-[#0a0a0a]">
-            <canvas
+        <div className="fixed inset-0 z-[-1] bg-[#09080e]">
+            <motion.canvas
                 ref={canvasRef}
                 className="absolute inset-0 block"
+                initial={prefersReducedMotion ? false : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 2.4, ease: easing.smooth }}
             />
 
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <motion.div
-                    className="absolute -top-[20%] -left-[10%]"
-                    style={{ y: prefersReducedMotion ? 0 : orb1Y, willChange: 'transform' }}
-                >
+            <motion.div
+                className="absolute inset-0 overflow-hidden pointer-events-none"
+                initial={prefersReducedMotion ? false : { opacity: 0, scale: 1.08 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 2.8, ease: easing.expo }}
+            >
+                {orbs.map((orb, index) => (
                     <motion.div
-                        {...idleDrift(50, 15)}
-                        className="w-[600px] h-[600px] rounded-full bg-purple-600 mix-blend-screen filter blur-[100px]"
-                        style={{
-                            opacity: prefersReducedMotion ? 0.4 : orb1Opacity,
-                            willChange: 'transform',
-                        }}
-                    />
-                </motion.div>
-
-                <motion.div
-                    className="absolute -bottom-[10%] -right-[5%]"
-                    style={{ y: prefersReducedMotion ? 0 : orb2Y, willChange: 'transform' }}
-                >
-                    <motion.div
-                        {...idleDrift(40, 18)}
-                        className="w-[400px] h-[400px] rounded-full bg-cyan-500 mix-blend-screen filter blur-[100px]"
-                        style={{
-                            opacity: prefersReducedMotion ? 0.4 : orb2Opacity,
-                            willChange: 'transform',
-                        }}
-                    />
-                </motion.div>
-
-                <motion.div
-                    className="absolute top-[30%] right-[10%]"
-                    style={{ y: prefersReducedMotion ? 0 : orb3Y, willChange: 'transform' }}
-                >
-                    <motion.div
-                        {...idleDrift(60, 12)}
-                        className="w-[250px] h-[250px] rounded-full bg-fuchsia-500 mix-blend-screen filter blur-[100px]"
-                        style={{
-                            opacity: prefersReducedMotion ? 0.4 : orb3Opacity,
-                            willChange: 'transform',
-                        }}
-                    />
-                </motion.div>
-            </div>
+                        key={orb.position}
+                        className={`absolute ${orb.position}`}
+                        style={{ y: prefersReducedMotion ? 0 : orbY[index] }}
+                    >
+                        <motion.div
+                            className={`${orb.size} rounded-full`}
+                            style={{
+                                backgroundImage: orb.color,
+                                opacity: prefersReducedMotion ? 0.4 : orbOpacity[index],
+                                willChange: 'transform, opacity',
+                            }}
+                            {...(prefersReducedMotion
+                                ? {}
+                                : {
+                                      animate: { x: [-orb.drift[0], orb.drift[0], -orb.drift[0]] },
+                                      transition: { duration: orb.drift[1], repeat: Infinity, ease: 'easeInOut' as const },
+                                  })}
+                        />
+                    </motion.div>
+                ))}
+            </motion.div>
 
             <div
                 className="absolute bottom-0 left-0 right-0 h-[60vh] pointer-events-none opacity-70"
@@ -237,7 +237,7 @@ const Background = () => {
             <div
                 className="absolute inset-0 opacity-30 pointer-events-none"
                 style={{
-                    background: 'radial-gradient(circle at 50% 50%, transparent 20%, #0a0a0a 100%)'
+                    background: 'radial-gradient(circle at 50% 50%, transparent 20%, #09080e 100%)'
                 }}
             />
 

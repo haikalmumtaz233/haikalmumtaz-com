@@ -3,6 +3,8 @@ export const easingCurves = {
   entrance: [0.22, 1, 0.36, 1],
   exit: [0.64, 0, 0.78, 0],
   inout: [0.65, 0, 0.35, 1],
+  expo: [0.16, 1, 0.3, 1],
+  wipe: [0.76, 0, 0.24, 1],
 };
 
 export const durationsMs = {
