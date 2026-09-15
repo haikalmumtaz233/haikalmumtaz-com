@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef, type ChangeEvent, type FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight, CheckCircle, XCircle, X } from 'lucide-react';
+import { ArrowUpRight, Mail, Instagram, Linkedin, Github, CheckCircle, XCircle, X } from 'lucide-react';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import RuleReveal from '../../journey/RuleReveal';
 import FadeIn from '../../journey/FadeIn';
-import { SECTION_TITLE_CLASS } from '../ui/SectionHeader';
 import { revealEase } from '../../lib/motion';
 import { profile, socialProfiles } from '../../data/profile';
 
@@ -31,10 +30,17 @@ const TURNSTILE_SRC =
   'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_REGEX = /^[\d\s+\-()]{10,}$/;
 const MAX_MESSAGE_LENGTH = 2000;
-const MAX_NAME_LENGTH = 100;
+const MAX_NAME_LENGTH = 50;
 
-const EMPTY_FORM = { name: '', email: '', message: '', honeypot: '' };
+const EMPTY_FORM = { firstName: '', lastName: '', email: '', phone: '', message: '', honeypot: '' };
+
+const socialIcons: Record<string, typeof Github> = {
+  GitHub: Github,
+  LinkedIn: Linkedin,
+  Instagram: Instagram,
+};
 
 type ToastType = 'success' | 'error';
 
@@ -44,8 +50,8 @@ interface Toast {
   message: string;
 }
 
-const fieldClass =
-  'w-full border-b border-white/20 bg-transparent py-3 text-base text-white placeholder:text-white/30 transition-colors duration-300 focus:border-white focus:outline-none';
+const inputClass =
+  'w-full bg-transparent border-b border-white/20 py-2 text-[15px] text-white placeholder:text-white/30 focus:border-white focus:outline-none transition-colors';
 
 const labelClass = 'text-sm text-white/60';
 
@@ -167,17 +173,24 @@ const Contact = () => {
       const sanitize = (text: string) =>
         DOMPurify.sanitize(text.trim(), { ALLOWED_TAGS: [], ALLOWED_ATTR: [] });
 
-      const name = sanitize(formData.name);
+      const firstName = sanitize(formData.firstName);
+      const lastName = sanitize(formData.lastName);
       const email = sanitize(formData.email);
+      const phone = sanitize(formData.phone);
       const message = sanitize(formData.message);
 
-      if (name.length === 0 || name.length > MAX_NAME_LENGTH) {
-        addToast('error', `Enter a name up to ${MAX_NAME_LENGTH} characters.`);
+      if (firstName.length > MAX_NAME_LENGTH || lastName.length > MAX_NAME_LENGTH) {
+        addToast('error', `Shorten the name to ${MAX_NAME_LENGTH} characters each.`);
         return;
       }
 
       if (!EMAIL_REGEX.test(email)) {
         addToast('error', 'Enter a valid email address, like name@example.com.');
+        return;
+      }
+
+      if (phone && !PHONE_REGEX.test(phone)) {
+        addToast('error', 'Use only numbers, spaces, +, (), or - in the phone number.');
         return;
       }
 
@@ -196,16 +209,16 @@ const Contact = () => {
         import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
         {
           title: 'New Inquiry from Portfolio',
-          name,
+          name: `${firstName} ${lastName}`,
           email,
-          phone: 'Not provided',
+          phone: phone || 'Not provided',
           message,
           time: new Date().toLocaleString(),
         },
         import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       );
 
-      addToast('success', "Message sent. I'll reply to your email.");
+      addToast('success', "Message sent. I'll reply to your email soon.");
       setFormData(EMPTY_FORM);
       setTurnstileToken(null);
 
@@ -262,127 +275,167 @@ const Contact = () => {
       </div>
 
       <div className="shell">
-        <div className="grid gap-14 lg:grid-cols-12 lg:gap-16">
-          <div className="lg:col-span-5">
-            <RuleReveal lines={["Let's work", 'together']} className={SECTION_TITLE_CLASS} />
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16 2xl:gap-24">
+          <div className="flex flex-col justify-center">
+            <RuleReveal
+              lines={["Let's work", 'together']}
+              className="font-monument font-black uppercase text-white tracking-tight leading-[0.95] text-[clamp(2rem,4.6vw,4.5rem)]"
+            />
 
             <FadeIn>
-              <p className="mt-6 max-w-sm text-base text-white/60 md:mt-8 2xl:text-lg">
-                Have a project or a role in mind? Tell me about it.
+              <p className="mt-6 max-w-md text-base text-white/60 md:mt-8 2xl:text-lg">
+                Have a project in mind or just want to say hi? I'm always open to new projects and opportunities.
               </p>
 
-              <a
-                href={`mailto:${profile.email}`}
-                className="group mt-10 inline-flex items-center gap-2 border-b border-white/25 pb-1 text-lg text-white transition-colors duration-300 hover:border-white md:text-xl"
-              >
-                {profile.email}
-                <ArrowUpRight className="h-5 w-5 transition-transform duration-500 ease-expo group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </a>
+              <div className="mt-8 space-y-6 md:mt-10">
+                <a
+                  href={`mailto:${profile.email}`}
+                  className="group flex items-center gap-3 text-base text-white transition-colors hover:text-white/80 md:text-lg 2xl:text-2xl"
+                >
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 transition-colors duration-300 group-hover:bg-white group-hover:text-black">
+                    <Mail size={18} />
+                  </span>
+                  <span>{profile.email}</span>
+                </a>
 
-              <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
-                {socialProfiles.map((social) => (
-                  <li key={social.label}>
-                    <a
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[15px] text-white/60 transition-colors duration-300 hover:text-white"
-                    >
-                      {social.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+                <div className="flex gap-3">
+                  {socialProfiles.map((social) => {
+                    const Icon = socialIcons[social.label];
+                    return (
+                      <a
+                        key={social.label}
+                        href={social.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white transition-colors duration-300 hover:bg-white hover:text-black"
+                        aria-label={social.label}
+                      >
+                        <Icon size={18} />
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
             </FadeIn>
           </div>
 
-          <FadeIn delay={0.3} className="lg:col-span-6 lg:col-start-7">
-            <form onSubmit={handleSubmit} className="space-y-8">
-              <div className="grid gap-8 md:grid-cols-2">
-                <div>
-                  <label htmlFor="contact-name" className={labelClass}>Name</label>
-                  <input
-                    type="text"
-                    id="contact-name"
-                    name="name"
-                    required
-                    autoComplete="name"
-                    maxLength={MAX_NAME_LENGTH}
-                    value={formData.name}
-                    onChange={handleChange}
-                    className={fieldClass}
-                    placeholder="Your name"
-                  />
+          <FadeIn delay={0.3}>
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8 2xl:p-10">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                  <div className="space-y-1">
+                    <label htmlFor="contact-first-name" className={labelClass}>First name</label>
+                    <input
+                      type="text"
+                      id="contact-first-name"
+                      name="firstName"
+                      required
+                      autoComplete="given-name"
+                      maxLength={MAX_NAME_LENGTH}
+                      value={formData.firstName}
+                      onChange={handleChange}
+                      className={inputClass}
+                      placeholder="John"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label htmlFor="contact-last-name" className={labelClass}>Last name</label>
+                    <input
+                      type="text"
+                      id="contact-last-name"
+                      name="lastName"
+                      required
+                      autoComplete="family-name"
+                      maxLength={MAX_NAME_LENGTH}
+                      value={formData.lastName}
+                      onChange={handleChange}
+                      className={inputClass}
+                      placeholder="Doe"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label htmlFor="contact-email" className={labelClass}>Email</label>
-                  <input
-                    type="email"
-                    id="contact-email"
-                    name="email"
-                    required
-                    autoComplete="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className={fieldClass}
-                    placeholder="name@example.com"
-                  />
-                </div>
-              </div>
 
-              <div>
-                <div className="flex items-baseline justify-between">
-                  <label htmlFor="contact-message" className={labelClass}>Message</label>
-                  <span className="text-xs tabular-nums text-white/35">
-                    {formData.message.length}/{MAX_MESSAGE_LENGTH}
-                  </span>
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                  <div className="space-y-1">
+                    <label htmlFor="contact-email" className={labelClass}>Email</label>
+                    <input
+                      type="email"
+                      id="contact-email"
+                      name="email"
+                      required
+                      autoComplete="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className={inputClass}
+                      placeholder="john@example.com"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label htmlFor="contact-phone" className={labelClass}>
+                      Phone <span className="text-white/35">(optional)</span>
+                    </label>
+                    <input
+                      type="tel"
+                      id="contact-phone"
+                      name="phone"
+                      autoComplete="tel"
+                      pattern="[\d\s+\-()]{10,}"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className={inputClass}
+                      placeholder="+62..."
+                    />
+                  </div>
                 </div>
-                <textarea
-                  id="contact-message"
-                  name="message"
-                  required
-                  rows={4}
-                  maxLength={MAX_MESSAGE_LENGTH}
-                  value={formData.message}
+
+                <div className="space-y-1">
+                  <div className="flex items-baseline justify-between">
+                    <label htmlFor="contact-message" className={labelClass}>Message</label>
+                    <span className="text-xs tabular-nums text-white/35">
+                      {formData.message.length}/{MAX_MESSAGE_LENGTH}
+                    </span>
+                  </div>
+                  <textarea
+                    id="contact-message"
+                    name="message"
+                    required
+                    rows={3}
+                    maxLength={MAX_MESSAGE_LENGTH}
+                    value={formData.message}
+                    onChange={handleChange}
+                    className={`${inputClass} resize-none`}
+                    placeholder="Tell me about your project..."
+                  />
+                </div>
+
+                <input
+                  type="text"
+                  name="honeypot"
+                  value={formData.honeypot}
                   onChange={handleChange}
-                  className={`${fieldClass} resize-none`}
-                  placeholder="What are you working on?"
+                  className="hidden"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
                 />
-              </div>
 
-              <input
-                type="text"
-                name="honeypot"
-                value={formData.honeypot}
-                onChange={handleChange}
-                className="hidden"
-                tabIndex={-1}
-                autoComplete="off"
-                aria-hidden="true"
-              />
-
-              <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <div ref={turnstileRef} className="min-h-[65px]" />
+                  <div ref={turnstileRef} className="flex min-h-[65px] justify-center" />
                   {turnstileError && (
-                    <p className="mt-2 text-sm text-red-300">Complete the security check to send.</p>
+                    <p className="mt-2 text-center text-sm text-red-300">Complete the security check to send.</p>
                   )}
                 </div>
 
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-black isolate disabled:opacity-50"
+                  className="group flex w-full items-center justify-center gap-2 rounded-xl bg-white py-3 text-sm font-bold text-black transition-colors hover:bg-white/90 disabled:opacity-50"
                 >
-                  <span
-                    aria-hidden="true"
-                    className="absolute inset-0 -z-10 origin-bottom scale-y-0 rounded-full bg-purple-200 transition-transform duration-500 ease-expo group-hover:scale-y-100"
-                  />
                   {isSubmitting ? 'Sending message' : 'Send message'}
-                  <ArrowUpRight className="h-4 w-4 transition-transform duration-500 ease-expo group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  <ArrowUpRight className="h-5 w-5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                 </button>
-              </div>
-            </form>
+              </form>
+            </div>
           </FadeIn>
         </div>
       </div>
