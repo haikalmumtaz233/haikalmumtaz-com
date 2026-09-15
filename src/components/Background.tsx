@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
+import { easing } from '../lib/motion';
 import { useJourney } from '../journey/useJourney';
 
 const STAR_DENSITY = 8000;
@@ -178,12 +179,20 @@ const Background = () => {
 
     return (
         <div className="fixed inset-0 z-[-1] bg-[#0a0a0a]">
-            <canvas
+            <motion.canvas
                 ref={canvasRef}
                 className="absolute inset-0 block"
+                initial={prefersReducedMotion ? false : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 2.4, ease: easing.smooth }}
             />
 
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <motion.div
+                className="absolute inset-0 overflow-hidden pointer-events-none"
+                initial={prefersReducedMotion ? false : { opacity: 0, scale: 1.08 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 2.8, ease: easing.expo }}
+            >
                 <motion.div
                     className="absolute -top-[20%] -left-[10%]"
                     style={{ y: prefersReducedMotion ? 0 : orb1Y, willChange: 'transform' }}
@@ -225,7 +234,7 @@ const Background = () => {
                         }}
                     />
                 </motion.div>
-            </div>
+            </motion.div>
 
             <div
                 className="absolute bottom-0 left-0 right-0 h-[60vh] pointer-events-none opacity-70"
