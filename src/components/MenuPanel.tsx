@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { profile, socialProfiles } from '../data/profile';
-import { animatedProps } from '../lib/motion';
+import { animatedProps, easing } from '../lib/motion';
 
 const navLinks = [
   { name: 'HOME', path: '/', type: 'route' },
@@ -22,7 +22,7 @@ const socialIcons: Record<string, typeof Github> = {
 
 export const MENU_PANEL_ID = 'site-menu-panel';
 
-const LETTER_DURATION = 0.25;
+const LETTER_DURATION = 0.5;
 const LETTER_STAGGER = 0.025;
 
 interface MenuPanelProps {
@@ -99,17 +99,12 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
           <motion.div
             initial={prefersReducedMotion ? { opacity: 0 } : { x: '100%' }}
             animate={prefersReducedMotion ? { opacity: 1 } : { x: '0%' }}
-            exit={prefersReducedMotion ? { opacity: 0 } : { x: '100%' }}
-            transition={
+            exit={
               prefersReducedMotion
-                ? { duration: 0.2 }
-                : {
-                    type: 'spring',
-                    damping: 30,
-                    stiffness: 300,
-                    mass: 0.8,
-                  }
+                ? { opacity: 0 }
+                : { x: '100%', transition: { duration: 0.5, ease: easing.inout } }
             }
+            transition={prefersReducedMotion ? { duration: 0.2 } : { duration: 0.8, ease: easing.expo }}
             ref={panelRef}
             id={MENU_PANEL_ID}
             role="dialog"
@@ -123,80 +118,82 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
               <nav className="flex-1 flex items-center">
                 <ul className="space-y-4 sm:space-y-6 w-full">
                   {navLinks.map((link, index) => (
-                    <motion.li
-                      key={link.name}
-                      {...animatedProps(prefersReducedMotion, {
-                        initial: { opacity: 0, x: 50 },
-                        animate: { opacity: 1, x: 0 },
-                        transition: {
-                          delay: 0.1 + index * 0.1,
-                          duration: 0.5,
-                          type: 'spring' as const,
-                          damping: 20,
-                        },
-                      })}
-                      className="overflow-hidden"
-                    >
-                      <motion.button
-                        onClick={() => handleNavigation(link)}
-                        initial="initial"
-                        whileHover={prefersReducedMotion ? undefined : 'hovered'}
-                        className="cursor-pointer text-left group"
+                    <li key={link.name} className="overflow-hidden">
+                      <motion.div
+                        {...animatedProps(prefersReducedMotion, {
+                          initial: { y: '115%', rotate: 4 },
+                          animate: { y: '0%', rotate: 0 },
+                          transition: {
+                            delay: 0.22 + index * 0.07,
+                            duration: 1,
+                            ease: easing.expo,
+                          },
+                        })}
+                        className="origin-bottom-left"
                       >
-                        <div
-                          className="relative block overflow-hidden whitespace-nowrap text-3xl sm:text-4xl md:text-6xl font-black uppercase text-white"
-                          style={{ lineHeight: 0.9 }}
+                        <motion.button
+                          onClick={() => handleNavigation(link)}
+                          initial="initial"
+                          whileHover={prefersReducedMotion ? undefined : 'hovered'}
+                          className="cursor-pointer text-left group"
                         >
-                          <div>
-                            {link.name.split("").map((l, i) => (
-                              <motion.span
-                                variants={{
-                                  initial: { y: 0 },
-                                  hovered: { y: "-100%" }
-                                }}
-                                transition={{
-                                  duration: LETTER_DURATION,
-                                  delay: LETTER_STAGGER * i
-                                }}
-                                className="inline-block"
-                                key={i}
-                              >
-                                {l}
-                              </motion.span>
-                            ))}
+                          <div
+                            className="relative block overflow-hidden whitespace-nowrap text-3xl sm:text-4xl md:text-6xl font-black uppercase text-white"
+                            style={{ lineHeight: 0.9 }}
+                          >
+                            <div>
+                              {link.name.split("").map((l, i) => (
+                                <motion.span
+                                  variants={{
+                                    initial: { y: 0 },
+                                    hovered: { y: "-100%" }
+                                  }}
+                                  transition={{
+                                    duration: LETTER_DURATION,
+                                    ease: easing.expo,
+                                    delay: LETTER_STAGGER * i
+                                  }}
+                                  className="inline-block"
+                                  key={i}
+                                >
+                                  {l}
+                                </motion.span>
+                              ))}
+                            </div>
+
+                            <div className="absolute inset-0">
+                              {link.name.split("").map((l, i) => (
+                                <motion.span
+                                  variants={{
+                                    initial: { y: "100%" },
+                                    hovered: { y: 0 }
+                                  }}
+                                  transition={{
+                                    duration: LETTER_DURATION,
+                                    ease: easing.expo,
+                                    delay: LETTER_STAGGER * i
+                                  }}
+                                  className="inline-block text-purple-400"
+                                  key={i}
+                                >
+                                  {l}
+                                </motion.span>
+                              ))}
+                            </div>
                           </div>
 
-                          <div className="absolute inset-0">
-                            {link.name.split("").map((l, i) => (
-                              <motion.span
-                                variants={{
-                                  initial: { y: "100%" },
-                                  hovered: { y: 0 }
-                                }}
-                                transition={{
-                                  duration: LETTER_DURATION,
-                                  delay: LETTER_STAGGER * i
-                                }}
-                                className="inline-block text-purple-400"
-                                key={i}
-                              >
-                                {l}
-                              </motion.span>
-                            ))}
-                          </div>
-                        </div>
-
-                      </motion.button>
-                    </motion.li>
+                        </motion.button>
+                      </motion.div>
+                    </li>
                   ))}
                 </ul>
               </nav>
 
               <motion.div
                 {...animatedProps(prefersReducedMotion, {
-                  initial: { opacity: 0, y: 20 },
+                  initial: { opacity: 0, y: 16 },
                   animate: { opacity: 1, y: 0 },
-                  transition: { delay: 0.6, duration: 0.5 },
+                  transition: { delay: 0.55, duration: 0.9, ease: easing.expo },
                 })}
                 className="space-y-6 sm:space-y-8 border-t border-white/10 pt-6 sm:pt-8"
               >

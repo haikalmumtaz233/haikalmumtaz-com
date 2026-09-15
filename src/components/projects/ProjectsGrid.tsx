@@ -5,7 +5,7 @@ import type { Project } from '../../data/projects';
 import ProjectCard from './ProjectCard';
 import ProjectModal from './ProjectModal';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import { animatedProps } from '../../lib/motion';
+import { animatedProps, easing } from '../../lib/motion';
 
 const ProjectsGrid = () => {
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -51,9 +51,9 @@ const ProjectsGrid = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           {...animatedProps(prefersReducedMotion, {
-            initial: { opacity: 0, y: 20 },
+            initial: { opacity: 0, y: 12 },
             animate: { opacity: 1, y: 0 },
-            transition: { delay: 0.2, duration: 0.6 },
+            transition: { delay: 0.55, duration: 0.9, ease: easing.expo },
           })}
           className="mb-6 sm:mb-8"
         >
@@ -85,11 +85,7 @@ const ProjectsGrid = () => {
                       <motion.div
                         layoutId="projectsActiveFilter"
                         className="absolute inset-0 bg-white/10 border border-white/20 rounded-full"
-                        transition={{
-                          type: 'spring',
-                          stiffness: 400,
-                          damping: 30,
-                        }}
+                        transition={{ duration: 0.6, ease: easing.expo }}
                       />
                     )}
                     <span className="relative z-10 flex items-center gap-2 whitespace-nowrap">
@@ -112,14 +108,23 @@ const ProjectsGrid = () => {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 2xl:gap-8"
         >
           <AnimatePresence mode="popLayout">
-            {filteredProjects.map((project) => (
+            {filteredProjects.map((project, index) => (
               <motion.div
                 key={project.id}
-                layout
-                initial={{ opacity: 0, scale: prefersReducedMotion ? 1 : 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: prefersReducedMotion ? 1 : 0.9 }}
-                transition={{ duration: 0.3 }}
+                layout={!prefersReducedMotion}
+                initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 32, filter: 'blur(8px)' }}
+                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                exit={
+                  prefersReducedMotion
+                    ? { opacity: 0 }
+                    : { opacity: 0, scale: 0.96, filter: 'blur(6px)', transition: { duration: 0.3, ease: easing.exit } }
+                }
+                transition={{
+                  duration: prefersReducedMotion ? 0.2 : 0.9,
+                  ease: easing.expo,
+                  delay: prefersReducedMotion ? 0 : Math.min(index, 8) * 0.05,
+                  layout: { duration: 0.7, ease: easing.expo },
+                }}
               >
                 <ProjectCard
                   project={project}
