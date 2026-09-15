@@ -171,6 +171,29 @@ const projectSeeds: ProjectSeed[] = [
         liveLink: '#',
         isFeatured: false,
     },
+    {
+        id: 10,
+        name: 'NoteFlo',
+        subtitle: 'Connected Daily Notes App',
+        category: 'Fullstack Web Development',
+        description:
+            'Daily notes app for workers with automatic task rollover, wikilink-based topic timelines, hybrid full-text and semantic search, embedding-powered connection suggestions, and AI-generated weekly recaps.',
+        stack: [
+            'Next.js',
+            'TypeScript',
+            'TipTap',
+            'Tailwind CSS',
+            'Golang',
+            'PostgreSQL',
+            'pgvector',
+            'Supabase',
+            'Claude API',
+        ],
+        image: '/projects/noteflo.webp',
+        repoLink: '#',
+        liveLink: '#',
+        isFeatured: false,
+    },
 ];
 
 export const projects: Project[] = projectSeeds.map((seed) => ({
