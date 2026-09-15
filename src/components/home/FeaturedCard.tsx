@@ -5,6 +5,7 @@ import type { Project } from '../../data/projects';
 import OptimizedImage from '../ui/OptimizedImage';
 import { activateOnEnterOrSpace } from '../../lib/keyboard';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { easing } from '../../lib/motion';
 
 interface FeaturedCardProps {
   project: Project;
@@ -48,12 +49,19 @@ const FeaturedCard = memo(({ project, onClick }: FeaturedCardProps) => {
           <div
             className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-40 z-10 pointer-events-none transition-opacity duration-300 group-hover:opacity-60`}
           />
-          <OptimizedImage
-            src={project.image}
-            alt={project.name}
-            className="w-full h-full object-cover"
-            containerClassName="w-full h-full"
-          />
+          <motion.div
+            className="w-full h-full"
+            initial={prefersReducedMotion ? false : { scale: 1.18 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 1.4, ease: easing.expo }}
+          >
+            <OptimizedImage
+              src={project.image}
+              alt={project.name}
+              className="w-full h-full object-cover"
+              containerClassName="w-full h-full"
+            />
+          </motion.div>
           <div className="absolute top-2 left-2 md:top-3 md:left-3 z-20 px-2 py-0.5 md:px-2.5 md:py-1 bg-black/70 backdrop-blur-md text-slate-300 text-[9px] md:text-[10px] lg:text-[11px] font-mono rounded-full tracking-wider uppercase border border-white/15">
             {project.category}
           </div>

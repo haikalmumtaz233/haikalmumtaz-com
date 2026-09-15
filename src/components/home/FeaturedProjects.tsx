@@ -9,6 +9,7 @@ import FeaturedCard from './FeaturedCard';
 import RuleReveal from '../../journey/RuleReveal';
 import FadeIn from '../../journey/FadeIn';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { easing } from '../../lib/motion';
 
 const FeaturedProjects = () => {
   const navigate = useNavigate();
@@ -59,25 +60,33 @@ const FeaturedProjects = () => {
       }
     : {
         enter: (direction: number) => ({
-          rotateY: direction > 0 ? 45 : -45,
-          x: direction > 0 ? 300 : -300,
-          opacity: 0,
-          scale: 0.8,
-          z: -200,
+          clipPath: direction > 0 ? 'inset(0% 0% 0% 100%)' : 'inset(0% 100% 0% 0%)',
+          x: direction > 0 ? 90 : -90,
+          opacity: 1,
+          scale: 1,
+          zIndex: 2,
         }),
         center: {
-          rotateY: 0,
+          clipPath: 'inset(0% 0% 0% 0%)',
           x: 0,
           opacity: 1,
           scale: 1,
-          z: 0,
+          zIndex: 2,
+          transition: {
+            clipPath: { duration: 1.05, ease: easing.expo },
+            x: { duration: 1.2, ease: easing.expo },
+          },
         },
         exit: (direction: number) => ({
-          rotateY: direction > 0 ? -45 : 45,
-          x: direction > 0 ? -300 : 300,
+          clipPath: 'inset(0% 0% 0% 0%)',
+          x: direction > 0 ? -140 : 140,
           opacity: 0,
-          scale: 0.8,
-          z: -200,
+          scale: 0.92,
+          zIndex: 1,
+          transition: {
+            default: { duration: 0.9, ease: easing.inout },
+            opacity: { duration: 0.6, ease: easing.exit, delay: 0.15 },
+          },
         }),
       };
 
@@ -125,7 +134,6 @@ const FeaturedProjects = () => {
 
           <div
             className="flex-1 relative h-[240px] md:h-[260px] lg:h-[300px] xl:h-[330px] 2xl:h-[370px] focus:outline-none"
-            style={{ perspective: '1200px' }}
             role="group"
             aria-roledescription="carousel"
             aria-label="Featured projects"
@@ -140,18 +148,8 @@ const FeaturedProjects = () => {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={
-                  prefersReducedMotion
-                    ? { duration: 0.2 }
-                    : {
-                        type: 'spring',
-                        stiffness: 300,
-                        damping: 30,
-                        opacity: { duration: 0.3 },
-                      }
-                }
+                transition={prefersReducedMotion ? { duration: 0.2 } : undefined}
                 className="absolute inset-0 flex justify-center items-center"
-                style={{ transformStyle: 'preserve-3d' }}
                 drag={prefersReducedMotion ? false : 'x'}
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={0.18}
@@ -193,7 +191,7 @@ const FeaturedProjects = () => {
               role="tab"
               aria-selected={index === currentIndex}
               aria-label={`Go to project ${index + 1}: ${project.name}`}
-              className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
+              className={`h-1.5 sm:h-2 rounded-full transition-all duration-500 ease-expo ${
                 index === currentIndex ? 'bg-white w-5 sm:w-6' : 'w-1.5 sm:w-2 bg-white/20 hover:bg-white/40'
               }`}
             />

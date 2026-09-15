@@ -1,13 +1,21 @@
-import { motion } from 'framer-motion';
+import { motion, useScroll, useSpring } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { experiences } from '../../data/experience';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import { animatedProps } from '../../lib/motion';
+import { easing } from '../../lib/motion';
 import RuleReveal from '../../journey/RuleReveal';
 
 const Experience = () => {
   const sectionRef = useRef(null);
+  const listRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: listRef,
+    offset: ['start 0.6', 'end 0.6'],
+  });
+  const spine = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.4 });
 
   return (
     <section ref={sectionRef} className="relative bg-transparent pt-10 sm:pt-16 md:pt-24 2xl:pt-32 pb-8 w-full overflow-x-clip">
@@ -15,6 +23,13 @@ const Experience = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-12 items-stretch">
           <div className="lg:col-span-5 min-h-full">
             <div className="sticky top-1/2 -translate-y-1/2 py-8 text-left border-l-2 border-white/20 pl-8 md:pl-12">
+              {!prefersReducedMotion && (
+                <motion.span
+                  aria-hidden="true"
+                  className="absolute -left-[2px] top-0 bottom-0 w-[2px] origin-top bg-white"
+                  style={{ scaleY: spine }}
+                />
+              )}
               <RuleReveal
                 lines={['Professional', 'Experience']}
                 className="text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-monument font-black text-white uppercase tracking-tight leading-none"
@@ -23,7 +38,7 @@ const Experience = () => {
           </div>
 
           <div className="lg:col-span-7 relative">
-            <div className="max-w-3xl">
+            <div ref={listRef} className="max-w-3xl">
               {experiences.map((exp, index) => (
                 <ExperienceItem
                   key={index}
@@ -62,49 +77,66 @@ const ExperienceItem = ({ experience, index, hoveredIndex, setHoveredIndex }: Ex
   return (
     <div className="min-h-0 sm:min-h-[40vh] lg:min-h-[60vh] 2xl:min-h-[70vh] flex flex-col justify-center">
       <motion.div
-        {...animatedProps(prefersReducedMotion, {
-          initial: { opacity: 0, y: 50 },
-          whileInView: { opacity: 1, y: 0 },
-          viewport: { once: true, amount: 0.5 },
-          transition: { duration: 0.6, delay: index * 0.1 },
-        })}
+        className="relative"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.45 }}
       >
+        <motion.span
+          aria-hidden="true"
+          className="absolute inset-x-0 top-0 h-px origin-left bg-white/20"
+          variants={{
+            hidden: { scaleX: prefersReducedMotion ? 1 : 0 },
+            visible: { scaleX: 1, transition: { duration: 1.1, ease: easing.wipe } },
+          }}
+        />
         <motion.div
           onMouseEnter={() => setHoveredIndex(index)}
           onMouseLeave={() => setHoveredIndex(null)}
           animate={{ opacity: isDimmed ? 0.2 : 1 }}
           transition={{ duration: 0.5, ease: 'easeInOut' }}
-          className="border-t border-white/20 pt-6 pb-6 sm:pt-8 sm:pb-8 lg:pt-10 lg:pb-10 lg:pl-12"
+          className="pt-6 pb-6 sm:pt-8 sm:pb-8 lg:pt-10 lg:pb-10 lg:pl-12"
         >
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 md:gap-8">
-          <div className="md:col-span-3">
-            <div className="font-mono text-slate-400 text-sm tracking-wider">
-              <div className="text-white font-bold text-base md:text-lg 2xl:text-xl">{experience.year}</div>
-              <div className="mt-1 text-xs md:text-sm">{experience.period}</div>
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 md:gap-8"
+            variants={{
+              hidden: prefersReducedMotion ? {} : { opacity: 0, y: 28, filter: 'blur(6px)' },
+              visible: {
+                opacity: 1,
+                y: 0,
+                filter: 'blur(0px)',
+                transition: { duration: 1, ease: easing.expo, delay: 0.25 },
+              },
+            }}
+          >
+            <div className="md:col-span-3">
+              <div className="font-mono text-slate-400 text-sm tracking-wider">
+                <div className="text-white font-bold text-base md:text-lg 2xl:text-xl">{experience.year}</div>
+                <div className="mt-1 text-xs md:text-sm">{experience.period}</div>
+              </div>
             </div>
-          </div>
 
-          <div className="md:col-span-9">
-            <div className="space-y-1 mb-4">
-              <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-bold text-white">
-                {experience.company}
-              </h3>
-              {experience.subtitle && (
-                <p className="text-sm md:text-base text-slate-400 font-medium">
-                  {experience.subtitle}
+            <div className="md:col-span-9">
+              <div className="space-y-1 mb-4">
+                <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-bold text-white">
+                  {experience.company}
+                </h3>
+                {experience.subtitle && (
+                  <p className="text-sm md:text-base text-slate-400 font-medium">
+                    {experience.subtitle}
+                  </p>
+                )}
+              </div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full mb-4 transition-all duration-300">
+                <p className="text-xs md:text-sm font-medium text-white tracking-wider">
+                  {experience.role}
                 </p>
-              )}
-            </div>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full mb-4 transition-all duration-300">
-              <p className="text-xs md:text-sm font-medium text-white tracking-wider">
-                {experience.role}
+              </div>
+              <p className="text-slate-400 text-sm md:text-base lg:text-lg 2xl:text-xl leading-relaxed max-w-3xl">
+                {experience.description}
               </p>
             </div>
-            <p className="text-slate-400 text-sm md:text-base lg:text-lg 2xl:text-xl leading-relaxed max-w-3xl">
-              {experience.description}
-            </p>
-          </div>
-        </div>
+          </motion.div>
         </motion.div>
       </motion.div>
     </div>
