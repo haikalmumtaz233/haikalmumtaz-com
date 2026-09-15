@@ -51,7 +51,7 @@ interface Toast {
 }
 
 const inputClass =
-  'w-full bg-transparent border-b border-white/20 py-2 text-[15px] text-white placeholder:text-white/30 focus:border-white focus:outline-none transition-colors';
+  'w-full bg-transparent border-b border-white/20 py-2 text-[15px] text-white caret-purple-300 placeholder:text-white/30 focus:border-white focus:outline-none transition-colors';
 
 const labelClass = 'text-sm text-white/60';
 

@@ -59,14 +59,20 @@ body {
 
 a:focus-visible,
 button:focus-visible,
-input:focus-visible,
-textarea:focus-visible,
 select:focus-visible,
 [tabindex]:focus-visible,
 [role="button"]:focus-visible {
   outline: 2px solid #ffffff;
   outline-offset: 3px;
   box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.85);
+}
+
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 0;
+  border-bottom-color: #ffffff;
+  box-shadow: 0 1px 0 0 #ffffff;
 }
 
 ::view-transition-old(root),
