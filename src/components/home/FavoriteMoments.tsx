@@ -44,6 +44,7 @@ const FavoriteMoments = () => {
   });
 
   const x = useTransform(scrollYProgress, [0, 1], [0, -horizontalDistance]);
+  const imageDrift = useTransform(scrollYProgress, [0, 1], ['-7%', '7%']);
 
   const getAlignmentClass = (alignment: 'start' | 'center' | 'end') => {
     switch (alignment) {
@@ -67,12 +68,17 @@ const FavoriteMoments = () => {
 
     const imageBlock = (
       <div className={`relative overflow-hidden rounded-lg ${imageSizeClass} group`}>
-        <OptimizedImage
-          src={moment.image}
-          alt={moment.title}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          containerClassName="w-full h-full"
-        />
+        <motion.div
+          className="w-full h-full"
+          style={prefersReducedMotion ? undefined : { x: imageDrift, scale: 1.18 }}
+        >
+          <OptimizedImage
+            src={moment.image}
+            alt={moment.title}
+            className="w-full h-full object-cover transition-transform duration-700 ease-expo group-hover:scale-105"
+            containerClassName="w-full h-full"
+          />
+        </motion.div>
       </div>
     );
 
