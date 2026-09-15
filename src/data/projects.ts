@@ -194,6 +194,27 @@ const projectSeeds: ProjectSeed[] = [
         liveLink: '#',
         isFeatured: false,
     },
+    {
+        id: 11,
+        name: 'MBG Tracker',
+        subtitle: 'AI Nutrition Monitoring App',
+        category: 'Mobile Development',
+        description:
+            'Android app for monitoring the free nutritious meal (MBG) program at a junior high school, using a YOLOv8 model to detect meal tray components and estimate calories and macronutrients against national nutrition standards.',
+        stack: [
+            'Kotlin',
+            'Jetpack Compose',
+            'CameraX',
+            'Python',
+            'FastAPI',
+            'YOLOv8',
+            'SQLite',
+        ],
+        image: '/projects/mbgtracker.webp',
+        repoLink: '#',
+        liveLink: '#',
+        isFeatured: false,
+    },
 ];
 
 export const projects: Project[] = projectSeeds.map((seed) => ({
