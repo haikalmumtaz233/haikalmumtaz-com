@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, type KeyboardEvent as ReactKeyboardEvent } from 'react';
+import { useCallback, useRef, useState, useEffect, type KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { animate, motion, useMotionValue } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { certifications, type Certification } from '../../data/certifications';
@@ -8,6 +8,8 @@ import SectionHeader from '../ui/SectionHeader';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { easing } from '../../lib/motion';
 import { activateOnEnterOrSpace } from '../../lib/keyboard';
+import { useIsMobile } from '../../hooks/useMediaQuery';
+import { useRailFocus } from '../../hooks/useRailFocus';
 
 const navButtonClass = (isDisabled: boolean) =>
   `flex h-11 w-11 items-center justify-center rounded-full border transition-colors duration-300 ${
@@ -18,6 +20,7 @@ const navButtonClass = (isDisabled: boolean) =>
 
 const Certifications = () => {
   const prefersReducedMotion = usePrefersReducedMotion();
+  const isMobile = useIsMobile();
   const [selectedCert, setSelectedCert] = useState<Certification | null>(null);
   const [maxOffset, setMaxOffset] = useState(0);
   const [step, setStep] = useState(0);
@@ -25,6 +28,15 @@ const Certifications = () => {
   const x = useMotionValue(0);
   const sliderRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const railRef = useRef<HTMLDivElement>(null);
+
+  const applyFocus = useCallback((card: HTMLElement, offset: number) => {
+    const distance = Math.min(1, Math.abs(offset));
+    card.style.transform = `scale(${1 - distance * 0.1})`;
+    card.style.opacity = String(1 - distance * 0.5);
+  }, []);
+
+  const updateFocus = useRailFocus(railRef, applyFocus, isMobile && !prefersReducedMotion);
 
   useEffect(() => {
     const slider = sliderRef.current;
@@ -47,7 +59,7 @@ const Certifications = () => {
     resizeObserver.observe(container);
 
     return () => resizeObserver.disconnect();
-  }, []);
+  }, [isMobile]);
 
   const slideTo = (nextOffset: number) => {
     const clamped = Math.min(maxOffset, Math.max(0, nextOffset));
@@ -78,7 +90,7 @@ const Certifications = () => {
           meta={
             <div className="flex items-center gap-4">
               <span className="text-sm md:text-base text-white/55">{certifications.length} credentials</span>
-              <div className="flex gap-2">
+              <div className={isMobile ? 'hidden' : 'flex gap-2'}>
                 <button
                   type="button"
                   onClick={() => slideTo(offset - step)}
@@ -102,6 +114,23 @@ const Certifications = () => {
           }
         />
 
+        {isMobile ? (
+          <div className="-mx-5 sm:-mx-8">
+            <div
+              ref={railRef}
+              onScroll={updateFocus}
+              role="group"
+              aria-label="Certificates, swipe to browse"
+              className="snap-rail relative flex gap-4 overflow-x-auto px-[10vw] pb-4"
+            >
+              {certifications.map((cert) => (
+                <div key={cert.id} data-rail-card className="w-[80vw] flex-shrink-0 snap-center">
+                  <CertificateCard cert={cert} onCertClick={setSelectedCert} />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
         <div
           ref={containerRef}
           role="group"
@@ -123,6 +152,7 @@ const Certifications = () => {
             ))}
           </motion.div>
         </div>
+        )}
       </div>
 
       <CertificationModal cert={selectedCert} isOpen={selectedCert !== null} onClose={() => setSelectedCert(null)} />
@@ -154,7 +184,7 @@ const CertificateCard = ({
       role="button"
       tabIndex={0}
       aria-label={`View ${cert.title} certificate from ${cert.issuer}`}
-      className="group w-[76vw] max-w-[340px] flex-shrink-0 cursor-pointer select-none sm:w-[300px] lg:w-[340px]"
+      className="group w-full cursor-pointer select-none md:w-[300px] md:flex-shrink-0 lg:w-[340px]"
     >
       <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-white/10 bg-white/[0.04] transition-colors duration-500 group-hover:border-white/30">
         <OptimizedImage
