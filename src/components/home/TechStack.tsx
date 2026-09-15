@@ -4,11 +4,14 @@ import TechIcon from '../ui/TechIcon';
 import SectionHeader from '../ui/SectionHeader';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { easing } from '../../lib/motion';
+import { useIsMobile } from '../../hooks/useMediaQuery';
+import TechStackSwitcher from './TechStackSwitcher';
 
 const technologyCount = techCategories.reduce((total, category) => total + category.items.length, 0);
 
 const TechStack = () => {
   const prefersReducedMotion = usePrefersReducedMotion();
+  const isMobile = useIsMobile();
 
   return (
     <section className="relative pt-24 md:pt-32 2xl:pt-40 pb-16 md:pb-20">
@@ -22,6 +25,9 @@ const TechStack = () => {
           }
         />
 
+        {isMobile ? (
+          <TechStackSwitcher />
+        ) : (
         <div className="grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-14 2xl:gap-y-16">
           {techCategories.map((category) => (
             <motion.div
@@ -79,6 +85,7 @@ const TechStack = () => {
             </motion.div>
           ))}
         </div>
+        )}
       </div>
     </section>
   );
