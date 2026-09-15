@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useRef, type KeyboardEvent as ReactKeyboardEvent } from 'react';
+import { useState, useMemo, useCallback, useEffect, useRef, type KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { motion, AnimatePresence, type PanInfo } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
@@ -20,11 +20,33 @@ const FeaturedProjects = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const sectionRef = useRef<HTMLElement>(null);
 
   const featuredProjects = useMemo(() => projects.filter((p) => p.isFeatured), []);
   const activeProject = featuredProjects[currentIndex];
 
   const handleCloseModal = useCallback(() => setSelectedProject(null), []);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        featuredProjects.forEach((project) => {
+          const image = new Image();
+          image.decoding = 'async';
+          image.src = project.image;
+        });
+      },
+      { rootMargin: '600px 0px' }
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, [featuredProjects]);
 
   const select = (index: number) => {
     if (index === currentIndex || index < 0 || index >= featuredProjects.length) return;
@@ -93,7 +115,7 @@ const FeaturedProjects = () => {
       };
 
   return (
-    <section className="relative section-space overflow-x-clip">
+    <section ref={sectionRef} className="relative section-space overflow-x-clip">
       <div className="shell">
         <SectionHeader
           title={['Featured work']}

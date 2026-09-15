@@ -38,6 +38,7 @@ const FeaturedCard = memo(({ project, onClick }: FeaturedCardProps) => {
           alt={project.name}
           className="h-full w-full object-cover transition-transform duration-700 ease-expo group-hover:scale-[1.03]"
           containerClassName="h-full w-full"
+          eager
         />
       </motion.div>
       <span className="absolute bottom-4 left-4 z-20 translate-y-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-black opacity-0 transition-all duration-500 ease-expo group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
