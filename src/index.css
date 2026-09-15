@@ -95,6 +95,16 @@ select:focus-visible,
   }
 }
 
+@layer components {
+  .shell {
+    @apply mx-auto w-full max-w-[1320px] px-5 sm:px-8 lg:px-12;
+  }
+
+  .section-space {
+    @apply py-24 md:py-32 2xl:py-40;
+  }
+}
+
 @layer utilities {
   .text-gradient {
     background: linear-gradient(135deg, #06b6d4 0%, #a855f7 100%);
