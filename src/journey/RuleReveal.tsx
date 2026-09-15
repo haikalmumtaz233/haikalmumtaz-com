@@ -45,7 +45,7 @@ const RuleReveal = ({ lines, as = 'h2', className = '', align = 'left', delay = 
         <Tag ref={ref} className={className}>
             {lines.map((line, index) => (
                 <span key={line} className="block">
-                    <span className="relative inline-block overflow-hidden align-top pb-[0.12em] -mb-[0.12em]">
+                    <span className="relative inline-block overflow-hidden align-top pb-[0.12em] -mb-[0.12em] px-[0.08em] -mx-[0.08em]">
                         <motion.span
                             className="block"
                             initial={{ y: '110%' }}

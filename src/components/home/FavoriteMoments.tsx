@@ -107,7 +107,7 @@ const FavoriteMoments = () => {
 
   if (prefersReducedMotion) {
     return (
-      <section className="relative bg-transparent py-16 md:py-24">
+      <section ref={sectionRef} className="relative bg-transparent py-16 md:py-24">
         <div className="max-w-5xl mx-auto px-4 md:px-12">
           <div className="text-left mb-12 md:mb-16">{heading}</div>
 

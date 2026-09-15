@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { motion, useTransform, type MotionValue } from 'framer-motion';
 import { useFittedTextSize } from '../../hooks/useFittedTextSize';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
@@ -17,6 +18,53 @@ const NAMEPLATE_TIMING = {
 
 const centrality = (index: number) => 1 - Math.abs(index - CENTER) / CENTER;
 
+const TYPE_CLASS = 'font-monument font-black uppercase tracking-tight whitespace-nowrap';
+
+const glyph = (char: string) => (char === ' ' ? '\u00A0' : char);
+
+const useKerning = (enabled: boolean) => {
+  const [kerning, setKerning] = useState<number[]>([]);
+
+  useEffect(() => {
+    if (!enabled) return;
+
+    let cancelled = false;
+
+    const measure = () => {
+      if (cancelled) return;
+
+      const probe = document.createElement('span');
+      probe.className = TYPE_CLASS;
+      probe.style.cssText = 'position:absolute;left:-99999px;top:0;visibility:hidden;font-size:100px';
+      document.body.appendChild(probe);
+
+      const widthOf = (text: string) => {
+        probe.textContent = text;
+        return probe.getBoundingClientRect().width;
+      };
+
+      const offsets = LETTERS.map((char, index) => {
+        const next = LETTERS[index + 1];
+        if (!next) return 0;
+        const pair = widthOf(glyph(char) + glyph(next));
+        return (pair - widthOf(glyph(char)) - widthOf(glyph(next))) / 100;
+      });
+
+      probe.remove();
+      setKerning(offsets);
+    };
+
+    measure();
+    document.fonts?.ready.then(measure).catch(() => undefined);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [enabled]);
+
+  return kerning;
+};
+
 const liftFor = (index: number) => 70 + centrality(index) * 190;
 
 interface NameplateProps {
@@ -26,25 +74,26 @@ interface NameplateProps {
 interface LetterProps {
   char: string;
   index: number;
+  kern: number;
   scrollProgress: MotionValue<number>;
 }
 
-const Letter = ({ char, index, scrollProgress }: LetterProps) => {
+const Letter = ({ char, index, kern, scrollProgress }: LetterProps) => {
   const lift = useTransform(scrollProgress, [0, 1], [0, -liftFor(index)]);
   const fade = useTransform(scrollProgress, [0.05, 0.75 - centrality(index) * 0.35], [1, 0]);
   const delay =
     NAMEPLATE_TIMING.riseDelay + Math.abs(index - CENTER) * NAMEPLATE_TIMING.riseStagger;
 
   return (
-    <motion.span className="inline-block" style={{ y: lift, opacity: fade }}>
-      <span className="inline-block overflow-hidden align-top py-[0.08em] -my-[0.08em]">
+    <motion.span className="inline-block" style={{ y: lift, opacity: fade, marginRight: `${kern}em` }}>
+      <span className="inline-block overflow-hidden align-top py-[0.08em] -my-[0.08em] px-[0.12em] -mx-[0.12em]">
         <motion.span
           className="inline-block"
           initial={{ y: '118%' }}
           animate={{ y: '0%' }}
           transition={{ duration: NAMEPLATE_TIMING.riseDuration, ease: easing.expo, delay }}
         >
-          {char === ' ' ? ' ' : char}
+          {glyph(char)}
         </motion.span>
       </span>
     </motion.span>
@@ -56,15 +105,16 @@ const Nameplate = ({ scrollProgress }: NameplateProps) => {
   const { containerRef, measureRef, fittedSize, referenceFontSize } =
     useFittedTextSize(NAMEPLATE_TEXT);
 
+  const kerning = useKerning(!prefersReducedMotion);
+
   const hasMeasured = fittedSize > 0;
-  const typeClass = 'font-monument font-black uppercase tracking-tight whitespace-nowrap';
 
   return (
     <div ref={containerRef} className="relative w-full overflow-x-clip">
       <span
         ref={measureRef}
         aria-hidden="true"
-        className={typeClass}
+        className={TYPE_CLASS}
         style={{
           position: 'absolute',
           visibility: 'hidden',
@@ -74,16 +124,12 @@ const Nameplate = ({ scrollProgress }: NameplateProps) => {
           top: 0,
         }}
       >
-        {LETTERS.map((char, index) => (
-          <span key={index} className="inline-block">
-            {char === ' ' ? ' ' : char}
-          </span>
-        ))}
+        {NAMEPLATE_TEXT}
       </span>
 
       {prefersReducedMotion ? (
         <h1
-          className={`${typeClass} text-white text-center leading-[0.9]`}
+          className={`${TYPE_CLASS} text-white text-center leading-[0.9]`}
           style={{
             fontSize: hasMeasured ? `${fittedSize}px` : undefined,
             visibility: hasMeasured ? 'visible' : 'hidden',
@@ -95,7 +141,7 @@ const Nameplate = ({ scrollProgress }: NameplateProps) => {
         <div className="relative">
           <h1
             aria-label={NAMEPLATE_TEXT}
-            className={`${typeClass} text-white text-center leading-[0.9]`}
+            className={`${TYPE_CLASS} text-white text-center leading-[0.9]`}
             style={{
               fontSize: hasMeasured ? `${fittedSize}px` : undefined,
               visibility: hasMeasured ? 'visible' : 'hidden',
@@ -107,6 +153,7 @@ const Nameplate = ({ scrollProgress }: NameplateProps) => {
                   key={index}
                   char={char}
                   index={index}
+                  kern={kerning[index] ?? 0}
                   scrollProgress={scrollProgress}
                 />
               ))}
