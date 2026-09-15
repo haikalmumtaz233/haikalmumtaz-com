@@ -69,20 +69,22 @@ const liftFor = (index: number) => 70 + centrality(index) * 190;
 
 interface NameplateProps {
   scrollProgress: MotionValue<number>;
+  offset?: number;
 }
 
 interface LetterProps {
   char: string;
   index: number;
   kern: number;
+  offset: number;
   scrollProgress: MotionValue<number>;
 }
 
-const Letter = ({ char, index, kern, scrollProgress }: LetterProps) => {
+const Letter = ({ char, index, kern, offset, scrollProgress }: LetterProps) => {
   const lift = useTransform(scrollProgress, [0, 1], [0, -liftFor(index)]);
   const fade = useTransform(scrollProgress, [0.05, 0.75 - centrality(index) * 0.35], [1, 0]);
   const delay =
-    NAMEPLATE_TIMING.riseDelay + Math.abs(index - CENTER) * NAMEPLATE_TIMING.riseStagger;
+    offset + NAMEPLATE_TIMING.riseDelay + Math.abs(index - CENTER) * NAMEPLATE_TIMING.riseStagger;
 
   return (
     <motion.span className="inline-block" style={{ y: lift, opacity: fade, marginRight: `${kern}em` }}>
@@ -100,7 +102,7 @@ const Letter = ({ char, index, kern, scrollProgress }: LetterProps) => {
   );
 };
 
-const Nameplate = ({ scrollProgress }: NameplateProps) => {
+const Nameplate = ({ scrollProgress, offset = 0 }: NameplateProps) => {
   const prefersReducedMotion = usePrefersReducedMotion();
   const { containerRef, measureRef, fittedSize, referenceFontSize } =
     useFittedTextSize(NAMEPLATE_TEXT);
@@ -154,6 +156,7 @@ const Nameplate = ({ scrollProgress }: NameplateProps) => {
                   char={char}
                   index={index}
                   kern={kerning[index] ?? 0}
+                  offset={offset}
                   scrollProgress={scrollProgress}
                 />
               ))}
@@ -175,7 +178,7 @@ const Nameplate = ({ scrollProgress }: NameplateProps) => {
               }}
               transition={{
                 duration: NAMEPLATE_TIMING.ruleDuration,
-                delay: NAMEPLATE_TIMING.ruleDelay,
+                delay: offset + NAMEPLATE_TIMING.ruleDelay,
                 times: [0, 0.3, 0.68, 1],
                 ease: [easing.wipe, 'linear', easing.wipe],
               }}
