@@ -16,7 +16,7 @@ const Footer = () => {
 
   return (
     <footer className="relative border-t border-white/10 bg-[#09080e]">
-      <div className="shell flex flex-wrap items-center justify-between gap-x-10 gap-y-4 py-8 md:py-10">
+      <div className="shell flex flex-wrap items-center justify-between gap-x-10 gap-y-4 pt-8 pb-28 md:py-10">
         <p className="text-sm text-white/50">
           &copy; {currentYear} {profile.name}
         </p>

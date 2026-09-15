@@ -113,7 +113,7 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
             tabIndex={-1}
             className="fixed top-0 right-0 h-full w-full sm:w-[85vw] md:w-[480px] z-50 bg-black/80 backdrop-blur-2xl border-l border-white/10 shadow-2xl overflow-hidden"
           >
-            <div className="h-full flex flex-col justify-between p-6 sm:p-8 md:p-12">
+            <div className="h-full flex flex-col justify-between p-6 pb-28 sm:p-8 sm:pb-28 md:p-12">
 
               <nav className="flex-1 flex items-center">
                 <ul className="space-y-4 sm:space-y-6 w-full">
