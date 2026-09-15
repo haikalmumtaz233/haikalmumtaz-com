@@ -3,7 +3,7 @@ import { motion, AnimatePresence, useMotionValueEvent, useScroll, useTransform }
 import { ArrowDownRight } from 'lucide-react';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { animatedProps, easing } from '../../lib/motion';
-import { introOffset } from '../../lib/intro';
+import { useIntroGate } from '../../lib/intro';
 import Nameplate from './Nameplate';
 
 const roles = ['Application Developer Jr.', 'Fullstack Developer', 'Machine Learning Engineer', 'Data Scientist', 'Game Developer'];
@@ -12,15 +12,16 @@ const EYEBROW_DELAY = 1.05;
 const DOCK_DELAY = 1.45;
 const DOCK_STAGGER = 0.12;
 const TYPING_START = 2.1;
+const INTRO_LEAD = 0.75;
 
-const dockItem = (prefersReducedMotion: boolean, order: number, offset: number) =>
+const dockItem = (prefersReducedMotion: boolean, order: number, ready: boolean, lead: number) =>
   animatedProps(prefersReducedMotion, {
     initial: { opacity: 0, y: 18 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 1, ease: easing.expo, delay: offset + DOCK_DELAY + order * DOCK_STAGGER },
+    animate: ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 },
+    transition: { duration: 1, ease: easing.expo, delay: DOCK_DELAY - lead + order * DOCK_STAGGER },
   });
 
-const RoleTicker = ({ startDelay }: { startDelay: number }) => {
+const RoleTicker = ({ startDelay, ready }: { startDelay: number; ready: boolean }) => {
   const prefersReducedMotion = usePrefersReducedMotion();
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState(prefersReducedMotion ? roles[0] : '');
@@ -28,10 +29,10 @@ const RoleTicker = ({ startDelay }: { startDelay: number }) => {
   const [isTyping, setIsTyping] = useState(false);
 
   useEffect(() => {
-    if (prefersReducedMotion) return;
+    if (prefersReducedMotion || !ready) return;
     const timer = setTimeout(() => setIsTyping(true), startDelay * 1000);
     return () => clearTimeout(timer);
-  }, [prefersReducedMotion, startDelay]);
+  }, [prefersReducedMotion, startDelay, ready]);
 
   useEffect(() => {
     if (prefersReducedMotion || !isTyping) return;
@@ -87,7 +88,8 @@ const RoleTicker = ({ startDelay }: { startDelay: number }) => {
 const Hero = () => {
   const prefersReducedMotion = usePrefersReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
-  const [offset] = useState(introOffset);
+  const { gated, ready } = useIntroGate();
+  const lead = gated ? INTRO_LEAD : 0;
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
 
   const { scrollYProgress, scrollY } = useScroll({
@@ -116,8 +118,8 @@ const Hero = () => {
             <motion.p
               {...animatedProps(prefersReducedMotion, {
                 initial: { opacity: 0, letterSpacing: '1.1em' },
-                animate: { opacity: 1, letterSpacing: '0.5em' },
-                transition: { duration: 1.6, ease: easing.expo, delay: offset + EYEBROW_DELAY },
+                animate: ready ? { opacity: 1, letterSpacing: '0.5em' } : { opacity: 0, letterSpacing: '1.1em' },
+                transition: { duration: 1.6, ease: easing.expo, delay: EYEBROW_DELAY - lead },
               })}
               className="text-[11px] sm:text-xs md:text-sm font-bold uppercase tracking-[0.5em] text-white/55 mb-4 sm:mb-6 whitespace-nowrap"
             >
@@ -125,7 +127,7 @@ const Hero = () => {
             </motion.p>
           </motion.div>
 
-          <Nameplate scrollProgress={scrollYProgress} offset={offset} />
+          <Nameplate scrollProgress={scrollYProgress} />
         </div>
       </div>
 
@@ -135,7 +137,7 @@ const Hero = () => {
             <AnimatePresence>
               {showScrollIndicator && (
                 <motion.div
-                  {...dockItem(prefersReducedMotion, 0, offset)}
+                  {...dockItem(prefersReducedMotion, 0, ready, lead)}
                   exit={prefersReducedMotion ? undefined : { opacity: 0, y: 10, transition: { duration: 0.4 } }}
                   className="flex items-center gap-4"
                 >
@@ -150,7 +152,7 @@ const Hero = () => {
                           ease: easing.inout,
                           repeat: Infinity,
                           repeatDelay: 0.4,
-                          delay: offset + DOCK_DELAY + 0.8,
+                          delay: DOCK_DELAY - lead + 0.8,
                         },
                       })}
                     />
@@ -161,11 +163,11 @@ const Hero = () => {
             </AnimatePresence>
           </div>
 
-          <motion.div {...dockItem(prefersReducedMotion, 1, offset)} className="flex justify-center">
-            <RoleTicker startDelay={offset + TYPING_START} />
+          <motion.div {...dockItem(prefersReducedMotion, 1, ready, lead)} className="flex justify-center">
+            <RoleTicker startDelay={TYPING_START - lead} ready={ready} />
           </motion.div>
 
-          <motion.div {...dockItem(prefersReducedMotion, 2, offset)} className="flex justify-center lg:justify-end">
+          <motion.div {...dockItem(prefersReducedMotion, 2, ready, lead)} className="flex justify-center lg:justify-end">
             <a
               href="#contact"
               className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-white px-6 py-3 text-sm font-semibold text-black isolate"

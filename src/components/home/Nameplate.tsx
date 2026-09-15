@@ -4,6 +4,7 @@ import { useFittedTextSize } from '../../hooks/useFittedTextSize';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import { easing } from '../../lib/motion';
+import { useIntroGate } from '../../lib/intro';
 
 const NAMEPLATE_TEXT = 'HAIKAL MUMTAZ';
 const LETTERS = NAMEPLATE_TEXT.split('');
@@ -75,7 +76,11 @@ const WORD_STARTS = WORDS.map((_, wordIndex) =>
 
 interface NameplateProps {
   scrollProgress: MotionValue<number>;
-  offset?: number;
+}
+
+interface IntroGate {
+  gated: boolean;
+  ready: boolean;
 }
 
 interface LetterProps {
@@ -84,22 +89,34 @@ interface LetterProps {
   delay: number;
   lift: number;
   fadeEnd: number;
+  order: number;
+  gate: IntroGate;
   scrollProgress: MotionValue<number>;
 }
 
-const Letter = ({ char, kern, delay, lift: liftDistance, fadeEnd, scrollProgress }: LetterProps) => {
+const Letter = ({ char, kern, delay, lift: liftDistance, fadeEnd, order, gate, scrollProgress }: LetterProps) => {
   const lift = useTransform(scrollProgress, [0, 1], [0, liftDistance]);
   const fade = useTransform(scrollProgress, [0.05, fadeEnd], [1, 0]);
+
+  const reveal = gate.gated
+    ? {
+        initial: { opacity: 0, y: '0%' },
+        animate: { opacity: gate.ready ? 1 : 0, y: '0%' },
+        transition: { duration: 0.5, ease: easing.smooth, delay: gate.ready ? order * 0.025 : 0 },
+      }
+    : {
+        initial: { y: '118%' },
+        animate: { y: '0%' },
+        transition: { duration: NAMEPLATE_TIMING.riseDuration, ease: easing.expo, delay },
+      };
 
   return (
     <motion.span className="inline-block" style={{ y: lift, opacity: fade, marginRight: `${kern}em` }}>
       <span className="inline-block overflow-hidden align-top py-[0.08em] -my-[0.08em] px-[0.12em] -mx-[0.12em]">
-        <motion.span
-          className="inline-block"
-          initial={{ y: '118%' }}
-          animate={{ y: '0%' }}
-          transition={{ duration: NAMEPLATE_TIMING.riseDuration, ease: easing.expo, delay }}
-        >
+        <motion.span className="inline-block" {...reveal}>
+          {char.trim() && (
+            <span data-glyph-origin={char} aria-hidden="true" className="inline-block h-0 w-0 align-baseline" />
+          )}
           {glyph(char)}
         </motion.span>
       </span>
@@ -111,11 +128,11 @@ interface StackedWordProps {
   word: string;
   wordIndex: number;
   kerning: number[];
-  offset: number;
+  gate: IntroGate;
   scrollProgress: MotionValue<number>;
 }
 
-const StackedWord = ({ word, wordIndex, kerning, offset, scrollProgress }: StackedWordProps) => {
+const StackedWord = ({ word, wordIndex, kerning, gate, scrollProgress }: StackedWordProps) => {
   const { containerRef, measureRef, fittedSize, referenceFontSize } = useFittedTextSize(word);
   const letters = word.split('');
   const middle = (letters.length - 1) / 2;
@@ -146,9 +163,11 @@ const StackedWord = ({ word, wordIndex, kerning, offset, scrollProgress }: Stack
                 key={letterIndex}
                 char={char}
                 kern={isLast ? 0 : kerning[start + letterIndex] ?? 0}
-                delay={offset + NAMEPLATE_TIMING.riseDelay + wordIndex * 0.14 + spread * middle * NAMEPLATE_TIMING.riseStagger}
+                delay={NAMEPLATE_TIMING.riseDelay + wordIndex * 0.14 + spread * middle * NAMEPLATE_TIMING.riseStagger}
                 lift={direction * (50 + (1 - spread) * 150)}
                 fadeEnd={0.7 - (1 - spread) * 0.3}
+                order={start + letterIndex}
+                gate={gate}
                 scrollProgress={scrollProgress}
               />
             );
@@ -158,14 +177,14 @@ const StackedWord = ({ word, wordIndex, kerning, offset, scrollProgress }: Stack
   );
 };
 
-const StackedNameplate = ({ scrollProgress, offset = 0 }: NameplateProps) => {
+const StackedNameplate = ({ scrollProgress, gate }: NameplateProps & { gate: IntroGate }) => {
   const kerning = useKerning(true);
   const ruleScale = useTransform(scrollProgress, [0, 0.35], [1, 2.6]);
   const ruleFade = useTransform(scrollProgress, [0, 0.35], [1, 0]);
 
   return (
     <h1 aria-label={NAMEPLATE_TEXT} className="relative w-full">
-      <StackedWord word={WORDS[0]} wordIndex={0} kerning={kerning} offset={offset} scrollProgress={scrollProgress} />
+      <StackedWord word={WORDS[0]} wordIndex={0} kerning={kerning} gate={gate} scrollProgress={scrollProgress} />
       <motion.span
         aria-hidden="true"
         className="relative my-[3vw] block h-px w-full"
@@ -174,11 +193,11 @@ const StackedNameplate = ({ scrollProgress, offset = 0 }: NameplateProps) => {
         <motion.span
           className="absolute inset-0 origin-center bg-white/80"
           initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ duration: 1.1, delay: offset + NAMEPLATE_TIMING.ruleDelay, ease: easing.wipe }}
+          animate={{ scaleX: gate.ready ? 1 : 0 }}
+          transition={{ duration: 1.1, delay: gate.gated ? 0.3 : NAMEPLATE_TIMING.ruleDelay, ease: easing.wipe }}
         />
       </motion.span>
-      <StackedWord word={WORDS[1]} wordIndex={1} kerning={kerning} offset={offset} scrollProgress={scrollProgress} />
+      <StackedWord word={WORDS[1]} wordIndex={1} kerning={kerning} gate={gate} scrollProgress={scrollProgress} />
     </h1>
   );
 };
@@ -186,15 +205,16 @@ const StackedNameplate = ({ scrollProgress, offset = 0 }: NameplateProps) => {
 const Nameplate = (props: NameplateProps) => {
   const prefersReducedMotion = usePrefersReducedMotion();
   const isMobile = useIsMobile();
+  const gate = useIntroGate();
 
   if (isMobile && !prefersReducedMotion) {
-    return <StackedNameplate {...props} />;
+    return <StackedNameplate {...props} gate={gate} />;
   }
 
-  return <LinearNameplate {...props} />;
+  return <LinearNameplate {...props} gate={gate} />;
 };
 
-const LinearNameplate = ({ scrollProgress, offset = 0 }: NameplateProps) => {
+const LinearNameplate = ({ scrollProgress, gate }: NameplateProps & { gate: IntroGate }) => {
   const prefersReducedMotion = usePrefersReducedMotion();
   const { containerRef, measureRef, fittedSize, referenceFontSize } =
     useFittedTextSize(NAMEPLATE_TEXT);
@@ -247,9 +267,11 @@ const LinearNameplate = ({ scrollProgress, offset = 0 }: NameplateProps) => {
                   key={index}
                   char={char}
                   kern={kerning[index] ?? 0}
-                  delay={offset + NAMEPLATE_TIMING.riseDelay + Math.abs(index - CENTER) * NAMEPLATE_TIMING.riseStagger}
+                  delay={NAMEPLATE_TIMING.riseDelay + Math.abs(index - CENTER) * NAMEPLATE_TIMING.riseStagger}
                   lift={-liftFor(index)}
                   fadeEnd={0.75 - centrality(index) * 0.35}
+                  order={index}
+                  gate={gate}
                   scrollProgress={scrollProgress}
                 />
               ))}
@@ -261,17 +283,21 @@ const LinearNameplate = ({ scrollProgress, offset = 0 }: NameplateProps) => {
               className="pointer-events-none absolute inset-x-0 -bottom-[0.06em] h-px bg-white/80"
               style={{ fontSize: `${fittedSize}px` }}
               initial={{ clipPath: 'inset(0 50% 0 50%)' }}
-              animate={{
-                clipPath: [
-                  'inset(0 50% 0 50%)',
-                  'inset(0 0% 0 0%)',
-                  'inset(0 0% 0 0%)',
-                  'inset(0 50% 0 50%)',
-                ],
-              }}
+              animate={
+                gate.ready
+                  ? {
+                      clipPath: [
+                        'inset(0 50% 0 50%)',
+                        'inset(0 0% 0 0%)',
+                        'inset(0 0% 0 0%)',
+                        'inset(0 50% 0 50%)',
+                      ],
+                    }
+                  : { clipPath: 'inset(0 50% 0 50%)' }
+              }
               transition={{
                 duration: NAMEPLATE_TIMING.ruleDuration,
-                delay: offset + NAMEPLATE_TIMING.ruleDelay,
+                delay: gate.gated ? 0.3 : NAMEPLATE_TIMING.ruleDelay,
                 times: [0, 0.3, 0.68, 1],
                 ease: [easing.wipe, 'linear', easing.wipe],
               }}
