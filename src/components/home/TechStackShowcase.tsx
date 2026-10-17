@@ -18,9 +18,10 @@ const TechStackShowcase = () => {
   const hoverTimer = useRef<number>();
   const isInView = useInView(containerRef, { amount: 0.4 });
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isEngaged, setIsEngaged] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [hasFocusWithin, setHasFocusWithin] = useState(false);
   const category = techCategories[activeIndex];
-  const isCycling = isInView && !isEngaged && !prefersReducedMotion;
+  const isCycling = isInView && !isHovered && !hasFocusWithin && !prefersReducedMotion;
 
   useEffect(() => {
     if (!isCycling) return;
@@ -50,7 +51,7 @@ const TechStackShowcase = () => {
   };
 
   const handleBlur = (event: FocusEvent<HTMLDivElement>) => {
-    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setIsEngaged(false);
+    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setHasFocusWithin(false);
   };
 
   const handleStagePointerMove = (event: PointerEvent<HTMLDivElement>) => {
@@ -65,9 +66,9 @@ const TechStackShowcase = () => {
     <div
       ref={containerRef}
       className="grid gap-10 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-14"
-      onPointerEnter={() => setIsEngaged(true)}
-      onPointerLeave={() => setIsEngaged(false)}
-      onFocus={() => setIsEngaged(true)}
+      onPointerEnter={() => setIsHovered(true)}
+      onPointerLeave={() => setIsHovered(false)}
+      onFocus={() => setHasFocusWithin(true)}
       onBlur={handleBlur}
     >
       <div
