@@ -5,10 +5,12 @@ import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { animatedProps, easing } from '../lib/motion';
 import RuleReveal from '../journey/RuleReveal';
 import FadeIn from '../journey/FadeIn';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 const NotFound = () => {
   const navigate = useNavigate();
   const prefersReducedMotion = usePrefersReducedMotion();
+  useDocumentTitle('Page not found');
 
   return (
     <section className="relative z-10 min-h-[70vh] flex items-center py-20 sm:py-28">

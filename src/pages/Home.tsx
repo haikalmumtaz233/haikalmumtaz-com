@@ -7,8 +7,11 @@ import Certifications from '../components/home/Certifications';
 import FavoriteMoments from '../components/home/FavoriteMoments';
 import Contact from '../components/home/Contact';
 import SectionAtmosphere from '../journey/SectionAtmosphere';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 const Home = () => {
+  useDocumentTitle();
+
   return (
     <div className="relative z-10">
       <div className="relative">

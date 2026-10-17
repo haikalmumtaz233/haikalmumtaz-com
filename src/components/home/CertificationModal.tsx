@@ -71,10 +71,12 @@ const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) 
             onClick={(e) => e.stopPropagation()}
           >
             <button
+              type="button"
               onClick={onClose}
+              aria-label="Close"
               className="absolute top-4 right-4 z-10 p-2 bg-black/60 backdrop-blur-md rounded-full border border-white/20 text-white hover:bg-white/20 transition-colors cursor-pointer"
             >
-              <X size={20} />
+              <X size={20} aria-hidden="true" />
             </button>
 
             <div className="flex-1 flex items-center justify-center p-4 pt-14 overflow-hidden">

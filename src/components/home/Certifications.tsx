@@ -44,7 +44,12 @@ const Certifications = () => {
     if (!slider || !container) return;
 
     const measure = () => {
-      setMaxOffset(Math.max(0, slider.scrollWidth - container.offsetWidth));
+      const nextMaxOffset = Math.max(0, slider.scrollWidth - container.offsetWidth);
+      setMaxOffset(nextMaxOffset);
+      if (-x.get() > nextMaxOffset) {
+        x.set(-nextMaxOffset);
+        setOffset(nextMaxOffset);
+      }
       const firstCard = slider.firstElementChild as HTMLElement | null;
       const secondCard = firstCard?.nextElementSibling as HTMLElement | null;
       setStep(
@@ -59,12 +64,24 @@ const Certifications = () => {
     resizeObserver.observe(container);
 
     return () => resizeObserver.disconnect();
-  }, [isMobile]);
+  }, [isMobile, x]);
 
   const slideTo = (nextOffset: number) => {
     const clamped = Math.min(maxOffset, Math.max(0, nextOffset));
     setOffset(clamped);
     animate(x, -clamped, prefersReducedMotion ? { duration: 0 } : { duration: 0.9, ease: easing.expo });
+  };
+
+  const revealCard = (card: HTMLElement) => {
+    const slider = sliderRef.current;
+    const container = containerRef.current;
+    const firstCard = slider?.firstElementChild as HTMLElement | null;
+    if (!container || !firstCard || !card.matches(':focus-visible')) return;
+
+    const left = card.offsetLeft - firstCard.offsetLeft;
+    const right = left + card.offsetWidth;
+    if (left < offset) slideTo(left);
+    else if (right > offset + container.offsetWidth) slideTo(right - container.offsetWidth);
   };
 
   const isAtStart = offset <= 1;
@@ -146,9 +163,10 @@ const Certifications = () => {
             drag="x"
             dragConstraints={{ right: 0, left: -maxOffset }}
             onDragEnd={() => setOffset(-x.get())}
+            onDragTransitionEnd={() => setOffset(-x.get())}
           >
             {certifications.map((cert) => (
-              <CertificateCard key={cert.id} cert={cert} onCertClick={setSelectedCert} />
+              <CertificateCard key={cert.id} cert={cert} onCertClick={setSelectedCert} onFocusCard={revealCard} />
             ))}
           </motion.div>
         </div>
@@ -163,9 +181,11 @@ const Certifications = () => {
 const CertificateCard = ({
   cert,
   onCertClick,
+  onFocusCard,
 }: {
   cert: Certification;
   onCertClick: (cert: Certification) => void;
+  onFocusCard?: (card: HTMLElement) => void;
 }) => {
   const dragRef = useRef(false);
 
@@ -181,6 +201,7 @@ const CertificateCard = ({
         if (!dragRef.current) onCertClick(cert);
       }}
       onKeyDown={activateOnEnterOrSpace(() => onCertClick(cert))}
+      onFocus={(event) => onFocusCard?.(event.currentTarget)}
       role="button"
       tabIndex={0}
       aria-label={`View ${cert.title} certificate from ${cert.issuer}`}

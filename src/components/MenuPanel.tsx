@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Github, Linkedin, Instagram } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLenis } from 'lenis/react';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { profile, socialProfiles } from '../data/profile';
@@ -24,6 +25,15 @@ export const MENU_PANEL_ID = 'site-menu-panel';
 
 const LETTER_DURATION = 0.5;
 const LETTER_STAGGER = 0.025;
+const MAX_WAIT_FRAMES = 120;
+
+const whenRendered = (selector: string, run: () => void, framesLeft = MAX_WAIT_FRAMES) => {
+  if (document.querySelector(selector) || framesLeft === 0) {
+    requestAnimationFrame(() => requestAnimationFrame(run));
+    return;
+  }
+  requestAnimationFrame(() => whenRendered(selector, run, framesLeft - 1));
+};
 
 interface MenuPanelProps {
   isOpen: boolean;
@@ -35,26 +45,37 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
   const panelRef = useFocusTrap<HTMLDivElement>(isOpen);
   const navigate = useNavigate();
   const location = useLocation();
+  const lenis = useLenis();
+
+  const scrollToTarget = (target: string | number, immediate = false) => {
+    if (lenis) {
+      lenis.start();
+      lenis.resize();
+      lenis.scrollTo(target, { immediate });
+      return;
+    }
+
+    const behavior = prefersReducedMotion || immediate ? 'auto' : 'smooth';
+    if (typeof target === 'number') {
+      window.scrollTo({ top: target, behavior });
+      return;
+    }
+    document.querySelector(target)?.scrollIntoView({ behavior });
+  };
 
   const handleNavigation = (link: typeof navLinks[0]) => {
     onClose();
 
-    if (link.type === 'route') {
-      navigate(link.path, { viewTransition: true });
-      return;
-    }
+    const target = link.type === 'route' ? 0 : link.path;
 
     if (location.pathname !== '/') {
-      navigate('/');
-      setTimeout(() => {
-        const element = document.querySelector(link.path);
-        element?.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
+      const isRoute = link.type === 'route';
+      navigate('/', { viewTransition: isRoute, state: { skipScrollRestore: true } });
+      whenRendered(isRoute ? '#hero' : link.path, () => scrollToTarget(target, isRoute));
       return;
     }
 
-    const element = document.querySelector(link.path);
-    element?.scrollIntoView({ behavior: 'smooth' });
+    scrollToTarget(target);
   };
 
   useEffect(() => {
@@ -62,11 +83,13 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
 
     const previous = document.body.style.overflowY;
     document.body.style.overflowY = 'hidden';
+    lenis?.stop();
 
     return () => {
       document.body.style.overflowY = previous;
+      lenis?.start();
     };
-  }, [isOpen]);
+  }, [isOpen, lenis]);
 
   useEffect(() => {
     if (!isOpen) return;

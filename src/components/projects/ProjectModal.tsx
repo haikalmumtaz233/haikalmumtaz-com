@@ -79,10 +79,12 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
             }}
           >
 <button
+              type="button"
               onClick={onClose}
+              aria-label="Close"
               className="absolute top-4 right-4 z-30 p-2 rounded-full bg-black/60 backdrop-blur-sm border border-white/10 text-slate-400 hover:text-white hover:border-white/30 transition-colors"
             >
-              <X size={18} />
+              <X size={18} aria-hidden="true" />
             </button>
 <div className="relative aspect-video overflow-hidden rounded-t-2xl">
               <div
