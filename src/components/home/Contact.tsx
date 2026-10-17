@@ -66,13 +66,15 @@ const Contact = () => {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const turnstileRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
+  const toastIdRef = useRef(0);
 
   const removeToast = (id: number) => {
     setToasts((prev) => prev.filter((toast) => toast.id !== id));
   };
 
   const addToast = (type: ToastType, message: string) => {
-    const id = Date.now();
+    toastIdRef.current += 1;
+    const id = toastIdRef.current;
     setToasts((prev) => [...prev, { id, type, message }]);
     setTimeout(() => removeToast(id), 5000);
   };
@@ -178,6 +180,11 @@ const Contact = () => {
       const email = sanitize(formData.email);
       const phone = sanitize(formData.phone);
       const message = sanitize(formData.message);
+
+      if (firstName.length === 0 || lastName.length === 0) {
+        addToast('error', 'Enter your first and last name.');
+        return;
+      }
 
       if (firstName.length > MAX_NAME_LENGTH || lastName.length > MAX_NAME_LENGTH) {
         addToast('error', `Shorten the name to ${MAX_NAME_LENGTH} characters each.`);
@@ -379,7 +386,7 @@ const Contact = () => {
                       id="contact-phone"
                       name="phone"
                       autoComplete="tel"
-                      pattern="[\d\s+\-()]{10,}"
+                      pattern="[\d\s+\-\(\)]{10,}"
                       value={formData.phone}
                       onChange={handleChange}
                       className={inputClass}
