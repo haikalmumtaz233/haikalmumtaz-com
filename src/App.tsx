@@ -10,6 +10,7 @@ import JourneyProvider from './journey/JourneyProvider';
 import Intro from './components/Intro';
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
 import TechIconSprite from './components/ui/TechIconSprite';
+import ErrorBoundary from './components/ErrorBoundary';
 
 const Projects = lazy(() => import('./pages/Projects'));
 const NotFound = lazy(() => import('./pages/NotFound'));
@@ -63,6 +64,8 @@ function ScrollManager() {
 }
 
 function AppShell() {
+  const { pathname } = useLocation();
+
   return (
     <JourneyProvider>
       <Intro />
@@ -72,13 +75,15 @@ function AppShell() {
       <div className="min-h-screen flex flex-col">
         <MenuToggle />
         <main className="flex-grow">
-          <Suspense fallback={<div className="min-h-[60vh]" />}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/projects" element={<Projects />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
+          <ErrorBoundary key={pathname}>
+            <Suspense fallback={<div className="min-h-[60vh]" />}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/projects" element={<Projects />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+          </ErrorBoundary>
         </main>
         <Footer />
       </div>
