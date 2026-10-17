@@ -35,6 +35,15 @@ export const techCategories: TechCategory[] = [
     ],
   },
   {
+    title: "Mobile",
+    items: [
+      { name: "Kotlin", icon: spriteIcon('tech-kotlin') },
+      { name: "Dart", icon: spriteIcon('tech-dart') },
+      { name: "Flutter", icon: spriteIcon('tech-flutter') },
+      { name: "Jetpack Compose", icon: spriteIcon('tech-jetpackcompose') },
+    ],
+  },
+  {
     title: "AI",
     items: [
       { name: "TensorFlow", icon: spriteIcon('tech-tensorflow') },
