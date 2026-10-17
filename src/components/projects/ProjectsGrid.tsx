@@ -74,6 +74,8 @@ const ProjectsGrid = () => {
                 return (
                   <button
                     key={category}
+                    type="button"
+                    aria-pressed={isActive}
                     onClick={() => setSelectedCategory(category)}
                     className={`relative flex-shrink-0 px-4 py-2 text-xs sm:text-sm font-medium rounded-full transition-colors duration-300 ${
                       isActive
