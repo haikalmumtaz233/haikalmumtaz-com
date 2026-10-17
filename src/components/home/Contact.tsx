@@ -10,7 +10,6 @@ import { profile, socialProfiles } from '../../data/profile';
 declare global {
   interface Window {
     turnstile?: {
-      ready: (callback: () => void) => void;
       render: (container: HTMLElement, options: {
         sitekey: string;
         callback: (token: string) => void;
@@ -104,24 +103,28 @@ const Contact = () => {
     const renderWidget = () => {
       if (cancelled || !window.turnstile || !turnstileRef.current || widgetIdRef.current) return;
 
-      widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
-        sitekey: import.meta.env.VITE_TURNSTILE_SITE_KEY,
-        callback: (token: string) => {
-          setTurnstileToken(token);
-          setTurnstileError(false);
-        },
-        'expired-callback': () => {
-          setTurnstileToken(null);
-        },
-        'error-callback': () => {
-          setTurnstileError(true);
-        },
-        theme: 'dark',
-      });
+      try {
+        widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
+          sitekey: import.meta.env.VITE_TURNSTILE_SITE_KEY,
+          callback: (token: string) => {
+            setTurnstileToken(token);
+            setTurnstileError(false);
+          },
+          'expired-callback': () => {
+            setTurnstileToken(null);
+          },
+          'error-callback': () => {
+            setTurnstileError(true);
+          },
+          theme: 'dark',
+        });
+      } catch {
+        setTurnstileError(true);
+      }
     };
 
     if (window.turnstile) {
-      window.turnstile.ready(renderWidget);
+      renderWidget();
     } else {
       window.onloadTurnstileCallback = renderWidget;
 
