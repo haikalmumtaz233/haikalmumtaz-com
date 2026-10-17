@@ -70,7 +70,7 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
 
     if (location.pathname !== '/') {
       const isRoute = link.type === 'route';
-      navigate('/', { viewTransition: isRoute });
+      navigate('/', { viewTransition: isRoute, state: { skipScrollRestore: true } });
       whenRendered(isRoute ? '#hero' : link.path, () => scrollToTarget(target, isRoute));
       return;
     }

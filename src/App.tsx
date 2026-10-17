@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useEffect, lazy, Suspense } from 'react';
+import { useLayoutEffect, useRef, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { ReactLenis, useLenis } from 'lenis/react';
 import type Lenis from 'lenis';
@@ -30,7 +30,8 @@ const restoreScroll = (lenis: Lenis | undefined, target: number, framesLeft = MA
 };
 
 function ScrollManager() {
-  const { pathname } = useLocation();
+  const { pathname, state } = useLocation();
+  const skipRestore = (state as { skipScrollRestore?: boolean } | null)?.skipScrollRestore === true;
   const lenis = useLenis();
   const previousPathRef = useRef<string>(pathname);
 
@@ -40,25 +41,27 @@ function ScrollManager() {
     }
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const previousPath = previousPathRef.current;
+    previousPathRef.current = pathname;
 
-    if (pathname !== previousPath) {
-      if (pathname === '/projects' && previousPath === '/') {
-        scrollPositions.set('/', lenis?.scroll || window.scrollY);
-      }
-
-      if (pathname === '/' && previousPath === '/projects') {
-        const savedPosition = scrollPositions.get('/');
-        if (savedPosition !== undefined) restoreScroll(lenis, savedPosition);
-      } else if (pathname === '/projects') {
-        window.scrollTo(0, 0);
-        lenis?.scrollTo(0, { immediate: true });
-      }
-
-      previousPathRef.current = pathname;
+    if (pathname === '/projects') {
+      window.scrollTo(0, 0);
+      lenis?.scrollTo(0, { immediate: true });
+      return;
     }
-  }, [pathname, lenis]);
+
+    if (pathname !== '/') return;
+
+    const savedPosition = scrollPositions.get('/');
+    if (previousPath === '/projects' && savedPosition !== undefined && !skipRestore) {
+      restoreScroll(lenis, savedPosition);
+    }
+
+    const rememberHomeScroll = () => scrollPositions.set('/', window.scrollY);
+    window.addEventListener('scroll', rememberHomeScroll, { passive: true });
+    return () => window.removeEventListener('scroll', rememberHomeScroll);
+  }, [pathname, lenis, skipRestore]);
 
   return null;
 }
