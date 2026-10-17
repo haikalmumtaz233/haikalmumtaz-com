@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useEffect, lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route, useLocation, useNavigationType } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { ReactLenis, useLenis } from 'lenis/react';
+import type Lenis from 'lenis';
 import MenuToggle from './components/MenuToggle';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -14,10 +15,21 @@ const Projects = lazy(() => import('./pages/Projects'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 const scrollPositions = new Map<string, number>();
+const MAX_RESTORE_FRAMES = 30;
+
+const restoreScroll = (lenis: Lenis | undefined, target: number, framesLeft = MAX_RESTORE_FRAMES) => {
+  requestAnimationFrame(() => {
+    lenis?.resize();
+    window.scrollTo(0, target);
+    lenis?.scrollTo(target, { immediate: true });
+    if (Math.abs(window.scrollY - target) > 1 && framesLeft > 0) {
+      restoreScroll(lenis, target, framesLeft - 1);
+    }
+  });
+};
 
 function ScrollManager() {
   const { pathname } = useLocation();
-  const navigationType = useNavigationType();
   const lenis = useLenis();
   const previousPathRef = useRef<string>(pathname);
 
@@ -37,17 +49,7 @@ function ScrollManager() {
 
       if (pathname === '/' && previousPath === '/projects') {
         const savedPosition = scrollPositions.get('/');
-        if (savedPosition !== undefined && navigationType === 'POP') {
-          requestAnimationFrame(() => {
-            window.scrollTo(0, savedPosition);
-            lenis?.scrollTo(savedPosition, { immediate: true });
-          });
-        } else if (savedPosition !== undefined) {
-          requestAnimationFrame(() => {
-            window.scrollTo(0, savedPosition);
-            lenis?.scrollTo(savedPosition, { immediate: true });
-          });
-        }
+        if (savedPosition !== undefined) restoreScroll(lenis, savedPosition);
       } else if (pathname === '/projects') {
         window.scrollTo(0, 0);
         lenis?.scrollTo(0, { immediate: true });
@@ -55,7 +57,7 @@ function ScrollManager() {
 
       previousPathRef.current = pathname;
     }
-  }, [pathname, lenis, navigationType]);
+  }, [pathname, lenis]);
 
   return null;
 }
