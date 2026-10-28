@@ -5,7 +5,7 @@ import {
   useEffect,
   type KeyboardEvent as ReactKeyboardEvent,
 } from 'react';
-import { animate, motion, useMotionValue } from 'motion/react';
+import { animate, m, useMotionValue } from 'motion/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { certifications, type Certification } from '../../data/certifications';
 import CertificationModal from './CertificationModal';
@@ -170,7 +170,7 @@ const Certifications = () => {
             onKeyDown={handleKeyDown}
             className="rounded-lg"
           >
-            <motion.div
+            <m.div
               ref={sliderRef}
               className="flex cursor-grab gap-5 active:cursor-grabbing md:gap-8"
               style={{ touchAction: 'pan-y', x }}
@@ -187,7 +187,7 @@ const Certifications = () => {
                   onFocusCard={revealCard}
                 />
               ))}
-            </motion.div>
+            </m.div>
           </div>
         )}
       </div>

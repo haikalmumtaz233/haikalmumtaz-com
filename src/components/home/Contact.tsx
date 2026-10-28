@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, type ChangeEvent, type FormEvent } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from 'motion/react';
 import { ArrowUpRight, Mail, CircleCheck, CircleX, X } from 'lucide-react';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import RuleReveal from '../../journey/RuleReveal';
@@ -253,7 +253,7 @@ const Contact = () => {
       >
         <AnimatePresence>
           {toasts.map((toast) => (
-            <motion.div
+            <m.div
               key={toast.id}
               initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: 100, scale: 0.9 }}
               animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, x: 0, scale: 1 }}
@@ -279,7 +279,7 @@ const Contact = () => {
               >
                 <X className="h-4 w-4" />
               </button>
-            </motion.div>
+            </m.div>
           ))}
         </AnimatePresence>
       </div>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 import { useNavigate } from 'react-router';
 import { ArrowLeft } from 'lucide-react';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
@@ -18,7 +18,7 @@ const ProjectsHero = () => {
   return (
     <section className="relative pt-24 md:pt-28 pb-10 md:pb-14">
       <div className="shell">
-        <motion.button
+        <m.button
           {...animatedProps(prefersReducedMotion, {
             initial: { opacity: 0, x: -12 },
             animate: { opacity: 1, x: 0 },
@@ -29,7 +29,7 @@ const ProjectsHero = () => {
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
           <span className="text-sm font-medium">Back to home</span>
-        </motion.button>
+        </m.button>
 
         <SectionHeader
           as="h1"

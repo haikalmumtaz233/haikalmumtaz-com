@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { motion, useInView } from 'motion/react';
+import { m, useInView } from 'motion/react';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { easing } from '../lib/motion';
 
@@ -52,7 +52,7 @@ const RuleReveal = ({
       {lines.map((line, index) => (
         <span key={line} className="block">
           <span className="relative inline-block overflow-hidden align-top pb-[0.12em] mb-[-0.12em] px-[0.08em] mx-[-0.08em]">
-            <motion.span
+            <m.span
               className="block"
               initial={{ y: '110%' }}
               animate={isInView ? { y: '0%' } : undefined}
@@ -63,9 +63,9 @@ const RuleReveal = ({
               }}
             >
               {line}
-            </motion.span>
+            </m.span>
             {index === lastIndex && (
-              <motion.span
+              <m.span
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-white/70"
                 initial={{ clipPath: ruleFrames[align][0] }}

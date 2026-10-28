@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
+import { m, useScroll, useTransform } from 'motion/react';
 import { moments } from '../../data/moments';
 import OptimizedImage from '../ui/OptimizedImage';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
@@ -71,7 +71,7 @@ const HorizontalMoments = () => {
 
     const imageBlock = (
       <div className={`relative overflow-hidden rounded-lg ${imageSizeClass} group`}>
-        <motion.div
+        <m.div
           className="w-full h-full"
           style={prefersReducedMotion ? undefined : { x: imageDrift, scale: 1.18 }}
         >
@@ -81,7 +81,7 @@ const HorizontalMoments = () => {
             className="w-full h-full object-cover transition-transform duration-700 ease-expo group-hover:scale-105"
             containerClassName="w-full h-full"
           />
-        </motion.div>
+        </m.div>
       </div>
     );
 
@@ -148,7 +148,7 @@ const HorizontalMoments = () => {
       style={{ height: `calc(100vh + ${horizontalDistance}px)` }}
     >
       <div className="sticky top-0 h-screen overflow-hidden flex items-center">
-        <motion.div
+        <m.div
           ref={trackRef}
           style={{ x }}
           className="flex items-stretch gap-10 md:gap-16 lg:gap-24 2xl:gap-32 pl-5 sm:pl-8 lg:pl-12 min-[1320px]:pl-[calc((100vw-1320px)/2+3rem)] pr-12 md:pr-24 2xl:pr-32"
@@ -165,7 +165,7 @@ const HorizontalMoments = () => {
               {renderContent(moment)}
             </div>
           ))}
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

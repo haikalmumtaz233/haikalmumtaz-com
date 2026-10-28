@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { motion, useTransform, type MotionValue } from 'motion/react';
+import { m, useTransform, type MotionValue } from 'motion/react';
 import { useFittedTextSize } from '../../hooks/useFittedTextSize';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { useIsMobile } from '../../hooks/useMediaQuery';
@@ -121,12 +121,9 @@ const Letter = ({
       };
 
   return (
-    <motion.span
-      className="inline-block"
-      style={{ y: lift, opacity: fade, marginRight: `${kern}em` }}
-    >
+    <m.span className="inline-block" style={{ y: lift, opacity: fade, marginRight: `${kern}em` }}>
       <span className="inline-block overflow-hidden align-top py-[0.08em] my-[-0.08em] px-[0.12em] mx-[-0.12em]">
-        <motion.span className="inline-block" {...reveal}>
+        <m.span className="inline-block" {...reveal}>
           {char.trim() && (
             <span
               data-glyph-origin={char}
@@ -135,9 +132,9 @@ const Letter = ({
             />
           )}
           {glyph(char)}
-        </motion.span>
+        </m.span>
       </span>
-    </motion.span>
+    </m.span>
   );
 };
 
@@ -222,12 +219,12 @@ const StackedNameplate = ({ scrollProgress, gate }: NameplateProps & { gate: Int
         gate={gate}
         scrollProgress={scrollProgress}
       />
-      <motion.span
+      <m.span
         aria-hidden="true"
         className="relative my-[3vw] block h-px w-full"
         style={{ scaleX: ruleScale, opacity: ruleFade }}
       >
-        <motion.span
+        <m.span
           className="absolute inset-0 origin-center bg-white/80"
           initial={{ scaleX: 0 }}
           animate={{ scaleX: gate.ready ? 1 : 0 }}
@@ -237,7 +234,7 @@ const StackedNameplate = ({ scrollProgress, gate }: NameplateProps & { gate: Int
             ease: easing.wipe,
           }}
         />
-      </motion.span>
+      </m.span>
       <StackedWord
         word={WORDS[1]}
         wordIndex={1}
@@ -328,7 +325,7 @@ const LinearNameplate = ({ scrollProgress, gate }: NameplateProps & { gate: Intr
           </h1>
 
           {hasMeasured && (
-            <motion.span
+            <m.span
               aria-hidden="true"
               className="pointer-events-none absolute inset-x-0 bottom-[-0.06em] h-px bg-white/80"
               style={{ fontSize: `${fittedSize}px` }}

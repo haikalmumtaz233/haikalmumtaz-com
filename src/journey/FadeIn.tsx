@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { easing } from '../lib/motion';
 
@@ -17,7 +17,7 @@ const FadeIn = ({ children, className, delay = 0.7 }: FadeInProps) => {
   }
 
   return (
-    <motion.div
+    <m.div
       className={className}
       initial={{ opacity: 0, y: 14 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -25,7 +25,7 @@ const FadeIn = ({ children, className, delay = 0.7 }: FadeInProps) => {
       transition={{ duration: 0.9, ease: easing.expo, delay }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 };
 

@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 import { ArrowUpRight } from 'lucide-react';
 import type { Project } from '../../data/projects';
 import OptimizedImage from '../ui/OptimizedImage';
@@ -16,7 +16,7 @@ const ProjectCard = memo(({ project, onClick }: ProjectCardProps) => {
   const maxVisibleTech = 3;
 
   return (
-    <motion.article
+    <m.article
       layoutId={prefersReducedMotion ? undefined : `project-${project.id}`}
       onClick={onClick}
       onKeyDown={activateOnEnterOrSpace(onClick)}
@@ -67,7 +67,7 @@ const ProjectCard = memo(({ project, onClick }: ProjectCardProps) => {
           ))}
         </ul>
       </div>
-    </motion.article>
+    </m.article>
   );
 });
 

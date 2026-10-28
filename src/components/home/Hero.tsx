@@ -1,11 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import {
-  motion,
-  AnimatePresence,
-  useMotionValueEvent,
-  useScroll,
-  useTransform,
-} from 'motion/react';
+import { m, AnimatePresence, useMotionValueEvent, useScroll, useTransform } from 'motion/react';
 import { ArrowDownRight } from 'lucide-react';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { animatedProps, easing } from '../../lib/motion';
@@ -80,7 +74,7 @@ const RoleTicker = ({ startDelay, ready }: { startDelay: number; ready: boolean 
     <div className="font-mono text-sm md:text-base min-h-[1.5em]" aria-live="off">
       <span className="text-purple-400">&gt;</span>{' '}
       <span className="text-white/90">{displayedText}</span>
-      <motion.span
+      <m.span
         aria-hidden="true"
         className="inline-block w-[0.55em] h-[1.1em] mb-[-0.2em] bg-purple-400/80 ml-1"
         {...animatedProps(prefersReducedMotion, {
@@ -126,10 +120,10 @@ const Hero = () => {
 
       <div className="grow flex w-full items-center justify-center">
         <div className="w-full text-center">
-          <motion.div
+          <m.div
             style={prefersReducedMotion ? undefined : { opacity: eyebrowFade, y: eyebrowLift }}
           >
-            <motion.p
+            <m.p
               {...animatedProps(prefersReducedMotion, {
                 initial: { opacity: 0, letterSpacing: '1.1em' },
                 animate: ready
@@ -140,8 +134,8 @@ const Hero = () => {
               className="text-[11px] sm:text-xs md:text-sm font-bold uppercase tracking-[0.5em] text-white/55 mb-4 sm:mb-6 whitespace-nowrap"
             >
               MUHAMMAD RADITYA
-            </motion.p>
-          </motion.div>
+            </m.p>
+          </m.div>
 
           <Nameplate scrollProgress={scrollYProgress} />
         </div>
@@ -152,7 +146,7 @@ const Hero = () => {
           <div className="hidden lg:block">
             <AnimatePresence>
               {showScrollIndicator && (
-                <motion.div
+                <m.div
                   {...dockItem(prefersReducedMotion, 0, ready, lead)}
                   exit={
                     prefersReducedMotion
@@ -165,7 +159,7 @@ const Hero = () => {
                     aria-hidden="true"
                     className="relative block h-11 w-px overflow-hidden bg-white/15"
                   >
-                    <motion.span
+                    <m.span
                       className="absolute inset-x-0 top-0 h-1/2 bg-white"
                       {...animatedProps(prefersReducedMotion, {
                         initial: { y: '-100%' },
@@ -181,19 +175,19 @@ const Hero = () => {
                     />
                   </span>
                   <span className="text-sm text-white/60">Scroll to explore</span>
-                </motion.div>
+                </m.div>
               )}
             </AnimatePresence>
           </div>
 
-          <motion.div
+          <m.div
             {...dockItem(prefersReducedMotion, 1, ready, lead)}
             className="flex justify-center"
           >
             <RoleTicker startDelay={TYPING_START - lead} ready={ready} />
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             {...dockItem(prefersReducedMotion, 2, ready, lead)}
             className="flex justify-center lg:justify-end"
           >
@@ -208,7 +202,7 @@ const Hero = () => {
               Get in touch
               <ArrowDownRight className="w-4 h-4 transition-transform duration-500 ease-expo group-hover:-rotate-45" />
             </a>
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </section>

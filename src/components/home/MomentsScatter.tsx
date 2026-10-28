@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 import { moments } from '../../data/moments';
 import OptimizedImage from '../ui/OptimizedImage';
 import RuleReveal from '../../journey/RuleReveal';
@@ -26,7 +26,7 @@ const MomentsScatter = () => (
           const tilt = TILTS[index % TILTS.length];
           const isRight = index % 2 === 1;
           return (
-            <motion.li
+            <m.li
               key={moment.id}
               className={`relative w-[82%] ${isRight ? 'ml-auto' : 'mr-auto'} ${index > 0 ? 'mt-8' : ''}`}
               style={{ zIndex: index + 1 }}
@@ -54,7 +54,7 @@ const MomentsScatter = () => (
                   </span>
                 </figcaption>
               </figure>
-            </motion.li>
+            </m.li>
           );
         })}
       </ol>

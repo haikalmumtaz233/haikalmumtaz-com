@@ -1,4 +1,4 @@
-import { AnimatePresence, motion, useScroll, useSpring } from 'motion/react';
+import { AnimatePresence, m, useScroll, useSpring } from 'motion/react';
 import { useRef, useState } from 'react';
 import { Plus } from 'lucide-react';
 import { experiences, type Experience as ExperienceEntry } from '../../data/experience';
@@ -37,7 +37,7 @@ const Experience = () => {
             className="absolute left-[3px] top-0 bottom-0 w-px bg-white/10"
           />
           {!prefersReducedMotion && (
-            <motion.span
+            <m.span
               aria-hidden="true"
               className="absolute left-[3px] top-0 bottom-0 w-px origin-top bg-white/70"
               style={{ scaleY: spine }}
@@ -71,13 +71,13 @@ const ExperienceItem = ({ entry, index, isOpen, onToggle }: ExperienceItemProps)
   const isCurrent = entry.period.includes('Present');
 
   return (
-    <motion.li
+    <m.li
       className="relative pl-8 md:pl-12"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.5 }}
     >
-      <motion.span
+      <m.span
         aria-hidden="true"
         className="absolute inset-x-0 top-0 h-px origin-left bg-white/10"
         variants={{
@@ -92,7 +92,7 @@ const ExperienceItem = ({ entry, index, isOpen, onToggle }: ExperienceItemProps)
         }`}
       />
 
-      <motion.div
+      <m.div
         variants={{
           hidden: prefersReducedMotion ? {} : { opacity: 0, y: 24 },
           visible: {
@@ -135,7 +135,7 @@ const ExperienceItem = ({ entry, index, isOpen, onToggle }: ExperienceItemProps)
 
         <AnimatePresence initial={false}>
           {isOpen && (
-            <motion.div
+            <m.div
               id={panelId}
               className="overflow-hidden"
               initial={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
@@ -151,11 +151,11 @@ const ExperienceItem = ({ entry, index, isOpen, onToggle }: ExperienceItemProps)
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
-      </motion.div>
-    </motion.li>
+      </m.div>
+    </m.li>
   );
 };
 

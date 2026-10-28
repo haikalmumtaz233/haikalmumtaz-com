@@ -1,6 +1,6 @@
 import { useRef, type ReactNode } from 'react';
 import {
-  motion,
+  m,
   useAnimationFrame,
   useInView,
   useMotionValue,
@@ -61,9 +61,9 @@ const Marquee = ({ children }: { children: ReactNode }) => {
         hoverTarget.current = 1;
       }}
     >
-      <motion.div className="flex shrink-0" style={{ x }}>
+      <m.div className="flex shrink-0" style={{ x }}>
         {children}
-      </motion.div>
+      </m.div>
     </div>
   );
 };

@@ -6,7 +6,7 @@ import {
   useRef,
   type KeyboardEvent as ReactKeyboardEvent,
 } from 'react';
-import { motion, AnimatePresence, type PanInfo } from 'motion/react';
+import { m, AnimatePresence, type PanInfo } from 'motion/react';
 import { useNavigate } from 'react-router';
 import { ArrowUpRight } from 'lucide-react';
 import { projects } from '../../data/projects';
@@ -153,7 +153,7 @@ const FeaturedProjects = () => {
                 className="relative aspect-16/10"
               >
                 <AnimatePresence initial={false} custom={direction} mode="popLayout">
-                  <motion.div
+                  <m.div
                     key={currentIndex}
                     custom={direction}
                     variants={previewVariants}
@@ -172,7 +172,7 @@ const FeaturedProjects = () => {
                       project={activeProject}
                       onClick={() => setSelectedProject(activeProject)}
                     />
-                  </motion.div>
+                  </m.div>
                 </AnimatePresence>
               </div>
 
@@ -218,7 +218,7 @@ const FeaturedProjects = () => {
                     className="group relative block w-full border-t border-white/10 py-5 text-left md:py-6"
                   >
                     {isActive && (
-                      <motion.span
+                      <m.span
                         layoutId={prefersReducedMotion ? undefined : 'featured-active-rule'}
                         aria-hidden="true"
                         className="absolute -top-px left-0 h-px w-full bg-white"
@@ -234,7 +234,7 @@ const FeaturedProjects = () => {
                     </span>
                     <AnimatePresence initial={false}>
                       {isActive && (
-                        <motion.span
+                        <m.span
                           className="block overflow-hidden"
                           initial={
                             prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }
@@ -251,7 +251,7 @@ const FeaturedProjects = () => {
                           <span className="mt-1 block text-sm text-white/40">
                             {project.category}
                           </span>
-                        </motion.span>
+                        </m.span>
                       )}
                     </AnimatePresence>
                   </button>

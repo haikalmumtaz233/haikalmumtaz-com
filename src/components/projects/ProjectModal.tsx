@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from 'motion/react';
 import { X, ExternalLink } from 'lucide-react';
 import { useLenis } from 'lenis/react';
 import type { Project } from '../../data/projects';
@@ -47,7 +47,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
   return createPortal(
     <AnimatePresence>
       {project && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -57,7 +57,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
           onWheel={(e) => e.stopPropagation()}
         >
           <div className="absolute inset-0 bg-black/80 backdrop-blur-xs" />
-          <motion.div
+          <m.div
             layoutId={prefersReducedMotion ? undefined : `project-${project.id}`}
             initial={prefersReducedMotion ? { opacity: 0 } : false}
             animate={prefersReducedMotion ? { opacity: 1 } : undefined}
@@ -126,7 +126,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                     <BrandIcon brand="GitHub" size={18} /> Repository
                   </span>
                 ) : (
-                  <motion.a
+                  <m.a
                     href={project.repoLink}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -137,7 +137,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                     className="flex items-center justify-center gap-2 font-semibold text-sm px-5 py-2.5 rounded-xl border border-white/20 text-white hover:border-white/40 hover:bg-white/5 transition-colors"
                   >
                     <BrandIcon brand="GitHub" size={18} /> Repository
-                  </motion.a>
+                  </m.a>
                 )}
 
                 {isLiveDisabled ? (
@@ -145,7 +145,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                     <ExternalLink size={18} /> Live Demo
                   </span>
                 ) : (
-                  <motion.a
+                  <m.a
                     href={project.liveLink}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -156,12 +156,12 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                     className="flex items-center justify-center gap-2 font-semibold text-sm px-5 py-2.5 rounded-xl bg-white text-black hover:bg-white/90 transition-colors"
                   >
                     <ExternalLink size={18} /> Live Demo
-                  </motion.a>
+                  </m.a>
                 )}
               </div>
             </div>
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       )}
     </AnimatePresence>,
     document.body,

@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from 'motion/react';
 import { X, ExternalLink } from 'lucide-react';
 import { useLenis } from 'lenis/react';
 import type { Certification } from '../../data/certifications';
@@ -46,7 +46,7 @@ const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) 
   return createPortal(
     <AnimatePresence>
       {isOpen && cert && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -55,7 +55,7 @@ const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) 
           onClick={onClose}
           onWheel={(e) => e.stopPropagation()}
         >
-          <motion.div
+          <m.div
             initial={{ scale: prefersReducedMotion ? 1 : 0.92, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: prefersReducedMotion ? 1 : 0.92, opacity: 0 }}
@@ -110,8 +110,8 @@ const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) 
                 </a>
               )}
             </div>
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       )}
     </AnimatePresence>,
     document.body,

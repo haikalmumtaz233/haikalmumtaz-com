@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 import type { Project } from '../../data/projects';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { activateOnEnterOrSpace } from '../../lib/keyboard';
@@ -55,7 +55,7 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
 
   return (
     <div className="-mx-5 sm:-mx-8">
-      <motion.div
+      <m.div
         ref={railRef}
         onScroll={handleScroll}
         role="region"
@@ -116,7 +116,7 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
           </article>
         ))}
         <div aria-hidden="true" className="w-[calc(14vw-1rem)] shrink-0" />
-      </motion.div>
+      </m.div>
 
       <div className="flex items-center justify-between gap-6 px-5 sm:px-8">
         <div className="flex flex-1 gap-1.5" role="tablist" aria-label="Choose a project">

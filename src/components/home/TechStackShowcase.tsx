@@ -6,7 +6,7 @@ import {
   type KeyboardEvent,
   type PointerEvent,
 } from 'react';
-import { AnimatePresence, motion, stagger, useInView } from 'motion/react';
+import { AnimatePresence, m, stagger, useInView } from 'motion/react';
 import { techCategories } from '../../data/techStack';
 import TechIcon from '../ui/TechIcon';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
@@ -126,14 +126,14 @@ const TechStackShowcase = () => {
                 {item.items.length}
               </span>
               {isActive && (
-                <motion.span
+                <m.span
                   layoutId={prefersReducedMotion ? undefined : 'tech-area-rule'}
                   aria-hidden="true"
                   className="absolute inset-x-0 -bottom-px h-px overflow-hidden bg-white/30"
                   transition={{ duration: 0.6, ease: easing.expo }}
                 >
                   {isCycling && (
-                    <motion.span
+                    <m.span
                       key={activeIndex}
                       className="block h-full origin-left bg-white"
                       initial={{ scaleX: 0 }}
@@ -141,7 +141,7 @@ const TechStackShowcase = () => {
                       transition={{ duration: CYCLE_MS / 1000, ease: 'linear' }}
                     />
                   )}
-                </motion.span>
+                </m.span>
               )}
             </button>
           );
@@ -166,7 +166,7 @@ const TechStackShowcase = () => {
         />
 
         <AnimatePresence initial={false}>
-          <motion.span
+          <m.span
             key={category.title}
             aria-hidden="true"
             className="pointer-events-none absolute bottom-[-0.18em] left-5 whitespace-nowrap font-monument text-[clamp(3.5rem,8vw,7.5rem)] font-black uppercase leading-none text-white/[0.035] lg:left-7"
@@ -175,7 +175,7 @@ const TechStackShowcase = () => {
             exit={{ opacity: 0, transition: { duration: 0.3 } }}
           >
             {category.title}
-          </motion.span>
+          </m.span>
         </AnimatePresence>
 
         <span className="relative self-end font-mono text-xs tabular-nums text-white/40">
@@ -184,7 +184,7 @@ const TechStackShowcase = () => {
 
         <div className="relative flex flex-1 items-center pt-4">
           <AnimatePresence mode="wait" initial={false}>
-            <motion.ul
+            <m.ul
               key={category.title}
               className="grid w-full grid-cols-3 gap-3 lg:grid-cols-4 2xl:gap-4"
               initial="hidden"
@@ -197,7 +197,7 @@ const TechStackShowcase = () => {
               }}
             >
               {category.items.map((tech) => (
-                <motion.li
+                <m.li
                   key={tech.name}
                   variants={{
                     hidden: prefersReducedMotion
@@ -218,9 +218,9 @@ const TechStackShowcase = () => {
                   <span className="w-full truncate text-center text-[13px] text-white/60 transition-colors duration-300 group-hover/tile:text-white lg:text-sm">
                     {tech.name}
                   </span>
-                </motion.li>
+                </m.li>
               ))}
-            </motion.ul>
+            </m.ul>
           </AnimatePresence>
         </div>
       </div>

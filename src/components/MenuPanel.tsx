@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
-import { motion, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from 'motion/react';
 import { useLenis } from 'lenis/react';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { useFocusTrap } from '../hooks/useFocusTrap';
@@ -100,7 +100,7 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
     <>
       <AnimatePresence>
         {isOpen && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -113,7 +113,7 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
 
       <AnimatePresence>
         {isOpen && (
-          <motion.div
+          <m.div
             initial={prefersReducedMotion ? { opacity: 0 } : { x: '100%' }}
             animate={prefersReducedMotion ? { opacity: 1 } : { x: '0%' }}
             exit={
@@ -137,7 +137,7 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                 <ul className="space-y-4 sm:space-y-6 w-full">
                   {navLinks.map((link, index) => (
                     <li key={link.name} className="overflow-hidden">
-                      <motion.div
+                      <m.div
                         {...animatedProps(prefersReducedMotion, {
                           initial: { y: '115%', rotate: 4 },
                           animate: { y: '0%', rotate: 0 },
@@ -149,7 +149,7 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                         })}
                         className="origin-bottom-left"
                       >
-                        <motion.button
+                        <m.button
                           type="button"
                           aria-label={link.name}
                           onClick={() => handleNavigation(link)}
@@ -164,7 +164,7 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                           >
                             <div>
                               {link.name.split('').map((l, i) => (
-                                <motion.span
+                                <m.span
                                   variants={{
                                     initial: { y: 0 },
                                     hovered: { y: '-100%' },
@@ -178,13 +178,13 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                                   key={i}
                                 >
                                   {l}
-                                </motion.span>
+                                </m.span>
                               ))}
                             </div>
 
                             <div className="absolute inset-0">
                               {link.name.split('').map((l, i) => (
-                                <motion.span
+                                <m.span
                                   variants={{
                                     initial: { y: '100%' },
                                     hovered: { y: 0 },
@@ -198,18 +198,18 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                                   key={i}
                                 >
                                   {l}
-                                </motion.span>
+                                </m.span>
                               ))}
                             </div>
                           </div>
-                        </motion.button>
-                      </motion.div>
+                        </m.button>
+                      </m.div>
                     </li>
                   ))}
                 </ul>
               </nav>
 
-              <motion.div
+              <m.div
                 {...animatedProps(prefersReducedMotion, {
                   initial: { opacity: 0, y: 16 },
                   animate: { opacity: 1, y: 0 },
@@ -226,7 +226,7 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
 
                 <div className="flex gap-4">
                   {socialProfiles.map(({ href, label }) => (
-                    <motion.a
+                    <m.a
                       key={label}
                       href={href}
                       target="_blank"
@@ -242,7 +242,7 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                         brand={label}
                         className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors"
                       />
-                    </motion.a>
+                    </m.a>
                   ))}
                 </div>
 
@@ -250,9 +250,9 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                   <span>Available for opportunities</span>
                 </div>
-              </motion.div>
+              </m.div>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </>

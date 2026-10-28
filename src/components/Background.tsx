@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
+import { m, useScroll, useTransform } from 'motion/react';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { easing } from '../lib/motion';
 import { useJourney } from '../journey/useJourney';
@@ -205,7 +205,7 @@ const Background = () => {
 
   return (
     <div className="fixed inset-0 z-[-1] bg-[#09080e]">
-      <motion.canvas
+      <m.canvas
         ref={canvasRef}
         className="absolute inset-0 block"
         initial={prefersReducedMotion ? false : { opacity: 0 }}
@@ -213,19 +213,19 @@ const Background = () => {
         transition={{ duration: 2.4, ease: easing.smooth }}
       />
 
-      <motion.div
+      <m.div
         className="absolute inset-0 overflow-hidden pointer-events-none"
         initial={prefersReducedMotion ? false : { opacity: 0, scale: 1.08 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 2.8, ease: easing.expo }}
       >
         {orbs.map((orb, index) => (
-          <motion.div
+          <m.div
             key={orb.position}
             className={`absolute ${orb.position}`}
             style={{ y: prefersReducedMotion ? 0 : orbY[index] }}
           >
-            <motion.div
+            <m.div
               className={`${orb.size} rounded-full`}
               style={{
                 backgroundImage: orb.color,
@@ -243,9 +243,9 @@ const Background = () => {
                     },
                   })}
             />
-          </motion.div>
+          </m.div>
         ))}
-      </motion.div>
+      </m.div>
 
       <div
         className="absolute bottom-0 left-0 right-0 h-[60vh] pointer-events-none opacity-70"

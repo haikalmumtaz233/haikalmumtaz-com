@@ -15,7 +15,6 @@ export default defineConfig({
         codeSplitting: {
           groups: [
             vendor('react', ['react', 'react-dom', 'scheduler']),
-            vendor('motion', ['motion', 'framer-motion', 'motion-dom', 'motion-utils']),
             vendor('router', ['react-router']),
             vendor('lenis', ['lenis']),
           ],

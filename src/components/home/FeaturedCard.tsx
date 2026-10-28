@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 import type { Project } from '../../data/projects';
 import OptimizedImage from '../ui/OptimizedImage';
 import { activateOnEnterOrSpace } from '../../lib/keyboard';
@@ -15,7 +15,7 @@ const FeaturedCard = memo(({ project, onClick }: FeaturedCardProps) => {
   const prefersReducedMotion = usePrefersReducedMotion();
 
   return (
-    <motion.article
+    <m.article
       layoutId={prefersReducedMotion ? undefined : `project-${project.id}`}
       onClick={onClick}
       onKeyDown={activateOnEnterOrSpace(onClick)}
@@ -27,7 +27,7 @@ const FeaturedCard = memo(({ project, onClick }: FeaturedCardProps) => {
       <div
         className={`absolute inset-0 z-10 bg-linear-to-br ${project.gradient} opacity-40 pointer-events-none transition-opacity duration-500 group-hover:opacity-20`}
       />
-      <motion.div
+      <m.div
         className="h-full w-full"
         initial={prefersReducedMotion ? false : { scale: 1.18 }}
         animate={{ scale: 1 }}
@@ -40,11 +40,11 @@ const FeaturedCard = memo(({ project, onClick }: FeaturedCardProps) => {
           containerClassName="h-full w-full"
           eager
         />
-      </motion.div>
+      </m.div>
       <span className="absolute bottom-4 left-4 z-20 translate-y-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-black opacity-0 transition-all duration-500 ease-expo group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
         View details
       </span>
-    </motion.article>
+    </m.article>
   );
 });
 

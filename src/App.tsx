@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router';
 import { ReactLenis, useLenis } from 'lenis/react';
+import { LazyMotion } from 'motion/react';
 import type Lenis from 'lenis';
 import MenuToggle from './components/MenuToggle';
 import Footer from './components/Footer';
@@ -14,6 +15,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 
 const Projects = lazy(() => import('./pages/Projects'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+const loadMotionFeatures = () => import('./lib/motionFeatures').then((module) => module.default);
 
 const scrollPositions = new Map<string, number>();
 const MAX_RESTORE_FRAMES = 30;
@@ -115,7 +117,9 @@ function AppContent() {
 function App() {
   return (
     <BrowserRouter>
-      <AppContent />
+      <LazyMotion features={loadMotionFeatures} strict>
+        <AppContent />
+      </LazyMotion>
     </BrowserRouter>
   );
 }
