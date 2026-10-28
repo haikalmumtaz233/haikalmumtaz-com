@@ -10,7 +10,7 @@ const JourneyProvider = ({ children }: { children: ReactNode }) => {
         [scrollY, scrollYProgress]
     );
 
-    return <JourneyContext.Provider value={value}>{children}</JourneyContext.Provider>;
+    return <JourneyContext value={value}>{children}</JourneyContext>;
 };
 
 export default JourneyProvider;

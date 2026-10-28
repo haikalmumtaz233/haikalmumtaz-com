@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback, useEffect, useRef, type KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { motion, AnimatePresence, type PanInfo } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { ArrowUpRight } from 'lucide-react';
 import { projects } from '../../data/projects';
 import type { Project } from '../../data/projects';

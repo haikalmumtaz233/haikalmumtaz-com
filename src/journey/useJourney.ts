@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, use } from 'react';
 import type { MotionValue } from 'framer-motion';
 
 export interface JourneyValue {
@@ -9,7 +9,7 @@ export interface JourneyValue {
 export const JourneyContext = createContext<JourneyValue | null>(null);
 
 export const useJourney = (): JourneyValue => {
-    const value = useContext(JourneyContext);
+    const value = use(JourneyContext);
     if (!value) {
         throw new Error('useJourney must be used inside JourneyProvider');
     }

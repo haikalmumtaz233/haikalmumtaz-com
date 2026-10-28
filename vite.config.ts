@@ -9,7 +9,7 @@ export default defineConfig({
         manualChunks: {
           'framer-motion': ['framer-motion'],
           lenis: ['lenis', 'lenis/react'],
-          router: ['react-router-dom'],
+          router: ['react-router'],
         },
       },
     },

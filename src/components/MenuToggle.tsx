@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { useLenis } from 'lenis/react';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { useIsMobile } from '../hooks/useMediaQuery';

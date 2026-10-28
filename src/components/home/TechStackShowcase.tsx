@@ -15,7 +15,7 @@ const TechStackShowcase = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const hoverTimer = useRef<number>();
+  const hoverTimer = useRef<number | undefined>(undefined);
   const isInView = useInView(containerRef, { amount: 0.4 });
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
