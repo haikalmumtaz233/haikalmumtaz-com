@@ -9,10 +9,10 @@ import BrandIcon from './ui/BrandIcon';
 import { animatedProps, easing } from '../lib/motion';
 
 const navLinks = [
-  { name: 'HOME', path: '/', type: 'route' },
-  { name: 'PROJECTS', path: '#projects', type: 'scroll' },
-  { name: 'EXPERIENCE', path: '#experience', type: 'scroll' },
-  { name: 'CONTACT', path: '#contact', type: 'scroll' },
+  { name: 'Home', path: '/', type: 'route' },
+  { name: 'Projects', path: '#projects', type: 'scroll' },
+  { name: 'Experience', path: '#experience', type: 'scroll' },
+  { name: 'Contact', path: '#contact', type: 'scroll' },
 ];
 
 export const MENU_PANEL_ID = 'site-menu-panel';
@@ -149,12 +149,15 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                         className="origin-bottom-left"
                       >
                         <motion.button
+                          type="button"
+                          aria-label={link.name}
                           onClick={() => handleNavigation(link)}
                           initial="initial"
                           whileHover={prefersReducedMotion ? undefined : 'hovered'}
                           className="cursor-pointer text-left group"
                         >
                           <div
+                            aria-hidden="true"
                             className="relative block overflow-hidden whitespace-nowrap text-3xl sm:text-4xl md:text-6xl font-black uppercase text-white"
                             style={{ lineHeight: 0.9 }}
                           >
