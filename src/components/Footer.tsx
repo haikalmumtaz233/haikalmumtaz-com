@@ -12,7 +12,7 @@ const Footer = () => {
       lenis.scrollTo(0);
       return;
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0 });
   };
 
   return (
