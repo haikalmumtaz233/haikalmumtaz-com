@@ -2,7 +2,6 @@ import { useCallback, useRef, useState } from 'react';
 import { m } from 'motion/react';
 import type { Project } from '../../data/projects';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import { activateOnEnterOrSpace } from '../../lib/keyboard';
 import { easing } from '../../lib/motion';
 import { useRailFocus } from '../../hooks/useRailFocus';
 
@@ -70,12 +69,7 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
         {projects.map((project, index) => (
           <article
             key={project.id}
-            role="button"
-            tabIndex={0}
-            onClick={() => onOpen(project)}
-            onKeyDown={activateOnEnterOrSpace(() => onOpen(project))}
             onFocus={() => scrollToCard(index)}
-            aria-label={`Open details for ${project.name}`}
             data-rail-card
             style={{ transformOrigin: '50% 120%' }}
             className="relative aspect-4/5 w-[72vw] max-w-[360px] shrink-0 snap-center overflow-hidden rounded-[28px] border border-white/10 bg-[#141220] active:brightness-90"
@@ -113,6 +107,12 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
                 Tap for details
               </p>
             </div>
+            <button
+              type="button"
+              onClick={() => onOpen(project)}
+              aria-label={`Open details for ${project.name}`}
+              className="absolute inset-0 rounded-[28px]"
+            />
           </article>
         ))}
         <div aria-hidden="true" className="w-[calc(14vw-1rem)] shrink-0" />

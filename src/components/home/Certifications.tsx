@@ -13,7 +13,6 @@ import OptimizedImage from '../ui/OptimizedImage';
 import SectionHeader from '../ui/SectionHeader';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { easing } from '../../lib/motion';
-import { activateOnEnterOrSpace } from '../../lib/keyboard';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import { useRailFocus } from '../../hooks/useRailFocus';
 
@@ -87,7 +86,7 @@ const Certifications = () => {
     const slider = sliderRef.current;
     const container = containerRef.current;
     const firstCard = slider?.firstElementChild;
-    if (!container || !(firstCard instanceof HTMLElement) || !card.matches(':focus-visible'))
+    if (!container || !(firstCard instanceof HTMLElement) || !card.matches(':has(:focus-visible)'))
       return;
 
     const left = card.offsetLeft - firstCard.offsetLeft;
@@ -220,15 +219,8 @@ const CertificateCard = ({
       onPointerMove={(event) => {
         if (event.buttons > 0) dragRef.current = true;
       }}
-      onPointerUp={() => {
-        if (!dragRef.current) onCertClick(cert);
-      }}
-      onKeyDown={activateOnEnterOrSpace(() => onCertClick(cert))}
       onFocus={(event) => onFocusCard?.(event.currentTarget)}
-      role="button"
-      tabIndex={0}
-      aria-label={`View ${cert.title} certificate from ${cert.issuer}`}
-      className="group w-full cursor-pointer select-none md:w-[300px] md:shrink-0 lg:w-[340px]"
+      className="group relative w-full select-none md:w-[300px] md:shrink-0 lg:w-[340px]"
     >
       <div className="relative aspect-4/3 overflow-hidden rounded-lg border border-white/10 bg-white/4 transition-colors duration-500 group-hover:border-white/30">
         <OptimizedImage
@@ -245,6 +237,14 @@ const CertificateCard = ({
         <span className="pt-0.5 text-sm tabular-nums text-white/40">{cert.date}</span>
       </div>
       <p className="mt-1 text-sm text-white/50 line-clamp-1">{cert.issuer}</p>
+      <button
+        type="button"
+        onClick={(event) => {
+          if (event.detail === 0 || !dragRef.current) onCertClick(cert);
+        }}
+        aria-label={`View ${cert.title} certificate from ${cert.issuer}`}
+        className="absolute inset-0 rounded-lg"
+      />
     </article>
   );
 };
