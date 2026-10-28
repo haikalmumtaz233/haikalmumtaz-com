@@ -142,7 +142,7 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
         </div>
         <span className="font-monument text-sm font-black tabular-nums text-white">
           {String(activeIndex + 1).padStart(2, '0')}
-          <span className="text-white/35"> / {String(projects.length).padStart(2, '0')}</span>
+          <span className="text-white/50"> / {String(projects.length).padStart(2, '0')}</span>
         </span>
       </div>
     </div>

@@ -66,7 +66,7 @@ const TechStackSwitcher = () => {
                 )}
                 <span className="relative">{item.title}</span>
                 <span
-                  className={`relative text-xs tabular-nums ${isActive ? 'text-black/50' : 'text-white/35'}`}
+                  className={`relative text-xs tabular-nums ${isActive ? 'text-black/60' : 'text-white/50'}`}
                 >
                   {item.items.length}
                 </span>
@@ -135,7 +135,7 @@ const TechStackSwitcher = () => {
         </AnimatePresence>
       </m.div>
 
-      <p className="mt-4 text-center text-sm text-white/40">Swipe the grid to switch areas</p>
+      <p className="mt-4 text-center text-sm text-white/50">Swipe the grid to switch areas</p>
     </div>
   );
 };

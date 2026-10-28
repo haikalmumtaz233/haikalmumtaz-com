@@ -106,21 +106,21 @@ const TechStackShowcase = () => {
             >
               <span
                 className={`w-6 shrink-0 font-mono text-xs tabular-nums transition-colors duration-500 ${
-                  isActive ? 'text-white/70' : 'text-white/30'
+                  isActive ? 'text-white/70' : 'text-white/50'
                 }`}
               >
                 {pad(index + 1)}
               </span>
               <span
                 className={`flex-1 truncate text-xl font-semibold transition-[color,transform] duration-500 ease-expo lg:text-2xl 2xl:text-[28px] ${
-                  isActive ? 'translate-x-2 text-white' : 'text-white/35 group-hover:text-white/70'
+                  isActive ? 'translate-x-2 text-white' : 'text-white/50 group-hover:text-white/70'
                 }`}
               >
                 {item.title}
               </span>
               <span
                 className={`text-sm tabular-nums transition-colors duration-500 ${
-                  isActive ? 'text-white/60' : 'text-white/25'
+                  isActive ? 'text-white/70' : 'text-white/50'
                 }`}
               >
                 {item.items.length}
@@ -178,7 +178,7 @@ const TechStackShowcase = () => {
           </m.span>
         </AnimatePresence>
 
-        <span className="relative self-end font-mono text-xs tabular-nums text-white/40">
+        <span className="relative self-end font-mono text-xs tabular-nums text-white/50">
           {pad(activeIndex + 1)} / {pad(techCategories.length)}
         </span>
 

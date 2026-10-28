@@ -62,7 +62,7 @@ const HorizontalMoments = () => {
   const renderContent = (moment: (typeof moments)[0], imageSizeClass = moment.className) => {
     const textBlock = (
       <div className="space-y-1.5">
-        <p className="text-sm tabular-nums text-white/45">{moment.year}</p>
+        <p className="text-sm tabular-nums text-white/50">{moment.year}</p>
         <h3 className="text-lg font-semibold leading-tight text-white md:text-2xl 2xl:text-3xl">
           {moment.title}
         </h3>

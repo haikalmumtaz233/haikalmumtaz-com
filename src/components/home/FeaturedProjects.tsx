@@ -187,7 +187,7 @@ const FeaturedProjects = () => {
                     </li>
                   ))}
                 </ul>
-                <span className="shrink-0 pt-1 text-sm tabular-nums text-white/45">
+                <span className="shrink-0 pt-1 text-sm tabular-nums text-white/50">
                   {currentIndex + 1} / {featuredProjects.length}
                 </span>
               </div>
@@ -248,7 +248,7 @@ const FeaturedProjects = () => {
                           <span className="block pt-3 text-[15px] text-white/65 md:text-base">
                             {project.subtitle}
                           </span>
-                          <span className="mt-1 block text-sm text-white/40">
+                          <span className="mt-1 block text-sm text-white/50">
                             {project.category}
                           </span>
                         </m.span>

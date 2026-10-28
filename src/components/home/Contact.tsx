@@ -48,7 +48,7 @@ interface Toast {
 }
 
 const inputClass =
-  'w-full bg-transparent border-b border-white/20 py-2 text-[15px] text-white caret-purple-300 placeholder:text-white/30 focus:border-white focus:outline-hidden transition-colors';
+  'w-full bg-transparent border-b border-white/20 py-2 text-[15px] text-white caret-purple-300 placeholder:text-white/50 focus:border-white focus:outline-hidden transition-colors';
 
 const labelClass = 'text-sm text-white/60';
 
@@ -386,7 +386,7 @@ const Contact = () => {
                   </div>
                   <div className="grid gap-2">
                     <label htmlFor="contact-phone" className={labelClass}>
-                      Phone <span className="text-white/35">(optional)</span>
+                      Phone <span className="text-white/50">(optional)</span>
                     </label>
                     <input
                       type="tel"
@@ -407,7 +407,7 @@ const Contact = () => {
                     <label htmlFor="contact-message" className={labelClass}>
                       Message
                     </label>
-                    <span className="text-xs tabular-nums text-white/35">
+                    <span className="text-xs tabular-nums text-white/50">
                       {formData.message.length}/{MAX_MESSAGE_LENGTH}
                     </span>
                   </div>

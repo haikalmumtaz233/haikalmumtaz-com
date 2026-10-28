@@ -99,7 +99,7 @@ const Tools = () => {
           className="mb-6 flex items-baseline justify-between gap-4 border-t border-white/15 pt-5 md:mb-8"
         >
           <h3 className="text-base font-semibold text-white md:text-lg">Everyday tools</h3>
-          <span className="text-sm tabular-nums text-white/40">{tools.length}</span>
+          <span className="text-sm tabular-nums text-white/50">{tools.length}</span>
         </FadeIn>
       </div>
 

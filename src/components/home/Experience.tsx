@@ -145,7 +145,7 @@ const ExperienceItem = ({ entry, index, isOpen, onToggle }: ExperienceItemProps)
             >
               <div className="pb-8 md:grid md:grid-cols-12 md:gap-x-6 md:pb-10">
                 <div className="md:col-span-7 md:col-start-4">
-                  {entry.subtitle && <p className="mb-2 text-sm text-white/45">{entry.subtitle}</p>}
+                  {entry.subtitle && <p className="mb-2 text-sm text-white/50">{entry.subtitle}</p>}
                   <p className="max-w-[62ch] text-[15px] leading-relaxed text-white/65 md:text-base 2xl:text-lg">
                     {entry.description}
                   </p>

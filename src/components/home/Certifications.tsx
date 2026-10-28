@@ -234,7 +234,7 @@ const CertificateCard = ({
         <h3 className="text-base font-semibold leading-snug text-white line-clamp-2 md:text-[17px]">
           {cert.title}
         </h3>
-        <span className="pt-0.5 text-sm tabular-nums text-white/40">{cert.date}</span>
+        <span className="pt-0.5 text-sm tabular-nums text-white/50">{cert.date}</span>
       </div>
       <p className="mt-1 text-sm text-white/50 line-clamp-1">{cert.issuer}</p>
       <button
