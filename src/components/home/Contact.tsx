@@ -6,6 +6,7 @@ import RuleReveal from '../../journey/RuleReveal';
 import FadeIn from '../../journey/FadeIn';
 import { easing } from '../../lib/motion';
 import { profile, socialProfiles } from '../../data/profile';
+import { MAX_MESSAGE_LENGTH, MAX_NAME_LENGTH, findContactError } from '../../lib/contactForm';
 import BrandIcon from '../ui/BrandIcon';
 
 declare global {
@@ -31,11 +32,6 @@ declare global {
 const TURNSTILE_SCRIPT_ID = 'turnstile-script';
 const TURNSTILE_SRC =
   'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback';
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_REGEX = /^[\d\s+\-()]{10,}$/;
-const MAX_MESSAGE_LENGTH = 2000;
-const MAX_NAME_LENGTH = 50;
 
 const EMPTY_FORM = { firstName: '', lastName: '', email: '', phone: '', message: '', honeypot: '' };
 
@@ -182,33 +178,9 @@ const Contact = () => {
       const phone = sanitize(formData.phone);
       const message = sanitize(formData.message);
 
-      if (firstName.length === 0 || lastName.length === 0) {
-        addToast('error', 'Enter your first and last name.');
-        return;
-      }
-
-      if (firstName.length > MAX_NAME_LENGTH || lastName.length > MAX_NAME_LENGTH) {
-        addToast('error', `Shorten the name to ${MAX_NAME_LENGTH} characters each.`);
-        return;
-      }
-
-      if (!EMAIL_REGEX.test(email)) {
-        addToast('error', 'Enter a valid email address, like name@example.com.');
-        return;
-      }
-
-      if (phone && !PHONE_REGEX.test(phone)) {
-        addToast('error', 'Use only numbers, spaces, +, (), or - in the phone number.');
-        return;
-      }
-
-      if (message.length === 0) {
-        addToast('error', 'Write a message before sending.');
-        return;
-      }
-
-      if (message.length > MAX_MESSAGE_LENGTH) {
-        addToast('error', `Shorten the message to ${MAX_MESSAGE_LENGTH} characters.`);
+      const error = findContactError({ firstName, lastName, email, phone, message });
+      if (error) {
+        addToast('error', error);
         return;
       }
 
