@@ -24,11 +24,6 @@ const ProjectCard = memo(({ project, onClick }: ProjectCardProps) => {
       tabIndex={0}
       aria-label={`Open details for ${project.name}`}
       className="group relative cursor-pointer h-full flex flex-col"
-      style={
-        {
-          '--accent': project.accentColor,
-        } as React.CSSProperties
-      }
     >
       <div
         className="pointer-events-none absolute inset-x-0 top-0 aspect-16/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30"

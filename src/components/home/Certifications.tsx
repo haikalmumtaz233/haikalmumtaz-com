@@ -50,11 +50,11 @@ const Certifications = () => {
         x.set(-nextMaxOffset);
         setOffset(nextMaxOffset);
       }
-      const firstCard = slider.firstElementChild as HTMLElement | null;
-      const secondCard = firstCard?.nextElementSibling as HTMLElement | null;
-      setStep(
-        firstCard && secondCard ? secondCard.offsetLeft - firstCard.offsetLeft : firstCard?.offsetWidth ?? 0
-      );
+      const firstCard = slider.firstElementChild;
+      const secondCard = firstCard?.nextElementSibling;
+      if (!(firstCard instanceof HTMLElement)) setStep(0);
+      else if (secondCard instanceof HTMLElement) setStep(secondCard.offsetLeft - firstCard.offsetLeft);
+      else setStep(firstCard.offsetWidth);
     };
 
     measure();
@@ -75,8 +75,8 @@ const Certifications = () => {
   const revealCard = (card: HTMLElement) => {
     const slider = sliderRef.current;
     const container = containerRef.current;
-    const firstCard = slider?.firstElementChild as HTMLElement | null;
-    if (!container || !firstCard || !card.matches(':focus-visible')) return;
+    const firstCard = slider?.firstElementChild;
+    if (!container || !(firstCard instanceof HTMLElement) || !card.matches(':focus-visible')) return;
 
     const left = card.offsetLeft - firstCard.offsetLeft;
     const right = left + card.offsetWidth;

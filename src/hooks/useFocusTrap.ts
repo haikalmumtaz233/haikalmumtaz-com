@@ -18,7 +18,8 @@ export const useFocusTrap = <T extends HTMLElement>(isActive: boolean) => {
     const container = containerRef.current;
     if (!container) return;
 
-    const elementToRestore = document.activeElement as HTMLElement | null;
+    const active = document.activeElement;
+    const elementToRestore = active instanceof HTMLElement ? active : null;
 
     const getFocusableElements = () =>
       Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(

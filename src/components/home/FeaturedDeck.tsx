@@ -35,8 +35,8 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
     if (!rail) return;
     cancelAnimationFrame(frameRef.current);
     frameRef.current = requestAnimationFrame(() => {
-      const card = rail.firstElementChild?.nextElementSibling as HTMLElement | null;
-      const step = card ? card.offsetWidth + 16 : rail.clientWidth;
+      const card = rail.firstElementChild?.nextElementSibling;
+      const step = card instanceof HTMLElement ? card.offsetWidth + 16 : rail.clientWidth;
       const index = Math.round(rail.scrollLeft / step);
       setActiveIndex(Math.min(projects.length - 1, Math.max(0, index)));
     });
@@ -44,8 +44,8 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
 
   const scrollToCard = (index: number) => {
     const rail = railRef.current;
-    const card = rail?.children[index + 1] as HTMLElement | undefined;
-    if (!rail || !card) return;
+    const card = rail?.children.item(index + 1);
+    if (!rail || !(card instanceof HTMLElement)) return;
     rail.scrollTo({
       left: card.offsetLeft - (rail.clientWidth - card.offsetWidth) / 2,
       behavior: prefersReducedMotion ? 'auto' : 'smooth',

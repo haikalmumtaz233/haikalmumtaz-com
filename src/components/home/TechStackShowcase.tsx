@@ -51,7 +51,8 @@ const TechStackShowcase = () => {
   };
 
   const handleBlur = (event: FocusEvent<HTMLDivElement>) => {
-    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setHasFocusWithin(false);
+    const next = event.relatedTarget;
+    if (!(next instanceof Node) || !event.currentTarget.contains(next)) setHasFocusWithin(false);
   };
 
   const handleStagePointerMove = (event: PointerEvent<HTMLDivElement>) => {
