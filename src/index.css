@@ -1,4 +1,5 @@
-@import '@fontsource-variable/plus-jakarta-sans/wght.css';
+@import '@fontsource-variable/plus-jakarta-sans/wght.css' layer(base);
+@import 'tailwindcss';
 
 @font-face {
   font-family: 'Monument Extended';
@@ -16,128 +17,91 @@
   font-display: swap;
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@theme {
+  --font-sans: 'Plus Jakarta Sans Variable', sans-serif;
+  --font-monument: 'Monument Extended', sans-serif;
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-body {
-  cursor: default;
-}
+@layer base {
+  body {
+    position: relative;
+    overflow-x: hidden;
+    cursor: default;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-a,
-button,
-[role="button"] {
-  cursor: pointer;
-}
+  a,
+  button,
+  [role='button'] {
+    cursor: pointer;
+  }
 
-body {
-  font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: transparent;
-  background-image: none;
-  position: relative;
-  overflow-x: hidden;
-}
+  #root {
+    position: relative;
+    z-index: 2;
+  }
 
-#root {
-  position: relative;
-  z-index: 2;
-}
+  :focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
 
-:focus-visible {
-  outline: 2px solid #ffffff;
-  outline-offset: 3px;
-  border-radius: 2px;
-}
+  a:focus-visible,
+  button:focus-visible,
+  select:focus-visible,
+  [tabindex]:focus-visible,
+  [role='button']:focus-visible {
+    box-shadow: 0 0 0 5px rgb(0 0 0 / 0.85);
+  }
 
-a:focus-visible,
-button:focus-visible,
-select:focus-visible,
-[tabindex]:focus-visible,
-[role="button"]:focus-visible {
-  outline: 2px solid #ffffff;
-  outline-offset: 3px;
-  box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.85);
-}
-
-input:focus-visible,
-textarea:focus-visible {
-  outline: 2px solid transparent;
-  outline-offset: 0;
-  border-bottom-color: #ffffff;
-  box-shadow: 0 1px 0 0 #ffffff;
-}
-
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 320ms;
-  animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid transparent;
+    outline-offset: 0;
+    border-bottom-color: #ffffff;
+    box-shadow: 0 1px 0 0 #ffffff;
   }
 
   ::view-transition-old(root),
   ::view-transition-new(root) {
-    animation: none !important;
+    animation-duration: 320ms;
+    animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
   }
 
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none !important;
+    }
 
-@layer components {
-  .shell {
-    @apply mx-auto w-full max-w-[1320px] px-5 sm:px-8 lg:px-12;
-  }
-
-  .section-space {
-    @apply py-24 md:py-32 2xl:py-40;
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
-/* === SNAP RAIL === */
+@utility shell {
+  @apply mx-auto w-full max-w-[1320px] px-5 sm:px-8 lg:px-12;
+}
 
-.snap-rail {
+@utility section-space {
+  @apply py-24 md:py-32 2xl:py-40;
+}
+
+@utility snap-rail {
   scroll-snap-type: x mandatory;
   overscroll-behavior-x: contain;
-  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-}
 
-.snap-rail::-webkit-scrollbar {
-  display: none;
-}
-
-@layer utilities {
-  .text-gradient {
-    background: linear-gradient(135deg, #06b6d4 0%, #a855f7 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  .scrollbar-hide::-webkit-scrollbar {
+  &::-webkit-scrollbar {
     display: none;
   }
 }

@@ -77,7 +77,7 @@ function AppShell() {
       <ScrollManager />
       <div className="min-h-screen flex flex-col">
         <MenuToggle />
-        <main className="flex-grow">
+        <main className="grow">
           <ErrorBoundary key={pathname}>
             <Suspense fallback={<div className="min-h-[60vh]" />}>
               <Routes>

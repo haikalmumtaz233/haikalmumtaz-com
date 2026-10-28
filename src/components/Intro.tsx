@@ -31,7 +31,7 @@ const Intro = () => {
   if (isDone) return null;
 
   return (
-    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[90]">
+    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-90">
       <div ref={backdropRef} className="absolute inset-0 bg-[#09080e]" style={{ willChange: 'opacity' }} />
       <canvas ref={canvasRef} className="absolute inset-0 block h-full w-full" />
     </div>

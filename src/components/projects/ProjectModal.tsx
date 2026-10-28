@@ -6,7 +6,7 @@ import { useLenis } from 'lenis/react';
 import type { Project } from '../../data/projects';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
-import { animatedProps, revealEase } from '../../lib/motion';
+import { animatedProps, easing } from '../../lib/motion';
 
 interface ProjectModalProps {
   project: Project | null;
@@ -51,11 +51,11 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="fixed inset-0 z-[999] flex items-center justify-center p-4 sm:p-6 md:p-10"
+          className="fixed inset-0 z-999 flex items-center justify-center p-4 sm:p-6 md:p-10"
           onClick={onClose}
           onWheel={(e) => e.stopPropagation()}
         >
-<div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+<div className="absolute inset-0 bg-black/80 backdrop-blur-xs" />
 <motion.div
             layoutId={prefersReducedMotion ? undefined : `project-${project.id}`}
             initial={prefersReducedMotion ? { opacity: 0 } : false}
@@ -64,7 +64,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
             transition={
               prefersReducedMotion
                 ? { duration: 0.2 }
-                : { duration: 0.45, ease: revealEase }
+                : { duration: 0.45, ease: easing.smooth }
             }
             ref={dialogRef}
             role="dialog"
@@ -82,13 +82,13 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="absolute top-4 right-4 z-30 p-2 rounded-full bg-black/60 backdrop-blur-sm border border-white/10 text-slate-400 hover:text-white hover:border-white/30 transition-colors"
+              className="absolute top-4 right-4 z-30 p-2 rounded-full bg-black/60 backdrop-blur-xs border border-white/10 text-slate-400 hover:text-white hover:border-white/30 transition-colors"
             >
               <X size={18} aria-hidden="true" />
             </button>
 <div className="relative aspect-video overflow-hidden rounded-t-2xl">
               <div
-                className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-30 z-10 pointer-events-none`}
+                className={`absolute inset-0 bg-linear-to-br ${project.gradient} opacity-30 z-10 pointer-events-none`}
               />
               <img
                 src={project.image}

@@ -116,7 +116,7 @@ const MenuToggle = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.6 }}
             transition={{ duration: 0.45, ease: easing.expo }}
-            className="fixed top-6 right-6 sm:top-8 sm:right-8 z-[60] flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md transition-colors duration-300 hover:bg-white/20 sm:h-14 sm:w-14"
+            className="fixed top-6 right-6 sm:top-8 sm:right-8 z-60 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md transition-colors duration-300 hover:bg-white/20 sm:h-14 sm:w-14"
           >
             {toggleIcon}
           </motion.button>
@@ -131,7 +131,7 @@ const MenuToggle = () => {
             animate={{ y: 0, scale: 1, opacity: 1 }}
             exit={prefersReducedMotion ? { opacity: 0 } : { y: 120, scale: 0.8, opacity: 0 }}
             transition={{ duration: 0.8, ease: easing.expo }}
-            className="fixed inset-x-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-[60] mx-auto flex h-16 max-w-md items-center gap-3 rounded-full border border-white/15 bg-[#09080e] p-2 text-white"
+            className="fixed inset-x-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-60 mx-auto flex h-16 max-w-md items-center gap-3 rounded-full border border-white/15 bg-[#09080e] p-2 text-white"
           >
             <motion.span
               aria-hidden="true"
@@ -142,7 +142,7 @@ const MenuToggle = () => {
               type="button"
               onClick={scrollToTop}
               aria-label="Back to top"
-              className="relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border border-white/15 transition-transform duration-300 active:scale-90"
+              className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/15 transition-transform duration-300 active:scale-90"
             >
               <span className="font-monument text-[10px] font-black tabular-nums">
                 {activeIndex + 1}/{SECTIONS.length}
@@ -172,7 +172,7 @@ const MenuToggle = () => {
 
             <button
               {...toggleProps}
-              className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-white text-black transition-transform duration-300 active:scale-90"
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-black transition-transform duration-300 active:scale-90"
             >
               {toggleIcon}
             </button>

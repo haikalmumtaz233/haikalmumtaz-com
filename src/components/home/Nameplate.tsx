@@ -112,7 +112,7 @@ const Letter = ({ char, kern, delay, lift: liftDistance, fadeEnd, order, gate, s
 
   return (
     <motion.span className="inline-block" style={{ y: lift, opacity: fade, marginRight: `${kern}em` }}>
-      <span className="inline-block overflow-hidden align-top py-[0.08em] -my-[0.08em] px-[0.12em] -mx-[0.12em]">
+      <span className="inline-block overflow-hidden align-top py-[0.08em] my-[-0.08em] px-[0.12em] mx-[-0.12em]">
         <motion.span className="inline-block" {...reveal}>
           {char.trim() && (
             <span data-glyph-origin={char} aria-hidden="true" className="inline-block h-0 w-0 align-baseline" />
@@ -280,7 +280,7 @@ const LinearNameplate = ({ scrollProgress, gate }: NameplateProps & { gate: Intr
           {hasMeasured && (
             <motion.span
               aria-hidden="true"
-              className="pointer-events-none absolute inset-x-0 -bottom-[0.06em] h-px bg-white/80"
+              className="pointer-events-none absolute inset-x-0 bottom-[-0.06em] h-px bg-white/80"
               style={{ fontSize: `${fittedSize}px` }}
               initial={{ clipPath: 'inset(0 50% 0 50%)' }}
               animate={

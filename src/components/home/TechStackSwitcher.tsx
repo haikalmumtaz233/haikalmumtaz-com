@@ -50,7 +50,7 @@ const TechStackSwitcher = () => {
                 aria-selected={isActive}
                 aria-controls="tech-stack-panel"
                 onClick={() => select(index)}
-                className={`relative flex flex-shrink-0 snap-center items-center gap-2 rounded-full px-4 py-2.5 text-[15px] font-medium transition-colors duration-500 ${
+                className={`relative flex shrink-0 snap-center items-center gap-2 rounded-full px-4 py-2.5 text-[15px] font-medium transition-colors duration-500 ${
                   isActive ? 'text-black' : 'text-white/65'
                 }`}
               >

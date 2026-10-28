@@ -45,7 +45,7 @@ const OptimizedImage = memo(({
   return (
     <div ref={containerRef} className={`relative overflow-hidden ${containerClassName}`}>
       <div
-        className={`absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900 ${blurClassName} ${
+        className={`absolute inset-0 bg-linear-to-br from-slate-800 to-slate-900 ${blurClassName} ${
           isLoaded ? 'opacity-0' : 'opacity-100'
         } transition-opacity duration-500 pointer-events-none`}
       />

@@ -37,7 +37,7 @@ const MomentsScatter = () => (
                 className="rounded-[6px] p-2.5 pb-4 shadow-[0_16px_24px_-10px_rgba(0,0,0,0.85)]"
                 style={{ backgroundColor: PAPER }}
               >
-                <div className="aspect-[4/5] overflow-hidden rounded-[3px] bg-black/10">
+                <div className="aspect-4/5 overflow-hidden rounded-[3px] bg-black/10">
                   <OptimizedImage
                     src={moment.image}
                     alt={moment.title}

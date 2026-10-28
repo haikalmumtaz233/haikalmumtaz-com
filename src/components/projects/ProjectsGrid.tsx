@@ -77,7 +77,7 @@ const ProjectsGrid = () => {
                     type="button"
                     aria-pressed={isActive}
                     onClick={() => setSelectedCategory(category)}
-                    className={`relative flex-shrink-0 px-4 py-2 text-xs sm:text-sm font-medium rounded-full transition-colors duration-300 ${
+                    className={`relative shrink-0 px-4 py-2 text-xs sm:text-sm font-medium rounded-full transition-colors duration-300 ${
                       isActive
                         ? 'text-white'
                         : 'text-white/55 hover:text-white/80'

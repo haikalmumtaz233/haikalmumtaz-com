@@ -135,14 +135,14 @@ const HorizontalMoments = () => {
           style={{ x }}
           className="flex items-stretch gap-10 md:gap-16 lg:gap-24 2xl:gap-32 pl-5 sm:pl-8 lg:pl-12 min-[1320px]:pl-[calc((100vw-1320px)/2+3rem)] pr-12 md:pr-24 2xl:pr-32"
         >
-          <div className="flex-shrink-0 flex items-center justify-start w-[80vw] md:w-[460px] 2xl:w-[560px] h-[80vh]">
+          <div className="shrink-0 flex items-center justify-start w-[80vw] md:w-[460px] 2xl:w-[560px] h-[80vh]">
             <div className="text-left">{heading}</div>
           </div>
 
           {moments.map((moment) => (
             <div
               key={moment.id}
-              className={`flex-shrink-0 flex flex-col h-[80vh] ${getAlignmentClass(moment.alignment)}`}
+              className={`shrink-0 flex flex-col h-[80vh] ${getAlignmentClass(moment.alignment)}`}
             >
               {renderContent(moment)}
             </div>

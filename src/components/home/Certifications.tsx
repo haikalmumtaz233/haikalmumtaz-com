@@ -141,7 +141,7 @@ const Certifications = () => {
               className="snap-rail relative flex gap-4 overflow-x-auto px-[10vw] pb-4"
             >
               {certifications.map((cert) => (
-                <div key={cert.id} data-rail-card className="w-[80vw] flex-shrink-0 snap-center">
+                <div key={cert.id} data-rail-card className="w-[80vw] shrink-0 snap-center">
                   <CertificateCard cert={cert} onCertClick={setSelectedCert} />
                 </div>
               ))}
@@ -205,9 +205,9 @@ const CertificateCard = ({
       role="button"
       tabIndex={0}
       aria-label={`View ${cert.title} certificate from ${cert.issuer}`}
-      className="group w-full cursor-pointer select-none md:w-[300px] md:flex-shrink-0 lg:w-[340px]"
+      className="group w-full cursor-pointer select-none md:w-[300px] md:shrink-0 lg:w-[340px]"
     >
-      <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-white/10 bg-white/[0.04] transition-colors duration-500 group-hover:border-white/30">
+      <div className="relative aspect-4/3 overflow-hidden rounded-lg border border-white/10 bg-white/4 transition-colors duration-500 group-hover:border-white/30">
         <OptimizedImage
           src={cert.image}
           alt=""

@@ -70,7 +70,7 @@ const RoleTicker = ({ startDelay, ready }: { startDelay: number; ready: boolean 
       <span className="text-white/90">{displayedText}</span>
       <motion.span
         aria-hidden="true"
-        className="inline-block w-[0.55em] h-[1.1em] -mb-[0.2em] bg-purple-400/80 ml-1"
+        className="inline-block w-[0.55em] h-[1.1em] mb-[-0.2em] bg-purple-400/80 ml-1"
         {...animatedProps(prefersReducedMotion, {
           animate: { opacity: [1, 1, 0, 0] },
           transition: {
@@ -108,11 +108,11 @@ const Hero = () => {
     <section
       id="hero"
       ref={sectionRef}
-      className="relative h-[100svh] max-h-[100svh] bg-transparent text-white overflow-hidden flex flex-col items-center justify-between py-8 sm:py-12 px-4 sm:px-6"
+      className="relative h-svh max-h-svh bg-transparent text-white overflow-hidden flex flex-col items-center justify-between py-8 sm:py-12 px-4 sm:px-6"
     >
-      <div className="flex-shrink-0 h-20" />
+      <div className="shrink-0 h-20" />
 
-      <div className="flex-grow flex w-full items-center justify-center">
+      <div className="grow flex w-full items-center justify-center">
         <div className="w-full text-center">
           <motion.div style={prefersReducedMotion ? undefined : { opacity: eyebrowFade, y: eyebrowLift }}>
             <motion.p

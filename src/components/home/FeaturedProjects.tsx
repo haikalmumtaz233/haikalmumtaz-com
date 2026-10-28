@@ -143,7 +143,7 @@ const FeaturedProjects = () => {
               id="featured-preview"
               role="tabpanel"
               aria-labelledby={`featured-tab-${currentIndex}`}
-              className="relative aspect-[16/10]"
+              className="relative aspect-16/10"
             >
               <AnimatePresence initial={false} custom={direction} mode="popLayout">
                 <motion.div

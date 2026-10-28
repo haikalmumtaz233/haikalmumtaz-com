@@ -35,7 +35,7 @@ const ProjectsHero = () => {
           as="h1"
           title={['All projects']}
           delay={offset + 0.15}
-          className="!mb-0"
+          className="mb-0!"
           meta={
             <p className="text-sm md:text-base text-white/55">
               {projects.length} projects in {categoryCount} categories

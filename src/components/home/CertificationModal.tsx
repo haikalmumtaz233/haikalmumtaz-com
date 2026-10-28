@@ -6,7 +6,7 @@ import { useLenis } from 'lenis/react';
 import type { Certification } from '../../data/certifications';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
-import { revealEase } from '../../lib/motion';
+import { easing } from '../../lib/motion';
 
 interface CertificationModalProps {
   cert: Certification | null;
@@ -53,7 +53,7 @@ const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) 
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-hidden"
+          className="fixed inset-0 z-999 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs overflow-hidden"
           onClick={onClose}
           onWheel={(e) => e.stopPropagation()}
         >
@@ -61,7 +61,7 @@ const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) 
             initial={{ scale: prefersReducedMotion ? 1 : 0.92, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: prefersReducedMotion ? 1 : 0.92, opacity: 0 }}
-            transition={{ duration: 0.3, ease: revealEase }}
+            transition={{ duration: 0.3, ease: easing.smooth }}
             ref={dialogRef}
             role="dialog"
             aria-modal="true"
@@ -102,7 +102,7 @@ const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) 
                   href={cert.credentialLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-shrink-0 inline-flex items-center gap-2 text-xs font-mono font-bold text-white bg-white/10 border border-white/20 px-4 py-2.5 rounded-lg hover:bg-white/20 hover:border-white/40 transition-colors"
+                  className="shrink-0 inline-flex items-center gap-2 text-xs font-mono font-bold text-white bg-white/10 border border-white/20 px-4 py-2.5 rounded-lg hover:bg-white/20 hover:border-white/40 transition-colors"
                 >
                   <span>Verify Credential</span>
                   <ExternalLink size={14} />

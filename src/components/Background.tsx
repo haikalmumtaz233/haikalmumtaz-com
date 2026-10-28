@@ -27,8 +27,8 @@ const wrap = (value: number, max: number) => ((value % max) + max) % max;
 const glow = (rgb: string) => `radial-gradient(circle at center, rgba(${rgb}, 1) 0%, rgba(${rgb}, 0.55) 28%, rgba(${rgb}, 0) 68%)`;
 
 const orbs = [
-    { position: '-top-[32%] -left-[22%]', size: 'w-[900px] h-[900px]', color: glow('147, 51, 234'), drift: [50, 15] as const },
-    { position: '-bottom-[26%] -right-[16%]', size: 'w-[640px] h-[640px]', color: glow('6, 182, 212'), drift: [40, 18] as const },
+    { position: 'top-[-32%] left-[-22%]', size: 'w-[900px] h-[900px]', color: glow('147, 51, 234'), drift: [50, 15] as const },
+    { position: 'bottom-[-26%] right-[-16%]', size: 'w-[640px] h-[640px]', color: glow('6, 182, 212'), drift: [40, 18] as const },
     { position: 'top-[16%] right-[0%]', size: 'w-[460px] h-[460px]', color: glow('217, 70, 239'), drift: [60, 12] as const },
 ];
 

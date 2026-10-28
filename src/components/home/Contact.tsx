@@ -4,7 +4,7 @@ import { ArrowUpRight, Mail, Instagram, Linkedin, Github, CheckCircle, XCircle, 
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import RuleReveal from '../../journey/RuleReveal';
 import FadeIn from '../../journey/FadeIn';
-import { revealEase } from '../../lib/motion';
+import { easing } from '../../lib/motion';
 import { profile, socialProfiles } from '../../data/profile';
 
 declare global {
@@ -50,7 +50,7 @@ interface Toast {
 }
 
 const inputClass =
-  'w-full bg-transparent border-b border-white/20 py-2 text-[15px] text-white caret-purple-300 placeholder:text-white/30 focus:border-white focus:outline-none transition-colors';
+  'w-full bg-transparent border-b border-white/20 py-2 text-[15px] text-white caret-purple-300 placeholder:text-white/30 focus:border-white focus:outline-hidden transition-colors';
 
 const labelClass = 'text-sm text-white/60';
 
@@ -260,15 +260,15 @@ const Contact = () => {
               initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: 100, scale: 0.9 }}
               animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, x: 0, scale: 1 }}
               exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: 100, scale: 0.9 }}
-              transition={{ duration: 0.3, ease: revealEase }}
+              transition={{ duration: 0.3, ease: easing.smooth }}
               className={`flex items-center gap-3 rounded-xl border bg-[#09080e]/90 px-4 py-3 ${
                 toast.type === 'success' ? 'border-emerald-500/30 text-emerald-300' : 'border-red-500/30 text-red-300'
               }`}
             >
               {toast.type === 'success' ? (
-                <CheckCircle className="h-5 w-5 flex-shrink-0" />
+                <CheckCircle className="h-5 w-5 shrink-0" />
               ) : (
-                <XCircle className="h-5 w-5 flex-shrink-0" />
+                <XCircle className="h-5 w-5 shrink-0" />
               )}
               <p className="pr-2 text-sm font-medium">{toast.message}</p>
               <button
@@ -330,7 +330,7 @@ const Contact = () => {
           </div>
 
           <FadeIn delay={0.3}>
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8 2xl:p-10">
+            <div className="rounded-2xl border border-white/10 bg-white/3 p-6 md:p-8 2xl:p-10">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <div className="space-y-1">
