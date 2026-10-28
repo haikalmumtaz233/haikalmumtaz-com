@@ -1,9 +1,10 @@
 import { useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Github, ExternalLink } from 'lucide-react';
+import { X, ExternalLink } from 'lucide-react';
 import { useLenis } from 'lenis/react';
 import type { Project } from '../../data/projects';
+import BrandIcon from '../ui/BrandIcon';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 import { animatedProps, easing } from '../../lib/motion';
@@ -128,7 +129,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
 <div className="flex flex-wrap gap-4 pt-2">
                 {isRepoDisabled ? (
                   <span className="flex items-center justify-center gap-2 font-semibold text-sm px-5 py-2.5 rounded-xl border border-white/5 bg-white/5 text-slate-600 cursor-not-allowed opacity-50">
-                    <Github size={18} /> Repository
+                    <BrandIcon brand="GitHub" size={18} /> Repository
                   </span>
                 ) : (
                   <motion.a
@@ -141,7 +142,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                     })}
                     className="flex items-center justify-center gap-2 font-semibold text-sm px-5 py-2.5 rounded-xl border border-white/20 text-white hover:border-white/40 hover:bg-white/5 transition-colors"
                   >
-                    <Github size={18} /> Repository
+                    <BrandIcon brand="GitHub" size={18} /> Repository
                   </motion.a>
                 )}
 

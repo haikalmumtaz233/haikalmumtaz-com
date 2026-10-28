@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
-import { Github, Linkedin, Instagram } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLenis } from 'lenis/react';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { profile, socialProfiles } from '../data/profile';
+import BrandIcon from './ui/BrandIcon';
 import { animatedProps, easing } from '../lib/motion';
 
 const navLinks = [
@@ -14,12 +14,6 @@ const navLinks = [
   { name: 'EXPERIENCE', path: '#experience', type: 'scroll' },
   { name: 'CONTACT', path: '#contact', type: 'scroll' },
 ];
-
-const socialIcons: Record<string, typeof Github> = {
-  GitHub: Github,
-  LinkedIn: Linkedin,
-  Instagram: Instagram,
-};
 
 export const MENU_PANEL_ID = 'site-menu-panel';
 
@@ -228,9 +222,7 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                 </a>
 
                 <div className="flex gap-4">
-                  {socialProfiles.map(({ href, label }) => {
-                    const Icon = socialIcons[label];
-                    return (
+                  {socialProfiles.map(({ href, label }) => (
                     <motion.a
                       key={label}
                       href={href}
@@ -243,10 +235,9 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                       className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/20 transition-all group"
                       aria-label={label}
                     >
-                      <Icon className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
+                      <BrandIcon brand={label} className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
                     </motion.a>
-                    );
-                  })}
+                  ))}
                 </div>
 
                 <div className="flex items-center gap-3 text-xs font-mono text-slate-400">

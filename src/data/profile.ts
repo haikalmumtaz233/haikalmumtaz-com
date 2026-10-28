@@ -1,5 +1,7 @@
+export type SocialPlatform = 'GitHub' | 'LinkedIn' | 'Instagram';
+
 export interface SocialProfile {
-  label: string;
+  label: SocialPlatform;
   href: string;
 }
 

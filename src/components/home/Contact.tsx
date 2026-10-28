@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef, type ChangeEvent, type FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowUpRight, Mail, Instagram, Linkedin, Github, CheckCircle, XCircle, X } from 'lucide-react';
+import { ArrowUpRight, Mail, CircleCheck, CircleX, X } from 'lucide-react';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import RuleReveal from '../../journey/RuleReveal';
 import FadeIn from '../../journey/FadeIn';
 import { easing } from '../../lib/motion';
 import { profile, socialProfiles } from '../../data/profile';
+import BrandIcon from '../ui/BrandIcon';
 
 declare global {
   interface Window {
@@ -34,12 +35,6 @@ const MAX_MESSAGE_LENGTH = 2000;
 const MAX_NAME_LENGTH = 50;
 
 const EMPTY_FORM = { firstName: '', lastName: '', email: '', phone: '', message: '', honeypot: '' };
-
-const socialIcons: Record<string, typeof Github> = {
-  GitHub: Github,
-  LinkedIn: Linkedin,
-  Instagram: Instagram,
-};
 
 type ToastType = 'success' | 'error';
 
@@ -225,7 +220,7 @@ const Contact = () => {
           message,
           time: new Date().toLocaleString(),
         },
-        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+        { publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY }
       );
 
       addToast('success', "Message sent. I'll reply to your email soon.");
@@ -266,9 +261,9 @@ const Contact = () => {
               }`}
             >
               {toast.type === 'success' ? (
-                <CheckCircle className="h-5 w-5 shrink-0" />
+                <CircleCheck className="h-5 w-5 shrink-0" />
               ) : (
-                <XCircle className="h-5 w-5 shrink-0" />
+                <CircleX className="h-5 w-5 shrink-0" />
               )}
               <p className="pr-2 text-sm font-medium">{toast.message}</p>
               <button
@@ -309,21 +304,18 @@ const Contact = () => {
                 </a>
 
                 <div className="flex gap-3">
-                  {socialProfiles.map((social) => {
-                    const Icon = socialIcons[social.label];
-                    return (
-                      <a
-                        key={social.label}
-                        href={social.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white transition-colors duration-300 hover:bg-white hover:text-black"
-                        aria-label={social.label}
-                      >
-                        <Icon size={18} />
-                      </a>
-                    );
-                  })}
+                  {socialProfiles.map((social) => (
+                    <a
+                      key={social.label}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white transition-colors duration-300 hover:bg-white hover:text-black"
+                      aria-label={social.label}
+                    >
+                      <BrandIcon brand={social.label} size={18} />
+                    </a>
+                  ))}
                 </div>
               </div>
             </FadeIn>
