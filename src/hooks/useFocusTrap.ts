@@ -23,7 +23,7 @@ export const useFocusTrap = <T extends HTMLElement>(isActive: boolean) => {
 
     const getFocusableElements = () =>
       Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
-        (element) => element.offsetParent !== null
+        (element) => element.offsetParent !== null,
       );
 
     const firstFocusable = getFocusableElements()[0];

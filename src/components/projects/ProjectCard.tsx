@@ -1,10 +1,9 @@
 import { memo } from 'react';
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 import { ArrowUpRight } from 'lucide-react';
 import type { Project } from '../../data/projects';
 import OptimizedImage from '../ui/OptimizedImage';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import { activateOnEnterOrSpace } from '../../lib/keyboard';
 
 interface ProjectCardProps {
   project: Project;
@@ -16,14 +15,9 @@ const ProjectCard = memo(({ project, onClick }: ProjectCardProps) => {
   const maxVisibleTech = 3;
 
   return (
-    <motion.article
+    <m.article
       layoutId={prefersReducedMotion ? undefined : `project-${project.id}`}
-      onClick={onClick}
-      onKeyDown={activateOnEnterOrSpace(onClick)}
-      role="button"
-      tabIndex={0}
-      aria-label={`Open details for ${project.name}`}
-      className="group relative cursor-pointer h-full flex flex-col"
+      className="group relative h-full flex flex-col"
     >
       <div
         className="pointer-events-none absolute inset-x-0 top-0 aspect-16/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30"
@@ -52,19 +46,28 @@ const ProjectCard = memo(({ project, onClick }: ProjectCardProps) => {
         </span>
       </div>
       <div className="pt-5 flex flex-col grow">
-        <h3 className="text-lg sm:text-xl font-monument font-black uppercase text-white tracking-tight leading-tight line-clamp-1">
+        <h2 className="text-lg sm:text-xl font-monument font-black uppercase text-white tracking-tight leading-tight line-clamp-1">
           {project.name}
-        </h3>
+        </h2>
         <p className="text-white/65 text-[15px] mt-1.5 line-clamp-1">{project.subtitle}</p>
         <ul className="mt-4 flex flex-wrap gap-2" aria-label={`${project.name} stack`}>
           {project.stack.slice(0, maxVisibleTech).map((tech) => (
-            <li key={tech} className="rounded-full border border-white/10 px-3 py-1 text-[13px] text-white/60">
+            <li
+              key={tech}
+              className="rounded-full border border-white/10 px-3 py-1 text-[13px] text-white/60"
+            >
               {tech}
             </li>
           ))}
         </ul>
       </div>
-    </motion.article>
+      <button
+        type="button"
+        onClick={onClick}
+        aria-label={`Open details for ${project.name}`}
+        className="absolute inset-0 z-40 rounded-xl"
+      />
+    </m.article>
   );
 });
 

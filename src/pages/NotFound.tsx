@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 import { useNavigate } from 'react-router';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
@@ -29,7 +29,7 @@ const NotFound = () => {
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-monument font-black tracking-tight text-white uppercase mb-4 sm:mb-6"
           />
 
-          <motion.div
+          <m.div
             {...animatedProps(prefersReducedMotion, {
               initial: { opacity: 0 },
               animate: { opacity: 1 },
@@ -60,7 +60,7 @@ const NotFound = () => {
                 <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
               </button>
             </div>
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </section>

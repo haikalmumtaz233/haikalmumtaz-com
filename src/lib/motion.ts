@@ -8,5 +8,5 @@ export const easing = {
 
 export const animatedProps = <T extends object>(
   shouldReduceMotion: boolean,
-  props: T
+  props: T,
 ): Partial<T> => (shouldReduceMotion ? {} : props);

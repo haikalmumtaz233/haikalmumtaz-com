@@ -1,8 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 import type { Project } from '../../data/projects';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import { activateOnEnterOrSpace } from '../../lib/keyboard';
 import { easing } from '../../lib/motion';
 import { useRailFocus } from '../../hooks/useRailFocus';
 
@@ -24,7 +23,8 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
     card.style.zIndex = String(10 - Math.round(distance * 5));
     card.style.opacity = String(1 - distance * 0.55);
     const image = card.querySelector<HTMLElement>('[data-rail-image]');
-    if (image) image.style.transform = `translateX(${Math.max(-1, Math.min(1, offset)) * -14}%) scale(1.3)`;
+    if (image)
+      image.style.transform = `translateX(${Math.max(-1, Math.min(1, offset)) * -14}%) scale(1.3)`;
   }, []);
 
   const updateFocus = useRailFocus(railRef, applyFocus, !prefersReducedMotion);
@@ -54,7 +54,7 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
 
   return (
     <div className="-mx-5 sm:-mx-8">
-      <motion.div
+      <m.div
         ref={railRef}
         onScroll={handleScroll}
         role="region"
@@ -69,12 +69,7 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
         {projects.map((project, index) => (
           <article
             key={project.id}
-            role="button"
-            tabIndex={0}
-            onClick={() => onOpen(project)}
-            onKeyDown={activateOnEnterOrSpace(() => onOpen(project))}
             onFocus={() => scrollToCard(index)}
-            aria-label={`Open details for ${project.name}`}
             data-rail-card
             style={{ transformOrigin: '50% 120%' }}
             className="relative aspect-4/5 w-[72vw] max-w-[360px] shrink-0 snap-center overflow-hidden rounded-[28px] border border-white/10 bg-[#141220] active:brightness-90"
@@ -93,7 +88,9 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
             <div className="absolute inset-0 bg-linear-to-t from-[#09080e] via-[#09080e]/55 to-transparent" />
             <div
               className="absolute inset-x-0 top-0 h-1/3 opacity-60"
-              style={{ background: `radial-gradient(80% 100% at 0% 0%, ${project.accentColor}66, transparent 70%)` }}
+              style={{
+                background: `radial-gradient(80% 100% at 0% 0%, ${project.accentColor}66, transparent 70%)`,
+              }}
             />
 
             <span className="absolute left-5 top-5 rounded-full bg-black/55 px-3 py-1 text-xs text-white/85">
@@ -110,10 +107,16 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
                 Tap for details
               </p>
             </div>
+            <button
+              type="button"
+              onClick={() => onOpen(project)}
+              aria-label={`Open details for ${project.name}`}
+              className="absolute inset-0 rounded-[28px]"
+            />
           </article>
         ))}
         <div aria-hidden="true" className="w-[calc(14vw-1rem)] shrink-0" />
-      </motion.div>
+      </m.div>
 
       <div className="flex items-center justify-between gap-6 px-5 sm:px-8">
         <div className="flex flex-1 gap-1.5" role="tablist" aria-label="Choose a project">
@@ -139,7 +142,7 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
         </div>
         <span className="font-monument text-sm font-black tabular-nums text-white">
           {String(activeIndex + 1).padStart(2, '0')}
-          <span className="text-white/35"> / {String(projects.length).padStart(2, '0')}</span>
+          <span className="text-white/50"> / {String(projects.length).padStart(2, '0')}</span>
         </span>
       </div>
     </div>

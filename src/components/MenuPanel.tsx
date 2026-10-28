@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
-import { motion, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from 'motion/react';
 import { useLenis } from 'lenis/react';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { useFocusTrap } from '../hooks/useFocusTrap';
@@ -57,7 +57,7 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
     document.querySelector(target)?.scrollIntoView({ behavior });
   };
 
-  const handleNavigation = (link: typeof navLinks[0]) => {
+  const handleNavigation = (link: (typeof navLinks)[0]) => {
     onClose();
 
     const target = link.type === 'route' ? 0 : link.path;
@@ -100,7 +100,7 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
     <>
       <AnimatePresence>
         {isOpen && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -113,7 +113,7 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
 
       <AnimatePresence>
         {isOpen && (
-          <motion.div
+          <m.div
             initial={prefersReducedMotion ? { opacity: 0 } : { x: '100%' }}
             animate={prefersReducedMotion ? { opacity: 1 } : { x: '0%' }}
             exit={
@@ -121,7 +121,9 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                 ? { opacity: 0 }
                 : { x: '100%', transition: { duration: 0.5, ease: easing.inout } }
             }
-            transition={prefersReducedMotion ? { duration: 0.2 } : { duration: 0.8, ease: easing.expo }}
+            transition={
+              prefersReducedMotion ? { duration: 0.2 } : { duration: 0.8, ease: easing.expo }
+            }
             ref={panelRef}
             id={MENU_PANEL_ID}
             role="dialog"
@@ -131,12 +133,11 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
             className="fixed top-0 right-0 h-full w-full sm:w-[85vw] md:w-[480px] z-50 bg-black/80 backdrop-blur-2xl border-l border-white/10 shadow-2xl overflow-hidden"
           >
             <div className="h-full flex flex-col justify-between p-6 pb-28 sm:p-8 sm:pb-28 md:p-12">
-
               <nav className="flex-1 flex items-center">
                 <ul className="space-y-4 sm:space-y-6 w-full">
                   {navLinks.map((link, index) => (
                     <li key={link.name} className="overflow-hidden">
-                      <motion.div
+                      <m.div
                         {...animatedProps(prefersReducedMotion, {
                           initial: { y: '115%', rotate: 4 },
                           animate: { y: '0%', rotate: 0 },
@@ -148,7 +149,7 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                         })}
                         className="origin-bottom-left"
                       >
-                        <motion.button
+                        <m.button
                           type="button"
                           aria-label={link.name}
                           onClick={() => handleNavigation(link)}
@@ -162,54 +163,53 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                             style={{ lineHeight: 0.9 }}
                           >
                             <div>
-                              {link.name.split("").map((l, i) => (
-                                <motion.span
+                              {link.name.split('').map((l, i) => (
+                                <m.span
                                   variants={{
                                     initial: { y: 0 },
-                                    hovered: { y: "-100%" }
+                                    hovered: { y: '-100%' },
                                   }}
                                   transition={{
                                     duration: LETTER_DURATION,
                                     ease: easing.expo,
-                                    delay: LETTER_STAGGER * i
+                                    delay: LETTER_STAGGER * i,
                                   }}
                                   className="inline-block"
                                   key={i}
                                 >
                                   {l}
-                                </motion.span>
+                                </m.span>
                               ))}
                             </div>
 
                             <div className="absolute inset-0">
-                              {link.name.split("").map((l, i) => (
-                                <motion.span
+                              {link.name.split('').map((l, i) => (
+                                <m.span
                                   variants={{
-                                    initial: { y: "100%" },
-                                    hovered: { y: 0 }
+                                    initial: { y: '100%' },
+                                    hovered: { y: 0 },
                                   }}
                                   transition={{
                                     duration: LETTER_DURATION,
                                     ease: easing.expo,
-                                    delay: LETTER_STAGGER * i
+                                    delay: LETTER_STAGGER * i,
                                   }}
                                   className="inline-block text-purple-400"
                                   key={i}
                                 >
                                   {l}
-                                </motion.span>
+                                </m.span>
                               ))}
                             </div>
                           </div>
-
-                        </motion.button>
-                      </motion.div>
+                        </m.button>
+                      </m.div>
                     </li>
                   ))}
                 </ul>
               </nav>
 
-              <motion.div
+              <m.div
                 {...animatedProps(prefersReducedMotion, {
                   initial: { opacity: 0, y: 16 },
                   animate: { opacity: 1, y: 0 },
@@ -226,7 +226,7 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
 
                 <div className="flex gap-4">
                   {socialProfiles.map(({ href, label }) => (
-                    <motion.a
+                    <m.a
                       key={label}
                       href={href}
                       target="_blank"
@@ -238,8 +238,11 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                       className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/20 transition-all group"
                       aria-label={label}
                     >
-                      <BrandIcon brand={label} className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
-                    </motion.a>
+                      <BrandIcon
+                        brand={label}
+                        className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors"
+                      />
+                    </m.a>
                   ))}
                 </div>
 
@@ -247,9 +250,9 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                   <span>Available for opportunities</span>
                 </div>
-              </motion.div>
+              </m.div>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </>

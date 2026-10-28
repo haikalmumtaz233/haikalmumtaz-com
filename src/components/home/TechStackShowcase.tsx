@@ -1,5 +1,12 @@
-import { useEffect, useRef, useState, type FocusEvent, type KeyboardEvent, type PointerEvent } from 'react';
-import { AnimatePresence, motion, stagger, useInView } from 'motion/react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  type FocusEvent,
+  type KeyboardEvent,
+  type PointerEvent,
+} from 'react';
+import { AnimatePresence, m, stagger, useInView } from 'motion/react';
 import { techCategories } from '../../data/techStack';
 import TechIcon from '../ui/TechIcon';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
@@ -27,7 +34,7 @@ const TechStackShowcase = () => {
     if (!isCycling) return;
     const timer = window.setTimeout(
       () => setActiveIndex((index) => (index + 1) % techCategories.length),
-      CYCLE_MS
+      CYCLE_MS,
     );
     return () => window.clearTimeout(timer);
   }, [isCycling, activeIndex]);
@@ -99,34 +106,34 @@ const TechStackShowcase = () => {
             >
               <span
                 className={`w-6 shrink-0 font-mono text-xs tabular-nums transition-colors duration-500 ${
-                  isActive ? 'text-white/70' : 'text-white/30'
+                  isActive ? 'text-white/70' : 'text-white/50'
                 }`}
               >
                 {pad(index + 1)}
               </span>
               <span
                 className={`flex-1 truncate text-xl font-semibold transition-[color,transform] duration-500 ease-expo lg:text-2xl 2xl:text-[28px] ${
-                  isActive ? 'translate-x-2 text-white' : 'text-white/35 group-hover:text-white/70'
+                  isActive ? 'translate-x-2 text-white' : 'text-white/50 group-hover:text-white/70'
                 }`}
               >
                 {item.title}
               </span>
               <span
                 className={`text-sm tabular-nums transition-colors duration-500 ${
-                  isActive ? 'text-white/60' : 'text-white/25'
+                  isActive ? 'text-white/70' : 'text-white/50'
                 }`}
               >
                 {item.items.length}
               </span>
               {isActive && (
-                <motion.span
+                <m.span
                   layoutId={prefersReducedMotion ? undefined : 'tech-area-rule'}
                   aria-hidden="true"
                   className="absolute inset-x-0 -bottom-px h-px overflow-hidden bg-white/30"
                   transition={{ duration: 0.6, ease: easing.expo }}
                 >
                   {isCycling && (
-                    <motion.span
+                    <m.span
                       key={activeIndex}
                       className="block h-full origin-left bg-white"
                       initial={{ scaleX: 0 }}
@@ -134,7 +141,7 @@ const TechStackShowcase = () => {
                       transition={{ duration: CYCLE_MS / 1000, ease: 'linear' }}
                     />
                   )}
-                </motion.span>
+                </m.span>
               )}
             </button>
           );
@@ -159,7 +166,7 @@ const TechStackShowcase = () => {
         />
 
         <AnimatePresence initial={false}>
-          <motion.span
+          <m.span
             key={category.title}
             aria-hidden="true"
             className="pointer-events-none absolute bottom-[-0.18em] left-5 whitespace-nowrap font-monument text-[clamp(3.5rem,8vw,7.5rem)] font-black uppercase leading-none text-white/[0.035] lg:left-7"
@@ -168,16 +175,16 @@ const TechStackShowcase = () => {
             exit={{ opacity: 0, transition: { duration: 0.3 } }}
           >
             {category.title}
-          </motion.span>
+          </m.span>
         </AnimatePresence>
 
-        <span className="relative self-end font-mono text-xs tabular-nums text-white/40">
+        <span className="relative self-end font-mono text-xs tabular-nums text-white/50">
           {pad(activeIndex + 1)} / {pad(techCategories.length)}
         </span>
 
         <div className="relative flex flex-1 items-center pt-4">
           <AnimatePresence mode="wait" initial={false}>
-            <motion.ul
+            <m.ul
               key={category.title}
               className="grid w-full grid-cols-3 gap-3 lg:grid-cols-4 2xl:gap-4"
               initial="hidden"
@@ -190,11 +197,18 @@ const TechStackShowcase = () => {
               }}
             >
               {category.items.map((tech) => (
-                <motion.li
+                <m.li
                   key={tech.name}
                   variants={{
-                    hidden: prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 18, scale: 0.92 },
-                    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.7, ease: easing.expo } },
+                    hidden: prefersReducedMotion
+                      ? { opacity: 0 }
+                      : { opacity: 0, y: 18, scale: 0.92 },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      scale: 1,
+                      transition: { duration: 0.7, ease: easing.expo },
+                    },
                   }}
                   className="group/tile flex aspect-4/3 flex-col lg:aspect-square items-center justify-center gap-3 rounded-2xl border border-white/[0.07] bg-white/2 px-2 transition-colors duration-300 hover:border-white/25 hover:bg-white/5"
                 >
@@ -204,9 +218,9 @@ const TechStackShowcase = () => {
                   <span className="w-full truncate text-center text-[13px] text-white/60 transition-colors duration-300 group-hover/tile:text-white lg:text-sm">
                     {tech.name}
                   </span>
-                </motion.li>
+                </m.li>
               ))}
-            </motion.ul>
+            </m.ul>
           </AnimatePresence>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { AnimatePresence, motion, useScroll, useSpring } from 'motion/react';
+import { AnimatePresence, m, useScroll, useSpring } from 'motion/react';
 import { useRef, useState } from 'react';
 import { Plus } from 'lucide-react';
 import { experiences, type Experience as ExperienceEntry } from '../../data/experience';
@@ -32,9 +32,12 @@ const Experience = () => {
         />
 
         <ol ref={listRef} className="relative border-b border-white/10">
-          <span aria-hidden="true" className="absolute left-[3px] top-0 bottom-0 w-px bg-white/10" />
+          <span
+            aria-hidden="true"
+            className="absolute left-[3px] top-0 bottom-0 w-px bg-white/10"
+          />
           {!prefersReducedMotion && (
-            <motion.span
+            <m.span
               aria-hidden="true"
               className="absolute left-[3px] top-0 bottom-0 w-px origin-top bg-white/70"
               style={{ scaleY: spine }}
@@ -68,13 +71,13 @@ const ExperienceItem = ({ entry, index, isOpen, onToggle }: ExperienceItemProps)
   const isCurrent = entry.period.includes('Present');
 
   return (
-    <motion.li
+    <m.li
       className="relative pl-8 md:pl-12"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.5 }}
     >
-      <motion.span
+      <m.span
         aria-hidden="true"
         className="absolute inset-x-0 top-0 h-px origin-left bg-white/10"
         variants={{
@@ -89,10 +92,14 @@ const ExperienceItem = ({ entry, index, isOpen, onToggle }: ExperienceItemProps)
         }`}
       />
 
-      <motion.div
+      <m.div
         variants={{
           hidden: prefersReducedMotion ? {} : { opacity: 0, y: 24 },
-          visible: { opacity: 1, y: 0, transition: { duration: 1, ease: easing.expo, delay: 0.15 } },
+          visible: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 1, ease: easing.expo, delay: 0.15 },
+          },
         }}
       >
         <button
@@ -128,7 +135,7 @@ const ExperienceItem = ({ entry, index, isOpen, onToggle }: ExperienceItemProps)
 
         <AnimatePresence initial={false}>
           {isOpen && (
-            <motion.div
+            <m.div
               id={panelId}
               className="overflow-hidden"
               initial={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
@@ -138,17 +145,17 @@ const ExperienceItem = ({ entry, index, isOpen, onToggle }: ExperienceItemProps)
             >
               <div className="pb-8 md:grid md:grid-cols-12 md:gap-x-6 md:pb-10">
                 <div className="md:col-span-7 md:col-start-4">
-                  {entry.subtitle && <p className="mb-2 text-sm text-white/45">{entry.subtitle}</p>}
+                  {entry.subtitle && <p className="mb-2 text-sm text-white/50">{entry.subtitle}</p>}
                   <p className="max-w-[62ch] text-[15px] leading-relaxed text-white/65 md:text-base 2xl:text-lg">
                     {entry.description}
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
-      </motion.div>
-    </motion.li>
+      </m.div>
+    </m.li>
   );
 };
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, m } from 'motion/react';
 import { Menu, X } from 'lucide-react';
 import { useLocation } from 'react-router';
 import { useLenis } from 'lenis/react';
@@ -25,7 +25,7 @@ const useActiveSection = (enabled: boolean) => {
     if (!enabled) return;
 
     const elements = SECTIONS.map(({ id }) => document.getElementById(id)).filter(
-      (element): element is HTMLElement => element !== null
+      (element): element is HTMLElement => element !== null,
     );
 
     const observer = new IntersectionObserver(
@@ -35,11 +35,13 @@ const useActiveSection = (enabled: boolean) => {
           const index = SECTIONS.findIndex(({ id }) => id === entry.target.id);
           if (index < 0) continue;
           setActive((current) =>
-            current.index === index ? current : { index, direction: index > current.index ? 1 : -1 }
+            current.index === index
+              ? current
+              : { index, direction: index > current.index ? 1 : -1 },
           );
         }
       },
-      { rootMargin: '-50% 0px -50% 0px' }
+      { rootMargin: '-50% 0px -50% 0px' },
     );
 
     elements.forEach((element) => observer.observe(element));
@@ -67,10 +69,9 @@ const MenuToggle = () => {
     const hero = document.getElementById('hero');
     if (!hero) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsPastHero(!entry.isIntersecting),
-      { rootMargin: '0px 0px -75% 0px' }
-    );
+    const observer = new IntersectionObserver(([entry]) => setIsPastHero(!entry.isIntersecting), {
+      rootMargin: '0px 0px -75% 0px',
+    });
 
     observer.observe(hero);
     return () => observer.disconnect();
@@ -85,9 +86,9 @@ const MenuToggle = () => {
 
   const toggleIcon = (
     <AnimatePresence mode="wait" initial={false}>
-      <motion.span key={isOpen ? 'close' : 'open'} {...iconMotion} className="flex">
+      <m.span key={isOpen ? 'close' : 'open'} {...iconMotion} className="flex">
         {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-      </motion.span>
+      </m.span>
     </AnimatePresence>
   );
 
@@ -109,7 +110,7 @@ const MenuToggle = () => {
     <>
       <AnimatePresence initial={false}>
         {!isDockVisible && (
-          <motion.button
+          <m.button
             key="corner-toggle"
             {...toggleProps}
             initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.6 }}
@@ -119,13 +120,13 @@ const MenuToggle = () => {
             className="fixed top-6 right-6 sm:top-8 sm:right-8 z-60 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md transition-colors duration-300 hover:bg-white/20 sm:h-14 sm:w-14"
           >
             {toggleIcon}
-          </motion.button>
+          </m.button>
         )}
       </AnimatePresence>
 
       <AnimatePresence>
         {isDockVisible && (
-          <motion.div
+          <m.div
             key="thumb-dock"
             initial={prefersReducedMotion ? { opacity: 0 } : { y: 120, scale: 0.8, opacity: 0 }}
             animate={{ y: 0, scale: 1, opacity: 1 }}
@@ -133,7 +134,7 @@ const MenuToggle = () => {
             transition={{ duration: 0.8, ease: easing.expo }}
             className="fixed inset-x-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-60 mx-auto flex h-16 max-w-md items-center gap-3 rounded-full border border-white/15 bg-[#09080e] p-2 text-white"
           >
-            <motion.span
+            <m.span
               aria-hidden="true"
               className="absolute inset-x-10 -bottom-px h-[2px] origin-left bg-violet-300"
               style={{ scaleX: scrollYProgress }}
@@ -141,7 +142,7 @@ const MenuToggle = () => {
             <button
               type="button"
               onClick={scrollToTop}
-              aria-label="Back to top"
+              aria-label={`Back to top, ${activeIndex + 1}/${SECTIONS.length}`}
               className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/15 transition-transform duration-300 active:scale-90"
             >
               <span className="font-monument text-[10px] font-black tabular-nums">
@@ -151,13 +152,19 @@ const MenuToggle = () => {
 
             <div className="relative h-7 min-w-0 flex-1 overflow-hidden" aria-live="polite">
               <AnimatePresence initial={false} custom={direction} mode="popLayout">
-                <motion.span
+                <m.span
                   key={isOpen ? 'menu' : SECTIONS[activeIndex].id}
                   custom={direction}
                   variants={{
-                    enter: (dir: number) => ({ y: prefersReducedMotion ? 0 : `${dir * 110}%`, opacity: 0 }),
+                    enter: (dir: number) => ({
+                      y: prefersReducedMotion ? 0 : `${dir * 110}%`,
+                      opacity: 0,
+                    }),
                     center: { y: '0%', opacity: 1 },
-                    exit: (dir: number) => ({ y: prefersReducedMotion ? 0 : `${dir * -110}%`, opacity: 0 }),
+                    exit: (dir: number) => ({
+                      y: prefersReducedMotion ? 0 : `${dir * -110}%`,
+                      opacity: 0,
+                    }),
                   }}
                   initial="enter"
                   animate="center"
@@ -166,7 +173,7 @@ const MenuToggle = () => {
                   className="absolute inset-0 flex items-center truncate font-monument text-[15px] font-black uppercase leading-none tracking-tight"
                 >
                   {isOpen ? 'Menu' : SECTIONS[activeIndex].label}
-                </motion.span>
+                </m.span>
               </AnimatePresence>
             </div>
 
@@ -176,7 +183,7 @@ const MenuToggle = () => {
             >
               {toggleIcon}
             </button>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 

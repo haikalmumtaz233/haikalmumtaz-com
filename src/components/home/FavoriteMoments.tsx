@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
+import { m, useScroll, useTransform } from 'motion/react';
 import { moments } from '../../data/moments';
 import OptimizedImage from '../ui/OptimizedImage';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
@@ -50,16 +50,19 @@ const HorizontalMoments = () => {
 
   const getAlignmentClass = (alignment: 'start' | 'center' | 'end') => {
     switch (alignment) {
-      case 'start': return 'justify-start';
-      case 'center': return 'justify-center';
-      case 'end': return 'justify-end';
+      case 'start':
+        return 'justify-start';
+      case 'center':
+        return 'justify-center';
+      case 'end':
+        return 'justify-end';
     }
   };
 
-  const renderContent = (moment: typeof moments[0], imageSizeClass = moment.className) => {
+  const renderContent = (moment: (typeof moments)[0], imageSizeClass = moment.className) => {
     const textBlock = (
       <div className="space-y-1.5">
-        <p className="text-sm tabular-nums text-white/45">{moment.year}</p>
+        <p className="text-sm tabular-nums text-white/50">{moment.year}</p>
         <h3 className="text-lg font-semibold leading-tight text-white md:text-2xl 2xl:text-3xl">
           {moment.title}
         </h3>
@@ -68,7 +71,7 @@ const HorizontalMoments = () => {
 
     const imageBlock = (
       <div className={`relative overflow-hidden rounded-lg ${imageSizeClass} group`}>
-        <motion.div
+        <m.div
           className="w-full h-full"
           style={prefersReducedMotion ? undefined : { x: imageDrift, scale: 1.18 }}
         >
@@ -78,16 +81,31 @@ const HorizontalMoments = () => {
             className="w-full h-full object-cover transition-transform duration-700 ease-expo group-hover:scale-105"
             containerClassName="w-full h-full"
           />
-        </motion.div>
+        </m.div>
       </div>
     );
 
     if (moment.textPos === 'above') {
-      return <div className="flex flex-col gap-4 md:gap-6">{textBlock}{imageBlock}</div>;
+      return (
+        <div className="flex flex-col gap-4 md:gap-6">
+          {textBlock}
+          {imageBlock}
+        </div>
+      );
     } else if (moment.textPos === 'below') {
-      return <div className="flex flex-col gap-4 md:gap-6">{imageBlock}{textBlock}</div>;
+      return (
+        <div className="flex flex-col gap-4 md:gap-6">
+          {imageBlock}
+          {textBlock}
+        </div>
+      );
     } else {
-      return <div className="flex items-center gap-4 md:gap-8">{imageBlock}{textBlock}</div>;
+      return (
+        <div className="flex items-center gap-4 md:gap-8">
+          {imageBlock}
+          {textBlock}
+        </div>
+      );
     }
   };
 
@@ -130,7 +148,7 @@ const HorizontalMoments = () => {
       style={{ height: `calc(100vh + ${horizontalDistance}px)` }}
     >
       <div className="sticky top-0 h-screen overflow-hidden flex items-center">
-        <motion.div
+        <m.div
           ref={trackRef}
           style={{ x }}
           className="flex items-stretch gap-10 md:gap-16 lg:gap-24 2xl:gap-32 pl-5 sm:pl-8 lg:pl-12 min-[1320px]:pl-[calc((100vw-1320px)/2+3rem)] pr-12 md:pr-24 2xl:pr-32"
@@ -147,7 +165,7 @@ const HorizontalMoments = () => {
               {renderContent(moment)}
             </div>
           ))}
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

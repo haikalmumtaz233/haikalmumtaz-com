@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 import { moments } from '../../data/moments';
 import OptimizedImage from '../ui/OptimizedImage';
 import RuleReveal from '../../journey/RuleReveal';
@@ -16,7 +16,9 @@ const MomentsScatter = () => (
         className="font-monument font-black uppercase text-white tracking-tight leading-[0.95] text-[clamp(2.4rem,12vw,3.5rem)]"
       />
       <FadeIn>
-        <p className="mt-6 max-w-xs text-base text-white/55">Events, teams, and milestones since 2022.</p>
+        <p className="mt-6 max-w-xs text-base text-white/55">
+          Events, teams, and milestones since 2022.
+        </p>
       </FadeIn>
 
       <ol className="mt-14 flex flex-col">
@@ -24,7 +26,7 @@ const MomentsScatter = () => (
           const tilt = TILTS[index % TILTS.length];
           const isRight = index % 2 === 1;
           return (
-            <motion.li
+            <m.li
               key={moment.id}
               className={`relative w-[82%] ${isRight ? 'ml-auto' : 'mr-auto'} ${index > 0 ? 'mt-8' : ''}`}
               style={{ zIndex: index + 1 }}
@@ -52,7 +54,7 @@ const MomentsScatter = () => (
                   </span>
                 </figcaption>
               </figure>
-            </motion.li>
+            </m.li>
           );
         })}
       </ol>

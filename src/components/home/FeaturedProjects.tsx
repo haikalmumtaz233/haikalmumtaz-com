@@ -1,5 +1,12 @@
-import { useState, useMemo, useCallback, useEffect, useRef, type KeyboardEvent as ReactKeyboardEvent } from 'react';
-import { motion, AnimatePresence, type PanInfo } from 'motion/react';
+import {
+  useState,
+  useMemo,
+  useCallback,
+  useEffect,
+  useRef,
+  type KeyboardEvent as ReactKeyboardEvent,
+} from 'react';
+import { m, AnimatePresence, type PanInfo } from 'motion/react';
 import { useNavigate } from 'react-router';
 import { ArrowUpRight } from 'lucide-react';
 import { projects } from '../../data/projects';
@@ -44,7 +51,7 @@ const FeaturedProjects = () => {
           image.src = project.image;
         });
       },
-      { rootMargin: '600px 0px' }
+      { rootMargin: '600px 0px' },
     );
 
     observer.observe(section);
@@ -137,110 +144,121 @@ const FeaturedProjects = () => {
         {isMobile ? (
           <FeaturedDeck projects={featuredProjects} onOpen={setSelectedProject} />
         ) : (
-        <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-16">
-          <div className="lg:col-span-7 lg:order-2">
-            <div
-              id="featured-preview"
-              role="tabpanel"
-              aria-labelledby={`featured-tab-${currentIndex}`}
-              className="relative aspect-16/10"
-            >
-              <AnimatePresence initial={false} custom={direction} mode="popLayout">
-                <motion.div
-                  key={currentIndex}
-                  custom={direction}
-                  variants={previewVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={prefersReducedMotion ? { duration: 0.2 } : undefined}
-                  className="absolute inset-0"
-                  drag={prefersReducedMotion ? false : 'x'}
-                  dragConstraints={{ left: 0, right: 0 }}
-                  dragElastic={0.18}
-                  onDragEnd={handleDragEnd}
-                  style={{ touchAction: 'pan-y' }}
-                >
-                  <FeaturedCard project={activeProject} onClick={() => setSelectedProject(activeProject)} />
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            <div className="mt-5 flex items-start justify-between gap-6">
-              <ul className="flex flex-wrap gap-2" aria-label={`${activeProject.name} stack`}>
-                {activeProject.stack.slice(0, VISIBLE_STACK).map((tech) => (
-                  <li
-                    key={tech}
-                    className="rounded-full border border-white/10 px-3 py-1 text-[13px] text-white/70"
+          <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-16">
+            <div className="lg:col-span-7 lg:order-2">
+              <div
+                id="featured-preview"
+                role="tabpanel"
+                aria-labelledby={`featured-tab-${currentIndex}`}
+                className="relative aspect-16/10"
+              >
+                <AnimatePresence initial={false} custom={direction} mode="popLayout">
+                  <m.div
+                    key={currentIndex}
+                    custom={direction}
+                    variants={previewVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={prefersReducedMotion ? { duration: 0.2 } : undefined}
+                    className="absolute inset-0"
+                    drag={prefersReducedMotion ? false : 'x'}
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.18}
+                    onDragEnd={handleDragEnd}
+                    style={{ touchAction: 'pan-y' }}
                   >
-                    {tech}
-                  </li>
-                ))}
-              </ul>
-              <span className="shrink-0 pt-1 text-sm tabular-nums text-white/45">
-                {currentIndex + 1} / {featuredProjects.length}
-              </span>
-            </div>
-          </div>
-
-          <div
-            role="tablist"
-            aria-label="Featured projects"
-            aria-orientation="vertical"
-            onKeyDown={handleTabKeyDown}
-            className="border-b border-white/10 lg:col-span-5 lg:order-1"
-          >
-            {featuredProjects.map((project, index) => {
-              const isActive = index === currentIndex;
-              return (
-                <button
-                  key={project.id}
-                  ref={(node) => {
-                    tabRefs.current[index] = node;
-                  }}
-                  id={`featured-tab-${index}`}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  aria-controls="featured-preview"
-                  tabIndex={isActive ? 0 : -1}
-                  onClick={() => select(index)}
-                  className="group relative block w-full border-t border-white/10 py-5 text-left md:py-6"
-                >
-                  {isActive && (
-                    <motion.span
-                      layoutId={prefersReducedMotion ? undefined : 'featured-active-rule'}
-                      aria-hidden="true"
-                      className="absolute -top-px left-0 h-px w-full bg-white"
-                      transition={{ duration: 0.8, ease: easing.expo }}
+                    <FeaturedCard
+                      project={activeProject}
+                      onClick={() => setSelectedProject(activeProject)}
                     />
-                  )}
-                  <span
-                    className={`block font-monument text-lg font-black uppercase leading-tight tracking-tight transition-colors duration-500 sm:text-xl md:text-2xl ${
-                      isActive ? 'text-white' : 'text-white/35 group-hover:text-white/70'
-                    }`}
+                  </m.div>
+                </AnimatePresence>
+              </div>
+
+              <div className="mt-5 flex items-start justify-between gap-6">
+                <ul className="flex flex-wrap gap-2" aria-label={`${activeProject.name} stack`}>
+                  {activeProject.stack.slice(0, VISIBLE_STACK).map((tech) => (
+                    <li
+                      key={tech}
+                      className="rounded-full border border-white/10 px-3 py-1 text-[13px] text-white/70"
+                    >
+                      {tech}
+                    </li>
+                  ))}
+                </ul>
+                <span className="shrink-0 pt-1 text-sm tabular-nums text-white/50">
+                  {currentIndex + 1} / {featuredProjects.length}
+                </span>
+              </div>
+            </div>
+
+            <div
+              role="tablist"
+              aria-label="Featured projects"
+              aria-orientation="vertical"
+              onKeyDown={handleTabKeyDown}
+              className="border-b border-white/10 lg:col-span-5 lg:order-1"
+            >
+              {featuredProjects.map((project, index) => {
+                const isActive = index === currentIndex;
+                return (
+                  <button
+                    key={project.id}
+                    ref={(node) => {
+                      tabRefs.current[index] = node;
+                    }}
+                    id={`featured-tab-${index}`}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    aria-controls="featured-preview"
+                    tabIndex={isActive ? 0 : -1}
+                    onClick={() => select(index)}
+                    className="group relative block w-full border-t border-white/10 py-5 text-left md:py-6"
                   >
-                    {project.name}
-                  </span>
-                  <AnimatePresence initial={false}>
                     {isActive && (
-                      <motion.span
-                        className="block overflow-hidden"
-                        initial={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
-                        animate={prefersReducedMotion ? { opacity: 1 } : { height: 'auto', opacity: 1 }}
-                        exit={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
-                        transition={{ duration: 0.6, ease: easing.expo }}
-                      >
-                        <span className="block pt-3 text-[15px] text-white/65 md:text-base">{project.subtitle}</span>
-                        <span className="mt-1 block text-sm text-white/40">{project.category}</span>
-                      </motion.span>
+                      <m.span
+                        layoutId={prefersReducedMotion ? undefined : 'featured-active-rule'}
+                        aria-hidden="true"
+                        className="absolute -top-px left-0 h-px w-full bg-white"
+                        transition={{ duration: 0.8, ease: easing.expo }}
+                      />
                     )}
-                  </AnimatePresence>
-                </button>
-              );
-            })}
+                    <span
+                      className={`block font-monument text-lg font-black uppercase leading-tight tracking-tight transition-colors duration-500 sm:text-xl md:text-2xl ${
+                        isActive ? 'text-white' : 'text-white/35 group-hover:text-white/70'
+                      }`}
+                    >
+                      {project.name}
+                    </span>
+                    <AnimatePresence initial={false}>
+                      {isActive && (
+                        <m.span
+                          className="block overflow-hidden"
+                          initial={
+                            prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }
+                          }
+                          animate={
+                            prefersReducedMotion ? { opacity: 1 } : { height: 'auto', opacity: 1 }
+                          }
+                          exit={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
+                          transition={{ duration: 0.6, ease: easing.expo }}
+                        >
+                          <span className="block pt-3 text-[15px] text-white/65 md:text-base">
+                            {project.subtitle}
+                          </span>
+                          <span className="mt-1 block text-sm text-white/50">
+                            {project.category}
+                          </span>
+                        </m.span>
+                      )}
+                    </AnimatePresence>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
         )}
 
         <ProjectModal project={selectedProject} onClose={handleCloseModal} />

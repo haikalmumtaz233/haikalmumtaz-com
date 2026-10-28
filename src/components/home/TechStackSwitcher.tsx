@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { AnimatePresence, motion, stagger, type PanInfo } from 'motion/react';
+import { AnimatePresence, m, stagger, type PanInfo } from 'motion/react';
 import { techCategories } from '../../data/techStack';
 import TechIcon from '../ui/TechIcon';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
@@ -55,15 +55,19 @@ const TechStackSwitcher = () => {
                 }`}
               >
                 {isActive && (
-                  <motion.span
+                  <m.span
                     layoutId={prefersReducedMotion ? undefined : 'tech-chip'}
                     className="absolute inset-0 rounded-full bg-white"
                     transition={{ duration: 0.6, ease: easing.expo }}
                   />
                 )}
-                {!isActive && <span className="absolute inset-0 rounded-full border border-white/15" />}
+                {!isActive && (
+                  <span className="absolute inset-0 rounded-full border border-white/15" />
+                )}
                 <span className="relative">{item.title}</span>
-                <span className={`relative text-xs tabular-nums ${isActive ? 'text-black/50' : 'text-white/35'}`}>
+                <span
+                  className={`relative text-xs tabular-nums ${isActive ? 'text-black/60' : 'text-white/50'}`}
+                >
                   {item.items.length}
                 </span>
               </button>
@@ -72,7 +76,7 @@ const TechStackSwitcher = () => {
         </div>
       </div>
 
-      <motion.div
+      <m.div
         id="tech-stack-panel"
         role="tabpanel"
         aria-label={category.title}
@@ -84,7 +88,7 @@ const TechStackSwitcher = () => {
         style={{ touchAction: 'pan-y' }}
       >
         <AnimatePresence mode="popLayout" initial={false} custom={active.direction}>
-          <motion.ul
+          <m.ul
             key={category.title}
             custom={active.direction}
             className="grid grid-cols-3 gap-px bg-white/10"
@@ -98,12 +102,14 @@ const TechStackSwitcher = () => {
             }}
           >
             {category.items.map((tech) => (
-              <motion.li
+              <m.li
                 key={tech.name}
                 custom={active.direction}
                 variants={{
                   enter: (dir: number) =>
-                    prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: dir * 40, rotate: dir * 8, scale: 0.8 },
+                    prefersReducedMotion
+                      ? { opacity: 0 }
+                      : { opacity: 0, x: dir * 40, rotate: dir * 8, scale: 0.8 },
                   center: {
                     opacity: 1,
                     x: 0,
@@ -117,17 +123,19 @@ const TechStackSwitcher = () => {
                 <span className="flex h-9 w-9 items-center justify-center">
                   <TechIcon icon={tech.icon} name={tech.name} />
                 </span>
-                <span className="text-center text-[13px] leading-tight text-white/75">{tech.name}</span>
-              </motion.li>
+                <span className="text-center text-[13px] leading-tight text-white/75">
+                  {tech.name}
+                </span>
+              </m.li>
             ))}
             {Array.from({ length: (3 - (category.items.length % 3)) % 3 }, (_, index) => (
               <li key={`filler-${index}`} aria-hidden="true" className="bg-[#0d0b14]" />
             ))}
-          </motion.ul>
+          </m.ul>
         </AnimatePresence>
-      </motion.div>
+      </m.div>
 
-      <p className="mt-4 text-center text-sm text-white/40">Swipe the grid to switch areas</p>
+      <p className="mt-4 text-center text-sm text-white/50">Swipe the grid to switch areas</p>
     </div>
   );
 };

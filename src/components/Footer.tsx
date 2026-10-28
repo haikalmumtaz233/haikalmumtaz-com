@@ -21,7 +21,9 @@ const Footer = () => {
         <p className="text-sm text-white/50">
           &copy; {CURRENT_YEAR} {profile.name}
         </p>
-        <p className="order-3 w-full text-sm text-white/50 sm:order-0 sm:w-auto">{profile.location}</p>
+        <p className="order-3 w-full text-sm text-white/50 sm:order-0 sm:w-auto">
+          {profile.location}
+        </p>
         <button
           type="button"
           onClick={scrollToTop}

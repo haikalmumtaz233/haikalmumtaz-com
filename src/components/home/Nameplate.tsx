@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { motion, useTransform, type MotionValue } from 'motion/react';
+import { m, useTransform, type MotionValue } from 'motion/react';
 import { useFittedTextSize } from '../../hooks/useFittedTextSize';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { useIsMobile } from '../../hooks/useMediaQuery';
@@ -37,7 +37,8 @@ const useKerning = (enabled: boolean) => {
 
       const probe = document.createElement('span');
       probe.className = TYPE_CLASS;
-      probe.style.cssText = 'position:absolute;left:-99999px;top:0;visibility:hidden;font-size:100px';
+      probe.style.cssText =
+        'position:absolute;left:-99999px;top:0;visibility:hidden;font-size:100px';
       document.body.appendChild(probe);
 
       const widthOf = (text: string) => {
@@ -71,7 +72,7 @@ const liftFor = (index: number) => 70 + centrality(index) * 190;
 
 const WORDS = NAMEPLATE_TEXT.split(' ');
 const WORD_STARTS = WORDS.map((_, wordIndex) =>
-  WORDS.slice(0, wordIndex).reduce((total, word) => total + word.length + 1, 0)
+  WORDS.slice(0, wordIndex).reduce((total, word) => total + word.length + 1, 0),
 );
 
 interface NameplateProps {
@@ -94,7 +95,16 @@ interface LetterProps {
   scrollProgress: MotionValue<number>;
 }
 
-const Letter = ({ char, kern, delay, lift: liftDistance, fadeEnd, order, gate, scrollProgress }: LetterProps) => {
+const Letter = ({
+  char,
+  kern,
+  delay,
+  lift: liftDistance,
+  fadeEnd,
+  order,
+  gate,
+  scrollProgress,
+}: LetterProps) => {
   const lift = useTransform(scrollProgress, [0, 1], [0, liftDistance]);
   const fade = useTransform(scrollProgress, [0.05, fadeEnd], [1, 0]);
 
@@ -111,16 +121,20 @@ const Letter = ({ char, kern, delay, lift: liftDistance, fadeEnd, order, gate, s
       };
 
   return (
-    <motion.span className="inline-block" style={{ y: lift, opacity: fade, marginRight: `${kern}em` }}>
+    <m.span className="inline-block" style={{ y: lift, opacity: fade, marginRight: `${kern}em` }}>
       <span className="inline-block overflow-hidden align-top py-[0.08em] my-[-0.08em] px-[0.12em] mx-[-0.12em]">
-        <motion.span className="inline-block" {...reveal}>
+        <m.span className="inline-block" {...reveal}>
           {char.trim() && (
-            <span data-glyph-origin={char} aria-hidden="true" className="inline-block h-0 w-0 align-baseline" />
+            <span
+              data-glyph-origin={char}
+              aria-hidden="true"
+              className="inline-block h-0 w-0 align-baseline"
+            />
           )}
           {glyph(char)}
-        </motion.span>
+        </m.span>
       </span>
-    </motion.span>
+    </m.span>
   );
 };
 
@@ -145,14 +159,24 @@ const StackedWord = ({ word, wordIndex, kerning, gate, scrollProgress }: Stacked
         ref={measureRef}
         aria-hidden="true"
         className={TYPE_CLASS}
-        style={{ position: 'absolute', visibility: 'hidden', pointerEvents: 'none', fontSize: `${referenceFontSize}px`, left: -99999, top: 0 }}
+        style={{
+          position: 'absolute',
+          visibility: 'hidden',
+          pointerEvents: 'none',
+          fontSize: `${referenceFontSize}px`,
+          left: -99999,
+          top: 0,
+        }}
       >
         {word}
       </span>
       <span
         aria-hidden="true"
         className={`${TYPE_CLASS} block text-white text-center leading-[0.86]`}
-        style={{ fontSize: fittedSize > 0 ? `${fittedSize}px` : undefined, visibility: fittedSize > 0 ? 'visible' : 'hidden' }}
+        style={{
+          fontSize: fittedSize > 0 ? `${fittedSize}px` : undefined,
+          visibility: fittedSize > 0 ? 'visible' : 'hidden',
+        }}
       >
         {fittedSize > 0 &&
           letters.map((char, letterIndex) => {
@@ -162,8 +186,12 @@ const StackedWord = ({ word, wordIndex, kerning, gate, scrollProgress }: Stacked
               <Letter
                 key={letterIndex}
                 char={char}
-                kern={isLast ? 0 : kerning[start + letterIndex] ?? 0}
-                delay={NAMEPLATE_TIMING.riseDelay + wordIndex * 0.14 + spread * middle * NAMEPLATE_TIMING.riseStagger}
+                kern={isLast ? 0 : (kerning[start + letterIndex] ?? 0)}
+                delay={
+                  NAMEPLATE_TIMING.riseDelay +
+                  wordIndex * 0.14 +
+                  spread * middle * NAMEPLATE_TIMING.riseStagger
+                }
                 lift={direction * (50 + (1 - spread) * 150)}
                 fadeEnd={0.7 - (1 - spread) * 0.3}
                 order={start + letterIndex}
@@ -184,20 +212,36 @@ const StackedNameplate = ({ scrollProgress, gate }: NameplateProps & { gate: Int
 
   return (
     <h1 aria-label={NAMEPLATE_TEXT} className="relative w-full">
-      <StackedWord word={WORDS[0]} wordIndex={0} kerning={kerning} gate={gate} scrollProgress={scrollProgress} />
-      <motion.span
+      <StackedWord
+        word={WORDS[0]}
+        wordIndex={0}
+        kerning={kerning}
+        gate={gate}
+        scrollProgress={scrollProgress}
+      />
+      <m.span
         aria-hidden="true"
         className="relative my-[3vw] block h-px w-full"
         style={{ scaleX: ruleScale, opacity: ruleFade }}
       >
-        <motion.span
+        <m.span
           className="absolute inset-0 origin-center bg-white/80"
           initial={{ scaleX: 0 }}
           animate={{ scaleX: gate.ready ? 1 : 0 }}
-          transition={{ duration: 1.1, delay: gate.gated ? 0.3 : NAMEPLATE_TIMING.ruleDelay, ease: easing.wipe }}
+          transition={{
+            duration: 1.1,
+            delay: gate.gated ? 0.3 : NAMEPLATE_TIMING.ruleDelay,
+            ease: easing.wipe,
+          }}
         />
-      </motion.span>
-      <StackedWord word={WORDS[1]} wordIndex={1} kerning={kerning} gate={gate} scrollProgress={scrollProgress} />
+      </m.span>
+      <StackedWord
+        word={WORDS[1]}
+        wordIndex={1}
+        kerning={kerning}
+        gate={gate}
+        scrollProgress={scrollProgress}
+      />
     </h1>
   );
 };
@@ -267,7 +311,10 @@ const LinearNameplate = ({ scrollProgress, gate }: NameplateProps & { gate: Intr
                   key={index}
                   char={char}
                   kern={kerning[index] ?? 0}
-                  delay={NAMEPLATE_TIMING.riseDelay + Math.abs(index - CENTER) * NAMEPLATE_TIMING.riseStagger}
+                  delay={
+                    NAMEPLATE_TIMING.riseDelay +
+                    Math.abs(index - CENTER) * NAMEPLATE_TIMING.riseStagger
+                  }
                   lift={-liftFor(index)}
                   fadeEnd={0.75 - centrality(index) * 0.35}
                   order={index}
@@ -278,7 +325,7 @@ const LinearNameplate = ({ scrollProgress, gate }: NameplateProps & { gate: Intr
           </h1>
 
           {hasMeasured && (
-            <motion.span
+            <m.span
               aria-hidden="true"
               className="pointer-events-none absolute inset-x-0 bottom-[-0.06em] h-px bg-white/80"
               style={{ fontSize: `${fittedSize}px` }}

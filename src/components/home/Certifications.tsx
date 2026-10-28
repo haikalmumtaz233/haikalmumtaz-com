@@ -1,5 +1,11 @@
-import { useCallback, useRef, useState, useEffect, type KeyboardEvent as ReactKeyboardEvent } from 'react';
-import { animate, motion, useMotionValue } from 'motion/react';
+import {
+  useCallback,
+  useRef,
+  useState,
+  useEffect,
+  type KeyboardEvent as ReactKeyboardEvent,
+} from 'react';
+import { animate, m, useMotionValue } from 'motion/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { certifications, type Certification } from '../../data/certifications';
 import CertificationModal from './CertificationModal';
@@ -7,7 +13,6 @@ import OptimizedImage from '../ui/OptimizedImage';
 import SectionHeader from '../ui/SectionHeader';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { easing } from '../../lib/motion';
-import { activateOnEnterOrSpace } from '../../lib/keyboard';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import { useRailFocus } from '../../hooks/useRailFocus';
 
@@ -53,7 +58,8 @@ const Certifications = () => {
       const firstCard = slider.firstElementChild;
       const secondCard = firstCard?.nextElementSibling;
       if (!(firstCard instanceof HTMLElement)) setStep(0);
-      else if (secondCard instanceof HTMLElement) setStep(secondCard.offsetLeft - firstCard.offsetLeft);
+      else if (secondCard instanceof HTMLElement)
+        setStep(secondCard.offsetLeft - firstCard.offsetLeft);
       else setStep(firstCard.offsetWidth);
     };
 
@@ -69,14 +75,19 @@ const Certifications = () => {
   const slideTo = (nextOffset: number) => {
     const clamped = Math.min(maxOffset, Math.max(0, nextOffset));
     setOffset(clamped);
-    animate(x, -clamped, prefersReducedMotion ? { duration: 0 } : { duration: 0.9, ease: easing.expo });
+    animate(
+      x,
+      -clamped,
+      prefersReducedMotion ? { duration: 0 } : { duration: 0.9, ease: easing.expo },
+    );
   };
 
   const revealCard = (card: HTMLElement) => {
     const slider = sliderRef.current;
     const container = containerRef.current;
     const firstCard = slider?.firstElementChild;
-    if (!container || !(firstCard instanceof HTMLElement) || !card.matches(':focus-visible')) return;
+    if (!container || !(firstCard instanceof HTMLElement) || !card.matches(':has(:focus-visible)'))
+      return;
 
     const left = card.offsetLeft - firstCard.offsetLeft;
     const right = left + card.offsetWidth;
@@ -106,7 +117,9 @@ const Certifications = () => {
           title={['Certifications']}
           meta={
             <div className="flex items-center gap-4">
-              <span className="text-sm md:text-base text-white/55">{certifications.length} credentials</span>
+              <span className="text-sm md:text-base text-white/55">
+                {certifications.length} credentials
+              </span>
               <div className={isMobile ? 'hidden' : 'flex gap-2'}>
                 <button
                   type="button"
@@ -148,32 +161,41 @@ const Certifications = () => {
             </div>
           </div>
         ) : (
-        <div
-          ref={containerRef}
-          role="group"
-          aria-label="Certificates"
-          tabIndex={0}
-          onKeyDown={handleKeyDown}
-          className="rounded-lg"
-        >
-          <motion.div
-            ref={sliderRef}
-            className="flex cursor-grab gap-5 active:cursor-grabbing md:gap-8"
-            style={{ touchAction: 'pan-y', x }}
-            drag="x"
-            dragConstraints={{ right: 0, left: -maxOffset }}
-            onDragEnd={() => setOffset(-x.get())}
-            onDragTransitionEnd={() => setOffset(-x.get())}
+          <div
+            ref={containerRef}
+            role="group"
+            aria-label="Certificates"
+            tabIndex={0}
+            onKeyDown={handleKeyDown}
+            className="rounded-lg"
           >
-            {certifications.map((cert) => (
-              <CertificateCard key={cert.id} cert={cert} onCertClick={setSelectedCert} onFocusCard={revealCard} />
-            ))}
-          </motion.div>
-        </div>
+            <m.div
+              ref={sliderRef}
+              className="flex cursor-grab gap-5 active:cursor-grabbing md:gap-8"
+              style={{ touchAction: 'pan-y', x }}
+              drag="x"
+              dragConstraints={{ right: 0, left: -maxOffset }}
+              onDragEnd={() => setOffset(-x.get())}
+              onDragTransitionEnd={() => setOffset(-x.get())}
+            >
+              {certifications.map((cert) => (
+                <CertificateCard
+                  key={cert.id}
+                  cert={cert}
+                  onCertClick={setSelectedCert}
+                  onFocusCard={revealCard}
+                />
+              ))}
+            </m.div>
+          </div>
         )}
       </div>
 
-      <CertificationModal cert={selectedCert} isOpen={selectedCert !== null} onClose={() => setSelectedCert(null)} />
+      <CertificationModal
+        cert={selectedCert}
+        isOpen={selectedCert !== null}
+        onClose={() => setSelectedCert(null)}
+      />
     </section>
   );
 };
@@ -197,15 +219,8 @@ const CertificateCard = ({
       onPointerMove={(event) => {
         if (event.buttons > 0) dragRef.current = true;
       }}
-      onPointerUp={() => {
-        if (!dragRef.current) onCertClick(cert);
-      }}
-      onKeyDown={activateOnEnterOrSpace(() => onCertClick(cert))}
       onFocus={(event) => onFocusCard?.(event.currentTarget)}
-      role="button"
-      tabIndex={0}
-      aria-label={`View ${cert.title} certificate from ${cert.issuer}`}
-      className="group w-full cursor-pointer select-none md:w-[300px] md:shrink-0 lg:w-[340px]"
+      className="group relative w-full select-none md:w-[300px] md:shrink-0 lg:w-[340px]"
     >
       <div className="relative aspect-4/3 overflow-hidden rounded-lg border border-white/10 bg-white/4 transition-colors duration-500 group-hover:border-white/30">
         <OptimizedImage
@@ -216,10 +231,20 @@ const CertificateCard = ({
         />
       </div>
       <div className="mt-4 flex items-start justify-between gap-4">
-        <h3 className="text-base font-semibold leading-snug text-white line-clamp-2 md:text-[17px]">{cert.title}</h3>
-        <span className="pt-0.5 text-sm tabular-nums text-white/40">{cert.date}</span>
+        <h3 className="text-base font-semibold leading-snug text-white line-clamp-2 md:text-[17px]">
+          {cert.title}
+        </h3>
+        <span className="pt-0.5 text-sm tabular-nums text-white/50">{cert.date}</span>
       </div>
       <p className="mt-1 text-sm text-white/50 line-clamp-1">{cert.issuer}</p>
+      <button
+        type="button"
+        onClick={(event) => {
+          if (event.detail === 0 || !dragRef.current) onCertClick(cert);
+        }}
+        aria-label={`View ${cert.title} certificate from ${cert.issuer}`}
+        className="absolute inset-0 rounded-lg"
+      />
     </article>
   );
 };

@@ -1,6 +1,6 @@
 import { useRef, type ReactNode } from 'react';
 import {
-  motion,
+  m,
   useAnimationFrame,
   useInView,
   useMotionValue,
@@ -54,12 +54,16 @@ const Marquee = ({ children }: { children: ReactNode }) => {
         WebkitMaskImage: 'linear-gradient(to right, transparent, #000 12%, #000 88%, transparent)',
         maskImage: 'linear-gradient(to right, transparent, #000 12%, #000 88%, transparent)',
       }}
-      onPointerEnter={() => { hoverTarget.current = HOVER_SPEED; }}
-      onPointerLeave={() => { hoverTarget.current = 1; }}
+      onPointerEnter={() => {
+        hoverTarget.current = HOVER_SPEED;
+      }}
+      onPointerLeave={() => {
+        hoverTarget.current = 1;
+      }}
     >
-      <motion.div className="flex shrink-0" style={{ x }}>
+      <m.div className="flex shrink-0" style={{ x }}>
         {children}
-      </motion.div>
+      </m.div>
     </div>
   );
 };
@@ -90,9 +94,12 @@ const Tools = () => {
   return (
     <section className="relative overflow-hidden pb-24 md:pb-32 2xl:pb-40">
       <div className="shell">
-        <FadeIn delay={0.1} className="mb-6 flex items-baseline justify-between gap-4 border-t border-white/15 pt-5 md:mb-8">
+        <FadeIn
+          delay={0.1}
+          className="mb-6 flex items-baseline justify-between gap-4 border-t border-white/15 pt-5 md:mb-8"
+        >
           <h3 className="text-base font-semibold text-white md:text-lg">Everyday tools</h3>
-          <span className="text-sm tabular-nums text-white/40">{tools.length}</span>
+          <span className="text-sm tabular-nums text-white/50">{tools.length}</span>
         </FadeIn>
       </div>
 

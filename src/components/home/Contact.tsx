@@ -1,23 +1,27 @@
 import { useState, useEffect, useRef, type ChangeEvent, type FormEvent } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from 'motion/react';
 import { ArrowUpRight, Mail, CircleCheck, CircleX, X } from 'lucide-react';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import RuleReveal from '../../journey/RuleReveal';
 import FadeIn from '../../journey/FadeIn';
 import { easing } from '../../lib/motion';
 import { profile, socialProfiles } from '../../data/profile';
+import { MAX_MESSAGE_LENGTH, MAX_NAME_LENGTH, findContactError } from '../../lib/contactForm';
 import BrandIcon from '../ui/BrandIcon';
 
 declare global {
   interface Window {
     turnstile?: {
-      render: (container: HTMLElement, options: {
-        sitekey: string;
-        callback: (token: string) => void;
-        'expired-callback'?: () => void;
-        'error-callback'?: () => void;
-        theme?: 'light' | 'dark' | 'auto';
-      }) => string;
+      render: (
+        container: HTMLElement,
+        options: {
+          sitekey: string;
+          callback: (token: string) => void;
+          'expired-callback'?: () => void;
+          'error-callback'?: () => void;
+          theme?: 'light' | 'dark' | 'auto';
+        },
+      ) => string;
       reset: (widgetId: string) => void;
       remove: (widgetId: string) => void;
     };
@@ -28,11 +32,6 @@ declare global {
 const TURNSTILE_SCRIPT_ID = 'turnstile-script';
 const TURNSTILE_SRC =
   'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback';
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_REGEX = /^[\d\s+\-()]{10,}$/;
-const MAX_MESSAGE_LENGTH = 2000;
-const MAX_NAME_LENGTH = 50;
 
 const EMPTY_FORM = { firstName: '', lastName: '', email: '', phone: '', message: '', honeypot: '' };
 
@@ -45,7 +44,7 @@ interface Toast {
 }
 
 const inputClass =
-  'w-full bg-transparent border-b border-white/20 py-2 text-[15px] text-white caret-purple-300 placeholder:text-white/30 focus:border-white focus:outline-hidden transition-colors';
+  'w-full bg-transparent border-b border-white/20 py-2 text-[15px] text-white caret-purple-300 placeholder:text-white/50 focus:border-white focus:outline-hidden transition-colors';
 
 const labelClass = 'text-sm text-white/60';
 
@@ -83,7 +82,7 @@ const Contact = () => {
         setIsNearby(true);
         observer.disconnect();
       },
-      { rootMargin: '800px 0px' }
+      { rootMargin: '800px 0px' },
     );
 
     observer.observe(section);
@@ -179,33 +178,9 @@ const Contact = () => {
       const phone = sanitize(formData.phone);
       const message = sanitize(formData.message);
 
-      if (firstName.length === 0 || lastName.length === 0) {
-        addToast('error', 'Enter your first and last name.');
-        return;
-      }
-
-      if (firstName.length > MAX_NAME_LENGTH || lastName.length > MAX_NAME_LENGTH) {
-        addToast('error', `Shorten the name to ${MAX_NAME_LENGTH} characters each.`);
-        return;
-      }
-
-      if (!EMAIL_REGEX.test(email)) {
-        addToast('error', 'Enter a valid email address, like name@example.com.');
-        return;
-      }
-
-      if (phone && !PHONE_REGEX.test(phone)) {
-        addToast('error', 'Use only numbers, spaces, +, (), or - in the phone number.');
-        return;
-      }
-
-      if (message.length === 0) {
-        addToast('error', 'Write a message before sending.');
-        return;
-      }
-
-      if (message.length > MAX_MESSAGE_LENGTH) {
-        addToast('error', `Shorten the message to ${MAX_MESSAGE_LENGTH} characters.`);
+      const error = findContactError({ firstName, lastName, email, phone, message });
+      if (error) {
+        addToast('error', error);
         return;
       }
 
@@ -220,7 +195,7 @@ const Contact = () => {
           message,
           time: new Date().toLocaleString(),
         },
-        { publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY }
+        { publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY },
       );
 
       addToast('success', "Message sent. I'll reply to your email soon.");
@@ -250,14 +225,16 @@ const Contact = () => {
       >
         <AnimatePresence>
           {toasts.map((toast) => (
-            <motion.div
+            <m.div
               key={toast.id}
               initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: 100, scale: 0.9 }}
               animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, x: 0, scale: 1 }}
               exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: 100, scale: 0.9 }}
               transition={{ duration: 0.3, ease: easing.smooth }}
               className={`flex items-center gap-3 rounded-xl border bg-[#09080e]/90 px-4 py-3 ${
-                toast.type === 'success' ? 'border-emerald-500/30 text-emerald-300' : 'border-red-500/30 text-red-300'
+                toast.type === 'success'
+                  ? 'border-emerald-500/30 text-emerald-300'
+                  : 'border-red-500/30 text-red-300'
               }`}
             >
               {toast.type === 'success' ? (
@@ -274,7 +251,7 @@ const Contact = () => {
               >
                 <X className="h-4 w-4" />
               </button>
-            </motion.div>
+            </m.div>
           ))}
         </AnimatePresence>
       </div>
@@ -289,7 +266,8 @@ const Contact = () => {
 
             <FadeIn>
               <p className="mt-6 max-w-md text-base text-white/60 md:mt-8 2xl:text-lg">
-                Have a project in mind or just want to say hi? I'm always open to new projects and opportunities.
+                Have a project in mind or just want to say hi? I'm always open to new projects and
+                opportunities.
               </p>
 
               <div className="mt-8 space-y-6 md:mt-10">
@@ -326,7 +304,9 @@ const Contact = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <div className="grid gap-2">
-                    <label htmlFor="contact-first-name" className={labelClass}>First name</label>
+                    <label htmlFor="contact-first-name" className={labelClass}>
+                      First name
+                    </label>
                     <input
                       type="text"
                       id="contact-first-name"
@@ -341,7 +321,9 @@ const Contact = () => {
                     />
                   </div>
                   <div className="grid gap-2">
-                    <label htmlFor="contact-last-name" className={labelClass}>Last name</label>
+                    <label htmlFor="contact-last-name" className={labelClass}>
+                      Last name
+                    </label>
                     <input
                       type="text"
                       id="contact-last-name"
@@ -359,7 +341,9 @@ const Contact = () => {
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <div className="grid gap-2">
-                    <label htmlFor="contact-email" className={labelClass}>Email</label>
+                    <label htmlFor="contact-email" className={labelClass}>
+                      Email
+                    </label>
                     <input
                       type="email"
                       id="contact-email"
@@ -374,7 +358,7 @@ const Contact = () => {
                   </div>
                   <div className="grid gap-2">
                     <label htmlFor="contact-phone" className={labelClass}>
-                      Phone <span className="text-white/35">(optional)</span>
+                      Phone <span className="text-white/50">(optional)</span>
                     </label>
                     <input
                       type="tel"
@@ -392,8 +376,10 @@ const Contact = () => {
 
                 <div className="grid gap-2">
                   <div className="flex items-baseline justify-between">
-                    <label htmlFor="contact-message" className={labelClass}>Message</label>
-                    <span className="text-xs tabular-nums text-white/35">
+                    <label htmlFor="contact-message" className={labelClass}>
+                      Message
+                    </label>
+                    <span className="text-xs tabular-nums text-white/50">
                       {formData.message.length}/{MAX_MESSAGE_LENGTH}
                     </span>
                   </div>
@@ -424,7 +410,9 @@ const Contact = () => {
                 <div>
                   <div ref={turnstileRef} className="flex min-h-[65px] justify-center" />
                   {turnstileError && (
-                    <p className="mt-2 text-center text-sm text-red-300">Complete the security check to send.</p>
+                    <p className="mt-2 text-center text-sm text-red-300">
+                      Complete the security check to send.
+                    </p>
                   )}
                 </div>
 
