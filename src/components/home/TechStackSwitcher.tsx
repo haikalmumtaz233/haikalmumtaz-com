@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { AnimatePresence, motion, type PanInfo } from 'framer-motion';
+import { AnimatePresence, motion, stagger, type PanInfo } from 'motion/react';
 import { techCategories } from '../../data/techStack';
 import TechIcon from '../ui/TechIcon';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
@@ -93,7 +93,7 @@ const TechStackSwitcher = () => {
             exit="exit"
             variants={{
               enter: { opacity: 1 },
-              center: { opacity: 1, transition: { staggerChildren: 0.04 } },
+              center: { opacity: 1, transition: { delayChildren: stagger(0.04) } },
               exit: { opacity: 0, transition: { duration: 0.25 } },
             }}
           >

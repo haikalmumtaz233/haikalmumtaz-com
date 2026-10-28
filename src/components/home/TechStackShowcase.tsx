@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FocusEvent, type KeyboardEvent, type PointerEvent } from 'react';
-import { AnimatePresence, motion, useInView } from 'framer-motion';
+import { AnimatePresence, motion, stagger, useInView } from 'motion/react';
 import { techCategories } from '../../data/techStack';
 import TechIcon from '../ui/TechIcon';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
@@ -184,7 +184,7 @@ const TechStackShowcase = () => {
               exit="exit"
               variants={{
                 hidden: {},
-                visible: { transition: { staggerChildren: 0.045 } },
+                visible: { transition: { delayChildren: stagger(0.045) } },
                 exit: { opacity: 0, transition: { duration: 0.18 } },
               }}
             >

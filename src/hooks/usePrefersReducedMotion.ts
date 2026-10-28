@@ -1,3 +1,3 @@
-import { useReducedMotion } from 'framer-motion';
+import { useReducedMotion } from 'motion/react';
 
 export const usePrefersReducedMotion = (): boolean => useReducedMotion() ?? false;

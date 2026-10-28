@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState, useEffect, type KeyboardEvent as ReactKeyboardEvent } from 'react';
-import { animate, motion, useMotionValue } from 'framer-motion';
+import { animate, motion, useMotionValue } from 'motion/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { certifications, type Certification } from '../../data/certifications';
 import CertificationModal from './CertificationModal';

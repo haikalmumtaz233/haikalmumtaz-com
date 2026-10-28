@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { projects } from '../../data/projects';
 import type { Project } from '../../data/projects';
 import ProjectCard from './ProjectCard';

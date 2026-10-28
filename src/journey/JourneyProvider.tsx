@@ -1,5 +1,5 @@
 import { useMemo, type ReactNode } from 'react';
-import { useScroll } from 'framer-motion';
+import { useScroll } from 'motion/react';
 import { JourneyContext, type JourneyValue } from './useJourney';
 
 const JourneyProvider = ({ children }: { children: ReactNode }) => {

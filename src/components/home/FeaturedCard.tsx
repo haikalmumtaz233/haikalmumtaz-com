@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import type { Project } from '../../data/projects';
 import OptimizedImage from '../ui/OptimizedImage';
 import { activateOnEnterOrSpace } from '../../lib/keyboard';

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useMotionValueEvent, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValueEvent, useScroll, useTransform } from 'motion/react';
 import { ArrowDownRight } from 'lucide-react';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { animatedProps, easing } from '../../lib/motion';

@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { moments } from '../../data/moments';
 import OptimizedImage from '../ui/OptimizedImage';
 import RuleReveal from '../../journey/RuleReveal';

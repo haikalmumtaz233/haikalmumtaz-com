@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform, useVelocity } from 'framer-motion';
+import { motion, useScroll, useTransform, useVelocity } from 'motion/react';
 import { useRef } from 'react';
 
 const Identity = () => {

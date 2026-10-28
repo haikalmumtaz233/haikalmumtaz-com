@@ -8,7 +8,7 @@ import {
   useSpring,
   useTransform,
   useVelocity,
-} from 'framer-motion';
+} from 'motion/react';
 import { tools } from '../../data/tools';
 import TechIcon from '../ui/TechIcon';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';

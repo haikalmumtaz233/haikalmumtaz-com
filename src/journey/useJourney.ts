@@ -1,5 +1,5 @@
 import { createContext, use } from 'react';
-import type { MotionValue } from 'framer-motion';
+import type { MotionValue } from 'motion/react';
 
 export interface JourneyValue {
     scrollY: MotionValue<number>;
