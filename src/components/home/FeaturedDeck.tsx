@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import type { Project } from '../../data/projects';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { activateOnEnterOrSpace } from '../../lib/keyboard';
@@ -35,8 +35,8 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
     if (!rail) return;
     cancelAnimationFrame(frameRef.current);
     frameRef.current = requestAnimationFrame(() => {
-      const card = rail.firstElementChild?.nextElementSibling as HTMLElement | null;
-      const step = card ? card.offsetWidth + 16 : rail.clientWidth;
+      const card = rail.firstElementChild?.nextElementSibling;
+      const step = card instanceof HTMLElement ? card.offsetWidth + 16 : rail.clientWidth;
       const index = Math.round(rail.scrollLeft / step);
       setActiveIndex(Math.min(projects.length - 1, Math.max(0, index)));
     });
@@ -44,8 +44,8 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
 
   const scrollToCard = (index: number) => {
     const rail = railRef.current;
-    const card = rail?.children[index + 1] as HTMLElement | undefined;
-    if (!rail || !card) return;
+    const card = rail?.children.item(index + 1);
+    if (!rail || !(card instanceof HTMLElement)) return;
     rail.scrollTo({
       left: card.offsetLeft - (rail.clientWidth - card.offsetWidth) / 2,
       behavior: prefersReducedMotion ? 'auto' : 'smooth',
@@ -65,7 +65,7 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 1.2, ease: easing.expo }}
       >
-        <div aria-hidden="true" className="w-[calc(14vw-1rem)] flex-shrink-0" />
+        <div aria-hidden="true" className="w-[calc(14vw-1rem)] shrink-0" />
         {projects.map((project, index) => (
           <article
             key={project.id}
@@ -77,7 +77,7 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
             aria-label={`Open details for ${project.name}`}
             data-rail-card
             style={{ transformOrigin: '50% 120%' }}
-            className="relative aspect-[4/5] w-[72vw] max-w-[360px] flex-shrink-0 snap-center overflow-hidden rounded-[28px] border border-white/10 bg-[#141220] active:brightness-90"
+            className="relative aspect-4/5 w-[72vw] max-w-[360px] shrink-0 snap-center overflow-hidden rounded-[28px] border border-white/10 bg-[#141220] active:brightness-90"
           >
             <div className="absolute inset-0 overflow-hidden">
               <img
@@ -90,7 +90,7 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
                 className="h-full w-full object-cover"
               />
             </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-[#09080e] via-[#09080e]/55 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-[#09080e] via-[#09080e]/55 to-transparent" />
             <div
               className="absolute inset-x-0 top-0 h-1/3 opacity-60"
               style={{ background: `radial-gradient(80% 100% at 0% 0%, ${project.accentColor}66, transparent 70%)` }}
@@ -101,7 +101,7 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
             </span>
 
             <div className="absolute inset-x-0 bottom-0 p-5">
-              <h3 className="font-monument text-[clamp(1.6rem,8.5vw,2.25rem)] font-black uppercase leading-[0.92] tracking-tight text-white [overflow-wrap:anywhere]">
+              <h3 className="font-monument text-[clamp(1.6rem,8.5vw,2.25rem)] font-black uppercase leading-[0.92] tracking-tight text-white wrap-anywhere">
                 {project.name}
               </h3>
               <p className="mt-3 text-[15px] text-white/75">{project.subtitle}</p>
@@ -112,7 +112,7 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
             </div>
           </article>
         ))}
-        <div aria-hidden="true" className="w-[calc(14vw-1rem)] flex-shrink-0" />
+        <div aria-hidden="true" className="w-[calc(14vw-1rem)] shrink-0" />
       </motion.div>
 
       <div className="flex items-center justify-between gap-6 px-5 sm:px-8">

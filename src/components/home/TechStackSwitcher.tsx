@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { AnimatePresence, motion, type PanInfo } from 'framer-motion';
+import { AnimatePresence, motion, stagger, type PanInfo } from 'motion/react';
 import { techCategories } from '../../data/techStack';
 import TechIcon from '../ui/TechIcon';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
@@ -50,7 +50,7 @@ const TechStackSwitcher = () => {
                 aria-selected={isActive}
                 aria-controls="tech-stack-panel"
                 onClick={() => select(index)}
-                className={`relative flex flex-shrink-0 snap-center items-center gap-2 rounded-full px-4 py-2.5 text-[15px] font-medium transition-colors duration-500 ${
+                className={`relative flex shrink-0 snap-center items-center gap-2 rounded-full px-4 py-2.5 text-[15px] font-medium transition-colors duration-500 ${
                   isActive ? 'text-black' : 'text-white/65'
                 }`}
               >
@@ -93,7 +93,7 @@ const TechStackSwitcher = () => {
             exit="exit"
             variants={{
               enter: { opacity: 1 },
-              center: { opacity: 1, transition: { staggerChildren: 0.04 } },
+              center: { opacity: 1, transition: { delayChildren: stagger(0.04) } },
               exit: { opacity: 0, transition: { duration: 0.25 } },
             }}
           >

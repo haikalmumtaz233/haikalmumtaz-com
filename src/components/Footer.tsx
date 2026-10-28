@@ -2,25 +2,26 @@ import { ArrowUp } from 'lucide-react';
 import { useLenis } from 'lenis/react';
 import { profile } from '../data/profile';
 
+const CURRENT_YEAR = new Date().getFullYear();
+
 const Footer = () => {
   const lenis = useLenis();
-  const currentYear = new Date().getFullYear();
 
   const scrollToTop = () => {
     if (lenis) {
       lenis.scrollTo(0);
       return;
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0 });
   };
 
   return (
     <footer className="relative border-t border-white/10 bg-[#09080e]">
       <div className="shell flex flex-wrap items-center justify-between gap-x-10 gap-y-4 pt-8 pb-28 md:py-10">
         <p className="text-sm text-white/50">
-          &copy; {currentYear} {profile.name}
+          &copy; {CURRENT_YEAR} {profile.name}
         </p>
-        <p className="order-3 w-full text-sm text-white/50 sm:order-none sm:w-auto">{profile.location}</p>
+        <p className="order-3 w-full text-sm text-white/50 sm:order-0 sm:w-auto">{profile.location}</p>
         <button
           type="button"
           onClick={scrollToTop}

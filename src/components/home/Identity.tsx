@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform, useVelocity } from 'framer-motion';
+import { motion, useScroll, useTransform, useVelocity } from 'motion/react';
 import { useRef } from 'react';
 
 const Identity = () => {
@@ -26,9 +26,9 @@ const Identity = () => {
 
   return (
     <section ref={targetRef} className="relative bg-white py-10 overflow-hidden">
-      <div className="absolute left-0 top-0 bottom-0 w-32 md:w-48 bg-gradient-to-r from-white via-white/80 to-transparent z-10 pointer-events-none" />
+      <div className="absolute left-0 top-0 bottom-0 w-32 md:w-48 bg-linear-to-r from-white via-white/80 to-transparent z-10 pointer-events-none" />
 
-      <div className="absolute right-0 top-0 bottom-0 w-32 md:w-48 bg-gradient-to-l from-white via-white/80 to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-32 md:w-48 bg-linear-to-l from-white via-white/80 to-transparent z-10 pointer-events-none" />
 
       <motion.div
         className="flex items-center"
@@ -46,7 +46,7 @@ const Identity = () => {
           className="flex items-center gap-8 md:gap-12 pr-8 md:pr-12"
         >
           {duplicatedIdentities.map((identity, index) => (
-            <div key={index} className="flex items-center gap-8 md:gap-12 flex-shrink-0">
+            <div key={index} className="flex items-center gap-8 md:gap-12 shrink-0">
               <span className="text-3xl md:text-5xl font-black uppercase tracking-tighter whitespace-nowrap text-black">
                 {identity.text}
               </span>

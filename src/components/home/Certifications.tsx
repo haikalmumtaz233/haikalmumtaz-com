@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState, useEffect, type KeyboardEvent as ReactKeyboardEvent } from 'react';
-import { animate, motion, useMotionValue } from 'framer-motion';
+import { animate, motion, useMotionValue } from 'motion/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { certifications, type Certification } from '../../data/certifications';
 import CertificationModal from './CertificationModal';
@@ -50,11 +50,11 @@ const Certifications = () => {
         x.set(-nextMaxOffset);
         setOffset(nextMaxOffset);
       }
-      const firstCard = slider.firstElementChild as HTMLElement | null;
-      const secondCard = firstCard?.nextElementSibling as HTMLElement | null;
-      setStep(
-        firstCard && secondCard ? secondCard.offsetLeft - firstCard.offsetLeft : firstCard?.offsetWidth ?? 0
-      );
+      const firstCard = slider.firstElementChild;
+      const secondCard = firstCard?.nextElementSibling;
+      if (!(firstCard instanceof HTMLElement)) setStep(0);
+      else if (secondCard instanceof HTMLElement) setStep(secondCard.offsetLeft - firstCard.offsetLeft);
+      else setStep(firstCard.offsetWidth);
     };
 
     measure();
@@ -75,8 +75,8 @@ const Certifications = () => {
   const revealCard = (card: HTMLElement) => {
     const slider = sliderRef.current;
     const container = containerRef.current;
-    const firstCard = slider?.firstElementChild as HTMLElement | null;
-    if (!container || !firstCard || !card.matches(':focus-visible')) return;
+    const firstCard = slider?.firstElementChild;
+    if (!container || !(firstCard instanceof HTMLElement) || !card.matches(':focus-visible')) return;
 
     const left = card.offsetLeft - firstCard.offsetLeft;
     const right = left + card.offsetWidth;
@@ -141,7 +141,7 @@ const Certifications = () => {
               className="snap-rail relative flex gap-4 overflow-x-auto px-[10vw] pb-4"
             >
               {certifications.map((cert) => (
-                <div key={cert.id} data-rail-card className="w-[80vw] flex-shrink-0 snap-center">
+                <div key={cert.id} data-rail-card className="w-[80vw] shrink-0 snap-center">
                   <CertificateCard cert={cert} onCertClick={setSelectedCert} />
                 </div>
               ))}
@@ -205,9 +205,9 @@ const CertificateCard = ({
       role="button"
       tabIndex={0}
       aria-label={`View ${cert.title} certificate from ${cert.issuer}`}
-      className="group w-full cursor-pointer select-none md:w-[300px] md:flex-shrink-0 lg:w-[340px]"
+      className="group w-full cursor-pointer select-none md:w-[300px] md:shrink-0 lg:w-[340px]"
     >
-      <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-white/10 bg-white/[0.04] transition-colors duration-500 group-hover:border-white/30">
+      <div className="relative aspect-4/3 overflow-hidden rounded-lg border border-white/10 bg-white/4 transition-colors duration-500 group-hover:border-white/30">
         <OptimizedImage
           src={cert.image}
           alt=""

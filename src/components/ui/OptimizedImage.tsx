@@ -4,7 +4,6 @@ interface OptimizedImageProps {
   src: string;
   alt: string;
   className?: string;
-  blurClassName?: string;
   containerClassName?: string;
   eager?: boolean;
 }
@@ -13,7 +12,6 @@ const OptimizedImage = memo(({
   src,
   alt,
   className = '',
-  blurClassName = '',
   containerClassName = '',
   eager = false,
 }: OptimizedImageProps) => {
@@ -45,7 +43,7 @@ const OptimizedImage = memo(({
   return (
     <div ref={containerRef} className={`relative overflow-hidden ${containerClassName}`}>
       <div
-        className={`absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900 ${blurClassName} ${
+        className={`absolute inset-0 bg-linear-to-br from-slate-800 to-slate-900 ${
           isLoaded ? 'opacity-0' : 'opacity-100'
         } transition-opacity duration-500 pointer-events-none`}
       />
@@ -58,9 +56,7 @@ const OptimizedImage = memo(({
           decoding="async"
           draggable={false}
           onLoad={() => setIsLoaded(true)}
-          className={`${className} ${
-            isLoaded ? 'opacity-100' : 'opacity-0'
-          } transition-opacity duration-500`}
+          className={className}
         />
       )}
     </div>

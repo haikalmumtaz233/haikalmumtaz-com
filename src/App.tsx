@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router';
 import { ReactLenis, useLenis } from 'lenis/react';
 import type Lenis from 'lenis';
 import MenuToggle from './components/MenuToggle';
@@ -77,7 +77,7 @@ function AppShell() {
       <ScrollManager />
       <div className="min-h-screen flex flex-col">
         <MenuToggle />
-        <main className="flex-grow">
+        <main className="grow">
           <ErrorBoundary key={pathname}>
             <Suspense fallback={<div className="min-h-[60vh]" />}>
               <Routes>

@@ -1,4 +1,4 @@
-import { AnimatePresence, motion, useScroll, useSpring } from 'framer-motion';
+import { AnimatePresence, motion, useScroll, useSpring } from 'motion/react';
 import { useRef, useState } from 'react';
 import { Plus } from 'lucide-react';
 import { experiences, type Experience as ExperienceEntry } from '../../data/experience';

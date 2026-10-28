@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FocusEvent, type KeyboardEvent, type PointerEvent } from 'react';
-import { AnimatePresence, motion, useInView } from 'framer-motion';
+import { AnimatePresence, motion, stagger, useInView } from 'motion/react';
 import { techCategories } from '../../data/techStack';
 import TechIcon from '../ui/TechIcon';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
@@ -15,7 +15,7 @@ const TechStackShowcase = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const hoverTimer = useRef<number>();
+  const hoverTimer = useRef<number | undefined>(undefined);
   const isInView = useInView(containerRef, { amount: 0.4 });
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -51,7 +51,8 @@ const TechStackShowcase = () => {
   };
 
   const handleBlur = (event: FocusEvent<HTMLDivElement>) => {
-    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setHasFocusWithin(false);
+    const next = event.relatedTarget;
+    if (!(next instanceof Node) || !event.currentTarget.contains(next)) setHasFocusWithin(false);
   };
 
   const handleStagePointerMove = (event: PointerEvent<HTMLDivElement>) => {
@@ -94,10 +95,10 @@ const TechStackShowcase = () => {
               onClick={() => setActiveIndex(index)}
               onPointerEnter={() => scheduleSelect(index)}
               onPointerLeave={cancelSelect}
-              className="group relative flex items-baseline gap-5 border-b border-white/10 py-4 text-left outline-none focus-visible:bg-white/[0.04] 2xl:py-5"
+              className="group relative flex items-baseline gap-5 border-b border-white/10 py-4 text-left outline-hidden focus-visible:bg-white/4 2xl:py-5"
             >
               <span
-                className={`w-6 flex-shrink-0 font-mono text-xs tabular-nums transition-colors duration-500 ${
+                className={`w-6 shrink-0 font-mono text-xs tabular-nums transition-colors duration-500 ${
                   isActive ? 'text-white/70' : 'text-white/30'
                 }`}
               >
@@ -161,7 +162,7 @@ const TechStackShowcase = () => {
           <motion.span
             key={category.title}
             aria-hidden="true"
-            className="pointer-events-none absolute -bottom-[0.18em] left-5 whitespace-nowrap font-monument text-[clamp(3.5rem,8vw,7.5rem)] font-black uppercase leading-none text-white/[0.035] lg:left-7"
+            className="pointer-events-none absolute bottom-[-0.18em] left-5 whitespace-nowrap font-monument text-[clamp(3.5rem,8vw,7.5rem)] font-black uppercase leading-none text-white/[0.035] lg:left-7"
             initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: '40%' }}
             animate={{ opacity: 1, y: 0, transition: { duration: 0.9, ease: easing.expo } }}
             exit={{ opacity: 0, transition: { duration: 0.3 } }}
@@ -184,7 +185,7 @@ const TechStackShowcase = () => {
               exit="exit"
               variants={{
                 hidden: {},
-                visible: { transition: { staggerChildren: 0.045 } },
+                visible: { transition: { delayChildren: stagger(0.045) } },
                 exit: { opacity: 0, transition: { duration: 0.18 } },
               }}
             >
@@ -195,7 +196,7 @@ const TechStackShowcase = () => {
                     hidden: prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 18, scale: 0.92 },
                     visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.7, ease: easing.expo } },
                   }}
-                  className="group/tile flex aspect-[4/3] flex-col lg:aspect-square items-center justify-center gap-3 rounded-2xl border border-white/[0.07] bg-white/[0.02] px-2 transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.05]"
+                  className="group/tile flex aspect-4/3 flex-col lg:aspect-square items-center justify-center gap-3 rounded-2xl border border-white/[0.07] bg-white/2 px-2 transition-colors duration-300 hover:border-white/25 hover:bg-white/5"
                 >
                   <span className="flex h-10 w-10 items-center justify-center transition-transform duration-500 ease-expo group-hover/tile:-rotate-6 group-hover/tile:scale-110 lg:h-12 lg:w-12 2xl:h-14 2xl:w-14">
                     <TechIcon icon={tech.icon} name={tech.name} />

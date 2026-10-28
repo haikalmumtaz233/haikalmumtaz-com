@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { ArrowUpRight } from 'lucide-react';
 import type { Project } from '../../data/projects';
 import OptimizedImage from '../ui/OptimizedImage';
@@ -24,14 +24,9 @@ const ProjectCard = memo(({ project, onClick }: ProjectCardProps) => {
       tabIndex={0}
       aria-label={`Open details for ${project.name}`}
       className="group relative cursor-pointer h-full flex flex-col"
-      style={
-        {
-          '--accent': project.accentColor,
-        } as React.CSSProperties
-      }
     >
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 aspect-[16/10] rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30"
+        className="pointer-events-none absolute inset-x-0 top-0 aspect-16/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30"
         style={{
           boxShadow: `inset 0 0 0 1.5px rgba(255,255,255,0.5), 0 0 20px ${project.accentColor}25, 0 0 45px ${project.accentColor}12`,
           background: `linear-gradient(135deg, rgba(255,255,255,0.12) 0%, ${project.accentColor}18 100%)`,
@@ -42,9 +37,9 @@ const ProjectCard = memo(({ project, onClick }: ProjectCardProps) => {
           borderRadius: 'inherit',
         }}
       />
-      <div className="relative aspect-[16/10] overflow-hidden flex-shrink-0 rounded-xl border border-white/10 bg-white/[0.03]">
+      <div className="relative aspect-16/10 overflow-hidden shrink-0 rounded-xl border border-white/10 bg-white/3">
         <div
-          className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-40 z-10 pointer-events-none transition-opacity duration-300 group-hover:opacity-60`}
+          className={`absolute inset-0 bg-linear-to-br ${project.gradient} opacity-40 z-10 pointer-events-none transition-opacity duration-300 group-hover:opacity-60`}
         />
         <OptimizedImage
           src={project.image}
@@ -56,7 +51,7 @@ const ProjectCard = memo(({ project, onClick }: ProjectCardProps) => {
           View details <ArrowUpRight size={15} />
         </span>
       </div>
-      <div className="pt-5 flex flex-col flex-grow">
+      <div className="pt-5 flex flex-col grow">
         <h3 className="text-lg sm:text-xl font-monument font-black uppercase text-white tracking-tight leading-tight line-clamp-1">
           {project.name}
         </h3>

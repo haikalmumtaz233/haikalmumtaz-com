@@ -1,5 +1,5 @@
-import { createContext, useContext } from 'react';
-import type { MotionValue } from 'framer-motion';
+import { createContext, use } from 'react';
+import type { MotionValue } from 'motion/react';
 
 export interface JourneyValue {
     scrollY: MotionValue<number>;
@@ -9,7 +9,7 @@ export interface JourneyValue {
 export const JourneyContext = createContext<JourneyValue | null>(null);
 
 export const useJourney = (): JourneyValue => {
-    const value = useContext(JourneyContext);
+    const value = use(JourneyContext);
     if (!value) {
         throw new Error('useJourney must be used inside JourneyProvider');
     }

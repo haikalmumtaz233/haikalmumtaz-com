@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback, useEffect, useRef, type KeyboardEvent as ReactKeyboardEvent } from 'react';
-import { motion, AnimatePresence, type PanInfo } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence, type PanInfo } from 'motion/react';
+import { useNavigate } from 'react-router';
 import { ArrowUpRight } from 'lucide-react';
 import { projects } from '../../data/projects';
 import type { Project } from '../../data/projects';
@@ -143,7 +143,7 @@ const FeaturedProjects = () => {
               id="featured-preview"
               role="tabpanel"
               aria-labelledby={`featured-tab-${currentIndex}`}
-              className="relative aspect-[16/10]"
+              className="relative aspect-16/10"
             >
               <AnimatePresence initial={false} custom={direction} mode="popLayout">
                 <motion.div

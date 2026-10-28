@@ -1,12 +1,10 @@
-import { durationsMs, easingCurves } from '../design/tokens';
-
-export const easing = easingCurves;
-
-export const seconds = (name: keyof typeof durationsMs) => durationsMs[name] / 1000;
-
-export const CONDENSED_SCALE = 0.62;
-
-export const revealEase = easingCurves.smooth;
+export const easing = {
+  smooth: [0.33, 1, 0.68, 1],
+  exit: [0.64, 0, 0.78, 0],
+  inout: [0.65, 0, 0.35, 1],
+  expo: [0.16, 1, 0.3, 1],
+  wipe: [0.76, 0, 0.24, 1],
+} as const;
 
 export const animatedProps = <T extends object>(
   shouldReduceMotion: boolean,

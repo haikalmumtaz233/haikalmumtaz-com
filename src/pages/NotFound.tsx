@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { motion } from 'motion/react';
+import { useNavigate } from 'react-router';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { animatedProps, easing } from '../lib/motion';

@@ -1,5 +1,5 @@
 import { useMemo, type ReactNode } from 'react';
-import { useScroll } from 'framer-motion';
+import { useScroll } from 'motion/react';
 import { JourneyContext, type JourneyValue } from './useJourney';
 
 const JourneyProvider = ({ children }: { children: ReactNode }) => {
@@ -10,7 +10,7 @@ const JourneyProvider = ({ children }: { children: ReactNode }) => {
         [scrollY, scrollYProgress]
     );
 
-    return <JourneyContext.Provider value={value}>{children}</JourneyContext.Provider>;
+    return <JourneyContext value={value}>{children}</JourneyContext>;
 };
 
 export default JourneyProvider;

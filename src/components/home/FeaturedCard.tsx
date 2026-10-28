@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import type { Project } from '../../data/projects';
 import OptimizedImage from '../ui/OptimizedImage';
 import { activateOnEnterOrSpace } from '../../lib/keyboard';
@@ -22,10 +22,10 @@ const FeaturedCard = memo(({ project, onClick }: FeaturedCardProps) => {
       role="button"
       tabIndex={0}
       aria-label={`Open details for ${project.name}`}
-      className="group relative h-full w-full cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-white/[0.03]"
+      className="group relative h-full w-full cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-white/3"
     >
       <div
-        className={`absolute inset-0 z-10 bg-gradient-to-br ${project.gradient} opacity-40 pointer-events-none transition-opacity duration-500 group-hover:opacity-20`}
+        className={`absolute inset-0 z-10 bg-linear-to-br ${project.gradient} opacity-40 pointer-events-none transition-opacity duration-500 group-hover:opacity-20`}
       />
       <motion.div
         className="h-full w-full"

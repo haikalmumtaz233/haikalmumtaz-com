@@ -1,25 +1,19 @@
 import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Github, Linkedin, Instagram } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate, useLocation } from 'react-router';
+import { motion, AnimatePresence } from 'motion/react';
 import { useLenis } from 'lenis/react';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { profile, socialProfiles } from '../data/profile';
+import BrandIcon from './ui/BrandIcon';
 import { animatedProps, easing } from '../lib/motion';
 
 const navLinks = [
-  { name: 'HOME', path: '/', type: 'route' },
-  { name: 'PROJECTS', path: '#projects', type: 'scroll' },
-  { name: 'EXPERIENCE', path: '#experience', type: 'scroll' },
-  { name: 'CONTACT', path: '#contact', type: 'scroll' },
+  { name: 'Home', path: '/', type: 'route' },
+  { name: 'Projects', path: '#projects', type: 'scroll' },
+  { name: 'Experience', path: '#experience', type: 'scroll' },
+  { name: 'Contact', path: '#contact', type: 'scroll' },
 ];
-
-const socialIcons: Record<string, typeof Github> = {
-  GitHub: Github,
-  LinkedIn: Linkedin,
-  Instagram: Instagram,
-};
 
 export const MENU_PANEL_ID = 'site-menu-panel';
 
@@ -112,7 +106,7 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             onClick={onClose}
-            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs"
           />
         )}
       </AnimatePresence>
@@ -155,12 +149,15 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                         className="origin-bottom-left"
                       >
                         <motion.button
+                          type="button"
+                          aria-label={link.name}
                           onClick={() => handleNavigation(link)}
                           initial="initial"
                           whileHover={prefersReducedMotion ? undefined : 'hovered'}
                           className="cursor-pointer text-left group"
                         >
                           <div
+                            aria-hidden="true"
                             className="relative block overflow-hidden whitespace-nowrap text-3xl sm:text-4xl md:text-6xl font-black uppercase text-white"
                             style={{ lineHeight: 0.9 }}
                           >
@@ -228,9 +225,7 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                 </a>
 
                 <div className="flex gap-4">
-                  {socialProfiles.map(({ href, label }) => {
-                    const Icon = socialIcons[label];
-                    return (
+                  {socialProfiles.map(({ href, label }) => (
                     <motion.a
                       key={label}
                       href={href}
@@ -243,10 +238,9 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                       className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/20 transition-all group"
                       aria-label={label}
                     >
-                      <Icon className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
+                      <BrandIcon brand={label} className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
                     </motion.a>
-                    );
-                  })}
+                  ))}
                 </div>
 
                 <div className="flex items-center gap-3 text-xs font-mono text-slate-400">

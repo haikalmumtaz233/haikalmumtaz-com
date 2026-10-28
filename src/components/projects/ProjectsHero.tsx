@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { motion } from 'motion/react';
+import { useNavigate } from 'react-router';
 import { ArrowLeft } from 'lucide-react';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { animatedProps, easing } from '../../lib/motion';
@@ -35,7 +35,7 @@ const ProjectsHero = () => {
           as="h1"
           title={['All projects']}
           delay={offset + 0.15}
-          className="!mb-0"
+          className="mb-0!"
           meta={
             <p className="text-sm md:text-base text-white/55">
               {projects.length} projects in {categoryCount} categories
