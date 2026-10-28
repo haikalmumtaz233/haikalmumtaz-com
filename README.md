@@ -2,10 +2,10 @@
 
 <div align="center">
 
-[![React](https://img.shields.io/badge/React-18.3.1-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-7.2.4-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.17-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![React](https://img.shields.io/badge/React-19.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-7.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-8.3-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.3-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 [**Live Demo**](https://haikalmumtaz.com) · [**Report Bug**](https://github.com/haikalmumtaz233/haikalmumtaz-com/issues)
@@ -22,7 +22,7 @@ This website serves as a **digital archive** and a central hub to document my jo
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 Follow these steps to run the project locally.
 
@@ -30,8 +30,8 @@ Follow these steps to run the project locally.
 
 Ensure you have the following installed:
 
-- **Node.js** (v18 or higher recommended)
-- **npm** or **yarn** package manager
+- **Node.js** 22.22 or newer
+- **npm**
 
 ### Installation
 
@@ -82,6 +82,6 @@ To enable the **Contact Form** functionality, you need to set up environment var
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
