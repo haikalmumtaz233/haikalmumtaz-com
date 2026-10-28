@@ -204,7 +204,7 @@ const Background = () => {
   }, [prefersReducedMotion, progress]);
 
   return (
-    <div className="fixed inset-0 z-[-1] bg-[#09080e]">
+    <div aria-hidden="true" className="fixed inset-0 z-[-1] bg-[#09080e]">
       <m.canvas
         ref={canvasRef}
         className="absolute inset-0 block"

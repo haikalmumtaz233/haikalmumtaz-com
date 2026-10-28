@@ -24,6 +24,11 @@
 }
 
 @layer base {
+  html {
+    background-color: #09080e;
+    color-scheme: dark;
+  }
+
   body {
     position: relative;
     overflow-x: hidden;
