@@ -142,7 +142,7 @@ const MenuToggle = () => {
             <button
               type="button"
               onClick={scrollToTop}
-              aria-label="Back to top"
+              aria-label={`Back to top, ${activeIndex + 1}/${SECTIONS.length}`}
               className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/15 transition-transform duration-300 active:scale-90"
             >
               <span className="font-monument text-[10px] font-black tabular-nums">
