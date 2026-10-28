@@ -41,9 +41,7 @@ const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) 
     };
   }, [isOpen, handleKeyDown, lenis]);
 
-  const isOfficialLink =
-    cert?.credentialLink &&
-    !cert.credentialLink.includes('drive.google.com');
+  const isOfficialLink = cert?.credentialLink && !cert.credentialLink.includes('drive.google.com');
 
   return createPortal(
     <AnimatePresence>
@@ -89,7 +87,10 @@ const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) 
 
             <div className="p-5 md:p-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div className="space-y-1 min-w-0">
-                <h3 id="certification-modal-title" className="text-lg font-bold text-white leading-tight">
+                <h3
+                  id="certification-modal-title"
+                  className="text-lg font-bold text-white leading-tight"
+                >
                   {cert.title}
                 </h3>
                 <p className="text-xs font-mono text-slate-400">
@@ -113,7 +114,7 @@ const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) 
         </motion.div>
       )}
     </AnimatePresence>,
-    document.body
+    document.body,
   );
 };
 

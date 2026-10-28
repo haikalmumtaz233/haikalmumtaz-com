@@ -24,7 +24,8 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
     card.style.zIndex = String(10 - Math.round(distance * 5));
     card.style.opacity = String(1 - distance * 0.55);
     const image = card.querySelector<HTMLElement>('[data-rail-image]');
-    if (image) image.style.transform = `translateX(${Math.max(-1, Math.min(1, offset)) * -14}%) scale(1.3)`;
+    if (image)
+      image.style.transform = `translateX(${Math.max(-1, Math.min(1, offset)) * -14}%) scale(1.3)`;
   }, []);
 
   const updateFocus = useRailFocus(railRef, applyFocus, !prefersReducedMotion);
@@ -93,7 +94,9 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
             <div className="absolute inset-0 bg-linear-to-t from-[#09080e] via-[#09080e]/55 to-transparent" />
             <div
               className="absolute inset-x-0 top-0 h-1/3 opacity-60"
-              style={{ background: `radial-gradient(80% 100% at 0% 0%, ${project.accentColor}66, transparent 70%)` }}
+              style={{
+                background: `radial-gradient(80% 100% at 0% 0%, ${project.accentColor}66, transparent 70%)`,
+              }}
             />
 
             <span className="absolute left-5 top-5 rounded-full bg-black/55 px-3 py-1 text-xs text-white/85">

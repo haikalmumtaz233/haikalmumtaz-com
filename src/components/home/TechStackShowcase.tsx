@@ -1,4 +1,11 @@
-import { useEffect, useRef, useState, type FocusEvent, type KeyboardEvent, type PointerEvent } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  type FocusEvent,
+  type KeyboardEvent,
+  type PointerEvent,
+} from 'react';
 import { AnimatePresence, motion, stagger, useInView } from 'motion/react';
 import { techCategories } from '../../data/techStack';
 import TechIcon from '../ui/TechIcon';
@@ -27,7 +34,7 @@ const TechStackShowcase = () => {
     if (!isCycling) return;
     const timer = window.setTimeout(
       () => setActiveIndex((index) => (index + 1) % techCategories.length),
-      CYCLE_MS
+      CYCLE_MS,
     );
     return () => window.clearTimeout(timer);
   }, [isCycling, activeIndex]);
@@ -193,8 +200,15 @@ const TechStackShowcase = () => {
                 <motion.li
                   key={tech.name}
                   variants={{
-                    hidden: prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 18, scale: 0.92 },
-                    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.7, ease: easing.expo } },
+                    hidden: prefersReducedMotion
+                      ? { opacity: 0 }
+                      : { opacity: 0, y: 18, scale: 0.92 },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      scale: 1,
+                      transition: { duration: 0.7, ease: easing.expo },
+                    },
                   }}
                   className="group/tile flex aspect-4/3 flex-col lg:aspect-square items-center justify-center gap-3 rounded-2xl border border-white/[0.07] bg-white/2 px-2 transition-colors duration-300 hover:border-white/25 hover:bg-white/5"
                 >

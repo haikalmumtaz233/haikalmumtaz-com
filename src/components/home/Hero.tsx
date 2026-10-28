@@ -1,12 +1,24 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useMotionValueEvent, useScroll, useTransform } from 'motion/react';
+import {
+  motion,
+  AnimatePresence,
+  useMotionValueEvent,
+  useScroll,
+  useTransform,
+} from 'motion/react';
 import { ArrowDownRight } from 'lucide-react';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { animatedProps, easing } from '../../lib/motion';
 import { useIntroGate } from '../../lib/intro';
 import Nameplate from './Nameplate';
 
-const roles = ['Application Developer Jr.', 'Fullstack Developer', 'Machine Learning Engineer', 'Data Scientist', 'Game Developer'];
+const roles = [
+  'Application Developer Jr.',
+  'Fullstack Developer',
+  'Machine Learning Engineer',
+  'Data Scientist',
+  'Game Developer',
+];
 
 const EYEBROW_DELAY = 1.05;
 const DOCK_DELAY = 1.45;
@@ -114,11 +126,15 @@ const Hero = () => {
 
       <div className="grow flex w-full items-center justify-center">
         <div className="w-full text-center">
-          <motion.div style={prefersReducedMotion ? undefined : { opacity: eyebrowFade, y: eyebrowLift }}>
+          <motion.div
+            style={prefersReducedMotion ? undefined : { opacity: eyebrowFade, y: eyebrowLift }}
+          >
             <motion.p
               {...animatedProps(prefersReducedMotion, {
                 initial: { opacity: 0, letterSpacing: '1.1em' },
-                animate: ready ? { opacity: 1, letterSpacing: '0.5em' } : { opacity: 0, letterSpacing: '1.1em' },
+                animate: ready
+                  ? { opacity: 1, letterSpacing: '0.5em' }
+                  : { opacity: 0, letterSpacing: '1.1em' },
                 transition: { duration: 1.6, ease: easing.expo, delay: EYEBROW_DELAY - lead },
               })}
               className="text-[11px] sm:text-xs md:text-sm font-bold uppercase tracking-[0.5em] text-white/55 mb-4 sm:mb-6 whitespace-nowrap"
@@ -138,10 +154,17 @@ const Hero = () => {
               {showScrollIndicator && (
                 <motion.div
                   {...dockItem(prefersReducedMotion, 0, ready, lead)}
-                  exit={prefersReducedMotion ? undefined : { opacity: 0, y: 10, transition: { duration: 0.4 } }}
+                  exit={
+                    prefersReducedMotion
+                      ? undefined
+                      : { opacity: 0, y: 10, transition: { duration: 0.4 } }
+                  }
                   className="flex items-center gap-4"
                 >
-                  <span aria-hidden="true" className="relative block h-11 w-px overflow-hidden bg-white/15">
+                  <span
+                    aria-hidden="true"
+                    className="relative block h-11 w-px overflow-hidden bg-white/15"
+                  >
                     <motion.span
                       className="absolute inset-x-0 top-0 h-1/2 bg-white"
                       {...animatedProps(prefersReducedMotion, {
@@ -163,11 +186,17 @@ const Hero = () => {
             </AnimatePresence>
           </div>
 
-          <motion.div {...dockItem(prefersReducedMotion, 1, ready, lead)} className="flex justify-center">
+          <motion.div
+            {...dockItem(prefersReducedMotion, 1, ready, lead)}
+            className="flex justify-center"
+          >
             <RoleTicker startDelay={TYPING_START - lead} ready={ready} />
           </motion.div>
 
-          <motion.div {...dockItem(prefersReducedMotion, 2, ready, lead)} className="flex justify-center lg:justify-end">
+          <motion.div
+            {...dockItem(prefersReducedMotion, 2, ready, lead)}
+            className="flex justify-center lg:justify-end"
+          >
             <a
               href="#contact"
               className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-white px-6 py-3 text-sm font-semibold text-black isolate"

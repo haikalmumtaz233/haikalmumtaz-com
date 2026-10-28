@@ -18,7 +18,11 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 const scrollPositions = new Map<string, number>();
 const MAX_RESTORE_FRAMES = 30;
 
-const restoreScroll = (lenis: Lenis | undefined, target: number, framesLeft = MAX_RESTORE_FRAMES) => {
+const restoreScroll = (
+  lenis: Lenis | undefined,
+  target: number,
+  framesLeft = MAX_RESTORE_FRAMES,
+) => {
   requestAnimationFrame(() => {
     lenis?.resize();
     window.scrollTo(0, target);

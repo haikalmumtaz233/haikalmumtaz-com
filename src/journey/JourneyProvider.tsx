@@ -3,14 +3,14 @@ import { useScroll } from 'motion/react';
 import { JourneyContext, type JourneyValue } from './useJourney';
 
 const JourneyProvider = ({ children }: { children: ReactNode }) => {
-    const { scrollY, scrollYProgress } = useScroll();
+  const { scrollY, scrollYProgress } = useScroll();
 
-    const value = useMemo<JourneyValue>(
-        () => ({ scrollY, progress: scrollYProgress }),
-        [scrollY, scrollYProgress]
-    );
+  const value = useMemo<JourneyValue>(
+    () => ({ scrollY, progress: scrollYProgress }),
+    [scrollY, scrollYProgress],
+  );
 
-    return <JourneyContext value={value}>{children}</JourneyContext>;
+  return <JourneyContext value={value}>{children}</JourneyContext>;
 };
 
 export default JourneyProvider;

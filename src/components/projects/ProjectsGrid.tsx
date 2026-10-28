@@ -32,7 +32,7 @@ const ProjectsGrid = () => {
     const updateWidth = () => {
       const mobile = window.innerWidth < 640;
       setIsMobile(mobile);
-      
+
       if (filterRef.current && containerRef.current && mobile) {
         const scrollWidth = filterRef.current.scrollWidth;
         const containerWidth = containerRef.current.offsetWidth;
@@ -57,19 +57,23 @@ const ProjectsGrid = () => {
           })}
           className="mb-10 md:mb-12"
         >
-          <div ref={containerRef} className="overflow-hidden sm:overflow-visible -mx-4 px-4 sm:mx-0 sm:px-0">
-            <motion.div 
+          <div
+            ref={containerRef}
+            className="overflow-hidden sm:overflow-visible -mx-4 px-4 sm:mx-0 sm:px-0"
+          >
+            <motion.div
               ref={filterRef}
               className={`flex gap-2 sm:gap-3 sm:flex-wrap pr-4 sm:pr-0 ${isMobile && dragWidth > 0 ? 'cursor-grab active:cursor-grabbing' : ''}`}
-              drag={isMobile && dragWidth > 0 ? "x" : false}
+              drag={isMobile && dragWidth > 0 ? 'x' : false}
               dragConstraints={{ right: 0, left: -dragWidth }}
               style={{ touchAction: 'pan-y' }}
             >
               {categories.map((category) => {
                 const isActive = selectedCategory === category;
-                const count = category === 'All' 
-                  ? projects.length 
-                  : projects.filter(p => p.category === category).length;
+                const count =
+                  category === 'All'
+                    ? projects.length
+                    : projects.filter((p) => p.category === category).length;
 
                 return (
                   <button
@@ -78,9 +82,7 @@ const ProjectsGrid = () => {
                     aria-pressed={isActive}
                     onClick={() => setSelectedCategory(category)}
                     className={`relative shrink-0 px-4 py-2 text-xs sm:text-sm font-medium rounded-full transition-colors duration-300 ${
-                      isActive
-                        ? 'text-white'
-                        : 'text-white/55 hover:text-white/80'
+                      isActive ? 'text-white' : 'text-white/55 hover:text-white/80'
                     }`}
                   >
                     {isActive && (
@@ -92,9 +94,11 @@ const ProjectsGrid = () => {
                     )}
                     <span className="relative z-10 flex items-center gap-2 whitespace-nowrap">
                       {category}
-                      <span className={`text-xs tabular-nums px-1.5 py-0.5 rounded-full ${
-                        isActive ? 'bg-white/20' : 'bg-white/5'
-                      }`}>
+                      <span
+                        className={`text-xs tabular-nums px-1.5 py-0.5 rounded-full ${
+                          isActive ? 'bg-white/20' : 'bg-white/5'
+                        }`}
+                      >
                         {count}
                       </span>
                     </span>
@@ -128,10 +132,7 @@ const ProjectsGrid = () => {
                   layout: { duration: 0.7, ease: easing.expo },
                 }}
               >
-                <ProjectCard
-                  project={project}
-                  onClick={() => setSelectedProject(project)}
-                />
+                <ProjectCard project={project} onClick={() => setSelectedProject(project)} />
               </motion.div>
             ))}
           </AnimatePresence>
@@ -147,10 +148,7 @@ const ProjectsGrid = () => {
           </motion.div>
         )}
 
-        <ProjectModal
-          project={selectedProject}
-          onClose={handleCloseModal}
-        />
+        <ProjectModal project={selectedProject} onClose={handleCloseModal} />
       </div>
     </section>
   );

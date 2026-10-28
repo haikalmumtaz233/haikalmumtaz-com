@@ -29,7 +29,8 @@ const TIMING = {
 const END = TIMING.release + TIMING.escapeFade + 0.05;
 
 const easeOutExpo = (k: number) => (k >= 1 ? 1 : 1 - Math.pow(2, -10 * k));
-const easeInOutQuart = (k: number) => (k < 0.5 ? 8 * k * k * k * k : 1 - Math.pow(-2 * k + 2, 4) / 2);
+const easeInOutQuart = (k: number) =>
+  k < 0.5 ? 8 * k * k * k * k : 1 - Math.pow(-2 * k + 2, 4) / 2;
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 
 const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
@@ -97,7 +98,10 @@ const scatterTargets = (width: number, height: number, count: number) => {
   return points;
 };
 
-export const runIntroScene = (canvas: HTMLCanvasElement, { backdrop, onFormed, onDone }: SceneCallbacks) => {
+export const runIntroScene = (
+  canvas: HTMLCanvasElement,
+  { backdrop, onFormed, onDone }: SceneCallbacks,
+) => {
   const ctx = canvas.getContext('2d');
   if (!ctx) {
     onFormed();
@@ -181,7 +185,9 @@ export const runIntroScene = (canvas: HTMLCanvasElement, { backdrop, onFormed, o
       ey[i] = Math.sin(angle) * radius;
 
       start[i] =
-        TIMING.convergeBase + (tx[i] / width) * TIMING.convergeSweep + Math.random() * TIMING.convergeJitter;
+        TIMING.convergeBase +
+        (tx[i] / width) * TIMING.convergeSweep +
+        Math.random() * TIMING.convergeJitter;
       swirl[i] = (Math.random() - 0.5) * 140;
 
       const dx = tx[i] - nameCenterX;
@@ -202,7 +208,12 @@ export const runIntroScene = (canvas: HTMLCanvasElement, { backdrop, onFormed, o
     ctx.fillStyle = CURSOR;
     if (squashStart === null) {
       if (elapsed % 0.5 < 0.3) {
-        ctx.fillRect(centerX - cursorWidth / 2, centerY - cursorHeight / 2, cursorWidth, cursorHeight);
+        ctx.fillRect(
+          centerX - cursorWidth / 2,
+          centerY - cursorHeight / 2,
+          cursorWidth,
+          cursorHeight,
+        );
       }
       return;
     }
@@ -288,7 +299,8 @@ export const runIntroScene = (canvas: HTMLCanvasElement, { backdrop, onFormed, o
     ctx.clearRect(0, 0, width, height);
 
     if (bangStart === null) {
-      const canBang = (targets !== null || waitOver || elapsed > TIMING.maxWait) && elapsed >= TIMING.minCursor;
+      const canBang =
+        (targets !== null || waitOver || elapsed > TIMING.maxWait) && elapsed >= TIMING.minCursor;
       if (canBang && squashStart === null) squashStart = elapsed;
       drawCursor(elapsed);
 

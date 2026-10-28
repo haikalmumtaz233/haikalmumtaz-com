@@ -2,8 +2,8 @@ export interface Moment {
   id: number;
   title: string;
   year: string;
-  image: string; 
-  className: string; 
+  image: string;
+  className: string;
   alignment: 'start' | 'center' | 'end';
   textPos: 'below' | 'above' | 'side';
 }

@@ -50,13 +50,16 @@ const HorizontalMoments = () => {
 
   const getAlignmentClass = (alignment: 'start' | 'center' | 'end') => {
     switch (alignment) {
-      case 'start': return 'justify-start';
-      case 'center': return 'justify-center';
-      case 'end': return 'justify-end';
+      case 'start':
+        return 'justify-start';
+      case 'center':
+        return 'justify-center';
+      case 'end':
+        return 'justify-end';
     }
   };
 
-  const renderContent = (moment: typeof moments[0], imageSizeClass = moment.className) => {
+  const renderContent = (moment: (typeof moments)[0], imageSizeClass = moment.className) => {
     const textBlock = (
       <div className="space-y-1.5">
         <p className="text-sm tabular-nums text-white/45">{moment.year}</p>
@@ -83,11 +86,26 @@ const HorizontalMoments = () => {
     );
 
     if (moment.textPos === 'above') {
-      return <div className="flex flex-col gap-4 md:gap-6">{textBlock}{imageBlock}</div>;
+      return (
+        <div className="flex flex-col gap-4 md:gap-6">
+          {textBlock}
+          {imageBlock}
+        </div>
+      );
     } else if (moment.textPos === 'below') {
-      return <div className="flex flex-col gap-4 md:gap-6">{imageBlock}{textBlock}</div>;
+      return (
+        <div className="flex flex-col gap-4 md:gap-6">
+          {imageBlock}
+          {textBlock}
+        </div>
+      );
     } else {
-      return <div className="flex items-center gap-4 md:gap-8">{imageBlock}{textBlock}</div>;
+      return (
+        <div className="flex items-center gap-4 md:gap-8">
+          {imageBlock}
+          {textBlock}
+        </div>
+      );
     }
   };
 

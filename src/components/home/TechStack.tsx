@@ -4,7 +4,10 @@ import { useIsMobile } from '../../hooks/useMediaQuery';
 import TechStackSwitcher from './TechStackSwitcher';
 import TechStackShowcase from './TechStackShowcase';
 
-const technologyCount = techCategories.reduce((total, category) => total + category.items.length, 0);
+const technologyCount = techCategories.reduce(
+  (total, category) => total + category.items.length,
+  0,
+);
 
 const TechStack = () => {
   const isMobile = useIsMobile();

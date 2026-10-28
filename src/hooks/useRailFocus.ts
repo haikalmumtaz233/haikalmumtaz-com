@@ -2,7 +2,11 @@ import { useCallback, useEffect, useRef, type RefObject } from 'react';
 
 type ApplyFocus = (card: HTMLElement, offset: number) => void;
 
-export const useRailFocus = (railRef: RefObject<HTMLElement | null>, apply: ApplyFocus, enabled = true) => {
+export const useRailFocus = (
+  railRef: RefObject<HTMLElement | null>,
+  apply: ApplyFocus,
+  enabled = true,
+) => {
   const frameRef = useRef(0);
   const applyRef = useRef(apply);
 

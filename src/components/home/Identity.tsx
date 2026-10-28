@@ -30,10 +30,7 @@ const Identity = () => {
 
       <div className="absolute right-0 top-0 bottom-0 w-32 md:w-48 bg-linear-to-l from-white via-white/80 to-transparent z-10 pointer-events-none" />
 
-      <motion.div
-        className="flex items-center"
-        style={{ skewX: skew }}
-      >
+      <motion.div className="flex items-center" style={{ skewX: skew }}>
         <motion.div
           animate={{
             x: [-4000, 0],
@@ -51,9 +48,7 @@ const Identity = () => {
                 {identity.text}
               </span>
 
-              <span className="text-3xl md:text-5xl text-black font-black">
-                •
-              </span>
+              <span className="text-3xl md:text-5xl text-black font-black">•</span>
             </div>
           ))}
         </motion.div>

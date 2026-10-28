@@ -36,17 +36,20 @@ Ensure you have the following installed:
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/haikalmumtaz233/haikalmumtaz-com.git
    cd haikalmumtaz-com
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Run the development server**
+
    ```bash
    npm run dev
    ```
@@ -63,11 +66,13 @@ To enable the **Contact Form** functionality, you need to set up environment var
 ### Setup Instructions
 
 1. **Copy the example environment file:**
+
    ```bash
    cp .env.example .env
    ```
 
 2. **Fill in your API keys:**
+
    ```env
    # Cloudflare Turnstile (https://dash.cloudflare.com/turnstile)
    VITE_TURNSTILE_SITE_KEY=your_turnstile_site_key_here

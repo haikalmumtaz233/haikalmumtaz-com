@@ -57,7 +57,7 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
     document.querySelector(target)?.scrollIntoView({ behavior });
   };
 
-  const handleNavigation = (link: typeof navLinks[0]) => {
+  const handleNavigation = (link: (typeof navLinks)[0]) => {
     onClose();
 
     const target = link.type === 'route' ? 0 : link.path;
@@ -121,7 +121,9 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                 ? { opacity: 0 }
                 : { x: '100%', transition: { duration: 0.5, ease: easing.inout } }
             }
-            transition={prefersReducedMotion ? { duration: 0.2 } : { duration: 0.8, ease: easing.expo }}
+            transition={
+              prefersReducedMotion ? { duration: 0.2 } : { duration: 0.8, ease: easing.expo }
+            }
             ref={panelRef}
             id={MENU_PANEL_ID}
             role="dialog"
@@ -131,7 +133,6 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
             className="fixed top-0 right-0 h-full w-full sm:w-[85vw] md:w-[480px] z-50 bg-black/80 backdrop-blur-2xl border-l border-white/10 shadow-2xl overflow-hidden"
           >
             <div className="h-full flex flex-col justify-between p-6 pb-28 sm:p-8 sm:pb-28 md:p-12">
-
               <nav className="flex-1 flex items-center">
                 <ul className="space-y-4 sm:space-y-6 w-full">
                   {navLinks.map((link, index) => (
@@ -162,16 +163,16 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                             style={{ lineHeight: 0.9 }}
                           >
                             <div>
-                              {link.name.split("").map((l, i) => (
+                              {link.name.split('').map((l, i) => (
                                 <motion.span
                                   variants={{
                                     initial: { y: 0 },
-                                    hovered: { y: "-100%" }
+                                    hovered: { y: '-100%' },
                                   }}
                                   transition={{
                                     duration: LETTER_DURATION,
                                     ease: easing.expo,
-                                    delay: LETTER_STAGGER * i
+                                    delay: LETTER_STAGGER * i,
                                   }}
                                   className="inline-block"
                                   key={i}
@@ -182,16 +183,16 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                             </div>
 
                             <div className="absolute inset-0">
-                              {link.name.split("").map((l, i) => (
+                              {link.name.split('').map((l, i) => (
                                 <motion.span
                                   variants={{
-                                    initial: { y: "100%" },
-                                    hovered: { y: 0 }
+                                    initial: { y: '100%' },
+                                    hovered: { y: 0 },
                                   }}
                                   transition={{
                                     duration: LETTER_DURATION,
                                     ease: easing.expo,
-                                    delay: LETTER_STAGGER * i
+                                    delay: LETTER_STAGGER * i,
                                   }}
                                   className="inline-block text-purple-400"
                                   key={i}
@@ -201,7 +202,6 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                               ))}
                             </div>
                           </div>
-
                         </motion.button>
                       </motion.div>
                     </li>
@@ -238,7 +238,10 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                       className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/20 transition-all group"
                       aria-label={label}
                     >
-                      <BrandIcon brand={label} className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
+                      <BrandIcon
+                        brand={label}
+                        className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors"
+                      />
                     </motion.a>
                   ))}
                 </div>

@@ -16,7 +16,9 @@ const MomentsScatter = () => (
         className="font-monument font-black uppercase text-white tracking-tight leading-[0.95] text-[clamp(2.4rem,12vw,3.5rem)]"
       />
       <FadeIn>
-        <p className="mt-6 max-w-xs text-base text-white/55">Events, teams, and milestones since 2022.</p>
+        <p className="mt-6 max-w-xs text-base text-white/55">
+          Events, teams, and milestones since 2022.
+        </p>
       </FadeIn>
 
       <ol className="mt-14 flex flex-col">

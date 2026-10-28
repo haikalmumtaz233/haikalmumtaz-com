@@ -58,7 +58,10 @@ const ProjectCard = memo(({ project, onClick }: ProjectCardProps) => {
         <p className="text-white/65 text-[15px] mt-1.5 line-clamp-1">{project.subtitle}</p>
         <ul className="mt-4 flex flex-wrap gap-2" aria-label={`${project.name} stack`}>
           {project.stack.slice(0, maxVisibleTech).map((tech) => (
-            <li key={tech} className="rounded-full border border-white/10 px-3 py-1 text-[13px] text-white/60">
+            <li
+              key={tech}
+              className="rounded-full border border-white/10 px-3 py-1 text-[13px] text-white/60"
+            >
               {tech}
             </li>
           ))}

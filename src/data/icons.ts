@@ -1,6 +1,4 @@
-export type TechIconSource =
-  | { kind: 'sprite'; id: string }
-  | { kind: 'image'; src: string };
+export type TechIconSource = { kind: 'sprite'; id: string } | { kind: 'image'; src: string };
 
 export const spriteIcon = (id: string): TechIconSource => ({ kind: 'sprite', id });
 

@@ -23,7 +23,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     },
-    [onClose]
+    [onClose],
   );
 
   useEffect(() => {
@@ -56,16 +56,14 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
           onClick={onClose}
           onWheel={(e) => e.stopPropagation()}
         >
-<div className="absolute inset-0 bg-black/80 backdrop-blur-xs" />
-<motion.div
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-xs" />
+          <motion.div
             layoutId={prefersReducedMotion ? undefined : `project-${project.id}`}
             initial={prefersReducedMotion ? { opacity: 0 } : false}
             animate={prefersReducedMotion ? { opacity: 1 } : undefined}
             exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0 }}
             transition={
-              prefersReducedMotion
-                ? { duration: 0.2 }
-                : { duration: 0.45, ease: easing.smooth }
+              prefersReducedMotion ? { duration: 0.2 } : { duration: 0.45, ease: easing.smooth }
             }
             ref={dialogRef}
             role="dialog"
@@ -79,7 +77,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
               overscrollBehavior: 'contain',
             }}
           >
-<button
+            <button
               type="button"
               onClick={onClose}
               aria-label="Close"
@@ -87,20 +85,16 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
             >
               <X size={18} aria-hidden="true" />
             </button>
-<div className="relative aspect-video overflow-hidden rounded-t-2xl">
+            <div className="relative aspect-video overflow-hidden rounded-t-2xl">
               <div
                 className={`absolute inset-0 bg-linear-to-br ${project.gradient} opacity-30 z-10 pointer-events-none`}
               />
-              <img
-                src={project.image}
-                alt={project.name}
-                className="w-full h-full object-cover"
-              />
+              <img src={project.image} alt={project.name} className="w-full h-full object-cover" />
               <div className="absolute top-4 left-4 z-20 px-3 py-1.5 bg-black/70 text-white/80 text-sm rounded-full border border-white/15">
                 {project.category}
               </div>
             </div>
-<div className="p-6 sm:p-8 space-y-5">
+            <div className="p-6 sm:p-8 space-y-5">
               <div>
                 <h3
                   id="project-modal-title"
@@ -116,7 +110,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
               <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
                 {project.description}
               </p>
-<div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2">
                 {project.stack.map((tech, i) => (
                   <span
                     key={i}
@@ -126,7 +120,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                   </span>
                 ))}
               </div>
-<div className="flex flex-wrap gap-4 pt-2">
+              <div className="flex flex-wrap gap-4 pt-2">
                 {isRepoDisabled ? (
                   <span className="flex items-center justify-center gap-2 font-semibold text-sm px-5 py-2.5 rounded-xl border border-white/5 bg-white/5 text-slate-600 cursor-not-allowed opacity-50">
                     <BrandIcon brand="GitHub" size={18} /> Repository
@@ -170,7 +164,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
         </motion.div>
       )}
     </AnimatePresence>,
-    document.body
+    document.body,
   );
 };
 

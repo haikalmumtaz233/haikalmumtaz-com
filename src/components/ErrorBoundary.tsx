@@ -19,8 +19,13 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     if (!this.state.hasError) return this.props.children;
 
     return (
-      <section role="alert" className="shell flex min-h-[70vh] flex-col items-start justify-center gap-6 py-20">
-        <p className="font-mono text-xs uppercase tracking-[0.3em] text-white/45">Something went wrong</p>
+      <section
+        role="alert"
+        className="shell flex min-h-[70vh] flex-col items-start justify-center gap-6 py-20"
+      >
+        <p className="font-mono text-xs uppercase tracking-[0.3em] text-white/45">
+          Something went wrong
+        </p>
         <h1 className="font-monument text-3xl font-black uppercase tracking-tight text-white sm:text-5xl">
           This page failed to load
         </h1>

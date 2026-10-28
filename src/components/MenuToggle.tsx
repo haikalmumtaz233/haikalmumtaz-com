@@ -25,7 +25,7 @@ const useActiveSection = (enabled: boolean) => {
     if (!enabled) return;
 
     const elements = SECTIONS.map(({ id }) => document.getElementById(id)).filter(
-      (element): element is HTMLElement => element !== null
+      (element): element is HTMLElement => element !== null,
     );
 
     const observer = new IntersectionObserver(
@@ -35,11 +35,13 @@ const useActiveSection = (enabled: boolean) => {
           const index = SECTIONS.findIndex(({ id }) => id === entry.target.id);
           if (index < 0) continue;
           setActive((current) =>
-            current.index === index ? current : { index, direction: index > current.index ? 1 : -1 }
+            current.index === index
+              ? current
+              : { index, direction: index > current.index ? 1 : -1 },
           );
         }
       },
-      { rootMargin: '-50% 0px -50% 0px' }
+      { rootMargin: '-50% 0px -50% 0px' },
     );
 
     elements.forEach((element) => observer.observe(element));
@@ -67,10 +69,9 @@ const MenuToggle = () => {
     const hero = document.getElementById('hero');
     if (!hero) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsPastHero(!entry.isIntersecting),
-      { rootMargin: '0px 0px -75% 0px' }
-    );
+    const observer = new IntersectionObserver(([entry]) => setIsPastHero(!entry.isIntersecting), {
+      rootMargin: '0px 0px -75% 0px',
+    });
 
     observer.observe(hero);
     return () => observer.disconnect();
@@ -155,9 +156,15 @@ const MenuToggle = () => {
                   key={isOpen ? 'menu' : SECTIONS[activeIndex].id}
                   custom={direction}
                   variants={{
-                    enter: (dir: number) => ({ y: prefersReducedMotion ? 0 : `${dir * 110}%`, opacity: 0 }),
+                    enter: (dir: number) => ({
+                      y: prefersReducedMotion ? 0 : `${dir * 110}%`,
+                      opacity: 0,
+                    }),
                     center: { y: '0%', opacity: 1 },
-                    exit: (dir: number) => ({ y: prefersReducedMotion ? 0 : `${dir * -110}%`, opacity: 0 }),
+                    exit: (dir: number) => ({
+                      y: prefersReducedMotion ? 0 : `${dir * -110}%`,
+                      opacity: 0,
+                    }),
                   }}
                   initial="enter"
                   animate="center"

@@ -61,9 +61,13 @@ const TechStackSwitcher = () => {
                     transition={{ duration: 0.6, ease: easing.expo }}
                   />
                 )}
-                {!isActive && <span className="absolute inset-0 rounded-full border border-white/15" />}
+                {!isActive && (
+                  <span className="absolute inset-0 rounded-full border border-white/15" />
+                )}
                 <span className="relative">{item.title}</span>
-                <span className={`relative text-xs tabular-nums ${isActive ? 'text-black/50' : 'text-white/35'}`}>
+                <span
+                  className={`relative text-xs tabular-nums ${isActive ? 'text-black/50' : 'text-white/35'}`}
+                >
                   {item.items.length}
                 </span>
               </button>
@@ -103,7 +107,9 @@ const TechStackSwitcher = () => {
                 custom={active.direction}
                 variants={{
                   enter: (dir: number) =>
-                    prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: dir * 40, rotate: dir * 8, scale: 0.8 },
+                    prefersReducedMotion
+                      ? { opacity: 0 }
+                      : { opacity: 0, x: dir * 40, rotate: dir * 8, scale: 0.8 },
                   center: {
                     opacity: 1,
                     x: 0,
@@ -117,7 +123,9 @@ const TechStackSwitcher = () => {
                 <span className="flex h-9 w-9 items-center justify-center">
                   <TechIcon icon={tech.icon} name={tech.name} />
                 </span>
-                <span className="text-center text-[13px] leading-tight text-white/75">{tech.name}</span>
+                <span className="text-center text-[13px] leading-tight text-white/75">
+                  {tech.name}
+                </span>
               </motion.li>
             ))}
             {Array.from({ length: (3 - (category.items.length % 3)) % 3 }, (_, index) => (

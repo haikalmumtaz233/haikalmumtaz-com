@@ -59,11 +59,25 @@ const ProjectsBackground = () => {
       canvas.height = height;
       populate();
 
-      topGlow = ctx.createRadialGradient(width * 0.8, height * 0.2, 0, width * 0.8, height * 0.2, 400);
+      topGlow = ctx.createRadialGradient(
+        width * 0.8,
+        height * 0.2,
+        0,
+        width * 0.8,
+        height * 0.2,
+        400,
+      );
       topGlow.addColorStop(0, 'rgba(6, 182, 212, 0.1)');
       topGlow.addColorStop(1, 'transparent');
 
-      bottomGlow = ctx.createRadialGradient(width * 0.2, height * 0.8, 0, width * 0.2, height * 0.8, 300);
+      bottomGlow = ctx.createRadialGradient(
+        width * 0.2,
+        height * 0.8,
+        0,
+        width * 0.2,
+        height * 0.8,
+        300,
+      );
       bottomGlow.addColorStop(0, 'rgba(168, 85, 247, 0.08)');
       bottomGlow.addColorStop(1, 'transparent');
     };
@@ -93,7 +107,11 @@ const ProjectsBackground = () => {
           for (let neighbourRow = row; neighbourRow <= row + 1; neighbourRow++) {
             if (neighbourRow >= rows) continue;
 
-            for (let neighbourColumn = column - 1; neighbourColumn <= column + 1; neighbourColumn++) {
+            for (
+              let neighbourColumn = column - 1;
+              neighbourColumn <= column + 1;
+              neighbourColumn++
+            ) {
               if (neighbourColumn < 0 || neighbourColumn >= columns) continue;
               if (neighbourRow === row && neighbourColumn < column) continue;
 

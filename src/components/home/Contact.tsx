@@ -11,13 +11,16 @@ import BrandIcon from '../ui/BrandIcon';
 declare global {
   interface Window {
     turnstile?: {
-      render: (container: HTMLElement, options: {
-        sitekey: string;
-        callback: (token: string) => void;
-        'expired-callback'?: () => void;
-        'error-callback'?: () => void;
-        theme?: 'light' | 'dark' | 'auto';
-      }) => string;
+      render: (
+        container: HTMLElement,
+        options: {
+          sitekey: string;
+          callback: (token: string) => void;
+          'expired-callback'?: () => void;
+          'error-callback'?: () => void;
+          theme?: 'light' | 'dark' | 'auto';
+        },
+      ) => string;
       reset: (widgetId: string) => void;
       remove: (widgetId: string) => void;
     };
@@ -83,7 +86,7 @@ const Contact = () => {
         setIsNearby(true);
         observer.disconnect();
       },
-      { rootMargin: '800px 0px' }
+      { rootMargin: '800px 0px' },
     );
 
     observer.observe(section);
@@ -220,7 +223,7 @@ const Contact = () => {
           message,
           time: new Date().toLocaleString(),
         },
-        { publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY }
+        { publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY },
       );
 
       addToast('success', "Message sent. I'll reply to your email soon.");
@@ -257,7 +260,9 @@ const Contact = () => {
               exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: 100, scale: 0.9 }}
               transition={{ duration: 0.3, ease: easing.smooth }}
               className={`flex items-center gap-3 rounded-xl border bg-[#09080e]/90 px-4 py-3 ${
-                toast.type === 'success' ? 'border-emerald-500/30 text-emerald-300' : 'border-red-500/30 text-red-300'
+                toast.type === 'success'
+                  ? 'border-emerald-500/30 text-emerald-300'
+                  : 'border-red-500/30 text-red-300'
               }`}
             >
               {toast.type === 'success' ? (
@@ -289,7 +294,8 @@ const Contact = () => {
 
             <FadeIn>
               <p className="mt-6 max-w-md text-base text-white/60 md:mt-8 2xl:text-lg">
-                Have a project in mind or just want to say hi? I'm always open to new projects and opportunities.
+                Have a project in mind or just want to say hi? I'm always open to new projects and
+                opportunities.
               </p>
 
               <div className="mt-8 space-y-6 md:mt-10">
@@ -326,7 +332,9 @@ const Contact = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <div className="grid gap-2">
-                    <label htmlFor="contact-first-name" className={labelClass}>First name</label>
+                    <label htmlFor="contact-first-name" className={labelClass}>
+                      First name
+                    </label>
                     <input
                       type="text"
                       id="contact-first-name"
@@ -341,7 +349,9 @@ const Contact = () => {
                     />
                   </div>
                   <div className="grid gap-2">
-                    <label htmlFor="contact-last-name" className={labelClass}>Last name</label>
+                    <label htmlFor="contact-last-name" className={labelClass}>
+                      Last name
+                    </label>
                     <input
                       type="text"
                       id="contact-last-name"
@@ -359,7 +369,9 @@ const Contact = () => {
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <div className="grid gap-2">
-                    <label htmlFor="contact-email" className={labelClass}>Email</label>
+                    <label htmlFor="contact-email" className={labelClass}>
+                      Email
+                    </label>
                     <input
                       type="email"
                       id="contact-email"
@@ -392,7 +404,9 @@ const Contact = () => {
 
                 <div className="grid gap-2">
                   <div className="flex items-baseline justify-between">
-                    <label htmlFor="contact-message" className={labelClass}>Message</label>
+                    <label htmlFor="contact-message" className={labelClass}>
+                      Message
+                    </label>
                     <span className="text-xs tabular-nums text-white/35">
                       {formData.message.length}/{MAX_MESSAGE_LENGTH}
                     </span>
@@ -424,7 +438,9 @@ const Contact = () => {
                 <div>
                   <div ref={turnstileRef} className="flex min-h-[65px] justify-center" />
                   {turnstileError && (
-                    <p className="mt-2 text-center text-sm text-red-300">Complete the security check to send.</p>
+                    <p className="mt-2 text-center text-sm text-red-300">
+                      Complete the security check to send.
+                    </p>
                   )}
                 </div>
 

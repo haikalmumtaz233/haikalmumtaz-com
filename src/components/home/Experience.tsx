@@ -32,7 +32,10 @@ const Experience = () => {
         />
 
         <ol ref={listRef} className="relative border-b border-white/10">
-          <span aria-hidden="true" className="absolute left-[3px] top-0 bottom-0 w-px bg-white/10" />
+          <span
+            aria-hidden="true"
+            className="absolute left-[3px] top-0 bottom-0 w-px bg-white/10"
+          />
           {!prefersReducedMotion && (
             <motion.span
               aria-hidden="true"
@@ -92,7 +95,11 @@ const ExperienceItem = ({ entry, index, isOpen, onToggle }: ExperienceItemProps)
       <motion.div
         variants={{
           hidden: prefersReducedMotion ? {} : { opacity: 0, y: 24 },
-          visible: { opacity: 1, y: 0, transition: { duration: 1, ease: easing.expo, delay: 0.15 } },
+          visible: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 1, ease: easing.expo, delay: 0.15 },
+          },
         }}
       >
         <button
