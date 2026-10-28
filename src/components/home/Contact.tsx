@@ -325,7 +325,7 @@ const Contact = () => {
             <div className="rounded-2xl border border-white/10 bg-white/3 p-6 md:p-8 2xl:p-10">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <div className="space-y-1">
+                  <div className="grid gap-2">
                     <label htmlFor="contact-first-name" className={labelClass}>First name</label>
                     <input
                       type="text"
@@ -340,7 +340,7 @@ const Contact = () => {
                       placeholder="John"
                     />
                   </div>
-                  <div className="space-y-1">
+                  <div className="grid gap-2">
                     <label htmlFor="contact-last-name" className={labelClass}>Last name</label>
                     <input
                       type="text"
@@ -358,7 +358,7 @@ const Contact = () => {
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <div className="space-y-1">
+                  <div className="grid gap-2">
                     <label htmlFor="contact-email" className={labelClass}>Email</label>
                     <input
                       type="email"
@@ -372,7 +372,7 @@ const Contact = () => {
                       placeholder="john@example.com"
                     />
                   </div>
-                  <div className="space-y-1">
+                  <div className="grid gap-2">
                     <label htmlFor="contact-phone" className={labelClass}>
                       Phone <span className="text-white/35">(optional)</span>
                     </label>
@@ -390,7 +390,7 @@ const Contact = () => {
                   </div>
                 </div>
 
-                <div className="space-y-1">
+                <div className="grid gap-2">
                   <div className="flex items-baseline justify-between">
                     <label htmlFor="contact-message" className={labelClass}>Message</label>
                     <span className="text-xs tabular-nums text-white/35">
