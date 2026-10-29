@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
-import { setIntroPhase } from '../lib/intro';
+import { setIntroPhase, shouldPlayIntro } from '../lib/intro';
 import { runIntroScene } from '../lib/introScene';
 
 const Intro = () => {
   const prefersReducedMotion = usePrefersReducedMotion();
+  const { pathname } = useLocation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const [isDone, setIsDone] = useState(() => {
-    if (prefersReducedMotion) return true;
+    if (!shouldPlayIntro(pathname, prefersReducedMotion)) return true;
     setIntroPhase('playing');
     return false;
   });

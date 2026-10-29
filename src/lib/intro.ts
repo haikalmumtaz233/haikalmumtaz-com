@@ -4,6 +4,11 @@ export type IntroPhase = 'idle' | 'playing' | 'formed' | 'done';
 
 export const INTRO_FORMED_ESTIMATE = 2.4;
 
+export const INTRO_PATH = '/';
+
+export const shouldPlayIntro = (pathname: string, prefersReducedMotion: boolean) =>
+  !prefersReducedMotion && pathname === INTRO_PATH;
+
 let phase: IntroPhase = 'idle';
 let startedAt: number | null = null;
 const listeners = new Set<() => void>();
