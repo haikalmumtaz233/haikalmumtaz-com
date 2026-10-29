@@ -32,6 +32,19 @@ const projectSeeds: ProjectSeed[] = [
     isFeatured: true,
   },
   {
+    id: 13,
+    name: 'Plimsoll',
+    subtitle: 'Claude Plan Limits Tray App',
+    category: 'Desktop Development',
+    description:
+      'Open source Windows system tray app that tracks Claude plan limits, with five-hour and weekly usage, reset countdowns, threshold notifications, and token history by model and project, reading only usage fields from Claude Code logs and keeping all data on the machine.',
+    stack: ['Rust', 'Tauri', 'Svelte', 'TypeScript', 'SQLite', 'Vite'],
+    image: '/projects/plimsoll.webp',
+    repoLink: 'https://github.com/haikalmumtaz233/plimsoll',
+    liveLink: 'https://github.com/haikalmumtaz233/plimsoll/releases/latest',
+    isFeatured: true,
+  },
+  {
     id: 2,
     name: 'Street Beats',
     subtitle: 'Roblox Game',
