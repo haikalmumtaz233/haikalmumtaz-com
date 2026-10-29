@@ -4,6 +4,7 @@ export const accents = {
   fuchsia: '#d946ef',
   blue: '#3b82f6',
   amber: '#f59e0b',
+  emerald: '#10b981',
 } as const;
 
 export const DEFAULT_ACCENT = accents.purple;
@@ -16,6 +17,7 @@ export const categoryAccent: Record<string, string> = {
   'Game Development': accents.fuchsia,
   'Mobile Development': accents.blue,
   'Open Source Library': accents.amber,
+  'Desktop Development': accents.emerald,
 };
 
 export const categoryGradient: Record<string, string> = {
@@ -24,6 +26,7 @@ export const categoryGradient: Record<string, string> = {
   'Game Development': 'from-fuchsia-900/25 via-transparent to-fuchsia-900/10',
   'Mobile Development': 'from-blue-900/25 via-transparent to-blue-900/10',
   'Open Source Library': 'from-amber-900/25 via-transparent to-amber-900/10',
+  'Desktop Development': 'from-emerald-900/25 via-transparent to-emerald-900/10',
 };
 
 export const accentForCategory = (category: string) => categoryAccent[category] ?? DEFAULT_ACCENT;
