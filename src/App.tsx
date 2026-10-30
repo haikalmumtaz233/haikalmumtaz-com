@@ -12,6 +12,7 @@ import Intro from './components/Intro';
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
 import TechIconSprite from './components/ui/TechIconSprite';
 import ErrorBoundary from './components/ErrorBoundary';
+import { useJourney } from './journey/useJourney';
 
 const Projects = lazy(() => import('./pages/Projects'));
 const NotFound = lazy(() => import('./pages/NotFound'));
@@ -39,6 +40,7 @@ function ScrollManager() {
   const { pathname, state } = useLocation();
   const skipRestore = (state as { skipScrollRestore?: boolean } | null)?.skipScrollRestore === true;
   const lenis = useLenis();
+  const { scrollY } = useJourney();
   const previousPathRef = useRef<string>(pathname);
 
   useLayoutEffect(() => {
@@ -64,10 +66,8 @@ function ScrollManager() {
       restoreScroll(lenis, savedPosition);
     }
 
-    const rememberHomeScroll = () => scrollPositions.set('/', window.scrollY);
-    window.addEventListener('scroll', rememberHomeScroll, { passive: true });
-    return () => window.removeEventListener('scroll', rememberHomeScroll);
-  }, [pathname, lenis, skipRestore]);
+    return scrollY.on('change', (position) => scrollPositions.set('/', position));
+  }, [pathname, lenis, skipRestore, scrollY]);
 
   return null;
 }

@@ -1,29 +1,48 @@
-interface SceneCallbacks {
+import { buildFigure, traceFigure, type Figure } from './constellation';
+import { createSkyStars, createStarPainter, twinkleAt } from './skyStars';
+
+interface SceneOptions {
   backdrop: HTMLElement;
   onFormed: () => void;
   onDone: () => void;
 }
 
+interface GlyphTargets {
+  points: number[];
+  figures: Figure[];
+}
+
 const PIXEL_BUDGET = 1_600_000;
-const CURSOR = 'rgba(192, 132, 252, 0.9)';
 const COLORS = ['#ffffff', '#c4b5fd', '#a5f3fc'];
+const FRAME_LINE = 'rgba(196, 181, 253, 1)';
 const GLYPH_FONT = '"Monument Extended"';
+const ORDINARY_SHARE = 0.7;
+const NODE_SIZE = 13;
 
 const TIMING = {
-  minCursor: 0.85,
-  maxWait: 2,
-  squash: 0.24,
-  burst: 0.6,
-  convergeBase: 0.28,
-  convergeSweep: 0.45,
-  convergeJitter: 0.12,
-  convergeDuration: 1.05,
-  formed: 1.6,
-  release: 1.82,
+  igniteSpread: 0.75,
+  ignitePop: 0.32,
+  gatherAt: 0.85,
+  maxWait: 2.2,
+  flyStagger: 0.035,
+  flyVertex: 0.012,
+  flyDuration: 0.7,
+  traceFrom: 0.75,
+  traceStagger: 0.085,
+  traceDuration: 0.42,
+  reachFlash: 0.35,
+  fill: 1.7,
+  sweep: 0.5,
+  trail: 0.018,
+  jitter: 0.12,
+  travel: 1.0,
+  frameFade: 0.6,
+  formed: 3.3,
+  release: 3.52,
   settle: 0.45,
   escapeFade: 1.3,
-  skyFrom: 0.12,
-  skyTo: 1.4,
+  skyFrom: 3.3,
+  skyTo: 4.6,
 };
 
 const END = TIMING.release + TIMING.escapeFade + 0.05;
@@ -33,9 +52,34 @@ const easeInOutQuart = (k: number) =>
   k < 0.5 ? 8 * k * k * k * k : 1 - Math.pow(-2 * k + 2, 4) / 2;
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 
+const closestOnSegments = (segments: number[], x: number, y: number): readonly [number, number] => {
+  let bestX = x;
+  let bestY = y;
+  let best = Infinity;
+  for (let s = 0; s < segments.length; s += 4) {
+    const ax = segments[s];
+    const ay = segments[s + 1];
+    const dx = segments[s + 2] - ax;
+    const dy = segments[s + 3] - ay;
+    const span = dx * dx + dy * dy;
+    const t = span === 0 ? 0 : clamp01(((x - ax) * dx + (y - ay) * dy) / span);
+    const px = ax + dx * t;
+    const py = ay + dy * t;
+    const distance = (px - x) ** 2 + (py - y) ** 2;
+    if (distance < best) {
+      best = distance;
+      bestX = px;
+      bestY = py;
+    }
+  }
+  return [bestX, bestY];
+};
+
 const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
 
-const sampleGlyphs = (width: number, height: number, maxPoints: number) => {
+const traceStart = (letter: number) => TIMING.traceFrom + letter * TIMING.traceStagger;
+
+const sampleGlyphs = (width: number, height: number, maxPoints: number): GlyphTargets | null => {
   const origins = Array.from(document.querySelectorAll<HTMLElement>('[data-glyph-origin]'));
   if (origins.length === 0) return null;
 
@@ -53,6 +97,7 @@ const sampleGlyphs = (width: number, height: number, maxPoints: number) => {
   let top = height;
   let right = 0;
   let bottom = 0;
+  const figures: Figure[] = [];
 
   for (const origin of origins) {
     const char = origin.dataset.glyphOrigin ?? '';
@@ -61,6 +106,18 @@ const sampleGlyphs = (width: number, height: number, maxPoints: number) => {
     const size = parseFloat(getComputedStyle(origin).fontSize);
     ctx.font = `900 ${size}px ${GLYPH_FONT}`;
     ctx.fillText(char, rect.left, rect.top);
+
+    const metrics = ctx.measureText(char);
+    const box = {
+      left: rect.left - metrics.actualBoundingBoxLeft,
+      right: rect.left + metrics.actualBoundingBoxRight,
+      top: rect.top - metrics.actualBoundingBoxAscent,
+      bottom: rect.top + metrics.actualBoundingBoxDescent,
+    };
+
+    const figure = buildFigure(char, box);
+    if (figure) figures.push(figure);
+
     left = Math.min(left, rect.left);
     right = Math.max(right, rect.left + size * 1.2);
     top = Math.min(top, rect.top - size);
@@ -89,18 +146,18 @@ const sampleGlyphs = (width: number, height: number, maxPoints: number) => {
     }
   }
 
-  return points.length > 100 ? points : null;
+  return points.length > 100 ? { points, figures } : null;
 };
 
-const scatterTargets = (width: number, height: number, count: number) => {
+const scatterTargets = (width: number, height: number, count: number): GlyphTargets => {
   const points: number[] = [];
   for (let i = 0; i < count; i++) points.push(Math.random() * width, Math.random() * height);
-  return points;
+  return { points, figures: [] };
 };
 
 export const runIntroScene = (
   canvas: HTMLCanvasElement,
-  { backdrop, onFormed, onDone }: SceneCallbacks,
+  { backdrop, onFormed, onDone }: SceneOptions,
 ) => {
   const ctx = canvas.getContext('2d');
   if (!ctx) {
@@ -112,34 +169,38 @@ export const runIntroScene = (
   const width = window.innerWidth;
   const height = window.innerHeight;
   const dpr = Math.min(window.devicePixelRatio || 1, 2, Math.sqrt(PIXEL_BUDGET / (width * height)));
-  let lastSky = 1;
   canvas.width = Math.round(width * dpr);
   canvas.height = Math.round(height * dpr);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
+  const painter = createStarPainter(ctx);
+  const stars = createSkyStars(width, height);
+  const igniteAt = stars.map(
+    (star) => Math.random() * TIMING.igniteSpread * (0.3 + 0.7 * (1 - star.brightness)),
+  );
+  const departAt = new Float32Array(stars.length).fill(Infinity);
   const maxPoints = width < 768 ? 900 : 1900;
-  const centerX = width / 2;
-  const centerY = height / 2;
-  const cursorWidth = Math.max(18, Math.min(30, width * 0.02));
-  const cursorHeight = cursorWidth * 2;
 
   let cancelled = false;
   let frame = 0;
-  let targets: number[] | null = null;
+  let targets: GlyphTargets | null = null;
   let waitOver = false;
   let formedSent = false;
-  const mountedAt = performance.now();
-  let squashStart: number | null = null;
-  let bangStart: number | null = null;
+  let origin = performance.now();
+  let gatherStart: number | null = null;
   let pace = 1;
+  let lastSky = 1;
+
+  let figures: Figure[] = [];
+  let vertexStars: number[][] = [];
 
   let count = 0;
   let tx = new Float32Array(0);
   let ty = new Float32Array(0);
-  let ex = new Float32Array(0);
-  let ey = new Float32Array(0);
-  let px = new Float32Array(0);
-  let py = new Float32Array(0);
+  let sx = new Float32Array(0);
+  let sy = new Float32Array(0);
+  let headX = 0;
+  let headY = 0;
   let start = new Float32Array(0);
   let swirl = new Float32Array(0);
   let vx = new Float32Array(0);
@@ -147,17 +208,41 @@ export const runIntroScene = (
   let group = new Uint8Array(0);
   const groupCount = COLORS.length * 2;
   const segmentsByGroup: number[][] = Array.from({ length: groupCount }, () => []);
+  const frameSegments: number[] = [];
+
+  const borrowStars = () => {
+    const ordinary = stars
+      .map((star, index) => ({ index, star }))
+      .filter(({ star }) => !star.flare)
+      .sort((a, b) => a.star.brightness - b.star.brightness)
+      .slice(0, Math.max(1, Math.floor(stars.length * ORDINARY_SHARE)))
+      .map(({ index }) => index);
+    for (let i = ordinary.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [ordinary[i], ordinary[j]] = [ordinary[j], ordinary[i]];
+    }
+    let next = 0;
+    vertexStars = figures.map((figure, letter) =>
+      figure.vertices.map((_, vertex) => {
+        const index = ordinary[next % ordinary.length];
+        next++;
+        departAt[index] = letter * TIMING.flyStagger + vertex * TIMING.flyVertex;
+        return index;
+      }),
+    );
+  };
 
   const prepare = () => {
-    const points = targets ?? scatterTargets(width, height, maxPoints);
+    const chosen = targets ?? scatterTargets(width, height, maxPoints);
+    const points = chosen.points;
+    figures = chosen.figures;
+    borrowStars();
     pace = targets ? 1 : 1.8;
     count = points.length / 2;
     tx = new Float32Array(count);
     ty = new Float32Array(count);
-    ex = new Float32Array(count);
-    ey = new Float32Array(count);
-    px = new Float32Array(count).fill(centerX);
-    py = new Float32Array(count).fill(centerY);
+    sx = new Float32Array(count);
+    sy = new Float32Array(count);
     start = new Float32Array(count);
     swirl = new Float32Array(count);
     vx = new Float32Array(count);
@@ -173,29 +258,43 @@ export const runIntroScene = (
     nameCenterX /= count || 1;
     nameCenterY /= count || 1;
 
-    const burstRadius = Math.hypot(width, height) * 0.34;
+    const reach = Math.hypot(width, height);
+    const skeleton = figures.flatMap((figure) => traceFigure(figure, 1).segments);
+    let nameLeft = Infinity;
+    let nameRight = -Infinity;
+    for (let i = 0; i < count; i++) {
+      nameLeft = Math.min(nameLeft, points[i * 2]);
+      nameRight = Math.max(nameRight, points[i * 2]);
+    }
+    const nameWidth = Math.max(1, nameRight - nameLeft);
 
     for (let i = 0; i < count; i++) {
       tx[i] = points[i * 2];
       ty[i] = points[i * 2 + 1];
 
-      const angle = Math.random() * Math.PI * 2;
-      const radius = (0.12 + 0.88 * Math.pow(Math.random(), 0.6)) * burstRadius;
-      ex[i] = Math.cos(angle) * radius;
-      ey[i] = Math.sin(angle) * radius;
-
-      start[i] =
-        TIMING.convergeBase +
-        (tx[i] / width) * TIMING.convergeSweep +
-        Math.random() * TIMING.convergeJitter;
-      swirl[i] = (Math.random() - 0.5) * 140;
+      if (skeleton.length > 0) {
+        [sx[i], sy[i]] = closestOnSegments(skeleton, tx[i], ty[i]);
+        start[i] =
+          TIMING.fill +
+          ((tx[i] - nameLeft) / nameWidth) * TIMING.sweep +
+          Math.random() * TIMING.jitter;
+        swirl[i] = (Math.random() - 0.5) * 24;
+      } else {
+        const source = stars[Math.floor(Math.random() * stars.length)];
+        sx[i] = source.x * width;
+        sy[i] = source.y * height;
+        const distance = Math.hypot(tx[i] - sx[i], ty[i] - sy[i]);
+        start[i] =
+          TIMING.fill + (1 - distance / reach) * TIMING.sweep + Math.random() * TIMING.jitter;
+        swirl[i] = (Math.random() - 0.5) * 160;
+      }
 
       const dx = tx[i] - nameCenterX;
       const dy = ty[i] - nameCenterY;
-      const distance = Math.hypot(dx, dy) || 1;
+      const spread = Math.hypot(dx, dy) || 1;
       const speed = 90 + Math.random() * 260;
-      vx[i] = (dx / distance) * speed;
-      vy[i] = (dy / distance) * speed - 40 - Math.random() * 80;
+      vx[i] = (dx / spread) * speed;
+      vy[i] = (dy / spread) * speed - 40 - Math.random() * 80;
 
       const colorRoll = Math.random();
       const color = colorRoll < 0.1 ? 2 : colorRoll < 0.26 ? 1 : 0;
@@ -204,64 +303,121 @@ export const runIntroScene = (
     }
   };
 
-  const drawCursor = (elapsed: number) => {
-    ctx.fillStyle = CURSOR;
-    if (squashStart === null) {
-      if (elapsed % 0.5 < 0.3) {
-        ctx.fillRect(
-          centerX - cursorWidth / 2,
-          centerY - cursorHeight / 2,
-          cursorWidth,
-          cursorHeight,
-        );
-      }
-      return;
+  const drawSky = (elapsed: number, tg: number, fade: number) => {
+    const clock = performance.now() / 1000;
+    painter.reset();
+    for (let i = 0; i < stars.length; i++) {
+      if (tg >= departAt[i]) continue;
+      const k = clamp01((elapsed - igniteAt[i]) / TIMING.ignitePop);
+      if (k <= 0) continue;
+      const pop = 1 + 2.4 * (1 - k) * (1 - k);
+      const star = stars[i];
+      painter.draw(
+        star,
+        star.x * width,
+        star.y * height,
+        twinkleAt(star, clock),
+        easeOutExpo(k) * fade,
+        pop,
+      );
     }
-    const k = easeInOutQuart(clamp01((elapsed - squashStart) / TIMING.squash));
-    const w = cursorWidth + (cursorWidth * 3.5 - cursorWidth) * k;
-    const h = cursorHeight + (2 - cursorHeight) * k;
     ctx.globalAlpha = 1;
-    ctx.fillStyle = k > 0.6 ? '#ffffff' : CURSOR;
-    ctx.fillRect(centerX - w / 2, centerY - h / 2, w, h);
   };
 
-  const drawParticles = (tb: number) => {
-    const burstK = easeOutExpo(clamp01(tb / TIMING.burst));
-    const released = tb >= TIMING.release;
-    const releaseTime = tb - TIMING.release;
-    const decay = released ? (1 - Math.exp(-2.4 * releaseTime)) / 2.4 : 0;
+  const drawFrame = (tg: number) => {
+    const fade = 1 - clamp01((tg - TIMING.formed) / TIMING.frameFade);
+    if (fade <= 0 || figures.length === 0) return;
+
+    frameSegments.length = 0;
+    const heads: number[] = [];
+    figures.forEach((figure, letter) => {
+      const progress = clamp01((tg - traceStart(letter)) / TIMING.traceDuration);
+      const trace = traceFigure(figure, easeInOutQuart(progress));
+      for (const value of trace.segments) frameSegments.push(value);
+      if (trace.head && progress < 1) heads.push(trace.head[0], trace.head[1]);
+    });
+
+    if (frameSegments.length > 0) {
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = FRAME_LINE;
+      const shine = Math.max(0, 1 - Math.abs(tg - (TIMING.formed - 0.2)) / 0.45);
+      for (const [lineWidth, alpha] of [
+        [5, 0.07 + 0.2 * shine],
+        [1.2, 0.6 + 0.4 * shine],
+      ]) {
+        ctx.globalAlpha = alpha * fade;
+        ctx.lineWidth = lineWidth;
+        ctx.beginPath();
+        for (let s = 0; s < frameSegments.length; s += 4) {
+          ctx.moveTo(frameSegments[s], frameSegments[s + 1]);
+          ctx.lineTo(frameSegments[s + 2], frameSegments[s + 3]);
+        }
+        ctx.stroke();
+      }
+    }
+
+    const clock = performance.now() / 1000;
+    painter.reset();
+    figures.forEach((figure, letter) => {
+      const traced =
+        easeInOutQuart(clamp01((tg - traceStart(letter)) / TIMING.traceDuration)) * figure.length;
+      figure.vertices.forEach((vertex, index) => {
+        const starIndex = vertexStars[letter][index];
+        const star = stars[starIndex];
+        const flight = clamp01((tg - departAt[starIndex]) / TIMING.flyDuration);
+        const eased = easeInOutQuart(flight);
+        const x = star.x * width + (vertex.x - star.x * width) * eased;
+        const y = star.y * height + (vertex.y - star.y * height) * eased;
+        painter.draw(star, x, y, twinkleAt(star, clock), fade * (1 - eased));
+        painter.spark(x, y, NODE_SIZE * (0.35 + 0.65 * eased), fade * (0.3 + 0.65 * eased));
+
+        if (traced >= vertex.distance && figure.length > 0) {
+          const reachedAt =
+            traceStart(letter) + (vertex.distance / figure.length) * TIMING.traceDuration;
+          const flash = 1 - clamp01((tg - reachedAt) / TIMING.reachFlash);
+          if (flash > 0) painter.spark(vertex.x, vertex.y, 10 + 26 * flash, flash * fade);
+        }
+      });
+    });
+
+    for (let h = 0; h < heads.length; h += 2) painter.spark(heads[h], heads[h + 1], 22, fade);
+    ctx.globalAlpha = 1;
+  };
+
+  const locate = (i: number, tg: number) => {
+    if (tg >= TIMING.release) {
+      const decay = (1 - Math.exp(-2.4 * (tg - TIMING.release))) / 2.4;
+      const escapes = group[i] & 1;
+      headX = tx[i] + (escapes ? vx[i] * decay : 0);
+      headY = ty[i] + (escapes ? vy[i] * decay : 0);
+      return;
+    }
+    const k = clamp01((tg - start[i]) / TIMING.travel);
+    const e = easeInOutQuart(k);
+    const dx = tx[i] - sx[i];
+    const dy = ty[i] - sy[i];
+    const length = Math.hypot(dx, dy) || 1;
+    const arc = Math.sin(Math.PI * e) * swirl[i] * (1 - k * 0.3);
+    headX = sx[i] + dx * e + (-dy / length) * arc;
+    headY = sy[i] + dy * e + (dx / length) * arc;
+  };
+
+  const drawParticles = (tg: number) => {
+    const released = tg >= TIMING.release;
+    const releaseTime = tg - TIMING.release;
+    const tailTime = released ? Math.max(TIMING.release, tg - TIMING.trail) : tg - TIMING.trail;
 
     for (let i = 0; i < count; i++) {
-      let x: number;
-      let y: number;
-
-      if (released) {
-        const escapes = group[i] & 1;
-        x = tx[i] + (escapes ? vx[i] * decay : 0);
-        y = ty[i] + (escapes ? vy[i] * decay : 0);
-      } else {
-        const bx = centerX + ex[i] * burstK;
-        const by = centerY + ey[i] * burstK;
-        const k = clamp01((tb - start[i]) / TIMING.convergeDuration);
-        if (k <= 0) {
-          x = bx;
-          y = by;
-        } else {
-          const e = easeInOutQuart(k);
-          const dx = tx[i] - bx;
-          const dy = ty[i] - by;
-          const length = Math.hypot(dx, dy) || 1;
-          const arc = Math.sin(Math.PI * e) * swirl[i] * (1 - k * 0.3);
-          x = bx + dx * e + (-dy / length) * arc;
-          y = by + dy * e + (dx / length) * arc;
-        }
+      if (tg <= start[i]) continue;
+      if (!released && tg >= start[i] + TIMING.travel + TIMING.trail) {
+        segmentsByGroup[group[i]].push(tx[i], ty[i], tx[i], ty[i]);
+        continue;
       }
-
-      const prevX = px[i];
-      const prevY = py[i];
-      px[i] = x;
-      py[i] = y;
-      segmentsByGroup[group[i]].push(prevX, prevY, x, y);
+      locate(i, Math.max(start[i], tailTime));
+      const tailX = headX;
+      const tailY = headY;
+      locate(i, tg);
+      segmentsByGroup[group[i]].push(tailX, tailY, headX, headY);
     }
 
     ctx.lineCap = 'square';
@@ -295,46 +451,37 @@ export const runIntroScene = (
 
   const render = (now: number) => {
     if (cancelled) return;
-    const elapsed = (now - mountedAt) / 1000;
+    const elapsed = (now - origin) / 1000;
     ctx.clearRect(0, 0, width, height);
 
-    if (bangStart === null) {
-      const canBang =
-        (targets !== null || waitOver || elapsed > TIMING.maxWait) && elapsed >= TIMING.minCursor;
-      if (canBang && squashStart === null) squashStart = elapsed;
-      drawCursor(elapsed);
-
-      if (squashStart !== null && elapsed - squashStart >= TIMING.squash) {
+    if (gatherStart === null) {
+      drawSky(elapsed, -Infinity, 1);
+      const ready = targets !== null || waitOver || elapsed > TIMING.maxWait;
+      if (ready && elapsed >= TIMING.gatherAt) {
         prepare();
-        bangStart = now;
+        gatherStart = figures.length > 0 ? now : now - (TIMING.fill * 1000) / pace;
       }
       frame = requestAnimationFrame(render);
       return;
     }
 
-    const tb = ((now - bangStart) / 1000) * pace;
-    const sky = 1 - clamp01((tb - TIMING.skyFrom) / (TIMING.skyTo - TIMING.skyFrom));
+    const tg = ((now - gatherStart) / 1000) * pace;
+    const sky = 1 - clamp01((tg - TIMING.skyFrom) / (TIMING.skyTo - TIMING.skyFrom));
     if (sky !== lastSky) {
       backdrop.style.opacity = String(sky);
       lastSky = sky;
     }
 
-    if (tb < 0.14) {
-      const flash = 1 - tb / 0.14;
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, 1 + flash * 7, 0, Math.PI * 2);
-      ctx.fill();
-    }
+    drawSky(elapsed, tg, sky);
+    drawFrame(tg);
+    drawParticles(tg);
 
-    drawParticles(tb);
-
-    if (!formedSent && tb >= TIMING.formed) {
+    if (!formedSent && tg >= TIMING.formed) {
       formedSent = true;
       onFormed();
     }
 
-    if (tb >= END) {
+    if (tg >= END) {
       onDone();
       return;
     }
@@ -343,13 +490,15 @@ export const runIntroScene = (
   };
 
   const skip = () => {
-    if (bangStart === null) {
+    if (gatherStart === null) {
       waitOver = true;
+      const elapsed = (performance.now() - origin) / 1000;
+      if (elapsed < TIMING.gatherAt) origin -= (TIMING.gatherAt - elapsed) * 1000;
       return;
     }
-    const tb = ((performance.now() - bangStart) / 1000) * pace;
+    const tg = ((performance.now() - gatherStart) / 1000) * pace;
     const jumpTo = TIMING.formed - 0.12;
-    if (tb < jumpTo) bangStart -= ((jumpTo - tb) * 1000) / pace;
+    if (tg < jumpTo) gatherStart -= ((jumpTo - tg) * 1000) / pace;
   };
 
   const skipEvents: (keyof WindowEventMap)[] = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
@@ -366,7 +515,7 @@ export const runIntroScene = (
       waitOver = true;
       return;
     }
-    for (let attempt = 0; attempt < 90 && !cancelled && bangStart === null; attempt++) {
+    for (let attempt = 0; attempt < 90 && !cancelled && gatherStart === null; attempt++) {
       await nextFrame();
       if (document.querySelector('[data-glyph-origin]') && attempt >= 3) {
         await nextFrame();
