@@ -1,21 +1,17 @@
-import { createRandom, pickSpectralTint, SPECTRAL_TINTS, type Random } from './cosmos';
+import { createRandom, type Random } from './cosmos';
+import { getIntroPhase } from './intro';
+import {
+  createSkyStars,
+  createStarPainter,
+  SKY_SEED,
+  skyStarCount,
+  twinkleAt,
+  type SkyStar,
+} from './skyStars';
 
 interface StarfieldOptions {
-  seed: number;
   reduced: boolean;
   progress: () => number;
-}
-
-interface Star {
-  x: number;
-  y: number;
-  depth: number;
-  size: number;
-  brightness: number;
-  phase: number;
-  speed: number;
-  tint: number;
-  flare: boolean;
 }
 
 interface ShootingStar {
@@ -29,97 +25,15 @@ interface ShootingStar {
   life: number;
 }
 
-const STAR_AREA = 3400;
-const MIN_STARS = 140;
-const MAX_STARS = 700;
-const FLARES_DESKTOP = 7;
-const FLARES_MOBILE = 4;
 const SCROLL_PARALLAX = 0.07;
 const DRIFT_SPEED = 9;
 const ARRIVAL_START = 0.75;
-const POINTER_REACH = 16;
-const GLOW_SIZE = 24;
-const FLARE_SIZE = 72;
+const STEER_SPEED = 60;
+const STEER_EASE = 2.5;
+const SHOOTING_HEAD = 12;
 const MAX_DPR = 2;
 
 const wrap = (value: number, max: number) => ((value % max) + max) % max;
-
-const rgba = (tint: number, alpha: number) => {
-  const [red, green, blue] = SPECTRAL_TINTS[tint];
-  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
-};
-
-const createSprite = (size: number, paint: (ctx: CanvasRenderingContext2D) => void) => {
-  const sprite = document.createElement('canvas');
-  sprite.width = size;
-  sprite.height = size;
-  const ctx = sprite.getContext('2d');
-  if (ctx) paint(ctx);
-  return sprite;
-};
-
-const createGlow = (tint: number) =>
-  createSprite(GLOW_SIZE, (ctx) => {
-    const half = GLOW_SIZE / 2;
-    const gradient = ctx.createRadialGradient(half, half, 0, half, half, half);
-    gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-    gradient.addColorStop(0.18, rgba(tint, 0.85));
-    gradient.addColorStop(0.45, rgba(tint, 0.18));
-    gradient.addColorStop(1, rgba(tint, 0));
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, GLOW_SIZE, GLOW_SIZE);
-  });
-
-const createFlare = (tint: number) =>
-  createSprite(FLARE_SIZE, (ctx) => {
-    const half = FLARE_SIZE / 2;
-    const spike = (horizontal: boolean) => {
-      const gradient = horizontal
-        ? ctx.createLinearGradient(0, half, FLARE_SIZE, half)
-        : ctx.createLinearGradient(half, 0, half, FLARE_SIZE);
-      gradient.addColorStop(0, rgba(tint, 0));
-      gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.9)');
-      gradient.addColorStop(1, rgba(tint, 0));
-      ctx.fillStyle = gradient;
-      if (horizontal) ctx.fillRect(0, half - 0.6, FLARE_SIZE, 1.2);
-      else ctx.fillRect(half - 0.6, 0, 1.2, FLARE_SIZE);
-    };
-    spike(true);
-    spike(false);
-
-    const halo = ctx.createRadialGradient(half, half, 0, half, half, half * 0.42);
-    halo.addColorStop(0, 'rgba(255, 255, 255, 1)');
-    halo.addColorStop(0.12, rgba(tint, 0.9));
-    halo.addColorStop(0.4, rgba(tint, 0.22));
-    halo.addColorStop(1, rgba(tint, 0));
-    ctx.fillStyle = halo;
-    ctx.fillRect(0, 0, FLARE_SIZE, FLARE_SIZE);
-  });
-
-const createStars = (count: number, flares: number, random: Random) => {
-  const stars: Star[] = [];
-  for (let index = 0; index < count; index++) {
-    const brightness = 0.25 + 0.75 * random() ** 2.4;
-    stars.push({
-      x: random(),
-      y: random(),
-      depth: 0.3 + random() * 1.3,
-      size: 0.5 + brightness * 1.1,
-      brightness,
-      phase: random() * Math.PI * 2,
-      speed: 0.6 + random() * 2.2,
-      tint: pickSpectralTint(random),
-      flare: false,
-    });
-  }
-  stars.sort((a, b) => b.brightness - a.brightness);
-  for (let index = 0; index < flares && index < stars.length; index++) {
-    stars[index].flare = true;
-    stars[index].brightness = 0.85 + random() * 0.15;
-    stars[index].speed *= 0.4;
-  }
-  return stars.sort((a, b) => a.tint - b.tint);
-};
 
 const spawnShootingStar = (width: number, height: number, random: Random): ShootingStar => {
   const heading = Math.PI * 0.78 + (random() - 0.5) * 0.4;
@@ -140,13 +54,12 @@ export const runStarfield = (canvas: HTMLCanvasElement, options: StarfieldOption
   const ctx = canvas.getContext('2d');
   if (!ctx) return () => {};
 
-  const random = createRandom(options.seed + 41);
-  const glows = SPECTRAL_TINTS.map((_, tint) => createGlow(tint));
-  const flareSprites = SPECTRAL_TINTS.map((_, tint) => createFlare(tint));
+  const random = createRandom(SKY_SEED + 43);
+  const painter = createStarPainter(ctx);
 
   let width = 0;
   let height = 0;
-  let stars: Star[] = [];
+  let stars: SkyStar[] = [];
   let shooting: ShootingStar | null = null;
   let nextShootingAt = 4 + random() * 6;
 
@@ -155,13 +68,12 @@ export const runStarfield = (canvas: HTMLCanvasElement, options: StarfieldOption
   let elapsed = 0;
   let drift = 0;
   let scroll = window.scrollY;
-  let pointerX = 0;
-  let pointerY = 0;
-  let targetPointerX = 0;
-  let targetPointerY = 0;
-
-  const targetCount = () =>
-    Math.min(MAX_STARS, Math.max(MIN_STARS, Math.round((width * height) / STAR_AREA)));
+  let steerX = 0;
+  let steerY = 0;
+  let targetSteerX = 0;
+  let targetSteerY = 0;
+  let flowX = 0;
+  let flowY = 0;
 
   const resize = () => {
     width = window.innerWidth;
@@ -171,9 +83,8 @@ export const runStarfield = (canvas: HTMLCanvasElement, options: StarfieldOption
     canvas.height = Math.round(height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    const count = targetCount();
-    if (Math.abs(count - stars.length) > stars.length * 0.25) {
-      stars = createStars(count, width < 768 ? FLARES_MOBILE : FLARES_DESKTOP, random);
+    if (Math.abs(skyStarCount(width, height) - stars.length) > stars.length * 0.25) {
+      stars = createSkyStars(width, height);
     }
   };
 
@@ -196,45 +107,19 @@ export const runStarfield = (canvas: HTMLCanvasElement, options: StarfieldOption
     ctx.lineTo(headX, headY);
     ctx.stroke();
 
-    ctx.globalAlpha = fade;
-    ctx.drawImage(
-      glows[1],
-      headX - GLOW_SIZE / 4,
-      headY - GLOW_SIZE / 4,
-      GLOW_SIZE / 2,
-      GLOW_SIZE / 2,
-    );
+    painter.spark(headX, headY, SHOOTING_HEAD, fade);
   };
 
   const draw = () => {
     ctx.clearRect(0, 0, width, height);
     const shift = scroll * SCROLL_PARALLAX + drift;
-    let activeTint = -1;
+    painter.reset();
+    const clock = performance.now() / 1000;
 
     for (const star of stars) {
-      const x = wrap(star.x * width + pointerX * star.depth, width);
-      const y = wrap(star.y * height - shift * star.depth + pointerY * star.depth, height);
-      const twinkle = options.reduced
-        ? 1
-        : 0.72 + 0.28 * Math.sin(elapsed * star.speed + star.phase);
-      const alpha = star.brightness * twinkle;
-
-      if (star.flare) {
-        const size = FLARE_SIZE * (0.55 + 0.45 * twinkle);
-        ctx.globalAlpha = alpha;
-        ctx.drawImage(flareSprites[star.tint], x - size / 2, y - size / 2, size, size);
-      } else if (star.size > 1.15) {
-        const size = star.size * 7;
-        ctx.globalAlpha = alpha;
-        ctx.drawImage(glows[star.tint], x - size / 2, y - size / 2, size, size);
-      } else {
-        if (star.tint !== activeTint) {
-          activeTint = star.tint;
-          ctx.fillStyle = rgba(activeTint, 1);
-        }
-        ctx.globalAlpha = alpha;
-        ctx.fillRect(x - star.size / 2, y - star.size / 2, star.size, star.size);
-      }
+      const x = wrap(star.x * width + flowX * star.depth, width);
+      const y = wrap(star.y * height + (flowY - shift) * star.depth, height);
+      painter.draw(star, x, y, options.reduced ? 1 : twinkleAt(star, clock));
     }
 
     if (shooting) drawShootingStar(shooting);
@@ -254,8 +139,14 @@ export const runStarfield = (canvas: HTMLCanvasElement, options: StarfieldOption
   }
 
   const handlePointer = (event: PointerEvent) => {
-    targetPointerX = ((event.clientX - width / 2) / width) * -POINTER_REACH;
-    targetPointerY = ((event.clientY - height / 2) / height) * -POINTER_REACH;
+    if (event.pointerType !== 'mouse') return;
+    targetSteerX = (event.clientX - width / 2) / (width / 2);
+    targetSteerY = (event.clientY - height / 2) / (height / 2);
+  };
+
+  const releaseSteer = () => {
+    targetSteerX = 0;
+    targetSteerY = 0;
   };
 
   const tick = (time: number) => {
@@ -263,18 +154,26 @@ export const runStarfield = (canvas: HTMLCanvasElement, options: StarfieldOption
     lastTime = time;
     elapsed += delta;
 
-    const ease = 1 - Math.exp(-delta * 3);
-    pointerX += (targetPointerX - pointerX) * ease;
-    pointerY += (targetPointerY - pointerY) * ease;
+    const phase = getIntroPhase();
+    const introHolding = phase === 'playing' || phase === 'formed';
+    const ease = 1 - Math.exp(-delta * STEER_EASE);
+    steerX += (targetSteerX - steerX) * ease;
+    steerY += (targetSteerY - steerY) * ease;
     scroll += (window.scrollY - scroll) * (1 - Math.exp(-delta * 6));
 
-    const arrival = Math.min(
-      1,
-      Math.max(0, (options.progress() - ARRIVAL_START) / (1 - ARRIVAL_START)),
-    );
-    drift += DRIFT_SPEED * (1 - 0.7 * arrival) * delta;
+    if (!introHolding) {
+      const arrival = Math.min(
+        1,
+        Math.max(0, (options.progress() - ARRIVAL_START) / (1 - ARRIVAL_START)),
+      );
+      drift += DRIFT_SPEED * (1 - 0.7 * arrival) * delta;
+      flowX -= steerX * STEER_SPEED * delta;
+      flowY -= steerY * STEER_SPEED * delta;
+    }
 
-    if (shooting) {
+    if (introHolding) {
+      nextShootingAt = elapsed + 3;
+    } else if (shooting) {
       shooting.age += delta;
       if (shooting.age >= shooting.life) shooting = null;
     } else if (elapsed >= nextShootingAt) {
@@ -288,11 +187,15 @@ export const runStarfield = (canvas: HTMLCanvasElement, options: StarfieldOption
 
   window.addEventListener('resize', resize);
   window.addEventListener('pointermove', handlePointer, { passive: true });
+  window.addEventListener('blur', releaseSteer);
+  document.documentElement.addEventListener('mouseleave', releaseSteer);
   frame = requestAnimationFrame(tick);
 
   return () => {
     cancelAnimationFrame(frame);
     window.removeEventListener('resize', resize);
     window.removeEventListener('pointermove', handlePointer);
+    window.removeEventListener('blur', releaseSteer);
+    document.documentElement.removeEventListener('mouseleave', releaseSteer);
   };
 };

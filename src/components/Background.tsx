@@ -4,8 +4,8 @@ import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { easing } from '../lib/motion';
 import { useJourney } from '../journey/useJourney';
 import type { Bitmap, CosmosLayers, CosmosRequest } from '../lib/cosmos';
+import { SKY_SEED } from '../lib/skyStars';
 
-const SKY_SEED = 1977;
 const SKY_MIN_WIDTH = 200;
 const SKY_MAX_WIDTH = 480;
 const DUST_MAX_WIDTH = 1920;
@@ -106,7 +106,6 @@ const Background = () => {
     import('../lib/starfield').then(({ runStarfield }) => {
       if (cancelled) return;
       stop = runStarfield(canvas, {
-        seed: SKY_SEED,
         reduced: prefersReducedMotion,
         progress: () => progress.get(),
       });
