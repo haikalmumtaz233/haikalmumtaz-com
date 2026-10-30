@@ -15,17 +15,6 @@ export const profile = {
   siteUrl: 'https://haikalmumtaz.com',
 };
 
-export interface NameMeaning {
-  word: string;
-  script: string;
-  meaning: string;
-}
-
-export const nameMeanings: NameMeaning[] = [
-  { word: 'Haikal', script: 'هيكل', meaning: 'The Frame' },
-  { word: 'Mumtaz', script: 'ممتاز', meaning: 'The Distinguished' },
-];
-
 export const socialProfiles: SocialProfile[] = [
   { label: 'GitHub', href: 'https://github.com/haikalmumtaz233' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/haikal-mumtaz/' },

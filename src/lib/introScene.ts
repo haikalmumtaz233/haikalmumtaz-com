@@ -1,40 +1,15 @@
 import { buildFigure, traceFigure, type Figure } from './constellation';
 import { createSkyStars, createStarPainter, twinkleAt } from './skyStars';
 
-export interface WordMeaning {
-  word: string;
-  script: string;
-  meaning: string;
-}
-
 interface SceneOptions {
   backdrop: HTMLElement;
-  meanings: readonly WordMeaning[];
   onFormed: () => void;
   onDone: () => void;
-}
-
-interface WordBox {
-  text: string;
-  left: number;
-  bottom: number;
-  size: number;
-  lastLetter: number;
 }
 
 interface GlyphTargets {
   points: number[];
   figures: Figure[];
-  words: WordBox[];
-}
-
-interface Label {
-  x: number;
-  y: number;
-  size: number;
-  script: string;
-  meaning: string;
-  at: number;
 }
 
 const PIXEL_BUDGET = 1_600_000;
@@ -43,7 +18,6 @@ const FRAME_LINE = 'rgba(196, 181, 253, 1)';
 const GLYPH_FONT = '"Monument Extended"';
 const ORDINARY_SHARE = 0.7;
 const NODE_SIZE = 13;
-const LABEL_FONT = '"Plus Jakarta Sans Variable", sans-serif';
 
 const TIMING = {
   igniteSpread: 0.75,
@@ -57,7 +31,6 @@ const TIMING = {
   traceStagger: 0.085,
   traceDuration: 0.42,
   reachFlash: 0.35,
-  labelFade: 0.45,
   fill: 1.7,
   sweep: 0.5,
   trail: 0.018,
@@ -105,7 +78,6 @@ const closestOnSegments = (segments: number[], x: number, y: number): readonly [
 const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
 
 const traceStart = (letter: number) => TIMING.traceFrom + letter * TIMING.traceStagger;
-const traceEnd = (letter: number) => traceStart(letter) + TIMING.traceDuration;
 
 const sampleGlyphs = (width: number, height: number, maxPoints: number): GlyphTargets | null => {
   const origins = Array.from(document.querySelectorAll<HTMLElement>('[data-glyph-origin]'));
@@ -126,8 +98,6 @@ const sampleGlyphs = (width: number, height: number, maxPoints: number): GlyphTa
   let right = 0;
   let bottom = 0;
   const figures: Figure[] = [];
-  const words: WordBox[] = [];
-  let previous: { right: number; top: number; size: number } | null = null;
 
   for (const origin of origins) {
     const char = origin.dataset.glyphOrigin ?? '';
@@ -145,21 +115,8 @@ const sampleGlyphs = (width: number, height: number, maxPoints: number): GlyphTa
       bottom: rect.top + metrics.actualBoundingBoxDescent,
     };
 
-    const newWord =
-      !previous ||
-      Math.abs(box.top - previous.top) > previous.size * 0.5 ||
-      box.left - previous.right > previous.size * 0.2;
-    if (newWord) words.push({ text: '', left: box.left, bottom: box.bottom, size, lastLetter: 0 });
-    const word = words[words.length - 1];
-    word.text += char.toUpperCase();
-    word.bottom = Math.max(word.bottom, box.bottom);
-
     const figure = buildFigure(char, box);
-    if (figure) {
-      figures.push(figure);
-      word.lastLetter = figures.length - 1;
-    }
-    previous = { right: box.right, top: box.top, size };
+    if (figure) figures.push(figure);
 
     left = Math.min(left, rect.left);
     right = Math.max(right, rect.left + size * 1.2);
@@ -189,35 +146,18 @@ const sampleGlyphs = (width: number, height: number, maxPoints: number): GlyphTa
     }
   }
 
-  return points.length > 100 ? { points, figures, words } : null;
+  return points.length > 100 ? { points, figures } : null;
 };
 
 const scatterTargets = (width: number, height: number, count: number): GlyphTargets => {
   const points: number[] = [];
   for (let i = 0; i < count; i++) points.push(Math.random() * width, Math.random() * height);
-  return { points, figures: [], words: [] };
+  return { points, figures: [] };
 };
-
-const createLabels = (words: WordBox[], meanings: readonly WordMeaning[]) =>
-  words.flatMap((word): Label[] => {
-    const meaning = meanings.find((entry) => entry.word.toUpperCase() === word.text);
-    if (!meaning) return [];
-    const size = Math.min(15, Math.max(10, word.size * 0.11));
-    return [
-      {
-        x: word.left,
-        y: word.bottom + Math.max(14, word.size * 0.2) + size,
-        size,
-        script: meaning.script,
-        meaning: meaning.meaning.toUpperCase(),
-        at: traceEnd(word.lastLetter),
-      },
-    ];
-  });
 
 export const runIntroScene = (
   canvas: HTMLCanvasElement,
-  { backdrop, meanings, onFormed, onDone }: SceneOptions,
+  { backdrop, onFormed, onDone }: SceneOptions,
 ) => {
   const ctx = canvas.getContext('2d');
   if (!ctx) {
@@ -253,7 +193,6 @@ export const runIntroScene = (
 
   let figures: Figure[] = [];
   let vertexStars: number[][] = [];
-  let labels: Label[] = [];
 
   let count = 0;
   let tx = new Float32Array(0);
@@ -297,7 +236,6 @@ export const runIntroScene = (
     const chosen = targets ?? scatterTargets(width, height, maxPoints);
     const points = chosen.points;
     figures = chosen.figures;
-    labels = createLabels(chosen.words, meanings);
     borrowStars();
     pace = targets ? 1 : 1.8;
     count = points.length / 2;
@@ -446,40 +384,6 @@ export const runIntroScene = (
     ctx.globalAlpha = 1;
   };
 
-  const drawLabels = (tg: number) => {
-    const vanish = 1 - clamp01((tg - (TIMING.formed - 0.25)) / 0.5);
-    if (vanish <= 0) return;
-    ctx.textBaseline = 'alphabetic';
-    ctx.textAlign = 'left';
-
-    for (const label of labels) {
-      const appear = easeOutExpo(clamp01((tg - label.at) / TIMING.labelFade));
-      const alpha = appear * vanish;
-      if (alpha <= 0) continue;
-      const y = label.y + (1 - appear) * 6;
-
-      ctx.globalAlpha = alpha * 0.5;
-      ctx.fillStyle = FRAME_LINE;
-      ctx.fillRect(label.x, y - label.size * 0.36, label.size * 1.6 * appear, 1);
-
-      const scriptX = label.x + label.size * 2.2;
-      ctx.globalAlpha = alpha;
-      ctx.font = `600 ${label.size * 1.15}px ${LABEL_FONT}`;
-      ctx.letterSpacing = '0px';
-      ctx.fillStyle = '#f5f3ff';
-      ctx.fillText(label.script, scriptX, y);
-      const scriptWidth = ctx.measureText(label.script).width;
-
-      ctx.globalAlpha = alpha * 0.82;
-      ctx.font = `600 ${label.size}px ${LABEL_FONT}`;
-      ctx.letterSpacing = `${label.size * 0.28}px`;
-      ctx.fillStyle = FRAME_LINE;
-      ctx.fillText(label.meaning, scriptX + scriptWidth + label.size * 0.9, y);
-    }
-    ctx.letterSpacing = '0px';
-    ctx.globalAlpha = 1;
-  };
-
   const locate = (i: number, tg: number) => {
     if (tg >= TIMING.release) {
       const decay = (1 - Math.exp(-2.4 * (tg - TIMING.release))) / 2.4;
@@ -570,7 +474,6 @@ export const runIntroScene = (
 
     drawSky(elapsed, tg, sky);
     drawFrame(tg);
-    drawLabels(tg);
     drawParticles(tg);
 
     if (!formedSent && tg >= TIMING.formed) {

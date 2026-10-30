@@ -3,7 +3,6 @@ import { useLocation } from 'react-router';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { setIntroPhase, shouldPlayIntro } from '../lib/intro';
 import { runIntroScene } from '../lib/introScene';
-import { nameMeanings } from '../data/profile';
 
 const Intro = () => {
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -23,7 +22,6 @@ const Intro = () => {
 
     return runIntroScene(canvas, {
       backdrop,
-      meanings: nameMeanings,
       onFormed: () => setIntroPhase('formed'),
       onDone: () => {
         setIntroPhase('done');
