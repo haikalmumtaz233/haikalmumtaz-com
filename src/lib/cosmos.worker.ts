@@ -1,7 +1,15 @@
-import { renderCosmos, type CosmosRequest } from './cosmos';
+import { renderCosmos, type Bitmap, type CosmosImages, type CosmosRequest } from './cosmos';
 
-self.addEventListener('message', (event: MessageEvent<CosmosRequest>) => {
+const toImage = ({ data, width, height }: Bitmap) =>
+  createImageBitmap(new ImageData(data, width, height));
+
+self.addEventListener('message', async (event: MessageEvent<CosmosRequest>) => {
   const layers = renderCosmos(event.data);
-  const transfer = [layers.sky.data.buffer, layers.dust.data.buffer, layers.planet.data.buffer];
-  self.postMessage(layers, { transfer });
+  const [sky, dust, planet] = await Promise.all([
+    toImage(layers.sky),
+    toImage(layers.dust),
+    toImage(layers.planet),
+  ]);
+  const images: CosmosImages = { sky, dust, planet };
+  self.postMessage(images, { transfer: [sky, dust, planet] });
 });

@@ -26,6 +26,12 @@ export interface CosmosLayers {
   planet: Bitmap;
 }
 
+export interface CosmosImages {
+  sky: ImageBitmap;
+  dust: ImageBitmap;
+  planet: ImageBitmap;
+}
+
 type Rgb = readonly [number, number, number];
 
 const VIOLET: Rgb = [0.42, 0.25, 0.92];

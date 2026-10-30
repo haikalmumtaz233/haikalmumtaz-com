@@ -3,7 +3,7 @@ import { m, useTransform } from 'motion/react';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { easing } from '../lib/motion';
 import { useJourney } from '../journey/useJourney';
-import { planetLayout, type Bitmap, type CosmosLayers, type CosmosRequest } from '../lib/cosmos';
+import { planetLayout, type CosmosImages, type CosmosRequest } from '../lib/cosmos';
 import { SKY_SEED } from '../lib/skyStars';
 
 const SKY_MIN_WIDTH = 200;
@@ -19,11 +19,15 @@ const planetStops = [0, 0.6, 1];
 const planetRise = ['-4vh', '-12vh', '-44vh'];
 const planetRest = '-16vh';
 
-const paint = (canvas: HTMLCanvasElement | null, bitmap: Bitmap) => {
-  if (!canvas) return;
-  canvas.width = bitmap.width;
-  canvas.height = bitmap.height;
-  canvas.getContext('2d')?.putImageData(new ImageData(bitmap.data, bitmap.width), 0, 0);
+const show = (canvas: HTMLCanvasElement | null, image: ImageBitmap) => {
+  const ctx = canvas?.getContext('bitmaprenderer');
+  if (!canvas || !ctx) {
+    image.close();
+    return;
+  }
+  canvas.width = image.width;
+  canvas.height = image.height;
+  ctx.transferFromImageBitmap(image);
 };
 
 const Background = () => {
@@ -46,11 +50,11 @@ const Background = () => {
     let generatedWidth = 0;
     let timer = 0;
 
-    worker.addEventListener('message', (event: MessageEvent<CosmosLayers>) => {
+    worker.addEventListener('message', (event: MessageEvent<CosmosImages>) => {
       const { sky, dust, planet } = event.data;
-      paint(skyRef.current, sky);
-      paint(dustRef.current, dust);
-      paint(planetRef.current, planet);
+      show(skyRef.current, sky);
+      show(dustRef.current, dust);
+      show(planetRef.current, planet);
       setPainted(true);
     });
 
