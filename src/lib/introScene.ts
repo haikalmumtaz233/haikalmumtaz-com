@@ -33,8 +33,8 @@ const TIMING = {
   release: 1.82,
   settle: 0.45,
   escapeFade: 1.3,
-  skyFrom: 1.25,
-  skyTo: 2.6,
+  skyFrom: 1.6,
+  skyTo: 2.9,
 };
 
 const END = TIMING.release + TIMING.escapeFade + 0.05;
@@ -322,6 +322,10 @@ export const runIntroScene = (
 
     for (let i = 0; i < count; i++) {
       if (tg <= start[i]) continue;
+      if (!released && tg >= start[i] + TIMING.travel + TIMING.trail) {
+        segmentsByGroup[group[i]].push(tx[i], ty[i], tx[i], ty[i]);
+        continue;
+      }
       locate(i, Math.max(start[i], tailTime));
       const tailX = headX;
       const tailY = headY;
