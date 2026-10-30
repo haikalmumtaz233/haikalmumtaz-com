@@ -1,269 +1,181 @@
-import { useEffect, useRef } from 'react';
-import { m, useScroll, useTransform } from 'motion/react';
+import { useEffect, useRef, useState } from 'react';
+import { m, useTransform } from 'motion/react';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { easing } from '../lib/motion';
 import { useJourney } from '../journey/useJourney';
+import type { Bitmap, CosmosLayers, CosmosRequest } from '../lib/cosmos';
 
-const STAR_DENSITY = 8000;
-const SCROLL_PARALLAX = 0.08;
-const ARRIVAL_START = 0.75;
-const ARRIVAL_DRIFT = 0.3;
-const ROUND_STAR_RADIUS = 1.1;
-const STAR_COLORS = ['rgb(255, 255, 255)', 'rgb(220, 250, 255)', 'rgb(240, 230, 255)'];
+const SKY_SEED = 1977;
+const SKY_MIN_WIDTH = 200;
+const SKY_MAX_WIDTH = 480;
+const DUST_MAX_WIDTH = 1920;
+const LAYER_HEIGHT = 1.4;
+const GALAXY_SIZE_DESKTOP = 768;
+const GALAXY_SIZE_MOBILE = 512;
+const MOBILE_WIDTH = 768;
+const REGENERATE_DELAY = 300;
+const REGENERATE_WIDTH_CHANGE = 0.15;
+const GALAXY_SPIN_SECONDS = 420;
 
-interface Star {
-  x: number;
-  y: number;
-  depth: number;
-  radius: number;
-  baseAlpha: number;
-  alpha: number;
-  twinkleSpeed: number;
-  color: number;
-}
+const journeyStops = [0, 0.55, 1];
+const galaxyRest = { x: '22vw', y: '-20vh', scale: 0.62, opacity: 0.9 };
 
-const wrap = (value: number, max: number) => ((value % max) + max) % max;
+const galaxySizeFor = (width: number) =>
+  width < MOBILE_WIDTH ? GALAXY_SIZE_MOBILE : GALAXY_SIZE_DESKTOP;
 
-const glow = (rgb: string) =>
-  `radial-gradient(circle at center, rgba(${rgb}, 1) 0%, rgba(${rgb}, 0.55) 28%, rgba(${rgb}, 0) 68%)`;
-
-const orbs = [
-  {
-    position: 'top-[-32%] left-[-22%]',
-    size: 'w-[900px] h-[900px]',
-    color: glow('147, 51, 234'),
-    drift: [50, 15] as const,
-  },
-  {
-    position: 'bottom-[-26%] right-[-16%]',
-    size: 'w-[640px] h-[640px]',
-    color: glow('6, 182, 212'),
-    drift: [40, 18] as const,
-  },
-  {
-    position: 'top-[16%] right-[0%]',
-    size: 'w-[460px] h-[460px]',
-    color: glow('217, 70, 239'),
-    drift: [60, 12] as const,
-  },
-];
+const paint = (canvas: HTMLCanvasElement | null, bitmap: Bitmap) => {
+  if (!canvas) return;
+  canvas.width = bitmap.width;
+  canvas.height = bitmap.height;
+  canvas.getContext('2d')?.putImageData(new ImageData(bitmap.data, bitmap.width), 0, 0);
+};
 
 const Background = () => {
   const prefersReducedMotion = usePrefersReducedMotion();
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const { progress } = useJourney();
-  const { scrollYProgress } = useScroll();
+  const skyRef = useRef<HTMLCanvasElement>(null);
+  const dustRef = useRef<HTMLCanvasElement>(null);
+  const galaxyRef = useRef<HTMLCanvasElement>(null);
+  const starsRef = useRef<HTMLCanvasElement>(null);
+  const [painted, setPainted] = useState(false);
 
-  const orbY = [
-    useTransform(scrollYProgress, [0, 1], ['0vh', '50vh']),
-    useTransform(scrollYProgress, [0, 1], ['0vh', '30vh']),
-    useTransform(scrollYProgress, [0, 1], ['0vh', '40vh']),
-  ];
-
-  const orbOpacity = [
-    useTransform(progress, [0, 0.45, 1], [0.4, 0.22, 0.15]),
-    useTransform(progress, [0, 0.45, 1], [0.18, 0.4, 0.22]),
-    useTransform(progress, [0, 0.55, 1], [0.15, 0.22, 0.4]),
-  ];
+  const skyY = useTransform(progress, [0, 1], ['0%', '-21%']);
+  const dustY = useTransform(progress, [0, 1], ['0%', '-28%']);
+  const galaxyX = useTransform(progress, journeyStops, [galaxyRest.x, '-18vw', '-6vw']);
+  const galaxyY = useTransform(progress, journeyStops, [galaxyRest.y, '8vh', '30vh']);
+  const galaxyScale = useTransform(progress, journeyStops, [galaxyRest.scale, 0.95, 1.5]);
+  const galaxyOpacity = useTransform(progress, journeyStops, [galaxyRest.opacity, 0.7, 0.8]);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const worker = new Worker(new URL('../lib/cosmos.worker.ts', import.meta.url), {
+      type: 'module',
+    });
+    let generatedWidth = 0;
+    let hasGalaxy = false;
+    let timer = 0;
 
-    const ctx = canvas.getContext('2d', { alpha: true });
-    if (!ctx) return;
+    worker.addEventListener('message', (event: MessageEvent<CosmosLayers>) => {
+      const { sky, dust, galaxy } = event.data;
+      paint(skyRef.current, sky);
+      paint(dustRef.current, dust);
+      if (galaxy) paint(galaxyRef.current, galaxy);
+      setPainted(true);
+    });
 
-    let animationFrameId = 0;
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-
-    let mouseX = 0;
-    let mouseY = 0;
-    let targetMouseX = 0;
-    let targetMouseY = 0;
-
-    let smoothScrollY = window.scrollY;
-
-    const stars: Star[] = [];
-
-    const populate = () => {
-      stars.length = 0;
-      const starCount = Math.floor((width * height) / STAR_DENSITY);
-
-      for (let i = 0; i < starCount; i++) {
-        const baseAlpha = Math.random() * 0.55 + 0.4;
-        const depth = Math.random() * 1.5 + 0.5;
-        stars.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          depth,
-          radius: Math.random() * 1.2 * depth * 0.8,
-          baseAlpha,
-          alpha: baseAlpha,
-          twinkleSpeed: Math.random() * 0.01 + 0.002,
-          color: Math.floor(Math.random() * STAR_COLORS.length),
-        });
-      }
-
-      stars.sort((a, b) => a.color - b.color);
+    const generate = () => {
+      const width = window.innerWidth;
+      const height = Math.round(window.innerHeight * LAYER_HEIGHT);
+      const skyWidth = Math.min(SKY_MAX_WIDTH, Math.max(SKY_MIN_WIDTH, Math.ceil(width / 4)));
+      const dustWidth = Math.min(DUST_MAX_WIDTH, width);
+      generatedWidth = width;
+      const request: CosmosRequest = {
+        seed: SKY_SEED,
+        sky: { width: skyWidth, height: Math.ceil((height * skyWidth) / width) },
+        dust: { width: dustWidth, height: Math.ceil((height * dustWidth) / width) },
+        galaxySize: hasGalaxy ? null : galaxySizeFor(width),
+      };
+      hasGalaxy = true;
+      worker.postMessage(request);
     };
 
     const handleResize = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-      populate();
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        const change = Math.abs(window.innerWidth - generatedWidth) / generatedWidth;
+        if (change > REGENERATE_WIDTH_CHANGE) generate();
+      }, REGENERATE_DELAY);
     };
 
-    const handleMouseMove = (event: MouseEvent) => {
-      targetMouseX = (event.clientX - width / 2) * 0.02;
-      targetMouseY = (event.clientY - height / 2) * 0.02;
-    };
-
-    handleResize();
-
-    const drawField = () => {
-      ctx.clearRect(0, 0, width, height);
-      let activeColor = -1;
-
-      for (const star of stars) {
-        if (star.color !== activeColor) {
-          activeColor = star.color;
-          ctx.fillStyle = STAR_COLORS[activeColor];
-        }
-
-        const x = wrap(star.x, width);
-        const y = wrap(star.y - smoothScrollY * star.depth * SCROLL_PARALLAX, height);
-        ctx.globalAlpha = star.alpha > 0 ? star.alpha : 0;
-
-        if (star.radius > ROUND_STAR_RADIUS) {
-          ctx.beginPath();
-          ctx.arc(x, y, star.radius, 0, Math.PI * 2);
-          ctx.fill();
-        } else {
-          const diameter = star.radius * 2;
-          ctx.fillRect(x - star.radius, y - star.radius, diameter, diameter);
-        }
-      }
-
-      ctx.globalAlpha = 1;
-    };
-
-    if (prefersReducedMotion) {
-      const handleStaticResize = () => {
-        handleResize();
-        drawField();
-      };
-
-      drawField();
-      window.addEventListener('resize', handleStaticResize);
-
-      return () => {
-        window.removeEventListener('resize', handleStaticResize);
-      };
-    }
-
-    const animate = () => {
-      mouseX += (targetMouseX - mouseX) * 0.05;
-      mouseY += (targetMouseY - mouseY) * 0.05;
-      smoothScrollY += (window.scrollY - smoothScrollY) * 0.08;
-
-      const arrival = Math.min(
-        1,
-        Math.max(0, (progress.get() - ARRIVAL_START) / (1 - ARRIVAL_START)),
-      );
-      const drift = 0.2 * (1 - (1 - ARRIVAL_DRIFT) * arrival);
-      const pullX = mouseX * 0.05;
-      const pullY = mouseY * 0.05;
-
-      for (const star of stars) {
-        star.alpha += star.twinkleSpeed;
-        if (star.alpha > 1 || star.alpha < star.baseAlpha - 0.15) {
-          star.twinkleSpeed = -star.twinkleSpeed;
-        }
-
-        star.x -= pullX * star.depth;
-        star.y -= (pullY + drift) * star.depth;
-      }
-
-      drawField();
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
+    generate();
     window.addEventListener('resize', handleResize);
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-
-    animate();
 
     return () => {
+      window.clearTimeout(timer);
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('mousemove', handleMouseMove);
-      cancelAnimationFrame(animationFrameId);
+      worker.terminate();
+    };
+  }, []);
+
+  useEffect(() => {
+    const canvas = starsRef.current;
+    if (!canvas) return;
+
+    let stop: (() => void) | null = null;
+    let cancelled = false;
+
+    import('../lib/starfield').then(({ runStarfield }) => {
+      if (cancelled) return;
+      stop = runStarfield(canvas, {
+        seed: SKY_SEED,
+        reduced: prefersReducedMotion,
+        progress: () => progress.get(),
+      });
+    });
+
+    return () => {
+      cancelled = true;
+      stop?.();
     };
   }, [prefersReducedMotion, progress]);
 
   return (
-    <div aria-hidden="true" className="fixed inset-0 z-[-1] bg-[#09080e]">
-      <m.canvas
-        ref={canvasRef}
-        className="absolute inset-0 block"
-        initial={prefersReducedMotion ? false : { opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 2.4, ease: easing.smooth }}
-      />
-
+    <div aria-hidden="true" className="fixed inset-0 z-[-1] overflow-hidden bg-[#09080e]">
       <m.div
-        className="absolute inset-0 overflow-hidden pointer-events-none"
-        initial={prefersReducedMotion ? false : { opacity: 0, scale: 1.08 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 2.8, ease: easing.expo }}
+        className="absolute inset-0"
+        initial={false}
+        animate={{ opacity: painted ? 1 : 0 }}
+        transition={{ duration: prefersReducedMotion ? 0 : 2.4, ease: easing.smooth }}
       >
-        {orbs.map((orb, index) => (
-          <m.div
-            key={orb.position}
-            className={`absolute ${orb.position}`}
-            style={{ y: prefersReducedMotion ? 0 : orbY[index] }}
-          >
-            <m.div
-              className={`${orb.size} rounded-full`}
-              style={{
-                backgroundImage: orb.color,
-                opacity: prefersReducedMotion ? 0.4 : orbOpacity[index],
-                willChange: 'transform, opacity',
-              }}
+        <m.canvas
+          ref={skyRef}
+          className="absolute inset-x-0 top-0 block h-[140lvh] w-full"
+          style={{ y: prefersReducedMotion ? 0 : skyY }}
+        />
+        <m.canvas
+          ref={dustRef}
+          className="absolute inset-x-0 top-0 block h-[140lvh] w-full"
+          style={{ y: prefersReducedMotion ? 0 : dustY }}
+        />
+
+        <m.div
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+          style={
+            prefersReducedMotion
+              ? galaxyRest
+              : { x: galaxyX, y: galaxyY, scale: galaxyScale, opacity: galaxyOpacity }
+          }
+        >
+          <div className="[transform:rotate(-26deg)_rotateX(62deg)]">
+            <m.canvas
+              ref={galaxyRef}
+              className="block aspect-square w-[min(72vmax,900px)]"
               {...(prefersReducedMotion
                 ? {}
                 : {
-                    animate: { x: [-orb.drift[0], orb.drift[0], -orb.drift[0]] },
+                    animate: { rotate: -360 },
                     transition: {
-                      duration: orb.drift[1],
+                      duration: GALAXY_SPIN_SECONDS,
                       repeat: Infinity,
-                      ease: 'easeInOut' as const,
+                      ease: 'linear' as const,
                     },
                   })}
             />
-          </m.div>
-        ))}
+          </div>
+        </m.div>
       </m.div>
 
+      <canvas ref={starsRef} className="absolute inset-0 block size-full" />
+
       <div
-        className="absolute bottom-0 left-0 right-0 h-[60vh] pointer-events-none opacity-70"
+        className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'linear-gradient(to top, rgba(217, 70, 239, 0.3) 0%, rgba(168, 85, 247, 0.1) 50%, transparent 100%)',
+            'radial-gradient(ellipse at 50% 45%, transparent 35%, rgba(9, 8, 14, 0.7) 100%)',
         }}
       />
 
       <div
-        className="absolute inset-0 opacity-30 pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle at 50% 50%, transparent 20%, #09080e 100%)',
-        }}
-      />
-
-      <div
-        className="absolute inset-0 opacity-[0.04] pointer-events-none"
+        className="absolute inset-0 opacity-[0.035] pointer-events-none"
         style={{
           backgroundImage:
             'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iMSIvPjwvc3ZnPg==)',
