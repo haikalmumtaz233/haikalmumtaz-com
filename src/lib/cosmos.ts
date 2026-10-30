@@ -6,17 +6,24 @@ export interface Bitmap {
   data: Uint8ClampedArray<ArrayBuffer>;
 }
 
+export interface PlanetSpec {
+  width: number;
+  height: number;
+  radius: number;
+  top: number;
+}
+
 export interface CosmosRequest {
   seed: number;
   sky: { width: number; height: number };
   dust: { width: number; height: number };
-  galaxySize: number | null;
+  planet: PlanetSpec;
 }
 
 export interface CosmosLayers {
   sky: Bitmap;
   dust: Bitmap;
-  galaxy: Bitmap | null;
+  planet: Bitmap;
 }
 
 type Rgb = readonly [number, number, number];
@@ -27,8 +34,6 @@ const MAGENTA: Rgb = [0.86, 0.28, 0.78];
 export const SKY_MAX_ALPHA = 0.62;
 
 const STARLIGHT: Rgb = [1, 0.9, 0.82];
-const CORE_TINT: Rgb = [1, 0.86, 0.7];
-const HALO_TINT: Rgb = [0.74, 0.68, 1];
 
 export const SPECTRAL_TINTS: readonly Rgb[] = [
   [170, 191, 255],
@@ -51,9 +56,6 @@ export const createRandom = (seed: number): Random => {
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 };
-
-export const gaussian = (random: Random) =>
-  Math.sqrt(-2 * Math.log(1 - random())) * Math.cos(2 * Math.PI * random());
 
 export const pickSpectralTint = (random: Random) => {
   let roll = random();
@@ -233,143 +235,109 @@ export const renderDust = (width: number, height: number, seed: number): Bitmap 
   return bitmap;
 };
 
-const boxBlur = (source: Float32Array, size: number, channels: number, radius: number) => {
-  const temp = new Float32Array(source.length);
-  const span = radius * 2 + 1;
+export const PLANET_RISE = 0.36;
+export const PLANET_GLOW = 0.08;
 
-  for (let pass = 0; pass < 2; pass++) {
-    const from = pass === 0 ? source : temp;
-    const to = pass === 0 ? temp : source;
-    const stride = pass === 0 ? channels : size * channels;
-    const step = pass === 0 ? size * channels : channels;
+export const planetLayout = (viewportWidth: number, viewportHeight: number) => {
+  const glow = viewportHeight * PLANET_GLOW;
+  return {
+    radius: Math.max(viewportWidth * 0.75, viewportHeight * 0.55),
+    glow,
+    height: glow + viewportHeight * PLANET_RISE,
+  };
+};
 
-    for (let line = 0; line < size; line++) {
-      for (let channel = 0; channel < channels; channel++) {
-        const base = line * step + channel;
-        let sum = 0;
-        for (let index = -radius; index <= radius; index++) {
-          const clamped = Math.min(size - 1, Math.max(0, index));
-          sum += from[base + clamped * stride];
-        }
-        for (let index = 0; index < size; index++) {
-          to[base + index * stride] = sum / span;
-          const leaving = Math.max(0, index - radius);
-          const entering = Math.min(size - 1, index + radius + 1);
-          sum += from[base + entering * stride] - from[base + leaving * stride];
-        }
+const LIGHT = (() => {
+  const x = 0.62;
+  const y = -0.3;
+  const z = -0.72;
+  const length = Math.hypot(x, y, z);
+  return { x: x / length, y: y / length, z: z / length };
+})();
+
+const LIGHT_EDGE = Math.hypot(LIGHT.x, LIGHT.y);
+const NIGHT: Rgb = [0.018, 0.016, 0.032];
+const CLOUD_DEEP: Rgb = [0.2, 0.17, 0.46];
+const CLOUD_LIT: Rgb = [0.42, 0.64, 0.8];
+const AIR: Rgb = [0.62, 0.84, 1];
+const AIR_FAR: Rgb = [0.55, 0.4, 1];
+
+export const planetPixel = (x: number, y: number, seed: number): readonly [Rgb, number] => {
+  const distance = Math.hypot(x, y);
+  const side = smoothstep(-0.35, 0.75, (x * LIGHT.x + y * LIGHT.y) / (distance * LIGHT_EDGE || 1));
+
+  if (distance >= 1) {
+    const height = distance - 1;
+    const near = Math.exp(-height / 0.01) * 0.85;
+    const far = Math.exp(-height / 0.035) * 0.26;
+    const glow = 0.05 + 0.95 * side ** 1.5;
+    const red = (AIR[0] * near + AIR_FAR[0] * far) * glow;
+    const green = (AIR[1] * near + AIR_FAR[1] * far) * glow;
+    const blue = (AIR[2] * near + AIR_FAR[2] * far) * glow;
+    const alpha = clamp01(Math.max(red, green, blue));
+    return alpha > 0 ? [[red / alpha, green / alpha, blue / alpha], alpha] : [NIGHT, 0];
+  }
+
+  const z = Math.sqrt(1 - distance * distance);
+  const lit = x * LIGHT.x + y * LIGHT.y + z * LIGHT.z;
+  const twilight = smoothstep(-0.08, 0.32, lit);
+  const rim = (1 - z) ** 4 * smoothstep(-0.2, 0.5, lit) * 0.75;
+  let surface: Rgb = [0, 0, 0];
+
+  if (twilight > 0) {
+    const swirl = fbm(x * 2.2, y * 2.2, seed + 31, 3) * 1.6;
+    const bands = fbm(x * 1.4 + 4, y * 11 + swirl, seed + 37, 4);
+    const strength = twilight * (0.12 + 0.6 * Math.max(0, lit));
+    const tint = mix(CLOUD_DEEP, CLOUD_LIT, smoothstep(0.3, 0.75, bands));
+    surface = [tint[0] * strength, tint[1] * strength, tint[2] * strength];
+  }
+
+  return [
+    [
+      clamp01(NIGHT[0] + surface[0] + AIR[0] * rim),
+      clamp01(NIGHT[1] + surface[1] + AIR[1] * rim),
+      clamp01(NIGHT[2] + surface[2] + AIR[2] * rim),
+    ],
+    1,
+  ];
+};
+
+export const renderPlanet = ({ width, height, radius, top }: PlanetSpec, seed: number): Bitmap => {
+  const data = new Uint8ClampedArray(width * height * 4);
+  const centerX = width / 2;
+  const centerY = top + radius;
+
+  for (let row = 0; row < height; row++) {
+    const y = (row + 0.5 - centerY) / radius;
+    for (let column = 0; column < width; column++) {
+      const x = (column + 0.5 - centerX) / radius;
+      const [color, alpha] = planetPixel(x, y, seed);
+      const edge = clamp01((1 - Math.hypot(x, y)) * radius + 0.5);
+      if (edge > 0 && edge < 1) {
+        const [airColor, airAlpha] = planetPixel(x * (1 + 1 / radius), y * (1 + 1 / radius), seed);
+        const blended = edge + airAlpha * (1 - edge);
+        writePixel(
+          data,
+          (row * width + column) * 4,
+          [
+            (color[0] * edge + airColor[0] * airAlpha * (1 - edge)) / blended,
+            (color[1] * edge + airColor[1] * airAlpha * (1 - edge)) / blended,
+            (color[2] * edge + airColor[2] * airAlpha * (1 - edge)) / blended,
+          ],
+          blended,
+        );
+      } else if (alpha > 0) {
+        const fade = alpha < 1 ? smoothstep(0, top, row) : 1;
+        writePixel(data, (row * width + column) * 4, color, alpha * fade);
       }
     }
   }
-};
 
-const ARM_PITCH = Math.tan((17 * Math.PI) / 180);
-const ARM_START = 0.08;
-
-const armAngle = (arm: number, radius: number) =>
-  arm * Math.PI + Math.log(Math.max(radius, ARM_START) / ARM_START) / ARM_PITCH;
-
-export const renderGalaxy = (size: number, seed: number): Bitmap => {
-  const random = createRandom(seed + 23);
-  const light = new Float32Array(size * size * 3);
-  const dust = new Float32Array(size * size);
-  const center = size / 2;
-  const disc = size * 0.44;
-
-  const splat = (radius: number, angle: number, color: Rgb, weight: number) => {
-    const x = Math.round(center + Math.cos(angle) * radius * disc);
-    const y = Math.round(center + Math.sin(angle) * radius * disc);
-    if (x < 0 || y < 0 || x >= size || y >= size) return;
-    const offset = (y * size + x) * 3;
-    light[offset] += color[0] * weight;
-    light[offset + 1] += color[1] * weight;
-    light[offset + 2] += color[2] * weight;
-  };
-
-  const particles = Math.round(size * size * 0.16);
-  for (let index = 0; index < particles; index++) {
-    const roll = random();
-    if (roll < 0.14) {
-      const x = gaussian(random) * 0.1;
-      const y = gaussian(random) * 0.1;
-      splat(Math.hypot(x, y), Math.atan2(y, x), [1, 0.8, 0.58], 0.8);
-    } else if (roll < 0.72) {
-      const along = random() ** 0.8;
-      const arm = random() < 0.5 ? 0 : 1;
-      const minor = random() < 0.22;
-      const wobble = (valueNoise(along * 7, arm * 13, seed) - 0.5) * 0.5;
-      const spread = (minor ? 0.07 : 0.035) + 0.08 * along;
-      const radius = ARM_START + (1 - ARM_START) * along + gaussian(random) * spread;
-      const angle =
-        armAngle(arm, radius) + (minor ? Math.PI / 2 : 0) + wobble + gaussian(random) * 0.16;
-      const color = mix([1, 0.9, 0.82], [0.6, 0.72, 1], along ** 0.7);
-      splat(radius, angle, color, (minor ? 0.22 : 0.42) * (0.5 + Math.exp(-along * 1.8)));
-    } else {
-      const radius = Math.min(1, -Math.log(1 - random() * 0.97) * 0.3);
-      splat(radius, random() * Math.PI * 2, [0.82, 0.8, 0.95], 0.3);
-    }
-  }
-
-  for (let cluster = 0; cluster < 110; cluster++) {
-    const radius = 0.25 + random() * 0.72;
-    const angle = armAngle(random() < 0.5 ? 0 : 1, radius) + gaussian(random) * 0.08;
-    const color: Rgb = random() < 0.65 ? [1, 0.42, 0.74] : [0.66, 0.8, 1];
-    const spread = 0.006 + random() * 0.008;
-    for (let star = 0; star < 26; star++) {
-      const x = Math.cos(angle) * radius + gaussian(random) * spread;
-      const y = Math.sin(angle) * radius + gaussian(random) * spread;
-      splat(Math.hypot(x, y), Math.atan2(y, x), color, 1.1);
-    }
-  }
-
-  const lanes = Math.round(size * size * 0.08);
-  for (let index = 0; index < lanes; index++) {
-    const along = 0.04 + random() * 0.8;
-    const arm = random() < 0.5 ? 0 : 1;
-    const wobble = (valueNoise(along * 7, arm * 13, seed) - 0.5) * 0.5;
-    const radius = ARM_START + (1 - ARM_START) * along + gaussian(random) * 0.014;
-    const angle = armAngle(arm, radius) + wobble - 0.26 + gaussian(random) * 0.05;
-    const x = Math.round(center + Math.cos(angle) * radius * disc);
-    const y = Math.round(center + Math.sin(angle) * radius * disc);
-    if (x >= 0 && y >= 0 && x < size && y < size) dust[y * size + x] += 1;
-  }
-
-  const bloom = light.slice();
-  const bloomRadius = Math.max(2, Math.round(size / 55));
-  boxBlur(bloom, size, 3, bloomRadius);
-  boxBlur(bloom, size, 3, bloomRadius);
-  boxBlur(dust, size, 1, Math.max(1, Math.round(size / 220)));
-
-  const data = new Uint8ClampedArray(size * size * 4);
-  for (let y = 0; y < size; y++) {
-    for (let x = 0; x < size; x++) {
-      const pixel = y * size + x;
-      const distance = Math.hypot(x - center, y - center) / disc;
-      const core =
-        1.7 * Math.exp(-((distance / 0.06) ** 2)) + 0.5 * Math.exp(-((distance / 0.17) ** 2));
-      const halo = 0.2 * Math.exp(-distance / 0.32);
-      const edge = clamp01((1.1 - distance) / 0.25);
-      const shade = Math.exp(-dust[pixel] * 3.2);
-
-      const tone = (channel: number) => {
-        const raw =
-          (light[pixel * 3 + channel] * shade + bloom[pixel * 3 + channel] * 1.5) * 0.9 +
-          core * CORE_TINT[channel] +
-          halo * HALO_TINT[channel];
-        return (1 - Math.exp(-raw)) * edge;
-      };
-      const red = tone(0);
-      const green = tone(1);
-      const blue = tone(2);
-      const alpha = Math.max(red, green, blue);
-      if (alpha > 0) writePixel(data, pixel * 4, [red / alpha, green / alpha, blue / alpha], alpha);
-    }
-  }
-
-  return { width: size, height: size, data };
+  return { width, height, data };
 };
 
 export const renderCosmos = (request: CosmosRequest): CosmosLayers => ({
   sky: renderSky(request.sky.width, request.sky.height, request.seed),
   dust: renderDust(request.dust.width, request.dust.height, request.seed),
-  galaxy: request.galaxySize === null ? null : renderGalaxy(request.galaxySize, request.seed),
+  planet: renderPlanet(request.planet, request.seed),
 });

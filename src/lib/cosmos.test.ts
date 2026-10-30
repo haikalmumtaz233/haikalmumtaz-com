@@ -4,9 +4,11 @@ import {
   createRandom,
   fbm,
   pickSpectralTint,
+  planetLayout,
+  planetPixel,
   renderCosmos,
   renderDust,
-  renderGalaxy,
+  renderPlanet,
   renderSky,
   SKY_MAX_ALPHA,
   SPECTRAL_TINTS,
@@ -80,25 +82,54 @@ describe('renderDust', () => {
   });
 });
 
-describe('renderGalaxy', () => {
-  it('glows at the core and fades to nothing at the edges', () => {
-    const size = 96;
-    const { data } = renderGalaxy(size, 9);
-    expect(alphaAt(data, size, size / 2, size / 2)).toBeGreaterThan(200);
-    expect(alphaAt(data, size, 0, 0)).toBe(0);
-    expect(alphaAt(data, size, size - 1, size / 2)).toBe(0);
+describe('planetPixel', () => {
+  const brightness = ([color, alpha]: ReturnType<typeof planetPixel>) => Math.max(...color) * alpha;
+
+  it('keeps the night side dark and opaque so it hides the stars behind it', () => {
+    const [, alpha] = planetPixel(0, 0, 9);
+    expect(alpha).toBe(1);
+    expect(brightness(planetPixel(0, 0, 9))).toBeLessThan(0.05);
+  });
+
+  it('lights a crescent on the limb that faces the light', () => {
+    expect(brightness(planetPixel(0.3, -0.93, 9))).toBeGreaterThan(0.25);
+    expect(brightness(planetPixel(-0.3, 0.93, 9))).toBeLessThan(0.05);
+  });
+
+  it('glows just outside the lit limb and fades into space', () => {
+    expect(brightness(planetPixel(0.3, -0.96, 9))).toBeGreaterThan(
+      brightness(planetPixel(-0.3, 0.96, 9)),
+    );
+    expect(planetPixel(0, -2, 9)[1]).toBeLessThan(0.01);
+  });
+});
+
+describe('planetLayout', () => {
+  it('keeps the horizon wide on desktop and phones', () => {
+    expect(planetLayout(1440, 900).radius).toBe(1080);
+    expect(planetLayout(390, 844).radius).toBeCloseTo(464.2);
+  });
+});
+
+describe('renderPlanet', () => {
+  it('draws an opaque disc below a translucent glow', () => {
+    const width = 80;
+    const { data } = renderPlanet({ width, height: 40, radius: 50, top: 8 }, 9);
+    expect(alphaAt(data, width, 40, 30)).toBe(255);
+    expect(alphaAt(data, width, 40, 0)).toBeLessThan(255);
   });
 });
 
 describe('renderCosmos', () => {
-  it('skips the galaxy when no size is requested', () => {
+  it('returns every layer at the requested size', () => {
     const layers = renderCosmos({
       seed: 1,
       sky: { width: 8, height: 8 },
       dust: { width: 16, height: 16 },
-      galaxySize: null,
+      planet: { width: 12, height: 6, radius: 10, top: 2 },
     });
-    expect(layers.galaxy).toBeNull();
     expect(layers.sky.data).toHaveLength(8 * 8 * 4);
+    expect(layers.dust.data).toHaveLength(16 * 16 * 4);
+    expect(layers.planet.data).toHaveLength(12 * 6 * 4);
   });
 });
