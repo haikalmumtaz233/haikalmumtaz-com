@@ -1,29 +1,40 @@
+import { createSkyStars, createStarPainter, twinkleAt } from './skyStars';
+
 interface SceneCallbacks {
   backdrop: HTMLElement;
   onFormed: () => void;
   onDone: () => void;
 }
 
+interface GlyphTargets {
+  points: number[];
+  lines: number[];
+}
+
 const PIXEL_BUDGET = 1_600_000;
-const CURSOR = 'rgba(192, 132, 252, 0.9)';
 const COLORS = ['#ffffff', '#c4b5fd', '#a5f3fc'];
+const CONSTELLATION = 'rgba(196, 181, 253, 1)';
 const GLYPH_FONT = '"Monument Extended"';
 
 const TIMING = {
-  minCursor: 0.85,
-  maxWait: 2,
-  squash: 0.24,
-  burst: 0.6,
-  convergeBase: 0.28,
-  convergeSweep: 0.45,
-  convergeJitter: 0.12,
-  convergeDuration: 1.05,
+  igniteSpread: 0.95,
+  ignitePop: 0.32,
+  gatherAt: 1.05,
+  maxWait: 2.2,
+  sweep: 0.5,
+  trail: 0.018,
+  jitter: 0.12,
+  travel: 1.0,
+  linesFrom: 0.1,
+  linesTo: 0.95,
+  linesAlpha: 0.45,
+  linesFade: 0.5,
   formed: 1.6,
   release: 1.82,
   settle: 0.45,
   escapeFade: 1.3,
-  skyFrom: 0.12,
-  skyTo: 1.4,
+  skyFrom: 1.25,
+  skyTo: 2.6,
 };
 
 const END = TIMING.release + TIMING.escapeFade + 0.05;
@@ -33,9 +44,34 @@ const easeInOutQuart = (k: number) =>
   k < 0.5 ? 8 * k * k * k * k : 1 - Math.pow(-2 * k + 2, 4) / 2;
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 
+const anchorLift = (index: number) => {
+  const wave = Math.sin(index * 12.9898) * 43758.5453;
+  return 0.12 + 0.6 * (wave - Math.floor(wave));
+};
+
 const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
 
-const sampleGlyphs = (width: number, height: number, maxPoints: number) => {
+interface GlyphAnchor {
+  x: number;
+  y: number;
+  left: number;
+  right: number;
+  size: number;
+}
+
+const constellationLines = (anchors: GlyphAnchor[]) => {
+  const lines: number[] = [];
+  for (let i = 1; i < anchors.length; i++) {
+    const previous = anchors[i - 1];
+    const current = anchors[i];
+    const sameLine = Math.abs(current.y - previous.y) < previous.size;
+    const sameWord = current.left - previous.right < previous.size * 0.4;
+    if (sameLine && sameWord) lines.push(previous.x, previous.y, current.x, current.y);
+  }
+  return lines;
+};
+
+const sampleGlyphs = (width: number, height: number, maxPoints: number): GlyphTargets | null => {
   const origins = Array.from(document.querySelectorAll<HTMLElement>('[data-glyph-origin]'));
   if (origins.length === 0) return null;
 
@@ -53,6 +89,7 @@ const sampleGlyphs = (width: number, height: number, maxPoints: number) => {
   let top = height;
   let right = 0;
   let bottom = 0;
+  const anchors: GlyphAnchor[] = [];
 
   for (const origin of origins) {
     const char = origin.dataset.glyphOrigin ?? '';
@@ -61,6 +98,14 @@ const sampleGlyphs = (width: number, height: number, maxPoints: number) => {
     const size = parseFloat(getComputedStyle(origin).fontSize);
     ctx.font = `900 ${size}px ${GLYPH_FONT}`;
     ctx.fillText(char, rect.left, rect.top);
+    const glyphWidth = ctx.measureText(char).width;
+    anchors.push({
+      x: rect.left + glyphWidth / 2,
+      y: rect.top - size * anchorLift(anchors.length),
+      left: rect.left,
+      right: rect.left + glyphWidth,
+      size,
+    });
     left = Math.min(left, rect.left);
     right = Math.max(right, rect.left + size * 1.2);
     top = Math.min(top, rect.top - size);
@@ -89,13 +134,13 @@ const sampleGlyphs = (width: number, height: number, maxPoints: number) => {
     }
   }
 
-  return points.length > 100 ? points : null;
+  return points.length > 100 ? { points, lines: constellationLines(anchors) } : null;
 };
 
-const scatterTargets = (width: number, height: number, count: number) => {
+const scatterTargets = (width: number, height: number, count: number): GlyphTargets => {
   const points: number[] = [];
   for (let i = 0; i < count; i++) points.push(Math.random() * width, Math.random() * height);
-  return points;
+  return { points, lines: [] };
 };
 
 export const runIntroScene = (
@@ -112,34 +157,35 @@ export const runIntroScene = (
   const width = window.innerWidth;
   const height = window.innerHeight;
   const dpr = Math.min(window.devicePixelRatio || 1, 2, Math.sqrt(PIXEL_BUDGET / (width * height)));
-  let lastSky = 1;
   canvas.width = Math.round(width * dpr);
   canvas.height = Math.round(height * dpr);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
+  const painter = createStarPainter(ctx);
+  const stars = createSkyStars(width, height);
+  const igniteAt = stars.map(
+    (star) => Math.random() * TIMING.igniteSpread * (0.3 + 0.7 * (1 - star.brightness)),
+  );
   const maxPoints = width < 768 ? 900 : 1900;
-  const centerX = width / 2;
-  const centerY = height / 2;
-  const cursorWidth = Math.max(18, Math.min(30, width * 0.02));
-  const cursorHeight = cursorWidth * 2;
 
   let cancelled = false;
   let frame = 0;
-  let targets: number[] | null = null;
+  let targets: GlyphTargets | null = null;
   let waitOver = false;
   let formedSent = false;
-  const mountedAt = performance.now();
-  let squashStart: number | null = null;
-  let bangStart: number | null = null;
+  let origin = performance.now();
+  let gatherStart: number | null = null;
   let pace = 1;
+  let lastSky = 1;
 
   let count = 0;
+  let lines: number[] = [];
   let tx = new Float32Array(0);
   let ty = new Float32Array(0);
-  let ex = new Float32Array(0);
-  let ey = new Float32Array(0);
-  let px = new Float32Array(0);
-  let py = new Float32Array(0);
+  let sx = new Float32Array(0);
+  let sy = new Float32Array(0);
+  let headX = 0;
+  let headY = 0;
   let start = new Float32Array(0);
   let swirl = new Float32Array(0);
   let vx = new Float32Array(0);
@@ -149,15 +195,15 @@ export const runIntroScene = (
   const segmentsByGroup: number[][] = Array.from({ length: groupCount }, () => []);
 
   const prepare = () => {
-    const points = targets ?? scatterTargets(width, height, maxPoints);
+    const chosen = targets ?? scatterTargets(width, height, maxPoints);
+    const points = chosen.points;
+    lines = chosen.lines;
     pace = targets ? 1 : 1.8;
     count = points.length / 2;
     tx = new Float32Array(count);
     ty = new Float32Array(count);
-    ex = new Float32Array(count);
-    ey = new Float32Array(count);
-    px = new Float32Array(count).fill(centerX);
-    py = new Float32Array(count).fill(centerY);
+    sx = new Float32Array(count);
+    sy = new Float32Array(count);
     start = new Float32Array(count);
     swirl = new Float32Array(count);
     vx = new Float32Array(count);
@@ -173,29 +219,26 @@ export const runIntroScene = (
     nameCenterX /= count || 1;
     nameCenterY /= count || 1;
 
-    const burstRadius = Math.hypot(width, height) * 0.34;
+    const reach = Math.hypot(width, height);
 
     for (let i = 0; i < count; i++) {
       tx[i] = points[i * 2];
       ty[i] = points[i * 2 + 1];
 
-      const angle = Math.random() * Math.PI * 2;
-      const radius = (0.12 + 0.88 * Math.pow(Math.random(), 0.6)) * burstRadius;
-      ex[i] = Math.cos(angle) * radius;
-      ey[i] = Math.sin(angle) * radius;
+      const source = stars[Math.floor(Math.random() * stars.length)];
+      sx[i] = source.x * width;
+      sy[i] = source.y * height;
 
-      start[i] =
-        TIMING.convergeBase +
-        (tx[i] / width) * TIMING.convergeSweep +
-        Math.random() * TIMING.convergeJitter;
-      swirl[i] = (Math.random() - 0.5) * 140;
+      const distance = Math.hypot(tx[i] - sx[i], ty[i] - sy[i]);
+      start[i] = (1 - distance / reach) * TIMING.sweep + Math.random() * TIMING.jitter;
+      swirl[i] = (Math.random() - 0.5) * 160;
 
       const dx = tx[i] - nameCenterX;
       const dy = ty[i] - nameCenterY;
-      const distance = Math.hypot(dx, dy) || 1;
+      const spread = Math.hypot(dx, dy) || 1;
       const speed = 90 + Math.random() * 260;
-      vx[i] = (dx / distance) * speed;
-      vy[i] = (dy / distance) * speed - 40 - Math.random() * 80;
+      vx[i] = (dx / spread) * speed;
+      vy[i] = (dy / spread) * speed - 40 - Math.random() * 80;
 
       const colorRoll = Math.random();
       const color = colorRoll < 0.1 ? 2 : colorRoll < 0.26 ? 1 : 0;
@@ -204,64 +247,86 @@ export const runIntroScene = (
     }
   };
 
-  const drawCursor = (elapsed: number) => {
-    ctx.fillStyle = CURSOR;
-    if (squashStart === null) {
-      if (elapsed % 0.5 < 0.3) {
-        ctx.fillRect(
-          centerX - cursorWidth / 2,
-          centerY - cursorHeight / 2,
-          cursorWidth,
-          cursorHeight,
-        );
-      }
-      return;
+  const drawSky = (elapsed: number, fade: number) => {
+    const clock = performance.now() / 1000;
+    painter.reset();
+    for (let i = 0; i < stars.length; i++) {
+      const k = clamp01((elapsed - igniteAt[i]) / TIMING.ignitePop);
+      if (k <= 0) continue;
+      const pop = 1 + 2.4 * (1 - k) * (1 - k);
+      const star = stars[i];
+      painter.draw(
+        star,
+        star.x * width,
+        star.y * height,
+        twinkleAt(star, clock),
+        easeOutExpo(k) * fade,
+        pop,
+      );
     }
-    const k = easeInOutQuart(clamp01((elapsed - squashStart) / TIMING.squash));
-    const w = cursorWidth + (cursorWidth * 3.5 - cursorWidth) * k;
-    const h = cursorHeight + (2 - cursorHeight) * k;
     ctx.globalAlpha = 1;
-    ctx.fillStyle = k > 0.6 ? '#ffffff' : CURSOR;
-    ctx.fillRect(centerX - w / 2, centerY - h / 2, w, h);
   };
 
-  const drawParticles = (tb: number) => {
-    const burstK = easeOutExpo(clamp01(tb / TIMING.burst));
-    const released = tb >= TIMING.release;
-    const releaseTime = tb - TIMING.release;
-    const decay = released ? (1 - Math.exp(-2.4 * releaseTime)) / 2.4 : 0;
+  const drawConstellation = (tg: number) => {
+    if (lines.length === 0) return;
+    const grow = clamp01((tg - TIMING.linesFrom) / (TIMING.linesTo - TIMING.linesFrom));
+    const fade = 1 - clamp01((tg - TIMING.formed) / TIMING.linesFade);
+    if (grow <= 0 || fade <= 0) return;
+
+    const segments = lines.length / 4;
+    const drawn = grow * segments;
+    ctx.globalAlpha = TIMING.linesAlpha * fade;
+    ctx.strokeStyle = CONSTELLATION;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let s = 0; s < segments && s < drawn; s++) {
+      const portion = Math.min(1, drawn - s);
+      const x1 = lines[s * 4];
+      const y1 = lines[s * 4 + 1];
+      const x2 = lines[s * 4 + 2];
+      const y2 = lines[s * 4 + 3];
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x1 + (x2 - x1) * portion, y1 + (y2 - y1) * portion);
+    }
+    ctx.stroke();
+
+    for (let s = 0; s < segments && s < drawn; s++) {
+      painter.spark(lines[s * 4], lines[s * 4 + 1], 14, fade * 0.9);
+      if (drawn - s >= 1) painter.spark(lines[s * 4 + 2], lines[s * 4 + 3], 14, fade * 0.9);
+    }
+    ctx.globalAlpha = 1;
+  };
+
+  const locate = (i: number, tg: number) => {
+    if (tg >= TIMING.release) {
+      const decay = (1 - Math.exp(-2.4 * (tg - TIMING.release))) / 2.4;
+      const escapes = group[i] & 1;
+      headX = tx[i] + (escapes ? vx[i] * decay : 0);
+      headY = ty[i] + (escapes ? vy[i] * decay : 0);
+      return;
+    }
+    const k = clamp01((tg - start[i]) / TIMING.travel);
+    const e = easeInOutQuart(k);
+    const dx = tx[i] - sx[i];
+    const dy = ty[i] - sy[i];
+    const length = Math.hypot(dx, dy) || 1;
+    const arc = Math.sin(Math.PI * e) * swirl[i] * (1 - k * 0.3);
+    headX = sx[i] + dx * e + (-dy / length) * arc;
+    headY = sy[i] + dy * e + (dx / length) * arc;
+  };
+
+  const drawParticles = (tg: number) => {
+    const released = tg >= TIMING.release;
+    const releaseTime = tg - TIMING.release;
+    const tailTime = released ? Math.max(TIMING.release, tg - TIMING.trail) : tg - TIMING.trail;
 
     for (let i = 0; i < count; i++) {
-      let x: number;
-      let y: number;
-
-      if (released) {
-        const escapes = group[i] & 1;
-        x = tx[i] + (escapes ? vx[i] * decay : 0);
-        y = ty[i] + (escapes ? vy[i] * decay : 0);
-      } else {
-        const bx = centerX + ex[i] * burstK;
-        const by = centerY + ey[i] * burstK;
-        const k = clamp01((tb - start[i]) / TIMING.convergeDuration);
-        if (k <= 0) {
-          x = bx;
-          y = by;
-        } else {
-          const e = easeInOutQuart(k);
-          const dx = tx[i] - bx;
-          const dy = ty[i] - by;
-          const length = Math.hypot(dx, dy) || 1;
-          const arc = Math.sin(Math.PI * e) * swirl[i] * (1 - k * 0.3);
-          x = bx + dx * e + (-dy / length) * arc;
-          y = by + dy * e + (dx / length) * arc;
-        }
-      }
-
-      const prevX = px[i];
-      const prevY = py[i];
-      px[i] = x;
-      py[i] = y;
-      segmentsByGroup[group[i]].push(prevX, prevY, x, y);
+      if (tg <= start[i]) continue;
+      locate(i, Math.max(start[i], tailTime));
+      const tailX = headX;
+      const tailY = headY;
+      locate(i, tg);
+      segmentsByGroup[group[i]].push(tailX, tailY, headX, headY);
     }
 
     ctx.lineCap = 'square';
@@ -295,46 +360,37 @@ export const runIntroScene = (
 
   const render = (now: number) => {
     if (cancelled) return;
-    const elapsed = (now - mountedAt) / 1000;
+    const elapsed = (now - origin) / 1000;
     ctx.clearRect(0, 0, width, height);
 
-    if (bangStart === null) {
-      const canBang =
-        (targets !== null || waitOver || elapsed > TIMING.maxWait) && elapsed >= TIMING.minCursor;
-      if (canBang && squashStart === null) squashStart = elapsed;
-      drawCursor(elapsed);
-
-      if (squashStart !== null && elapsed - squashStart >= TIMING.squash) {
+    if (gatherStart === null) {
+      drawSky(elapsed, 1);
+      const ready = targets !== null || waitOver || elapsed > TIMING.maxWait;
+      if (ready && elapsed >= TIMING.gatherAt) {
         prepare();
-        bangStart = now;
+        gatherStart = now;
       }
       frame = requestAnimationFrame(render);
       return;
     }
 
-    const tb = ((now - bangStart) / 1000) * pace;
-    const sky = 1 - clamp01((tb - TIMING.skyFrom) / (TIMING.skyTo - TIMING.skyFrom));
+    const tg = ((now - gatherStart) / 1000) * pace;
+    const sky = 1 - clamp01((tg - TIMING.skyFrom) / (TIMING.skyTo - TIMING.skyFrom));
     if (sky !== lastSky) {
       backdrop.style.opacity = String(sky);
       lastSky = sky;
     }
 
-    if (tb < 0.14) {
-      const flash = 1 - tb / 0.14;
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, 1 + flash * 7, 0, Math.PI * 2);
-      ctx.fill();
-    }
+    drawSky(elapsed, sky);
+    drawConstellation(tg);
+    drawParticles(tg);
 
-    drawParticles(tb);
-
-    if (!formedSent && tb >= TIMING.formed) {
+    if (!formedSent && tg >= TIMING.formed) {
       formedSent = true;
       onFormed();
     }
 
-    if (tb >= END) {
+    if (tg >= END) {
       onDone();
       return;
     }
@@ -343,13 +399,15 @@ export const runIntroScene = (
   };
 
   const skip = () => {
-    if (bangStart === null) {
+    if (gatherStart === null) {
       waitOver = true;
+      const elapsed = (performance.now() - origin) / 1000;
+      if (elapsed < TIMING.gatherAt) origin -= (TIMING.gatherAt - elapsed) * 1000;
       return;
     }
-    const tb = ((performance.now() - bangStart) / 1000) * pace;
+    const tg = ((performance.now() - gatherStart) / 1000) * pace;
     const jumpTo = TIMING.formed - 0.12;
-    if (tb < jumpTo) bangStart -= ((jumpTo - tb) * 1000) / pace;
+    if (tg < jumpTo) gatherStart -= ((jumpTo - tg) * 1000) / pace;
   };
 
   const skipEvents: (keyof WindowEventMap)[] = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
@@ -366,7 +424,7 @@ export const runIntroScene = (
       waitOver = true;
       return;
     }
-    for (let attempt = 0; attempt < 90 && !cancelled && bangStart === null; attempt++) {
+    for (let attempt = 0; attempt < 90 && !cancelled && gatherStart === null; attempt++) {
       await nextFrame();
       if (document.querySelector('[data-glyph-origin]') && attempt >= 3) {
         await nextFrame();
