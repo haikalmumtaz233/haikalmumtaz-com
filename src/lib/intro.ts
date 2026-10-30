@@ -2,7 +2,7 @@ import { useState, useSyncExternalStore } from 'react';
 
 export type IntroPhase = 'idle' | 'playing' | 'formed' | 'done';
 
-export const INTRO_FORMED_ESTIMATE = 2.65;
+export const INTRO_FORMED_ESTIMATE = 4.15;
 
 export const INTRO_PATH = '/';
 
