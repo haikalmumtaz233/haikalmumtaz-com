@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { m, useTransform } from 'motion/react';
+import { useLocation } from 'react-router';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { easing } from '../lib/motion';
 import { useJourney } from '../journey/useJourney';
@@ -18,6 +19,7 @@ const REGENERATE_WIDTH_CHANGE = 0.15;
 const planetStops = [0, 0.6, 1];
 const planetRise = ['-4vh', '-12vh', '-44vh'];
 const planetRest = '-16vh';
+const pagesWithOwnBackdrop = new Set(['/projects']);
 
 const show = (canvas: HTMLCanvasElement | null, image: ImageBitmap) => {
   const ctx = canvas?.getContext('bitmaprenderer');
@@ -32,7 +34,9 @@ const show = (canvas: HTMLCanvasElement | null, image: ImageBitmap) => {
 
 const Background = () => {
   const prefersReducedMotion = usePrefersReducedMotion();
-  const { progress } = useJourney();
+  const { progress, scrollY } = useJourney();
+  const { pathname } = useLocation();
+  const starsHidden = pagesWithOwnBackdrop.has(pathname);
   const skyRef = useRef<HTMLCanvasElement>(null);
   const dustRef = useRef<HTMLCanvasElement>(null);
   const planetRef = useRef<HTMLCanvasElement>(null);
@@ -107,7 +111,7 @@ const Background = () => {
 
   useEffect(() => {
     const canvas = starsRef.current;
-    if (!canvas) return;
+    if (!canvas || starsHidden) return;
 
     let stop: (() => void) | null = null;
     let cancelled = false;
@@ -117,6 +121,7 @@ const Background = () => {
       stop = runStarfield(canvas, {
         reduced: prefersReducedMotion,
         progress: () => progress.get(),
+        scrollY: () => scrollY.get(),
       });
     });
 
@@ -124,7 +129,7 @@ const Background = () => {
       cancelled = true;
       stop?.();
     };
-  }, [prefersReducedMotion, progress]);
+  }, [prefersReducedMotion, progress, scrollY, starsHidden]);
 
   const reveal = {
     initial: false,
@@ -133,26 +138,26 @@ const Background = () => {
   };
 
   return (
-    <div aria-hidden="true" className="fixed inset-0 z-[-1] overflow-hidden bg-[#09080e]">
+    <div aria-hidden="true" className="fixed inset-0 z-[-1] min-h-lvh overflow-hidden bg-[#09080e]">
       <m.div className="absolute inset-0" {...reveal}>
         <m.canvas
           ref={skyRef}
-          className="absolute inset-x-0 top-0 block h-[140lvh] w-full"
+          className="absolute inset-x-0 top-0 block h-[140lvh] w-full will-change-transform"
           style={{ y: prefersReducedMotion ? 0 : skyY }}
         />
         <m.canvas
           ref={dustRef}
-          className="absolute inset-x-0 top-0 block h-[140lvh] w-full"
+          className="absolute inset-x-0 top-0 block h-[140lvh] w-full will-change-transform"
           style={{ y: prefersReducedMotion ? 0 : dustY }}
         />
       </m.div>
 
-      <canvas ref={starsRef} className="absolute inset-0 block size-full" />
+      <canvas ref={starsRef} className="absolute inset-x-0 top-0 block w-full" />
 
       <m.div className="absolute inset-0" {...reveal}>
         <m.canvas
           ref={planetRef}
-          className="absolute inset-x-0 top-full block w-full"
+          className="absolute inset-x-0 top-full block w-full will-change-transform"
           style={{ y: prefersReducedMotion ? planetRest : planetY }}
         />
       </m.div>

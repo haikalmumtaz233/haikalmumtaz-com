@@ -12,6 +12,7 @@ import {
 interface StarfieldOptions {
   reduced: boolean;
   progress: () => number;
+  scrollY: () => number;
 }
 
 interface ShootingStar {
@@ -32,6 +33,9 @@ const STEER_SPEED = 60;
 const STEER_EASE = 2.5;
 const SHOOTING_HEAD = 12;
 const MAX_DPR = 2;
+const PIXEL_BUDGET = 4_000_000;
+const CALM_SCROLL = 1.5;
+const CALM_STEER = 0.2;
 
 const wrap = (value: number, max: number) => ((value % max) + max) % max;
 
@@ -67,7 +71,7 @@ export const runStarfield = (canvas: HTMLCanvasElement, options: StarfieldOption
   let lastTime = 0;
   let elapsed = 0;
   let drift = 0;
-  let scroll = window.scrollY;
+  let scroll = options.scrollY();
   let steerX = 0;
   let steerY = 0;
   let targetSteerX = 0;
@@ -75,12 +79,22 @@ export const runStarfield = (canvas: HTMLCanvasElement, options: StarfieldOption
   let flowX = 0;
   let flowY = 0;
 
+  let skipFrame = false;
+
   const resize = () => {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+    const nextWidth = window.innerWidth;
+    const nextHeight = Math.max(window.innerHeight, nextWidth === width ? height : 0);
+    if (nextWidth === width && nextHeight === height) return;
+    width = nextWidth;
+    height = nextHeight;
+    const dpr = Math.min(
+      window.devicePixelRatio || 1,
+      MAX_DPR,
+      Math.sqrt(PIXEL_BUDGET / (width * height)),
+    );
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
+    canvas.style.height = `${height}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     if (Math.abs(skyStarCount(width, height) - stars.length) > stars.length * 0.25) {
@@ -159,7 +173,8 @@ export const runStarfield = (canvas: HTMLCanvasElement, options: StarfieldOption
     const ease = 1 - Math.exp(-delta * STEER_EASE);
     steerX += (targetSteerX - steerX) * ease;
     steerY += (targetSteerY - steerY) * ease;
-    scroll += (window.scrollY - scroll) * (1 - Math.exp(-delta * 6));
+    const scrollTarget = options.scrollY();
+    scroll += (scrollTarget - scroll) * (1 - Math.exp(-delta * 6));
 
     if (!introHolding) {
       const arrival = Math.min(
@@ -181,7 +196,13 @@ export const runStarfield = (canvas: HTMLCanvasElement, options: StarfieldOption
       nextShootingAt = elapsed + 7 + random() * 9;
     }
 
-    draw();
+    const calm =
+      !shooting &&
+      Math.abs(scrollTarget - scroll) < CALM_SCROLL &&
+      Math.hypot(steerX, steerY) < CALM_STEER;
+    skipFrame = calm && !skipFrame;
+
+    if (phase !== 'playing' && !skipFrame) draw();
     frame = requestAnimationFrame(tick);
   };
 

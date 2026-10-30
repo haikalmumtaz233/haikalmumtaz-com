@@ -125,7 +125,7 @@ export const createStarPainter = (ctx: CanvasRenderingContext2D) => {
     if (star.flare) {
       const size = FLARE_SIZE * (0.55 + 0.45 * twinkle) * pop;
       ctx.drawImage(flares[star.tint], x - size / 2, y - size / 2, size, size);
-    } else if (star.size > 1.15 || pop > 1.2) {
+    } else if (star.size > 1.3 || pop > 1.2) {
       const size = star.size * 7 * pop;
       ctx.drawImage(glows[star.tint], x - size / 2, y - size / 2, size, size);
     } else {
