@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, lazy, Suspense } from 'react';
+import { useLayoutEffect, useRef, useState, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router';
 import { ReactLenis, useLenis } from 'lenis/react';
 import { LazyMotion } from 'motion/react';
@@ -20,6 +20,7 @@ const loadMotionFeatures = () => import('./lib/motionFeatures').then((module) =>
 
 const scrollPositions = new Map<string, number>();
 const MAX_RESTORE_FRAMES = 30;
+const TOUCH_QUERY = '(pointer: coarse)';
 
 const restoreScroll = (
   lenis: Lenis | undefined,
@@ -102,8 +103,9 @@ function AppShell() {
 
 function AppContent() {
   const prefersReducedMotion = usePrefersReducedMotion();
+  const [scrollsByTouch] = useState(() => window.matchMedia(TOUCH_QUERY).matches);
 
-  if (prefersReducedMotion) {
+  if (prefersReducedMotion || scrollsByTouch) {
     return <AppShell />;
   }
 
