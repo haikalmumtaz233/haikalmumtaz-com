@@ -6,6 +6,7 @@ import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { profile, socialProfiles } from '../data/profile';
 import BrandIcon from './ui/BrandIcon';
+import MenuSky from './MenuSky';
 import { animatedProps, easing } from '../lib/motion';
 
 const navLinks = [
@@ -29,12 +30,22 @@ const whenRendered = (selector: string, run: () => void, framesLeft = MAX_WAIT_F
   requestAnimationFrame(() => whenRendered(selector, run, framesLeft - 1));
 };
 
+export interface MenuOrigin {
+  right: number;
+  top: number;
+  reach: number;
+}
+
+const portal = (origin: MenuOrigin, radius: number) =>
+  `circle(${radius}px at calc(100% - ${origin.right}px) ${origin.top}px)`;
+
 interface MenuPanelProps {
   isOpen: boolean;
+  origin: MenuOrigin;
   onClose: () => void;
 }
 
-const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
+const MenuPanel = ({ isOpen, origin, onClose }: MenuPanelProps) => {
   const prefersReducedMotion = usePrefersReducedMotion();
   const panelRef = useFocusTrap<HTMLDivElement>(isOpen);
   const navigate = useNavigate();
@@ -114,15 +125,20 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
       <AnimatePresence>
         {isOpen && (
           <m.div
-            initial={prefersReducedMotion ? { opacity: 0 } : { x: '100%' }}
-            animate={prefersReducedMotion ? { opacity: 1 } : { x: '0%' }}
+            initial={prefersReducedMotion ? { opacity: 0 } : { clipPath: portal(origin, 0) }}
+            animate={
+              prefersReducedMotion ? { opacity: 1 } : { clipPath: portal(origin, origin.reach) }
+            }
             exit={
               prefersReducedMotion
                 ? { opacity: 0 }
-                : { x: '100%', transition: { duration: 0.5, ease: easing.inout } }
+                : {
+                    clipPath: portal(origin, 0),
+                    transition: { duration: 0.6, ease: easing.inout },
+                  }
             }
             transition={
-              prefersReducedMotion ? { duration: 0.2 } : { duration: 0.8, ease: easing.expo }
+              prefersReducedMotion ? { duration: 0.2 } : { duration: 0.95, ease: easing.wipe }
             }
             ref={panelRef}
             id={MENU_PANEL_ID}
@@ -130,80 +146,107 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
             aria-modal="true"
             aria-label="Site menu"
             tabIndex={-1}
-            className="fixed top-0 right-0 h-full w-full sm:w-[85vw] md:w-[480px] z-50 bg-black/80 backdrop-blur-2xl border-l border-white/10 shadow-2xl overflow-hidden"
+            className="fixed top-0 right-0 h-full w-full sm:w-[85vw] md:w-[480px] z-50 bg-[#09080e] border-l border-white/10 shadow-2xl overflow-hidden"
           >
-            <div className="h-full flex flex-col justify-between p-6 pb-28 sm:p-8 sm:pb-28 md:p-12">
+            <MenuSky />
+            <div className="relative h-full flex flex-col justify-between p-6 pb-28 sm:p-8 sm:pb-28 md:p-12">
               <nav className="flex-1 flex items-center">
-                <ul className="space-y-4 sm:space-y-6 w-full">
+                <ul className="relative grid gap-4 sm:gap-6 w-full">
+                  <m.span
+                    aria-hidden="true"
+                    {...animatedProps(prefersReducedMotion, {
+                      initial: { scaleY: 0 },
+                      animate: { scaleY: 1 },
+                      transition: { delay: 0.3, duration: 1.2, ease: easing.expo },
+                    })}
+                    className="absolute left-[3px] top-[0.45em] bottom-[0.45em] w-px origin-top bg-linear-to-b from-violet-300/60 via-white/20 to-sky-300/40 text-3xl sm:text-4xl md:text-[3.5rem]"
+                  />
                   {navLinks.map((link, index) => (
-                    <li key={link.name} className="overflow-hidden">
-                      <m.div
+                    <li key={link.name} className="group flex items-center gap-5 sm:gap-6">
+                      <m.span
+                        aria-hidden="true"
                         {...animatedProps(prefersReducedMotion, {
-                          initial: { y: '115%', rotate: 4 },
-                          animate: { y: '0%', rotate: 0 },
+                          initial: { scale: 0, opacity: 0 },
+                          animate: { scale: 1, opacity: 1 },
                           transition: {
-                            delay: 0.22 + index * 0.07,
-                            duration: 1,
+                            delay: 0.4 + index * 0.09,
+                            duration: 0.9,
                             ease: easing.expo,
                           },
                         })}
-                        className="origin-bottom-left"
+                        className="relative flex size-[7px] shrink-0"
                       >
-                        <m.button
-                          type="button"
-                          aria-label={link.name}
-                          onClick={() => handleNavigation(link)}
-                          initial="initial"
-                          whileHover={prefersReducedMotion ? undefined : 'hovered'}
-                          className="cursor-pointer text-left group"
+                        <span className="size-full rounded-full bg-white/70 shadow-[0_0_8px_rgba(196,181,253,0.7)] transition-transform duration-500 ease-expo group-hover:scale-[1.9] group-has-focus-visible:scale-[1.9]" />
+                      </m.span>
+                      <div className="overflow-hidden">
+                        <m.div
+                          {...animatedProps(prefersReducedMotion, {
+                            initial: { y: '115%', rotate: 4 },
+                            animate: { y: '0%', rotate: 0 },
+                            transition: {
+                              delay: 0.22 + index * 0.07,
+                              duration: 1,
+                              ease: easing.expo,
+                            },
+                          })}
+                          className="origin-bottom-left"
                         >
-                          <div
-                            aria-hidden="true"
-                            className="relative block overflow-hidden whitespace-nowrap text-3xl sm:text-4xl md:text-6xl font-black uppercase text-white"
-                            style={{ lineHeight: 0.9 }}
+                          <m.button
+                            type="button"
+                            aria-label={link.name}
+                            onClick={() => handleNavigation(link)}
+                            initial="initial"
+                            whileHover={prefersReducedMotion ? undefined : 'hovered'}
+                            className="cursor-pointer text-left group"
                           >
-                            <div>
-                              {link.name.split('').map((l, i) => (
-                                <m.span
-                                  variants={{
-                                    initial: { y: 0 },
-                                    hovered: { y: '-100%' },
-                                  }}
-                                  transition={{
-                                    duration: LETTER_DURATION,
-                                    ease: easing.expo,
-                                    delay: LETTER_STAGGER * i,
-                                  }}
-                                  className="inline-block"
-                                  key={i}
-                                >
-                                  {l}
-                                </m.span>
-                              ))}
-                            </div>
+                            <div
+                              aria-hidden="true"
+                              className="relative block overflow-hidden whitespace-nowrap text-3xl sm:text-4xl md:text-[3.5rem] font-black uppercase text-white"
+                              style={{ lineHeight: 0.9 }}
+                            >
+                              <div>
+                                {link.name.split('').map((l, i) => (
+                                  <m.span
+                                    variants={{
+                                      initial: { y: 0 },
+                                      hovered: { y: '-100%' },
+                                    }}
+                                    transition={{
+                                      duration: LETTER_DURATION,
+                                      ease: easing.expo,
+                                      delay: LETTER_STAGGER * i,
+                                    }}
+                                    className="inline-block"
+                                    key={i}
+                                  >
+                                    {l}
+                                  </m.span>
+                                ))}
+                              </div>
 
-                            <div className="absolute inset-0">
-                              {link.name.split('').map((l, i) => (
-                                <m.span
-                                  variants={{
-                                    initial: { y: '100%' },
-                                    hovered: { y: 0 },
-                                  }}
-                                  transition={{
-                                    duration: LETTER_DURATION,
-                                    ease: easing.expo,
-                                    delay: LETTER_STAGGER * i,
-                                  }}
-                                  className="inline-block text-purple-400"
-                                  key={i}
-                                >
-                                  {l}
-                                </m.span>
-                              ))}
+                              <div className="absolute inset-0">
+                                {link.name.split('').map((l, i) => (
+                                  <m.span
+                                    variants={{
+                                      initial: { y: '100%' },
+                                      hovered: { y: 0 },
+                                    }}
+                                    transition={{
+                                      duration: LETTER_DURATION,
+                                      ease: easing.expo,
+                                      delay: LETTER_STAGGER * i,
+                                    }}
+                                    className="inline-block text-violet-300"
+                                    key={i}
+                                  >
+                                    {l}
+                                  </m.span>
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                        </m.button>
-                      </m.div>
+                          </m.button>
+                        </m.div>
+                      </div>
                     </li>
                   ))}
                 </ul>
@@ -215,7 +258,7 @@ const MenuPanel = ({ isOpen, onClose }: MenuPanelProps) => {
                   animate: { opacity: 1, y: 0 },
                   transition: { delay: 0.55, duration: 0.9, ease: easing.expo },
                 })}
-                className="space-y-6 sm:space-y-8 border-t border-white/10 pt-6 sm:pt-8"
+                className="relative grid justify-items-start gap-6 sm:gap-8 border-t border-white/10 pt-6 sm:pt-8"
               >
                 <a
                   href={`mailto:${profile.email}`}
