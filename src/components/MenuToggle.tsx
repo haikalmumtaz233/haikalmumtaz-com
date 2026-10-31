@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type MouseEvent } from 'react';
 import { AnimatePresence, m } from 'motion/react';
 import { Menu, X } from 'lucide-react';
 import { useLocation } from 'react-router';
@@ -6,7 +6,7 @@ import { useLenis } from 'lenis/react';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { useIsMobile } from '../hooks/useMediaQuery';
 import { animatedProps, easing } from '../lib/motion';
-import MenuPanel, { MENU_PANEL_ID } from './MenuPanel';
+import MenuPanel, { MENU_PANEL_ID, type MenuOrigin } from './MenuPanel';
 import { useJourney } from '../journey/useJourney';
 
 const SECTIONS = [
@@ -17,6 +17,17 @@ const SECTIONS = [
   { id: 'favoritemoments', label: 'Moments' },
   { id: 'contact', label: 'Contact' },
 ];
+
+const originFrom = (element: HTMLElement): MenuOrigin => {
+  const rect = element.getBoundingClientRect();
+  const x = rect.left + rect.width / 2;
+  const y = rect.top + rect.height / 2;
+  return {
+    right: window.innerWidth - x,
+    top: y,
+    reach: Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y)),
+  };
+};
 
 const useActiveSection = (enabled: boolean) => {
   const [active, setActive] = useState({ index: 0, direction: 1 });
@@ -57,6 +68,7 @@ const MenuToggle = () => {
   const { pathname } = useLocation();
   const lenis = useLenis();
   const [isOpen, setIsOpen] = useState(false);
+  const [origin, setOrigin] = useState<MenuOrigin>({ right: 52, top: 52, reach: 2000 });
   const [isPastHero, setIsPastHero] = useState(false);
 
   const { progress: scrollYProgress } = useJourney();
@@ -94,7 +106,10 @@ const MenuToggle = () => {
 
   const toggleProps = {
     type: 'button' as const,
-    onClick: () => setIsOpen((open) => !open),
+    onClick: (event: MouseEvent<HTMLButtonElement>) => {
+      if (!isOpen) setOrigin(originFrom(event.currentTarget));
+      setIsOpen((open) => !open);
+    },
     'aria-label': isOpen ? 'Close menu' : 'Open menu',
     'aria-expanded': isOpen,
     'aria-controls': MENU_PANEL_ID,
@@ -187,7 +202,7 @@ const MenuToggle = () => {
         )}
       </AnimatePresence>
 
-      <MenuPanel isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <MenuPanel isOpen={isOpen} origin={origin} onClose={() => setIsOpen(false)} />
     </>
   );
 };

@@ -18,6 +18,8 @@ const FRAME_LINE = 'rgba(196, 181, 253, 1)';
 const GLYPH_FONT = '"Monument Extended"';
 const ORDINARY_SHARE = 0.7;
 const NODE_SIZE = 13;
+const LEAVE_SCROLL = 24;
+const LEAVE_DURATION = 320;
 
 const TIMING = {
   igniteSpread: 0.75,
@@ -182,6 +184,8 @@ export const runIntroScene = (
   const maxPoints = width < 768 ? 900 : 1900;
 
   let cancelled = false;
+  let leaving = false;
+  let leaveTimer = 0;
   let frame = 0;
   let targets: GlyphTargets | null = null;
   let waitOver = false;
@@ -450,7 +454,7 @@ export const runIntroScene = (
   };
 
   const render = (now: number) => {
-    if (cancelled) return;
+    if (cancelled || leaving) return;
     const elapsed = (now - origin) / 1000;
     ctx.clearRect(0, 0, width, height);
 
@@ -501,8 +505,25 @@ export const runIntroScene = (
     if (tg < jumpTo) gatherStart -= ((jumpTo - tg) * 1000) / pace;
   };
 
+  const leave = () => {
+    if (leaving || window.scrollY <= LEAVE_SCROLL) return;
+    leaving = true;
+    cancelAnimationFrame(frame);
+    if (!formedSent) {
+      formedSent = true;
+      onFormed();
+    }
+    const fade = `opacity ${LEAVE_DURATION}ms ease-out`;
+    for (const layer of [canvas, backdrop]) {
+      layer.style.transition = fade;
+      layer.style.opacity = '0';
+    }
+    leaveTimer = window.setTimeout(onDone, LEAVE_DURATION);
+  };
+
   const skipEvents: (keyof WindowEventMap)[] = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
   skipEvents.forEach((type) => window.addEventListener(type, skip, { passive: true }));
+  window.addEventListener('scroll', leave, { passive: true });
 
   const collect = async () => {
     if (window.location.pathname !== '/') {
@@ -515,7 +536,11 @@ export const runIntroScene = (
       waitOver = true;
       return;
     }
-    for (let attempt = 0; attempt < 90 && !cancelled && gatherStart === null; attempt++) {
+    for (
+      let attempt = 0;
+      attempt < 90 && !cancelled && !leaving && gatherStart === null;
+      attempt++
+    ) {
       await nextFrame();
       if (document.querySelector('[data-glyph-origin]') && attempt >= 3) {
         await nextFrame();
@@ -532,6 +557,8 @@ export const runIntroScene = (
   return () => {
     cancelled = true;
     cancelAnimationFrame(frame);
+    window.clearTimeout(leaveTimer);
     skipEvents.forEach((type) => window.removeEventListener(type, skip));
+    window.removeEventListener('scroll', leave);
   };
 };
