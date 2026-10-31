@@ -4,6 +4,7 @@ import type { Project } from '../../data/projects';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { easing } from '../../lib/motion';
 import { useRailFocus } from '../../hooks/useRailFocus';
+import { fittedTitleSize } from '../../lib/titleFit';
 
 interface FeaturedDeckProps {
   projects: Project[];
@@ -72,7 +73,7 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
             onFocus={() => scrollToCard(index)}
             data-rail-card
             style={{ transformOrigin: '50% 120%' }}
-            className="relative aspect-4/5 w-[72vw] max-w-[360px] shrink-0 snap-center overflow-hidden rounded-[28px] border border-white/10 bg-[#141220] active:brightness-90"
+            className="@container relative aspect-4/5 w-[72vw] max-w-[360px] shrink-0 snap-center overflow-hidden rounded-[28px] border border-white/10 bg-[#141220] active:brightness-90"
           >
             <div className="absolute inset-0 overflow-hidden">
               <img
@@ -98,7 +99,10 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
             </span>
 
             <div className="absolute inset-x-0 bottom-0 p-5">
-              <h3 className="font-monument text-[clamp(1.6rem,8.5vw,2.25rem)] font-black uppercase leading-[0.92] tracking-tight text-white wrap-anywhere">
+              <h3
+                className="font-monument font-black uppercase leading-[0.92] tracking-tight text-balance text-white"
+                style={{ fontSize: fittedTitleSize(project.name, '2.25rem', '2.5rem') }}
+              >
                 {project.name}
               </h3>
               <p className="mt-3 text-[15px] text-white/75">{project.subtitle}</p>
