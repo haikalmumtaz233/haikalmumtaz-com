@@ -19,7 +19,7 @@ const REGENERATE_WIDTH_CHANGE = 0.15;
 const planetStops = [0, 0.6, 1];
 const planetRise = ['-4vh', '-12vh', '-44vh'];
 const planetRest = '-16vh';
-const pagesWithOwnBackdrop = new Set(['/projects']);
+const PLANET_PATH = '/';
 
 const show = (canvas: HTMLCanvasElement | null, image: ImageBitmap) => {
   const ctx = canvas?.getContext('bitmaprenderer');
@@ -36,7 +36,7 @@ const Background = () => {
   const prefersReducedMotion = usePrefersReducedMotion();
   const { progress, scrollY } = useJourney();
   const { pathname } = useLocation();
-  const starsHidden = pagesWithOwnBackdrop.has(pathname);
+  const showPlanet = pathname === PLANET_PATH;
   const skyRef = useRef<HTMLCanvasElement>(null);
   const dustRef = useRef<HTMLCanvasElement>(null);
   const planetRef = useRef<HTMLCanvasElement>(null);
@@ -111,7 +111,7 @@ const Background = () => {
 
   useEffect(() => {
     const canvas = starsRef.current;
-    if (!canvas || starsHidden) return;
+    if (!canvas) return;
 
     let stop: (() => void) | null = null;
     let cancelled = false;
@@ -129,7 +129,7 @@ const Background = () => {
       cancelled = true;
       stop?.();
     };
-  }, [prefersReducedMotion, progress, scrollY, starsHidden]);
+  }, [prefersReducedMotion, progress, scrollY]);
 
   const reveal = {
     initial: false,
@@ -154,7 +154,15 @@ const Background = () => {
 
       <canvas ref={starsRef} className="absolute inset-x-0 top-0 block w-full" />
 
-      <m.div className="absolute inset-0" {...reveal}>
+      <m.div
+        className="absolute inset-0"
+        initial={false}
+        animate={{ opacity: painted && showPlanet ? 1 : 0 }}
+        transition={{
+          duration: prefersReducedMotion ? 0 : showPlanet ? 2.4 : 0.6,
+          ease: easing.smooth,
+        }}
+      >
         <m.canvas
           ref={planetRef}
           className="absolute inset-x-0 top-full block w-full will-change-transform"
