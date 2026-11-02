@@ -6,6 +6,7 @@ import { easing } from '../lib/motion';
 import { useJourney } from '../journey/useJourney';
 import { planetLayout, type CosmosImages, type CosmosRequest } from '../lib/cosmos';
 import { SKY_SEED } from '../lib/skyStars';
+import { pacedProgress } from '../lib/parallax';
 
 const SKY_MIN_WIDTH = 200;
 const SKY_MAX_WIDTH = 480;
@@ -43,8 +44,9 @@ const Background = () => {
   const starsRef = useRef<HTMLCanvasElement>(null);
   const [painted, setPainted] = useState(false);
 
-  const skyY = useTransform(progress, [0, 1], ['0%', '-21%']);
-  const dustY = useTransform(progress, [0, 1], ['0%', '-28%']);
+  const parallax = useTransform(() => pacedProgress(progress.get(), scrollY.get()));
+  const skyY = useTransform(parallax, [0, 1], ['0%', '-21%']);
+  const dustY = useTransform(parallax, [0, 1], ['0%', '-28%']);
   const planetY = useTransform(progress, planetStops, planetRise);
 
   useEffect(() => {
@@ -120,7 +122,7 @@ const Background = () => {
       if (cancelled) return;
       stop = runStarfield(canvas, {
         reduced: prefersReducedMotion,
-        progress: () => progress.get(),
+        progress: () => parallax.get(),
         scrollY: () => scrollY.get(),
       });
     });
@@ -129,7 +131,7 @@ const Background = () => {
       cancelled = true;
       stop?.();
     };
-  }, [prefersReducedMotion, progress, scrollY]);
+  }, [prefersReducedMotion, parallax, scrollY]);
 
   const reveal = {
     initial: false,

@@ -76,30 +76,26 @@ const Tools = () => {
   const toolTiles = toolsTrack.map((tool, index) => (
     <div
       key={`${tool.name}-${index}`}
-      className="group mr-3 flex h-14 shrink-0 items-center gap-3 rounded-full border border-white/10 px-5 transition-colors duration-300 hover:border-white/30 md:mr-4 md:h-16 md:px-6"
+      className="group mr-3 flex h-14 shrink-0 items-center gap-3 rounded-full panel px-5 transition-colors duration-300 hover:border-white/40 md:mr-4 md:h-16 md:px-6"
     >
       <span className="flex h-6 w-6 items-center justify-center transition-transform duration-500 ease-expo group-hover:scale-110 md:h-7 md:w-7">
-        <TechIcon
-          icon={tool.icon}
-          name={tool.name}
-          className="object-contain grayscale opacity-60 transition-[filter,opacity] duration-300 group-hover:grayscale-0 group-hover:opacity-100"
-        />
+        <TechIcon icon={tool.icon} name={tool.name} className="object-contain" />
       </span>
-      <span className="whitespace-nowrap text-[15px] text-white/60 transition-colors duration-300 group-hover:text-white md:text-base">
+      <span className="whitespace-nowrap text-[15px] text-white/85 transition-colors duration-300 group-hover:text-white md:text-base">
         {tool.name}
       </span>
     </div>
   ));
 
   return (
-    <section className="relative overflow-hidden pb-24 md:pb-32 2xl:pb-40">
+    <section className="relative overflow-hidden pb-4 md:pb-6">
       <div className="shell">
         <FadeIn
           delay={0.1}
-          className="mb-6 flex items-baseline justify-between gap-4 border-t border-white/15 pt-5 md:mb-8"
+          className="mb-6 flex items-baseline justify-between gap-4 border-t border-white/20 pt-5 md:mb-8"
         >
           <h3 className="text-base font-semibold text-white md:text-lg">Everyday tools</h3>
-          <span className="text-sm tabular-nums text-white/50">{tools.length}</span>
+          <span className="text-sm tabular-nums text-white/80">{tools.length}</span>
         </FadeIn>
       </div>
 

@@ -1,10 +1,23 @@
 import { accentForCategory, gradientForCategory } from './categoryAccents';
 
+export type ProjectDomain =
+  | 'Developer Tools'
+  | 'Education'
+  | 'Entertainment'
+  | 'Finance'
+  | 'Government'
+  | 'Health'
+  | 'Personal'
+  | 'Productivity'
+  | 'Property'
+  | 'Transportation';
+
 export interface Project {
   id: number;
   name: string;
   subtitle: string;
   category: string;
+  domain: ProjectDomain;
   description: string;
   stack: string[];
   image: string;
@@ -23,6 +36,7 @@ const projectSeeds: ProjectSeed[] = [
     name: 'NusaIndex',
     subtitle: 'Indonesian Data Toolkit',
     category: 'Open Source Library',
+    domain: 'Developer Tools',
     description:
       'Open source toolkit for validating, parsing, and formatting Indonesian data like NIK, NPWP, phone numbers, plates, regions, holidays, and Rupiah, with identical Go and TypeScript libraries, a CLI, and an MCP server for AI agents, all fully offline.',
     stack: ['Golang', 'TypeScript', 'Node.js', 'MCP', 'Zod', 'Valibot', 'Astro'],
@@ -36,6 +50,7 @@ const projectSeeds: ProjectSeed[] = [
     name: 'Plimsoll',
     subtitle: 'Claude Plan Limits Tray App',
     category: 'Desktop Development',
+    domain: 'Developer Tools',
     description:
       'Open source Windows system tray app that tracks Claude plan limits, with five-hour and weekly usage, reset countdowns, threshold notifications, and token history by model and project, reading only usage fields from Claude Code logs and keeping all data on the machine.',
     stack: ['Rust', 'Tauri', 'Svelte', 'TypeScript', 'SQLite', 'Vite'],
@@ -49,6 +64,7 @@ const projectSeeds: ProjectSeed[] = [
     name: 'Street Beats',
     subtitle: 'Roblox Game',
     category: 'Game Development',
+    domain: 'Entertainment',
     description:
       'Multiplayer rhythm game on Roblox platform where players hit notes in sync with music tracks to score points and compete on leaderboards.',
     stack: ['Lua', 'Roblox Studio'],
@@ -62,6 +78,7 @@ const projectSeeds: ProjectSeed[] = [
     name: 'Portfolio',
     subtitle: 'Personal Portfolio Website',
     category: 'Frontend Development',
+    domain: 'Personal',
     description:
       'Modern, interactive portfolio website showcasing projects with advanced animations and smooth user experience.',
     stack: ['React', 'Framer Motion', 'Tailwind', 'GSAP', 'Lenis'],
@@ -75,6 +92,7 @@ const projectSeeds: ProjectSeed[] = [
     name: 'SMP Muhdela Yogyakarta Website',
     subtitle: 'School Profile Website',
     category: 'Frontend Development',
+    domain: 'Education',
     description: 'Responsive school profile website for SMP Muhdela Yogyakarta',
     stack: ['Vue 3', 'Pinia', 'Axios', 'Tailwind CSS'],
     image: '/projects/smpmuhdela.webp',
@@ -87,6 +105,7 @@ const projectSeeds: ProjectSeed[] = [
     name: 'Pocky',
     subtitle: 'Personal Finance Management App',
     category: 'Fullstack Web Development',
+    domain: 'Finance',
     description:
       'Personal finance app for tracking multiple assets, budgets, savings goals, and recurring transactions, with offline-first transaction sync, built on Go microservices communicating over gRPC and RabbitMQ.',
     stack: [
@@ -110,6 +129,7 @@ const projectSeeds: ProjectSeed[] = [
     name: 'TixNow',
     subtitle: 'Cinema Booking Platform',
     category: 'Fullstack Web Development',
+    domain: 'Entertainment',
     description:
       'End-to-end cinema ticketing system with admin dashboard and seamless user booking experience.',
     stack: ['Java Spring Boot', 'Java Spring Security', 'Thymeleaf', 'MySQL', 'Bootstrap'],
@@ -123,6 +143,7 @@ const projectSeeds: ProjectSeed[] = [
     name: 'NoteFlo',
     subtitle: 'Connected Daily Notes App',
     category: 'Fullstack Web Development',
+    domain: 'Productivity',
     description:
       'Daily notes app for workers with automatic task rollover, wikilink-based topic timelines, hybrid full-text and semantic search, embedding-powered connection suggestions, and AI-generated weekly recaps.',
     stack: [
@@ -146,6 +167,7 @@ const projectSeeds: ProjectSeed[] = [
     name: 'MBG Tracker',
     subtitle: 'AI Nutrition Monitoring App',
     category: 'Mobile Development',
+    domain: 'Health',
     description:
       'Android app for monitoring the free nutritious meal (MBG) program at a junior high school, using a YOLOv8 model to detect meal tray components and estimate calories and macronutrients against national nutrition standards.',
     stack: ['Kotlin', 'Jetpack Compose', 'CameraX', 'Python', 'FastAPI', 'YOLOv8', 'SQLite'],
@@ -159,6 +181,7 @@ const projectSeeds: ProjectSeed[] = [
     name: 'SIMASET Asahan',
     subtitle: 'Regional Asset Management System',
     category: 'Frontend Development',
+    domain: 'Government',
     description:
       'Web-based asset management system for Asahan Regency covering master data, KIB-based inventory, procurement transactions, maintenance workflows, and GIS-assisted asset mapping.',
     stack: ['Vue 3', 'Pinia', 'TanStack Query', 'Axios', 'Leaflet', 'Tailwind CSS'],
@@ -172,6 +195,7 @@ const projectSeeds: ProjectSeed[] = [
     name: 'Content Management System',
     subtitle: 'School CMS Website',
     category: 'Frontend Development',
+    domain: 'Education',
     description:
       'Content management system for SMP Muhdela Yogyakarta, enabling easy updates to school information, news, and events by non-technical staff.',
     stack: ['Vue 3', 'Vuexy', 'Axios', 'Tailwind CSS'],
@@ -185,6 +209,7 @@ const projectSeeds: ProjectSeed[] = [
     name: 'KostKu',
     subtitle: 'Kost Management Platform',
     category: 'Fullstack Web Development',
+    domain: 'Property',
     description:
       'Fullstack kost operations platform for landlords and tenants, covering auth, billing, inventory, notifications, and analytics with a microservices architecture, plus a PWA implementation for a mobile-first experience.',
     stack: [
@@ -207,6 +232,7 @@ const projectSeeds: ProjectSeed[] = [
     name: 'Vehicle Route LeafletJS',
     subtitle: 'Bus Route Mapping Application',
     category: 'Frontend Development',
+    domain: 'Transportation',
     description:
       'Bus route mapping application using LeafletJS for interactive visualization and navigation of vehicle routes.',
     stack: ['JavaScript', 'Leaflet', 'HTML', 'CSS'],

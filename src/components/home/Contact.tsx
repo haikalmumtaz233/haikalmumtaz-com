@@ -44,9 +44,9 @@ interface Toast {
 }
 
 const inputClass =
-  'w-full bg-transparent border-b border-white/20 py-2 text-[15px] text-white caret-purple-300 placeholder:text-white/50 focus:border-white focus:outline-hidden transition-colors';
+  'w-full bg-transparent border-b border-white/30 py-2 text-[15px] text-white caret-purple-300 placeholder:text-white/50 focus:border-white focus:outline-hidden transition-colors';
 
-const labelClass = 'text-sm text-white/60';
+const labelClass = 'text-sm text-white/85';
 
 const Contact = () => {
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -300,7 +300,7 @@ const Contact = () => {
           </div>
 
           <FadeIn delay={0.3}>
-            <div className="rounded-2xl border border-white/10 bg-white/3 p-6 md:p-8 2xl:p-10">
+            <div className="panel rounded-2xl p-6 md:p-8 2xl:p-10">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <div className="grid gap-2">
@@ -358,7 +358,7 @@ const Contact = () => {
                   </div>
                   <div className="grid gap-2">
                     <label htmlFor="contact-phone" className={labelClass}>
-                      Phone <span className="text-white/50">(optional)</span>
+                      Phone <span className="text-white/75">(optional)</span>
                     </label>
                     <input
                       type="tel"
@@ -379,7 +379,7 @@ const Contact = () => {
                     <label htmlFor="contact-message" className={labelClass}>
                       Message
                     </label>
-                    <span className="text-xs tabular-nums text-white/50">
+                    <span className="text-xs tabular-nums text-white/75">
                       {formData.message.length}/{MAX_MESSAGE_LENGTH}
                     </span>
                   </div>

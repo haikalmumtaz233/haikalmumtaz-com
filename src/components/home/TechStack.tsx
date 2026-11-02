@@ -18,7 +18,7 @@ const TechStack = () => {
         <SectionHeader
           title={['Tech stack']}
           meta={
-            <p className="text-sm md:text-base text-white/55">
+            <p className="text-sm md:text-base text-white/80">
               {technologyCount} technologies in {techCategories.length} areas
             </p>
           }

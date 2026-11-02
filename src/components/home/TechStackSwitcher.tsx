@@ -51,7 +51,7 @@ const TechStackSwitcher = () => {
                 aria-controls="tech-stack-panel"
                 onClick={() => select(index)}
                 className={`relative flex shrink-0 snap-center items-center gap-2 rounded-full px-4 py-2.5 text-[15px] font-medium transition-colors duration-500 ${
-                  isActive ? 'text-black' : 'text-white/65'
+                  isActive ? 'text-black' : 'bg-hull/85 text-white/85'
                 }`}
               >
                 {isActive && (
@@ -66,7 +66,7 @@ const TechStackSwitcher = () => {
                 )}
                 <span className="relative">{item.title}</span>
                 <span
-                  className={`relative text-xs tabular-nums ${isActive ? 'text-black/60' : 'text-white/50'}`}
+                  className={`relative text-xs tabular-nums ${isActive ? 'text-black/60' : 'text-white/65'}`}
                 >
                   {item.items.length}
                 </span>
@@ -80,7 +80,7 @@ const TechStackSwitcher = () => {
         id="tech-stack-panel"
         role="tabpanel"
         aria-label={category.title}
-        className="relative mt-6 overflow-hidden rounded-3xl border border-white/10"
+        className="panel relative mt-6 overflow-hidden rounded-3xl"
         drag={prefersReducedMotion ? false : 'x'}
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.12}
@@ -91,7 +91,7 @@ const TechStackSwitcher = () => {
           <m.ul
             key={category.title}
             custom={active.direction}
-            className="grid grid-cols-3 gap-px bg-white/10"
+            className="grid grid-cols-3"
             initial="enter"
             animate="center"
             exit="exit"
@@ -118,24 +118,24 @@ const TechStackSwitcher = () => {
                     transition: { duration: 0.7, ease: easing.expo },
                   },
                 }}
-                className="flex aspect-square flex-col items-center justify-center gap-3 bg-[#0d0b14] px-2"
+                className="flex aspect-square flex-col items-center justify-center gap-3 px-2 shadow-[1px_0_0_rgb(255_255_255/0.1),0_1px_0_rgb(255_255_255/0.1)]"
               >
                 <span className="flex h-9 w-9 items-center justify-center">
                   <TechIcon icon={tech.icon} name={tech.name} />
                 </span>
-                <span className="text-center text-[13px] leading-tight text-white/75">
+                <span className="text-center text-[13px] leading-tight text-white/85">
                   {tech.name}
                 </span>
               </m.li>
             ))}
             {Array.from({ length: (3 - (category.items.length % 3)) % 3 }, (_, index) => (
-              <li key={`filler-${index}`} aria-hidden="true" className="bg-[#0d0b14]" />
+              <li key={`filler-${index}`} aria-hidden="true" />
             ))}
           </m.ul>
         </AnimatePresence>
       </m.div>
 
-      <p className="mt-4 text-center text-sm text-white/50">Swipe the grid to switch areas</p>
+      <p className="mt-4 text-center text-sm text-white/80">Swipe the grid to switch areas</p>
     </div>
   );
 };
