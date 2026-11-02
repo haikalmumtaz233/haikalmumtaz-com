@@ -131,7 +131,7 @@ const Hero = () => {
                   : { opacity: 0, letterSpacing: '1.1em' },
                 transition: { duration: 1.6, ease: easing.expo, delay: EYEBROW_DELAY - lead },
               })}
-              className="text-[11px] sm:text-xs md:text-sm font-bold uppercase tracking-[0.5em] text-white/80 mb-4 sm:mb-6 whitespace-nowrap"
+              className="text-[11px] sm:text-xs md:text-sm font-bold uppercase tracking-[0.5em] text-white/55 mb-4 sm:mb-6 whitespace-nowrap"
             >
               MUHAMMAD RADITYA
             </m.p>
@@ -142,10 +142,7 @@ const Hero = () => {
       </div>
 
       <div className="shell pb-4 sm:pb-8">
-        <m.div
-          {...dockItem(prefersReducedMotion, 0, ready, lead)}
-          className="panel mx-auto flex w-full max-w-sm flex-col items-center gap-4 rounded-3xl px-5 py-5 lg:grid lg:max-w-none lg:grid-cols-3 lg:items-center lg:gap-5 lg:rounded-full lg:py-3 lg:pr-3 lg:pl-7"
-        >
+        <div className="flex flex-col items-center gap-5 lg:grid lg:grid-cols-3 lg:items-center">
           <div className="hidden lg:block">
             <AnimatePresence>
               {showScrollIndicator && (
@@ -160,7 +157,7 @@ const Hero = () => {
                 >
                   <span
                     aria-hidden="true"
-                    className="relative block h-8 w-px overflow-hidden bg-white/25"
+                    className="relative block h-11 w-px overflow-hidden bg-white/15"
                   >
                     <m.span
                       className="absolute inset-x-0 top-0 h-1/2 bg-white"
@@ -177,7 +174,7 @@ const Hero = () => {
                       })}
                     />
                   </span>
-                  <span className="text-sm text-white/85">Scroll to explore</span>
+                  <span className="text-sm text-white/60">Scroll to explore</span>
                 </m.div>
               )}
             </AnimatePresence>
@@ -206,7 +203,7 @@ const Hero = () => {
               <ArrowDownRight className="w-4 h-4 transition-transform duration-500 ease-expo group-hover:-rotate-45" />
             </a>
           </m.div>
-        </m.div>
+        </div>
       </div>
     </section>
   );
