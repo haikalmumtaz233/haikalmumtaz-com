@@ -44,9 +44,9 @@ interface Toast {
 }
 
 const inputClass =
-  'w-full bg-transparent border-b border-white/25 py-2 text-[15px] text-white caret-purple-300 placeholder:text-white/45 focus:border-white focus:outline-hidden transition-colors';
+  'w-full bg-transparent border-b border-white/20 py-2 text-[15px] text-white caret-purple-300 placeholder:text-white/50 focus:border-white focus:outline-hidden transition-colors';
 
-const labelClass = 'text-sm text-white/80';
+const labelClass = 'text-sm text-white/60';
 
 const Contact = () => {
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -265,7 +265,7 @@ const Contact = () => {
             />
 
             <FadeIn>
-              <p className="mt-6 max-w-md text-base text-white/85 md:mt-8 2xl:text-lg">
+              <p className="mt-6 max-w-md text-base text-white/60 md:mt-8 2xl:text-lg">
                 Have a project in mind or just want to say hi? I'm always open to new projects and
                 opportunities.
               </p>
@@ -275,7 +275,7 @@ const Contact = () => {
                   href={`mailto:${profile.email}`}
                   className="group flex items-center gap-3 text-base text-white transition-colors hover:text-white/80 md:text-lg 2xl:text-2xl"
                 >
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-hull/85 transition-colors duration-300 group-hover:bg-white group-hover:text-black">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 transition-colors duration-300 group-hover:bg-white group-hover:text-black">
                     <Mail size={18} />
                   </span>
                   <span>{profile.email}</span>
@@ -288,7 +288,7 @@ const Contact = () => {
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-hull/85 text-white transition-colors duration-300 hover:bg-white hover:text-black"
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white transition-colors duration-300 hover:bg-white hover:text-black"
                       aria-label={social.label}
                     >
                       <BrandIcon brand={social.label} size={18} />
@@ -300,7 +300,7 @@ const Contact = () => {
           </div>
 
           <FadeIn delay={0.3}>
-            <div className="panel rounded-2xl p-6 md:p-8 2xl:p-10">
+            <div className="rounded-2xl border border-white/10 bg-white/3 p-6 md:p-8 2xl:p-10">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <div className="grid gap-2">
@@ -358,7 +358,7 @@ const Contact = () => {
                   </div>
                   <div className="grid gap-2">
                     <label htmlFor="contact-phone" className={labelClass}>
-                      Phone <span className="text-white/65">(optional)</span>
+                      Phone <span className="text-white/50">(optional)</span>
                     </label>
                     <input
                       type="tel"
@@ -379,7 +379,7 @@ const Contact = () => {
                     <label htmlFor="contact-message" className={labelClass}>
                       Message
                     </label>
-                    <span className="text-xs tabular-nums text-white/65">
+                    <span className="text-xs tabular-nums text-white/50">
                       {formData.message.length}/{MAX_MESSAGE_LENGTH}
                     </span>
                   </div>
