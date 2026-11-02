@@ -8,7 +8,7 @@ import SectionHeader from '../ui/SectionHeader';
 import { projects } from '../../data/projects';
 import { introOffset } from '../../lib/intro';
 
-const categoryCount = new Set(projects.map((project) => project.category)).size;
+const domainCount = new Set(projects.map((project) => project.domain)).size;
 
 const ProjectsHero = () => {
   const navigate = useNavigate();
@@ -38,7 +38,7 @@ const ProjectsHero = () => {
           className="mb-0!"
           meta={
             <p className="text-sm md:text-base text-white/55">
-              {projects.length} projects in {categoryCount} categories
+              {projects.length} projects across {domainCount} domains
             </p>
           }
         />
