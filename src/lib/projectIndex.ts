@@ -1,20 +1,8 @@
 export const ALL_DOMAINS = 'All';
 
-export type LinkKind = 'download' | 'source' | 'community' | 'website';
-
 export interface DomainFilter<D extends string> {
   value: D | typeof ALL_DOMAINS;
   count: number;
-}
-
-export interface ProjectLink {
-  href: string;
-  kind: LinkKind;
-}
-
-interface Linked {
-  repoLink: string;
-  liveLink: string;
 }
 
 export const domainFilters = <D extends string>(
@@ -34,15 +22,3 @@ export const filterByDomain = <T extends { domain: string }>(
   items: readonly T[],
   value: string,
 ): T[] => (value === ALL_DOMAINS ? [...items] : items.filter((item) => item.domain === value));
-
-export const linkKind = (href: string): LinkKind => {
-  const { hostname, pathname } = new URL(href);
-  if (hostname === 'github.com') return pathname.includes('/releases') ? 'download' : 'source';
-  if (hostname === 'discord.gg' || hostname.endsWith('discord.com')) return 'community';
-  return 'website';
-};
-
-const isAvailable = (href: string) => href !== '' && href !== '#';
-
-export const projectLinks = ({ liveLink, repoLink }: Linked): ProjectLink[] =>
-  [liveLink, repoLink].filter(isAvailable).map((href) => ({ href, kind: linkKind(href) }));
