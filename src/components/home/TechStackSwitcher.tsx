@@ -51,7 +51,7 @@ const TechStackSwitcher = () => {
                 aria-controls="tech-stack-panel"
                 onClick={() => select(index)}
                 className={`relative flex shrink-0 snap-center items-center gap-2 rounded-full px-4 py-2.5 text-[15px] font-medium transition-colors duration-500 ${
-                  isActive ? 'text-black' : 'text-white/85'
+                  isActive ? 'text-black' : 'bg-hull/85 text-white/85'
                 }`}
               >
                 {isActive && (
@@ -62,11 +62,11 @@ const TechStackSwitcher = () => {
                   />
                 )}
                 {!isActive && (
-                  <span className="absolute inset-0 rounded-full border border-white/15 bg-hull/85" />
+                  <span className="absolute inset-0 rounded-full border border-white/15" />
                 )}
                 <span className="relative">{item.title}</span>
                 <span
-                  className={`relative text-xs tabular-nums ${isActive ? 'text-black/60' : 'text-white/60'}`}
+                  className={`relative text-xs tabular-nums ${isActive ? 'text-black/60' : 'text-white/65'}`}
                 >
                   {item.items.length}
                 </span>
