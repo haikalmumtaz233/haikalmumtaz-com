@@ -238,7 +238,7 @@ const CertificateCard = ({
           {cert.date}
         </span>
       </div>
-      <p className="mt-1 px-1 pb-1 text-sm text-white/75 line-clamp-1">{cert.issuer}</p>
+      <p className="mt-1 px-1 pb-1 text-sm text-white/80 line-clamp-1">{cert.issuer}</p>
       <button
         type="button"
         onClick={(event) => {

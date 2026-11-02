@@ -104,7 +104,7 @@ const TechStackShowcase = () => {
             >
               <span
                 className={`flex-1 truncate text-xl font-semibold transition-[color,transform] duration-500 ease-expo lg:text-2xl 2xl:text-[28px] ${
-                  isActive ? 'translate-x-1 text-white' : 'text-white/70 group-hover:text-white'
+                  isActive ? 'translate-x-1 text-white' : 'text-white/80 group-hover:text-white'
                 }`}
               >
                 {item.title}
@@ -156,7 +156,7 @@ const TechStackShowcase = () => {
           }}
         />
 
-        <span className="relative font-mono text-xs tracking-[0.2em] text-white/70 uppercase">
+        <span className="relative font-mono text-xs tracking-[0.2em] text-white/80 uppercase">
           {category.title}
         </span>
 
