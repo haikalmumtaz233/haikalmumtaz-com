@@ -37,7 +37,7 @@ const FeaturedTabs = ({ projects, activeIndex, onSelect }: FeaturedTabsProps) =>
       aria-label="Featured projects"
       aria-orientation="vertical"
       onKeyDown={handleKeyDown}
-      className="panel flex flex-col gap-1 rounded-2xl p-2"
+      className="panel flex h-full flex-col gap-1 rounded-2xl p-2"
     >
       {projects.map((project, index) => {
         const isActive = index === activeIndex;
@@ -54,7 +54,7 @@ const FeaturedTabs = ({ projects, activeIndex, onSelect }: FeaturedTabsProps) =>
             aria-controls="featured-preview"
             tabIndex={isActive ? 0 : -1}
             onClick={() => onSelect(index)}
-            className="group relative block w-full rounded-xl px-5 py-4 text-left 2xl:py-5"
+            className="group relative flex w-full flex-auto flex-col justify-center rounded-xl px-5 py-2.5 text-left xl:py-4"
           >
             {isActive && (
               <m.span
@@ -65,7 +65,7 @@ const FeaturedTabs = ({ projects, activeIndex, onSelect }: FeaturedTabsProps) =>
               />
             )}
             <span
-              className={`relative block font-monument text-base font-black uppercase leading-tight tracking-tight transition-colors duration-500 lg:text-lg 2xl:text-xl ${
+              className={`relative block font-monument text-base font-black uppercase leading-tight tracking-tight transition-colors duration-500 xl:text-lg 2xl:text-xl ${
                 isActive ? 'text-white' : 'text-white/60 group-hover:text-white/90'
               }`}
             >

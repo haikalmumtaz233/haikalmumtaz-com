@@ -78,26 +78,26 @@ const FeaturedProjects = () => {
     return (
       <div className="shell">
         {header}
-        <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-14">
-          <div className="lg:col-span-7 lg:order-2">
-            <FeaturedPreview
-              project={activeProject}
-              index={active.index}
-              direction={active.direction}
-              onOpen={setSelectedProject}
-              onSwipe={(step) => select(active.index + step)}
-              className="aspect-16/10"
-            />
-            <div className="mt-5">
-              <FeaturedMeta project={activeProject} />
-            </div>
+        <div className="grid gap-x-14 gap-y-5 lg:grid-cols-12">
+          <FeaturedPreview
+            project={activeProject}
+            index={active.index}
+            direction={active.direction}
+            onOpen={setSelectedProject}
+            onSwipe={(step) => select(active.index + step)}
+            className="aspect-16/10 lg:col-span-7 lg:col-start-6 lg:row-start-1"
+          />
+          <div className="lg:col-span-7 lg:col-start-6 lg:row-start-2">
+            <FeaturedMeta project={activeProject} />
           </div>
-          <div className="lg:col-span-5 lg:order-1">
-            <FeaturedTabs
-              projects={featuredProjects}
-              activeIndex={active.index}
-              onSelect={select}
-            />
+          <div className="mt-5 lg:relative lg:col-span-5 lg:col-start-1 lg:row-start-1 lg:mt-0">
+            <div className="lg:absolute lg:inset-0">
+              <FeaturedTabs
+                projects={featuredProjects}
+                activeIndex={active.index}
+                onSelect={select}
+              />
+            </div>
           </div>
         </div>
       </div>
