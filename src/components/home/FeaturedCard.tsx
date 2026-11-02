@@ -16,7 +16,7 @@ const FeaturedCard = memo(({ project, onClick }: FeaturedCardProps) => {
   return (
     <m.article
       layoutId={prefersReducedMotion ? undefined : `project-${project.id}`}
-      className="group relative h-full w-full overflow-hidden rounded-2xl border border-white/15 bg-hull"
+      className="group relative h-full w-full overflow-hidden rounded-2xl panel"
     >
       <div
         className={`absolute inset-0 z-10 bg-linear-to-br ${project.gradient} opacity-40 pointer-events-none transition-opacity duration-500 group-hover:opacity-20`}

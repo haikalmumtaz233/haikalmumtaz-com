@@ -80,7 +80,7 @@ const TechStackSwitcher = () => {
         id="tech-stack-panel"
         role="tabpanel"
         aria-label={category.title}
-        className="relative mt-6 overflow-hidden rounded-3xl border border-white/15 bg-hull"
+        className="panel relative mt-6 overflow-hidden rounded-3xl"
         drag={prefersReducedMotion ? false : 'x'}
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.12}
@@ -91,7 +91,7 @@ const TechStackSwitcher = () => {
           <m.ul
             key={category.title}
             custom={active.direction}
-            className="grid grid-cols-3 gap-px bg-white/12"
+            className="grid grid-cols-3"
             initial="enter"
             animate="center"
             exit="exit"
@@ -118,7 +118,7 @@ const TechStackSwitcher = () => {
                     transition: { duration: 0.7, ease: easing.expo },
                   },
                 }}
-                className="flex aspect-square flex-col items-center justify-center gap-3 bg-hull px-2"
+                className="flex aspect-square flex-col items-center justify-center gap-3 px-2 shadow-[1px_0_0_rgb(255_255_255/0.1),0_1px_0_rgb(255_255_255/0.1)]"
               >
                 <span className="flex h-9 w-9 items-center justify-center">
                   <TechIcon icon={tech.icon} name={tech.name} />
@@ -129,7 +129,7 @@ const TechStackSwitcher = () => {
               </m.li>
             ))}
             {Array.from({ length: (3 - (category.items.length % 3)) % 3 }, (_, index) => (
-              <li key={`filler-${index}`} aria-hidden="true" className="bg-hull" />
+              <li key={`filler-${index}`} aria-hidden="true" />
             ))}
           </m.ul>
         </AnimatePresence>

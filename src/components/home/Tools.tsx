@@ -76,7 +76,7 @@ const Tools = () => {
   const toolTiles = toolsTrack.map((tool, index) => (
     <div
       key={`${tool.name}-${index}`}
-      className="group mr-3 flex h-14 shrink-0 items-center gap-3 rounded-full border border-white/15 bg-hull/90 px-5 transition-colors duration-300 hover:border-white/40 md:mr-4 md:h-16 md:px-6"
+      className="group mr-3 flex h-14 shrink-0 items-center gap-3 rounded-full panel px-5 transition-colors duration-300 hover:border-white/40 md:mr-4 md:h-16 md:px-6"
     >
       <span className="flex h-6 w-6 items-center justify-center transition-transform duration-500 ease-expo group-hover:scale-110 md:h-7 md:w-7">
         <TechIcon icon={tool.icon} name={tool.name} className="object-contain" />

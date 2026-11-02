@@ -111,7 +111,7 @@ const TechStackShowcase = () => {
               </span>
               <span
                 className={`text-sm tabular-nums transition-colors duration-500 ${
-                  isActive ? 'text-white' : 'text-white/60'
+                  isActive ? 'text-white' : 'text-white/80'
                 }`}
               >
                 {item.items.length}

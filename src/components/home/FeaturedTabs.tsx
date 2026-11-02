@@ -66,7 +66,7 @@ const FeaturedTabs = ({ projects, activeIndex, onSelect }: FeaturedTabsProps) =>
             )}
             <span
               className={`relative block font-monument text-base font-black uppercase leading-tight tracking-tight transition-colors duration-500 xl:text-lg 2xl:text-xl ${
-                isActive ? 'text-white' : 'text-white/60 group-hover:text-white/90'
+                isActive ? 'text-white' : 'text-white/75 group-hover:text-white'
               }`}
             >
               {project.name}
@@ -81,7 +81,7 @@ const FeaturedTabs = ({ projects, activeIndex, onSelect }: FeaturedTabsProps) =>
                   transition={{ duration: 0.6, ease: easing.expo }}
                 >
                   <span className="block pt-2 text-[15px] text-white/85">{project.subtitle}</span>
-                  <span className="mt-1 flex items-center gap-2 text-sm text-white/65">
+                  <span className="mt-1 flex items-center gap-2 text-sm text-white/80">
                     <span
                       aria-hidden="true"
                       className="size-1.5 rounded-full"

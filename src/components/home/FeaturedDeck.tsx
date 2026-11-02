@@ -73,7 +73,7 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
             onFocus={() => scrollToCard(index)}
             data-rail-card
             style={{ transformOrigin: '50% 120%' }}
-            className="@container relative aspect-4/5 w-[72vw] max-w-[360px] shrink-0 snap-center overflow-hidden rounded-[28px] border border-white/15 bg-hull-raised active:brightness-90"
+            className="@container relative aspect-4/5 w-[72vw] max-w-[360px] shrink-0 snap-center overflow-hidden rounded-[28px] panel active:brightness-90"
           >
             <div className="absolute inset-0 overflow-hidden">
               <img
