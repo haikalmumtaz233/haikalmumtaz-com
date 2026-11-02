@@ -8,6 +8,7 @@ import { profile, socialProfiles } from '../data/profile';
 import BrandIcon from './ui/BrandIcon';
 import MenuSky from './MenuSky';
 import { animatedProps, easing } from '../lib/motion';
+import { lockScroll } from '../lib/scrollLock';
 
 const navLinks = [
   { name: 'Home', path: '/', type: 'route' },
@@ -86,12 +87,11 @@ const MenuPanel = ({ isOpen, origin, onClose }: MenuPanelProps) => {
   useEffect(() => {
     if (!isOpen) return;
 
-    const previous = document.body.style.overflowY;
-    document.body.style.overflowY = 'hidden';
+    const unlockScroll = lockScroll();
     lenis?.stop();
 
     return () => {
-      document.body.style.overflowY = previous;
+      unlockScroll();
       lenis?.start();
     };
   }, [isOpen, lenis]);

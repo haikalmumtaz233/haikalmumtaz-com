@@ -8,6 +8,7 @@ import BrandIcon from '../ui/BrandIcon';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 import { animatedProps, easing } from '../../lib/motion';
+import { lockScroll } from '../../lib/scrollLock';
 
 interface ProjectModalProps {
   project: Project | null;
@@ -27,15 +28,13 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
   );
 
   useEffect(() => {
-    if (project) {
-      document.body.style.overflow = 'hidden';
-      lenis?.stop();
-      window.addEventListener('keydown', handleEscape);
-    } else {
-      lenis?.start();
-    }
+    if (!project) return;
+
+    const unlockScroll = lockScroll();
+    lenis?.stop();
+    window.addEventListener('keydown', handleEscape);
     return () => {
-      document.body.style.overflow = '';
+      unlockScroll();
       lenis?.start();
       window.removeEventListener('keydown', handleEscape);
     };

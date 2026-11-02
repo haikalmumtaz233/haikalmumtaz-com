@@ -7,6 +7,7 @@ import type { Certification } from '../../data/certifications';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 import { easing } from '../../lib/motion';
+import { lockScroll } from '../../lib/scrollLock';
 
 interface CertificationModalProps {
   cert: Certification | null;
@@ -27,16 +28,14 @@ const CertificationModal = ({ cert, isOpen, onClose }: CertificationModalProps) 
   );
 
   useEffect(() => {
-    if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'hidden';
-      lenis?.stop();
-    } else {
-      lenis?.start();
-    }
+    if (!isOpen) return;
+
+    document.addEventListener('keydown', handleKeyDown);
+    const unlockScroll = lockScroll();
+    lenis?.stop();
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
+      unlockScroll();
       lenis?.start();
     };
   }, [isOpen, handleKeyDown, lenis]);
