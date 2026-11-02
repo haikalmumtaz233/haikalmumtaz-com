@@ -18,8 +18,6 @@ const alignmentClass = {
   end: 'justify-end',
 } as const;
 
-const pad = (value: number) => String(value).padStart(2, '0');
-
 const MomentsChart = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -84,8 +82,6 @@ const MomentsChart = () => {
     setActiveIndex(passedNodes(pointsRef.current, offset, marker));
   });
 
-  const shown = moments[Math.max(0, activeIndex)];
-
   return (
     <section
       ref={sectionRef}
@@ -129,21 +125,6 @@ const MomentsChart = () => {
             </div>
           ))}
         </m.div>
-
-        <div className="pointer-events-none absolute inset-x-0 bottom-8">
-          <div className="shell flex items-center justify-between gap-6">
-            <p className="font-mono text-sm tabular-nums text-white/90">
-              {pad(Math.max(0, activeIndex) + 1)} / {pad(moments.length)}
-              <span className="text-white/85"> · {shown.year}</span>
-            </p>
-            <span aria-hidden="true" className="relative h-px w-40 overflow-hidden bg-white/25">
-              <m.span
-                className="absolute inset-0 origin-left bg-white"
-                style={{ scaleX: scrollYProgress }}
-              />
-            </span>
-          </div>
-        </div>
       </div>
     </section>
   );

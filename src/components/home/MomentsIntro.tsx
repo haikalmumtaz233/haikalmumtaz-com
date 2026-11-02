@@ -5,7 +5,6 @@ import FadeIn from '../../journey/FadeIn';
 import SectionEyebrow from '../ui/SectionEyebrow';
 
 const firstYear = moments.at(0)?.year;
-const lastYear = moments.at(-1)?.year;
 
 interface MomentsIntroProps {
   showHint: boolean;
@@ -19,9 +18,6 @@ const MomentsIntro = ({ showHint, titleClassName }: MomentsIntroProps) => (
     <FadeIn>
       <p className="mt-6 max-w-xs text-base text-white/85 md:mt-8 2xl:text-lg">
         Events, teams, and milestones since {firstYear}.
-      </p>
-      <p className="mt-4 font-mono text-xs tabular-nums tracking-[0.2em] text-white/80 uppercase">
-        {moments.length} moments · {firstYear}–{lastYear}
       </p>
       {showHint && (
         <p className="mt-8 inline-flex items-center gap-2 rounded-full border border-white/20 bg-hull/85 px-4 py-2 text-sm text-white/90">
