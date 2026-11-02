@@ -6,7 +6,6 @@ import { ALL_DOMAINS, domainFilters, filterByDomain } from '../../lib/projectInd
 import { easing } from '../../lib/motion';
 import { useIsMobile, useMediaQuery } from '../../hooks/useMediaQuery';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import ProjectsLabel from './ProjectsLabel';
 import DomainFilter from './DomainFilter';
 import IndexRow from './IndexRow';
 import IndexPreview from './IndexPreview';
@@ -32,45 +31,45 @@ const ProjectsIndex = ({ onOpen }: ProjectsIndexProps) => {
     setHovered(null);
   };
   const showPreview = hasFinePointer && !isMobile && !prefersReducedMotion;
-  const label = visible.length === 1 ? 'project' : 'projects';
 
   return (
-    <section aria-labelledby="projects-index" className="relative pb-24 md:pb-32 2xl:pb-40">
+    <section aria-label="Project index" className="relative pb-24 md:pb-32 2xl:pb-40">
       <div className="shell">
-        <ProjectsLabel id="projects-index" title="Index" meta={`${visible.length} ${label}`} />
-        <div className="mt-8 mb-6 md:mt-10 md:mb-8">
+        <div className="mb-5 md:mb-6">
           <DomainFilter options={filters} selected={selectedDomain} onSelect={selectDomain} />
         </div>
 
-        <ul
-          className="min-h-[60vh] border-t border-white/10"
-          onPointerLeave={() => setHovered(null)}
-          aria-label="All projects"
-        >
-          <AnimatePresence initial={false} mode="popLayout">
-            {visible.map((project) => (
-              <m.li
-                key={project.id}
-                layout={prefersReducedMotion ? false : 'position'}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{
-                  duration: prefersReducedMotion ? 0.15 : 0.4,
-                  ease: easing.expo,
-                  layout: { duration: 0.6, ease: easing.expo },
-                }}
-              >
-                <IndexRow
-                  project={project}
-                  dimmed={hovered !== null && hovered.id !== project.id}
-                  onOpen={onOpen}
-                  onHover={setHovered}
-                />
-              </m.li>
-            ))}
-          </AnimatePresence>
-        </ul>
+        <div className="min-h-[60vh]">
+          <ul
+            className="divide-y divide-white/10 rounded-2xl border border-white/15 bg-[#0d0c14]/92 p-1.5 shadow-[0_30px_80px_-40px_rgb(0_0_0/0.9)] md:p-2"
+            onPointerLeave={() => setHovered(null)}
+            aria-label="All projects"
+          >
+            <AnimatePresence initial={false} mode="popLayout">
+              {visible.map((project) => (
+                <m.li
+                  key={project.id}
+                  layout={prefersReducedMotion ? false : 'position'}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{
+                    duration: prefersReducedMotion ? 0.15 : 0.4,
+                    ease: easing.expo,
+                    layout: { duration: 0.6, ease: easing.expo },
+                  }}
+                >
+                  <IndexRow
+                    project={project}
+                    dimmed={hovered !== null && hovered.id !== project.id}
+                    onOpen={onOpen}
+                    onHover={setHovered}
+                  />
+                </m.li>
+              ))}
+            </AnimatePresence>
+          </ul>
+        </div>
       </div>
 
       {showPreview && <IndexPreview projects={projects} active={hovered} />}

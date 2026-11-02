@@ -25,7 +25,7 @@ const ProjectsHero = () => {
             transition: { duration: 0.8, ease: easing.expo, delay: offset },
           })}
           onClick={() => navigate('/', { viewTransition: true })}
-          className="group flex items-center gap-2 text-white/60 hover:text-white transition-colors duration-300 mb-10 md:mb-14"
+          className="group flex items-center gap-2 text-white/75 hover:text-white transition-colors duration-300 mb-10 md:mb-14"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
           <span className="text-sm font-medium">Back to home</span>
@@ -37,7 +37,7 @@ const ProjectsHero = () => {
           delay={offset + 0.15}
           className="mb-0!"
           meta={
-            <p className="text-sm md:text-base text-white/55">
+            <p className="text-sm md:text-base text-white/75">
               {projects.length} projects across {domainCount} domains
             </p>
           }

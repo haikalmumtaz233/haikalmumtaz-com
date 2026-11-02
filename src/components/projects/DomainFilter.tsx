@@ -23,20 +23,24 @@ const DomainFilter = ({ options, selected, onSelect }: DomainFilterProps) => (
           type="button"
           aria-pressed={isActive}
           onClick={() => onSelect(value)}
-          className={`relative shrink-0 rounded-full px-4 py-2 text-xs font-medium transition-colors duration-300 sm:text-sm ${
-            isActive ? 'text-white' : 'text-white/55 hover:text-white/85'
+          className={`relative shrink-0 rounded-full border px-4 py-2 text-xs font-medium transition-colors duration-300 sm:text-sm ${
+            isActive
+              ? 'border-transparent text-[#0d0c14]'
+              : 'border-white/15 bg-[#0d0c14]/85 text-white/80 hover:border-white/40 hover:text-white'
           }`}
         >
           {isActive && (
             <m.span
               layoutId="projectsActiveDomain"
-              className="absolute inset-0 rounded-full border border-white/20 bg-white/10"
+              className="absolute -inset-px rounded-full bg-white"
               transition={{ duration: 0.6, ease: easing.expo }}
             />
           )}
           <span className="relative z-10 flex items-center gap-2 whitespace-nowrap">
             {value}
-            <span className="tabular-nums text-white/45">{count}</span>
+            <span className={`tabular-nums ${isActive ? 'text-black/55' : 'text-white/50'}`}>
+              {count}
+            </span>
           </span>
         </button>
       );

@@ -17,11 +17,11 @@ const IndexRow = ({ project, dimmed, onOpen, onHover }: IndexRowProps) => (
     onPointerEnter={(event) => {
       if (event.pointerType === 'mouse') onHover(project);
     }}
-    className={`group grid w-full grid-cols-[5.5rem_minmax(0,1fr)] items-center gap-x-4 border-b border-white/10 py-4 text-left transition-opacity duration-300 md:grid-cols-[minmax(0,1.5fr)_minmax(0,0.8fr)_minmax(0,1.1fr)_auto] md:gap-x-8 md:py-6 ${
-      dimmed ? 'opacity-40' : 'opacity-100'
+    className={`group grid w-full grid-cols-[5.5rem_minmax(0,1fr)] items-center gap-x-4 rounded-xl px-2.5 py-3.5 text-left transition-[opacity,background-color] duration-300 hover:bg-white/6 md:grid-cols-[minmax(0,1.5fr)_minmax(0,0.8fr)_minmax(0,1.1fr)_auto] md:gap-x-8 md:px-5 md:py-5 ${
+      dimmed ? 'opacity-50' : 'opacity-100'
     }`}
   >
-    <span className="block aspect-16/10 overflow-hidden rounded-md border border-white/10 bg-white/5 md:hidden">
+    <span className="block aspect-16/10 overflow-hidden rounded-md border border-white/15 bg-white/5 md:hidden">
       <img
         src={project.image}
         alt=""
@@ -35,10 +35,10 @@ const IndexRow = ({ project, dimmed, onOpen, onHover }: IndexRowProps) => (
       <span className="font-monument text-sm font-black uppercase leading-tight tracking-tight text-white md:text-2xl">
         {project.name}
       </span>
-      <span className="truncate text-sm text-white/60 md:text-[15px]">{project.subtitle}</span>
-      <span className="text-xs text-white/45 md:hidden">{project.domain}</span>
+      <span className="truncate text-sm text-white/75 md:text-[15px]">{project.subtitle}</span>
+      <span className="text-xs text-white/60 md:hidden">{project.domain}</span>
     </span>
-    <span className="hidden items-center gap-2.5 text-sm text-white/65 md:flex">
+    <span className="hidden items-center gap-2.5 text-sm text-white/80 md:flex">
       <span
         aria-hidden="true"
         className="size-1.5 shrink-0 rounded-full"
@@ -46,13 +46,13 @@ const IndexRow = ({ project, dimmed, onOpen, onHover }: IndexRowProps) => (
       />
       {project.domain}
     </span>
-    <span className="hidden truncate text-sm text-white/45 md:block">
+    <span className="hidden truncate text-sm text-white/60 md:block">
       {project.stack.slice(0, VISIBLE_STACK).join(' · ')}
     </span>
     <ArrowUpRight
       aria-hidden="true"
       size={20}
-      className="hidden text-white/40 transition duration-500 ease-expo group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-white md:block"
+      className="hidden text-white/55 transition duration-500 ease-expo group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-white md:block"
     />
   </button>
 );
