@@ -19,8 +19,8 @@ import { useRailFocus } from '../../hooks/useRailFocus';
 const navButtonClass = (isDisabled: boolean) =>
   `flex h-11 w-11 items-center justify-center rounded-full border transition-colors duration-300 ${
     isDisabled
-      ? 'cursor-not-allowed border-white/5 text-white/20'
-      : 'border-white/20 text-white hover:border-white/50 hover:bg-white/5'
+      ? 'cursor-not-allowed border-white/15 bg-hull/85 text-white/40'
+      : 'border-white/30 bg-hull/85 text-white hover:border-white/60'
   }`;
 
 const Certifications = () => {
@@ -114,10 +114,11 @@ const Certifications = () => {
     <section className="relative section-space overflow-x-clip">
       <div className="shell">
         <SectionHeader
+          section="certifications"
           title={['Certifications']}
           meta={
             <div className="flex items-center gap-4">
-              <span className="text-sm md:text-base text-white/55">
+              <span className="text-sm md:text-base text-white/80">
                 {certifications.length} credentials
               </span>
               <div className={isMobile ? 'hidden' : 'flex gap-2'}>
@@ -220,30 +221,32 @@ const CertificateCard = ({
         if (event.buttons > 0) dragRef.current = true;
       }}
       onFocus={(event) => onFocusCard?.(event.currentTarget)}
-      className="group relative w-full select-none md:w-[300px] md:shrink-0 lg:w-[340px]"
+      className="panel group relative w-full select-none rounded-2xl p-3 md:w-[300px] md:shrink-0 lg:w-[340px]"
     >
-      <div className="relative aspect-4/3 overflow-hidden rounded-lg border border-white/10 bg-white/4 transition-colors duration-500 group-hover:border-white/30">
+      <div className="relative aspect-4/3 overflow-hidden rounded-xl bg-white/4">
         <OptimizedImage
           src={cert.image}
           alt=""
-          className="h-full w-full object-cover object-top opacity-85 transition-[transform,opacity] duration-700 ease-expo group-hover:scale-[1.04] group-hover:opacity-100"
+          className="h-full w-full object-cover object-top transition-transform duration-700 ease-expo group-hover:scale-[1.04]"
           containerClassName="h-full w-full"
         />
       </div>
-      <div className="mt-4 flex items-start justify-between gap-4">
+      <div className="mt-4 flex items-start justify-between gap-4 px-1">
         <h3 className="text-base font-semibold leading-snug text-white line-clamp-2 md:text-[17px]">
           {cert.title}
         </h3>
-        <span className="pt-0.5 text-sm tabular-nums text-white/50">{cert.date}</span>
+        <span className="shrink-0 rounded-full border border-white/15 px-2.5 py-0.5 font-mono text-xs tabular-nums text-white/85">
+          {cert.date}
+        </span>
       </div>
-      <p className="mt-1 text-sm text-white/50 line-clamp-1">{cert.issuer}</p>
+      <p className="mt-1 px-1 pb-1 text-sm text-white/75 line-clamp-1">{cert.issuer}</p>
       <button
         type="button"
         onClick={(event) => {
           if (event.detail === 0 || !dragRef.current) onCertClick(cert);
         }}
         aria-label={`View ${cert.title} certificate from ${cert.issuer}`}
-        className="absolute inset-0 rounded-lg"
+        className="absolute inset-0 rounded-2xl"
       />
     </article>
   );
