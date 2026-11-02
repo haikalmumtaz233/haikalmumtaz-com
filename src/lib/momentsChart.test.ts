@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { constellationPath, passedNodes, revealFraction, yearGroups } from './momentsChart';
+import {
+  chartMarker,
+  constellationPath,
+  passedNodes,
+  revealFraction,
+  yearGroups,
+} from './momentsChart';
 
 const years = (...values: string[]) => values.map((year) => ({ year }));
 
@@ -88,5 +94,40 @@ describe('revealFraction', () => {
 
   it('is 0 when there are fewer than two nodes', () => {
     expect(revealFraction([{ x: 10, y: 0 }], 0, 500)).toBe(0);
+  });
+});
+
+describe('chartMarker', () => {
+  const points = [
+    { x: 600, y: 0 },
+    { x: 3000, y: 0 },
+  ];
+
+  it('starts at the base marker', () => {
+    expect(chartMarker(points, 2000, 800, 0)).toBe(800);
+  });
+
+  it('reaches the last node when the scroll ends so the timeline completes', () => {
+    const marker = chartMarker(points, 2000, 800, 1);
+    expect(passedNodes(points, -2000, marker)).toBe(1);
+    expect(revealFraction(points, -2000, marker)).toBe(1);
+  });
+
+  it('keeps the base marker when the last node already passes it', () => {
+    expect(
+      chartMarker(
+        [
+          { x: 100, y: 0 },
+          { x: 900, y: 0 },
+        ],
+        2000,
+        800,
+        1,
+      ),
+    ).toBe(800);
+  });
+
+  it('clamps progress outside 0..1', () => {
+    expect(chartMarker(points, 2000, 800, 1.5)).toBe(1000);
   });
 });

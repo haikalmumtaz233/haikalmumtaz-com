@@ -35,3 +35,16 @@ export const revealFraction = (points: readonly ChartPoint[], offsetX: number, m
   const fraction = (markerX - offsetX - first.x) / (last.x - first.x);
   return Math.min(1, Math.max(0, fraction));
 };
+
+export const chartMarker = (
+  points: readonly ChartPoint[],
+  distance: number,
+  baseMarker: number,
+  progress: number,
+) => {
+  const last = points.at(-1);
+  if (!last) return baseMarker;
+  const lastAtEnd = last.x - distance;
+  const travel = Math.max(0, lastAtEnd - baseMarker);
+  return baseMarker + travel * Math.min(1, Math.max(0, progress));
+};

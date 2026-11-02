@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { m, useMotionValueEvent, useScroll, useTransform } from 'motion/react';
 import { moments } from '../../data/moments';
-import { passedNodes, revealFraction, yearGroups } from '../../lib/momentsChart';
+import { chartMarker, passedNodes, revealFraction, yearGroups } from '../../lib/momentsChart';
 import { useAnchorPoints } from '../../hooks/useAnchorPoints';
 import MomentsIntro from './MomentsIntro';
 import MomentPlate from './MomentPlate';
@@ -27,10 +27,15 @@ const MomentsChart = () => {
   const [activeIndex, setActiveIndex] = useState(-1);
   const points = useAnchorPoints(trackRef, '[data-moment-anchor]', NODE_LIFT, true);
   const pointsRef = useRef(points);
+  const distanceRef = useRef(0);
 
   useEffect(() => {
     pointsRef.current = points;
   }, [points]);
+
+  useEffect(() => {
+    distanceRef.current = horizontalDistance;
+  }, [horizontalDistance]);
 
   useEffect(() => {
     const track = trackRef.current;
@@ -57,19 +62,27 @@ const MomentsChart = () => {
   });
 
   const x = useTransform(scrollYProgress, [0, 1], [0, -horizontalDistance]);
-  const reveal = useTransform(() =>
-    revealFraction(pointsRef.current, x.get(), window.innerWidth * MARKER_RATIO),
-  );
-
-  const syncActive = (offset: number) => {
-    setActiveIndex(passedNodes(pointsRef.current, offset, window.innerWidth * MARKER_RATIO));
+  const trackState = (rawProgress: number) => {
+    const progress = Math.min(1, Math.max(0, rawProgress));
+    const offset = -distanceRef.current * progress;
+    const marker = chartMarker(
+      pointsRef.current,
+      distanceRef.current,
+      window.innerWidth * MARKER_RATIO,
+      progress,
+    );
+    return { offset, marker };
   };
 
-  useMotionValueEvent(x, 'change', syncActive);
+  const reveal = useTransform(() => {
+    const { offset, marker } = trackState(scrollYProgress.get());
+    return revealFraction(pointsRef.current, offset, marker);
+  });
 
-  useEffect(() => {
-    setActiveIndex(passedNodes(points, x.get(), window.innerWidth * MARKER_RATIO));
-  }, [points, x]);
+  useMotionValueEvent(scrollYProgress, 'change', (progress) => {
+    const { offset, marker } = trackState(progress);
+    setActiveIndex(passedNodes(pointsRef.current, offset, marker));
+  });
 
   const shown = moments[Math.max(0, activeIndex)];
 
