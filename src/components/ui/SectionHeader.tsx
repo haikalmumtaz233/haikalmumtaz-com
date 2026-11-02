@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import RuleReveal from '../../journey/RuleReveal';
 import FadeIn from '../../journey/FadeIn';
+import SectionEyebrow from './SectionEyebrow';
 
 interface SectionHeaderProps {
   title: string[];
@@ -8,6 +9,7 @@ interface SectionHeaderProps {
   as?: 'h1' | 'h2';
   delay?: number;
   className?: string;
+  section?: string;
 }
 
 export const SECTION_TITLE_CLASS =
@@ -19,16 +21,18 @@ const SectionHeader = ({
   as = 'h2',
   delay = 0,
   className = '',
+  section,
 }: SectionHeaderProps) => (
-  <div
-    className={`flex flex-wrap items-end justify-between gap-x-10 gap-y-6 mb-12 md:mb-16 2xl:mb-20 ${className}`}
-  >
-    <RuleReveal as={as} lines={title} delay={delay} className={SECTION_TITLE_CLASS} />
-    {meta && (
-      <FadeIn delay={delay + 0.6} className="pb-1 md:pb-2">
-        {meta}
-      </FadeIn>
-    )}
+  <div className={`mb-12 md:mb-16 2xl:mb-20 ${className}`}>
+    {section && <SectionEyebrow id={section} delay={delay} className="mb-5 md:mb-6" />}
+    <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
+      <RuleReveal as={as} lines={title} delay={delay} className={SECTION_TITLE_CLASS} />
+      {meta && (
+        <FadeIn delay={delay + 0.6} className="pb-1 md:pb-2">
+          {meta}
+        </FadeIn>
+      )}
+    </div>
   </div>
 );
 

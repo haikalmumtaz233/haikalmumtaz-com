@@ -21,6 +21,10 @@
   --font-sans: 'Plus Jakarta Sans Variable', sans-serif;
   --font-monument: 'Monument Extended', sans-serif;
   --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --color-void: #09080e;
+  --color-hull: #0d0c14;
+  --color-hull-raised: #15131f;
+  --color-signal: #c4b5fd;
 }
 
 @layer base {
@@ -99,6 +103,12 @@
 
 @utility section-space {
   @apply py-24 md:py-32 2xl:py-40;
+}
+
+@utility panel {
+  background-color: rgb(13 12 20 / 0.92);
+  border: 1px solid rgb(255 255 255 / 0.15);
+  box-shadow: 0 30px 80px -40px rgb(0 0 0 / 0.9);
 }
 
 @utility snap-rail {
