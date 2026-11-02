@@ -64,26 +64,17 @@ const FeaturedTabs = ({ projects, activeIndex, onSelect }: FeaturedTabsProps) =>
                 transition={{ duration: 0.6, ease: easing.expo }}
               />
             )}
-            <span className="relative flex items-baseline gap-4">
-              <span
-                className={`font-mono text-xs tabular-nums transition-colors duration-500 ${
-                  isActive ? 'text-white' : 'text-white/55'
-                }`}
-              >
-                {String(index + 1).padStart(2, '0')}
-              </span>
-              <span
-                className={`font-monument text-base font-black uppercase leading-tight tracking-tight transition-colors duration-500 lg:text-lg 2xl:text-xl ${
-                  isActive ? 'text-white' : 'text-white/60 group-hover:text-white/90'
-                }`}
-              >
-                {project.name}
-              </span>
+            <span
+              className={`relative block font-monument text-base font-black uppercase leading-tight tracking-tight transition-colors duration-500 lg:text-lg 2xl:text-xl ${
+                isActive ? 'text-white' : 'text-white/60 group-hover:text-white/90'
+              }`}
+            >
+              {project.name}
             </span>
             <AnimatePresence initial={false}>
               {isActive && (
                 <m.span
-                  className="relative block overflow-hidden pl-9"
+                  className="relative block overflow-hidden"
                   initial={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
                   animate={prefersReducedMotion ? { opacity: 1 } : { height: 'auto', opacity: 1 }}
                   exit={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}

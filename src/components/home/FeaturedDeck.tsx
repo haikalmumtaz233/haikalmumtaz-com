@@ -122,8 +122,8 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
         <div aria-hidden="true" className="w-[calc(14vw-1rem)] shrink-0" />
       </m.div>
 
-      <div className="flex items-center justify-between gap-6 px-5 sm:px-8">
-        <div className="flex flex-1 gap-1.5" role="tablist" aria-label="Choose a project">
+      <div className="px-5 sm:px-8">
+        <div className="flex gap-1.5" role="tablist" aria-label="Choose a project">
           {projects.map((project, index) => (
             <button
               key={project.id}
@@ -144,10 +144,6 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
             </button>
           ))}
         </div>
-        <span className="font-monument text-sm font-black tabular-nums text-white">
-          {String(activeIndex + 1).padStart(2, '0')}
-          <span className="text-white/85"> / {String(projects.length).padStart(2, '0')}</span>
-        </span>
       </div>
     </div>
   );

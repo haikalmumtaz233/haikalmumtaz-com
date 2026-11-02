@@ -15,8 +15,6 @@ import { easing } from '../../lib/motion';
 const CYCLE_MS = 4500;
 const HOVER_INTENT_MS = 180;
 
-const pad = (value: number) => String(value).padStart(2, '0');
-
 const TechStackShowcase = () => {
   const prefersReducedMotion = usePrefersReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -105,13 +103,6 @@ const TechStackShowcase = () => {
               className={`group relative flex items-baseline gap-5 overflow-hidden rounded-xl px-4 py-3.5 text-left transition-colors duration-500 2xl:py-4 ${isActive ? 'bg-white/8' : 'hover:bg-white/4'}`}
             >
               <span
-                className={`w-6 shrink-0 font-mono text-xs tabular-nums transition-colors duration-500 ${
-                  isActive ? 'text-white' : 'text-white/60'
-                }`}
-              >
-                {pad(index + 1)}
-              </span>
-              <span
                 className={`flex-1 truncate text-xl font-semibold transition-[color,transform] duration-500 ease-expo lg:text-2xl 2xl:text-[28px] ${
                   isActive ? 'translate-x-1 text-white' : 'text-white/70 group-hover:text-white'
                 }`}
@@ -165,9 +156,8 @@ const TechStackShowcase = () => {
           }}
         />
 
-        <span className="relative flex items-center justify-between font-mono text-xs tabular-nums text-white/70">
-          <span className="tracking-[0.2em] uppercase">{category.title}</span>
-          {pad(activeIndex + 1)} / {pad(techCategories.length)}
+        <span className="relative font-mono text-xs tracking-[0.2em] text-white/70 uppercase">
+          {category.title}
         </span>
 
         <div className="relative flex flex-1 items-center pt-4">

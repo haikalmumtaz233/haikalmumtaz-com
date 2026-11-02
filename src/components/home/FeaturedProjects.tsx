@@ -88,11 +88,9 @@ const FeaturedProjects = () => {
               onSwipe={(step) => select(active.index + step)}
               className="aspect-16/10"
             />
-            <FeaturedMeta
-              project={activeProject}
-              index={active.index}
-              count={featuredProjects.length}
-            />
+            <div className="mt-5">
+              <FeaturedMeta project={activeProject} />
+            </div>
           </div>
           <div className="lg:col-span-5 lg:order-1">
             <FeaturedTabs
