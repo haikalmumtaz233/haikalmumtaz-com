@@ -84,7 +84,7 @@ const TechStackShowcase = () => {
         aria-label="Technology areas"
         aria-orientation="vertical"
         onKeyDown={handleKeyDown}
-        className="flex flex-col border-t border-white/15"
+        className="panel flex flex-col gap-1 rounded-2xl p-2"
       >
         {techCategories.map((item, index) => {
           const isActive = index === activeIndex;
@@ -102,25 +102,25 @@ const TechStackShowcase = () => {
               onClick={() => setActiveIndex(index)}
               onPointerEnter={() => scheduleSelect(index)}
               onPointerLeave={cancelSelect}
-              className="group relative flex items-baseline gap-5 border-b border-white/10 py-4 text-left outline-hidden focus-visible:bg-white/4 2xl:py-5"
+              className={`group relative flex items-baseline gap-5 overflow-hidden rounded-xl px-4 py-3.5 text-left transition-colors duration-500 2xl:py-4 ${isActive ? 'bg-white/8' : 'hover:bg-white/4'}`}
             >
               <span
                 className={`w-6 shrink-0 font-mono text-xs tabular-nums transition-colors duration-500 ${
-                  isActive ? 'text-white/70' : 'text-white/50'
+                  isActive ? 'text-white' : 'text-white/60'
                 }`}
               >
                 {pad(index + 1)}
               </span>
               <span
                 className={`flex-1 truncate text-xl font-semibold transition-[color,transform] duration-500 ease-expo lg:text-2xl 2xl:text-[28px] ${
-                  isActive ? 'translate-x-2 text-white' : 'text-white/50 group-hover:text-white/70'
+                  isActive ? 'translate-x-1 text-white' : 'text-white/70 group-hover:text-white'
                 }`}
               >
                 {item.title}
               </span>
               <span
                 className={`text-sm tabular-nums transition-colors duration-500 ${
-                  isActive ? 'text-white/70' : 'text-white/50'
+                  isActive ? 'text-white' : 'text-white/60'
                 }`}
               >
                 {item.items.length}
@@ -129,7 +129,7 @@ const TechStackShowcase = () => {
                 <m.span
                   layoutId={prefersReducedMotion ? undefined : 'tech-area-rule'}
                   aria-hidden="true"
-                  className="absolute inset-x-0 -bottom-px h-px overflow-hidden bg-white/30"
+                  className="absolute inset-x-4 bottom-0 h-px overflow-hidden bg-white/25"
                   transition={{ duration: 0.6, ease: easing.expo }}
                 >
                   {isCycling && (
@@ -154,7 +154,7 @@ const TechStackShowcase = () => {
         role="tabpanel"
         aria-label={category.title}
         onPointerMove={handleStagePointerMove}
-        className="group/stage relative flex min-h-[340px] flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0d0b14]/70 p-6 lg:p-8"
+        className="panel group/stage relative flex min-h-[340px] flex-col overflow-hidden rounded-2xl p-6 lg:p-8"
       >
         <span
           aria-hidden="true"
@@ -165,20 +165,8 @@ const TechStackShowcase = () => {
           }}
         />
 
-        <AnimatePresence initial={false}>
-          <m.span
-            key={category.title}
-            aria-hidden="true"
-            className="pointer-events-none absolute bottom-[-0.18em] left-5 whitespace-nowrap font-monument text-[clamp(3.5rem,8vw,7.5rem)] font-black uppercase leading-none text-white/[0.035] lg:left-7"
-            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: '40%' }}
-            animate={{ opacity: 1, y: 0, transition: { duration: 0.9, ease: easing.expo } }}
-            exit={{ opacity: 0, transition: { duration: 0.3 } }}
-          >
-            {category.title}
-          </m.span>
-        </AnimatePresence>
-
-        <span className="relative self-end font-mono text-xs tabular-nums text-white/50">
+        <span className="relative flex items-center justify-between font-mono text-xs tabular-nums text-white/70">
+          <span className="tracking-[0.2em] uppercase">{category.title}</span>
           {pad(activeIndex + 1)} / {pad(techCategories.length)}
         </span>
 
@@ -210,12 +198,12 @@ const TechStackShowcase = () => {
                       transition: { duration: 0.7, ease: easing.expo },
                     },
                   }}
-                  className="group/tile flex aspect-4/3 flex-col lg:aspect-square items-center justify-center gap-3 rounded-2xl border border-white/[0.07] bg-white/2 px-2 transition-colors duration-300 hover:border-white/25 hover:bg-white/5"
+                  className="group/tile flex aspect-4/3 flex-col lg:aspect-square items-center justify-center gap-3 rounded-2xl border border-white/12 bg-white/4 px-2 transition-colors duration-300 hover:border-white/35 hover:bg-white/8"
                 >
                   <span className="flex h-10 w-10 items-center justify-center transition-transform duration-500 ease-expo group-hover/tile:-rotate-6 group-hover/tile:scale-110 lg:h-12 lg:w-12 2xl:h-14 2xl:w-14">
                     <TechIcon icon={tech.icon} name={tech.name} />
                   </span>
-                  <span className="w-full truncate text-center text-[13px] text-white/60 transition-colors duration-300 group-hover/tile:text-white lg:text-sm">
+                  <span className="w-full truncate text-center text-[13px] text-white/80 transition-colors duration-300 group-hover/tile:text-white lg:text-sm">
                     {tech.name}
                   </span>
                 </m.li>
