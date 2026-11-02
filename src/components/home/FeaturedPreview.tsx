@@ -1,4 +1,4 @@
-import { AnimatePresence, m, type MotionValue, type PanInfo } from 'motion/react';
+import { AnimatePresence, m, type PanInfo } from 'motion/react';
 import type { Project } from '../../data/projects';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { easing } from '../../lib/motion';
@@ -50,7 +50,6 @@ interface FeaturedPreviewProps {
   direction: number;
   onOpen: (project: Project) => void;
   onSwipe?: (step: number) => void;
-  imageY?: MotionValue<string>;
   className?: string;
 }
 
@@ -60,7 +59,6 @@ const FeaturedPreview = ({
   direction,
   onOpen,
   onSwipe,
-  imageY,
   className = '',
 }: FeaturedPreviewProps) => {
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -94,7 +92,7 @@ const FeaturedPreview = ({
           onDragEnd={handleDragEnd}
           style={{ touchAction: 'pan-y' }}
         >
-          <FeaturedCard project={project} onClick={() => onOpen(project)} imageY={imageY} />
+          <FeaturedCard project={project} onClick={() => onOpen(project)} />
         </m.div>
       </AnimatePresence>
     </div>

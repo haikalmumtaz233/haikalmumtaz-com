@@ -5,27 +5,20 @@ import { projects } from '../../data/projects';
 import type { Project } from '../../data/projects';
 import ProjectModal from '../projects/ProjectModal';
 import FeaturedDeck from './FeaturedDeck';
-import FeaturedStage from './FeaturedStage';
 import FeaturedTabs from './FeaturedTabs';
 import FeaturedPreview from './FeaturedPreview';
 import FeaturedMeta from './FeaturedMeta';
-import { useIsMobile, useMediaQuery } from '../../hooks/useMediaQuery';
+import { useIsMobile } from '../../hooks/useMediaQuery';
 import SectionHeader from '../ui/SectionHeader';
-import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-
-const PIN_QUERY = '(min-width: 1024px) and (min-height: 640px)';
 
 const FeaturedProjects = () => {
   const navigate = useNavigate();
-  const prefersReducedMotion = usePrefersReducedMotion();
   const isMobile = useIsMobile();
-  const fitsPinnedStage = useMediaQuery(PIN_QUERY);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [active, setActive] = useState({ index: 0, direction: 1 });
   const sectionRef = useRef<HTMLElement>(null);
 
   const featuredProjects = useMemo(() => projects.filter((p) => p.isFeatured), []);
-  const isPinned = fitsPinnedStage && !prefersReducedMotion;
   const activeProject = featuredProjects[active.index];
 
   const handleCloseModal = useCallback(() => setSelectedProject(null), []);
@@ -60,7 +53,6 @@ const FeaturedProjects = () => {
     <SectionHeader
       section="projects"
       title={['Featured work']}
-      className={isPinned ? 'mb-8! 2xl:mb-12!' : ''}
       meta={
         <button
           type="button"
@@ -81,12 +73,6 @@ const FeaturedProjects = () => {
           {header}
           <FeaturedDeck projects={featuredProjects} onOpen={setSelectedProject} />
         </div>
-      );
-    }
-
-    if (isPinned) {
-      return (
-        <FeaturedStage projects={featuredProjects} header={header} onOpen={setSelectedProject} />
       );
     }
 
@@ -122,10 +108,7 @@ const FeaturedProjects = () => {
   };
 
   return (
-    <section
-      ref={sectionRef}
-      className={`relative overflow-x-clip ${isPinned ? '' : 'section-space'}`}
-    >
+    <section ref={sectionRef} className="relative section-space overflow-x-clip">
       {renderLayout()}
       <ProjectModal project={selectedProject} onClose={handleCloseModal} />
     </section>
