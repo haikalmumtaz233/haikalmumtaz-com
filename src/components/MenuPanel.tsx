@@ -151,33 +151,9 @@ const MenuPanel = ({ isOpen, origin, onClose }: MenuPanelProps) => {
             <MenuSky />
             <div className="relative h-full flex flex-col justify-between p-6 pb-28 sm:p-8 sm:pb-28 md:p-12">
               <nav className="flex-1 flex items-center">
-                <ul className="relative grid gap-4 sm:gap-6 w-full">
-                  <m.span
-                    aria-hidden="true"
-                    {...animatedProps(prefersReducedMotion, {
-                      initial: { scaleY: 0 },
-                      animate: { scaleY: 1 },
-                      transition: { delay: 0.3, duration: 1.2, ease: easing.expo },
-                    })}
-                    className="absolute left-[3px] top-[0.45em] bottom-[0.45em] w-px origin-top bg-linear-to-b from-violet-300/60 via-white/20 to-sky-300/40 text-3xl sm:text-4xl md:text-[3.5rem]"
-                  />
+                <ul className="grid gap-4 sm:gap-6 w-full">
                   {navLinks.map((link, index) => (
-                    <li key={link.name} className="group flex items-center gap-5 sm:gap-6">
-                      <m.span
-                        aria-hidden="true"
-                        {...animatedProps(prefersReducedMotion, {
-                          initial: { scale: 0, opacity: 0 },
-                          animate: { scale: 1, opacity: 1 },
-                          transition: {
-                            delay: 0.4 + index * 0.09,
-                            duration: 0.9,
-                            ease: easing.expo,
-                          },
-                        })}
-                        className="relative flex size-[7px] shrink-0"
-                      >
-                        <span className="size-full rounded-full bg-white/70 shadow-[0_0_8px_rgba(196,181,253,0.7)] transition-transform duration-500 ease-expo group-hover:scale-[1.9] group-has-focus-visible:scale-[1.9]" />
-                      </m.span>
+                    <li key={link.name}>
                       <div className="overflow-hidden">
                         <m.div
                           {...animatedProps(prefersReducedMotion, {

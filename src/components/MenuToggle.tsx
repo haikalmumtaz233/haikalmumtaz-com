@@ -8,15 +8,7 @@ import { useIsMobile } from '../hooks/useMediaQuery';
 import { animatedProps, easing } from '../lib/motion';
 import MenuPanel, { MENU_PANEL_ID, type MenuOrigin } from './MenuPanel';
 import { useJourney } from '../journey/useJourney';
-
-const SECTIONS = [
-  { id: 'projects', label: 'Featured work' },
-  { id: 'experience', label: 'Experience' },
-  { id: 'techstack', label: 'Tech stack' },
-  { id: 'certifications', label: 'Certifications' },
-  { id: 'favoritemoments', label: 'Moments' },
-  { id: 'contact', label: 'Contact' },
-];
+import { homeSections } from '../data/sections';
 
 const originFrom = (element: HTMLElement): MenuOrigin => {
   const rect = element.getBoundingClientRect();
@@ -35,15 +27,15 @@ const useActiveSection = (enabled: boolean) => {
   useEffect(() => {
     if (!enabled) return;
 
-    const elements = SECTIONS.map(({ id }) => document.getElementById(id)).filter(
-      (element): element is HTMLElement => element !== null,
-    );
+    const elements = homeSections
+      .map(({ id }) => document.getElementById(id))
+      .filter((element): element is HTMLElement => element !== null);
 
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
-          const index = SECTIONS.findIndex(({ id }) => id === entry.target.id);
+          const index = homeSections.findIndex(({ id }) => id === entry.target.id);
           if (index < 0) continue;
           setActive((current) =>
             current.index === index
@@ -157,18 +149,18 @@ const MenuToggle = () => {
             <button
               type="button"
               onClick={scrollToTop}
-              aria-label={`Back to top, ${activeIndex + 1}/${SECTIONS.length}`}
+              aria-label={`Back to top, ${activeIndex + 1}/${homeSections.length}`}
               className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/15 transition-transform duration-300 active:scale-90"
             >
               <span className="font-monument text-[10px] font-black tabular-nums">
-                {activeIndex + 1}/{SECTIONS.length}
+                {activeIndex + 1}/{homeSections.length}
               </span>
             </button>
 
             <div className="relative h-7 min-w-0 flex-1 overflow-hidden" aria-live="polite">
               <AnimatePresence initial={false} custom={direction} mode="popLayout">
                 <m.span
-                  key={isOpen ? 'menu' : SECTIONS[activeIndex].id}
+                  key={isOpen ? 'menu' : homeSections[activeIndex].id}
                   custom={direction}
                   variants={{
                     enter: (dir: number) => ({
@@ -187,7 +179,7 @@ const MenuToggle = () => {
                   transition={{ duration: 0.55, ease: easing.expo }}
                   className="absolute inset-0 flex items-center truncate font-monument text-[15px] font-black uppercase leading-none tracking-tight"
                 >
-                  {isOpen ? 'Menu' : SECTIONS[activeIndex].label}
+                  {isOpen ? 'Menu' : homeSections[activeIndex].label}
                 </m.span>
               </AnimatePresence>
             </div>

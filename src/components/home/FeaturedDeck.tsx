@@ -73,7 +73,7 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
             onFocus={() => scrollToCard(index)}
             data-rail-card
             style={{ transformOrigin: '50% 120%' }}
-            className="@container relative aspect-4/5 w-[72vw] max-w-[360px] shrink-0 snap-center overflow-hidden rounded-[28px] border border-white/10 bg-[#141220] active:brightness-90"
+            className="@container relative aspect-4/5 w-[72vw] max-w-[360px] shrink-0 snap-center overflow-hidden rounded-[28px] panel active:brightness-90"
           >
             <div className="absolute inset-0 overflow-hidden">
               <img
@@ -94,7 +94,7 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
               }}
             />
 
-            <span className="absolute left-5 top-5 rounded-full bg-black/55 px-3 py-1 text-xs text-white/85">
+            <span className="absolute left-5 top-5 rounded-full border border-white/15 bg-hull/85 px-3 py-1 text-xs text-white/90">
               {project.category}
             </span>
 
@@ -105,7 +105,7 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
               >
                 {project.name}
               </h3>
-              <p className="mt-3 text-[15px] text-white/75">{project.subtitle}</p>
+              <p className="mt-3 text-[15px] text-white/85">{project.subtitle}</p>
               <p className="mt-4 flex items-center gap-2 text-sm font-semibold text-white">
                 <span className="inline-block h-px w-6 bg-white" />
                 Tap for details
@@ -122,8 +122,8 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
         <div aria-hidden="true" className="w-[calc(14vw-1rem)] shrink-0" />
       </m.div>
 
-      <div className="flex items-center justify-between gap-6 px-5 sm:px-8">
-        <div className="flex flex-1 gap-1.5" role="tablist" aria-label="Choose a project">
+      <div className="px-5 sm:px-8">
+        <div className="flex gap-1.5" role="tablist" aria-label="Choose a project">
           {projects.map((project, index) => (
             <button
               key={project.id}
@@ -134,7 +134,7 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
               onClick={() => scrollToCard(index)}
               className="relative h-8 flex-1"
             >
-              <span className="absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 overflow-hidden rounded-full bg-white/15">
+              <span className="absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 overflow-hidden rounded-full bg-white/25">
                 <span
                   className={`absolute inset-0 origin-left rounded-full bg-white transition-transform duration-700 ease-expo ${
                     index <= activeIndex ? 'scale-x-100' : 'scale-x-0'
@@ -144,10 +144,6 @@ const FeaturedDeck = ({ projects, onOpen }: FeaturedDeckProps) => {
             </button>
           ))}
         </div>
-        <span className="font-monument text-sm font-black tabular-nums text-white">
-          {String(activeIndex + 1).padStart(2, '0')}
-          <span className="text-white/50"> / {String(projects.length).padStart(2, '0')}</span>
-        </span>
       </div>
     </div>
   );

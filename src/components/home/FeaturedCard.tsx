@@ -16,7 +16,7 @@ const FeaturedCard = memo(({ project, onClick }: FeaturedCardProps) => {
   return (
     <m.article
       layoutId={prefersReducedMotion ? undefined : `project-${project.id}`}
-      className="group relative h-full w-full overflow-hidden rounded-xl border border-white/10 bg-white/3"
+      className="group relative h-full w-full overflow-hidden rounded-2xl panel"
     >
       <div
         className={`absolute inset-0 z-10 bg-linear-to-br ${project.gradient} opacity-40 pointer-events-none transition-opacity duration-500 group-hover:opacity-20`}
@@ -30,7 +30,7 @@ const FeaturedCard = memo(({ project, onClick }: FeaturedCardProps) => {
         <OptimizedImage
           src={project.image}
           alt={project.name}
-          className="h-full w-full object-cover transition-transform duration-700 ease-expo group-hover:scale-[1.03]"
+          className="h-full w-full object-cover object-top transition-transform duration-700 ease-expo group-hover:scale-[1.03]"
           containerClassName="h-full w-full"
           eager
         />
@@ -42,7 +42,7 @@ const FeaturedCard = memo(({ project, onClick }: FeaturedCardProps) => {
         type="button"
         onClick={onClick}
         aria-label={`Open details for ${project.name}`}
-        className="absolute inset-0 z-30 rounded-xl"
+        className="absolute inset-0 z-30 rounded-2xl"
       />
     </m.article>
   );
