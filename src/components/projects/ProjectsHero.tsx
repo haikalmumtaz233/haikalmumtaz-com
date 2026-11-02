@@ -16,7 +16,7 @@ const ProjectsHero = () => {
   const [offset] = useState(introOffset);
 
   return (
-    <section className="relative pt-24 md:pt-28 pb-10 md:pb-14">
+    <section className="relative pt-6 sm:pt-8 pb-10 md:pb-14">
       <div className="shell">
         <m.button
           {...animatedProps(prefersReducedMotion, {
@@ -25,7 +25,7 @@ const ProjectsHero = () => {
             transition: { duration: 0.8, ease: easing.expo, delay: offset },
           })}
           onClick={() => navigate('/', { viewTransition: true })}
-          className="group flex items-center gap-2 text-white/75 hover:text-white transition-colors duration-300 mb-10 md:mb-14"
+          className="group mb-10 flex h-12 items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 text-white/85 transition-colors duration-300 hover:bg-white/20 hover:text-white sm:h-14 md:mb-14"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
           <span className="text-sm font-medium">Back to home</span>
