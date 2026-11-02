@@ -8,7 +8,6 @@ import { easing } from '../../lib/motion';
 import { profile, socialProfiles } from '../../data/profile';
 import { MAX_MESSAGE_LENGTH, MAX_NAME_LENGTH, findContactError } from '../../lib/contactForm';
 import BrandIcon from '../ui/BrandIcon';
-import SectionEyebrow from '../ui/SectionEyebrow';
 
 declare global {
   interface Window {
@@ -260,7 +259,6 @@ const Contact = () => {
       <div className="shell">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16 2xl:gap-24">
           <div className="flex flex-col justify-center">
-            <SectionEyebrow id="contact" className="mb-5 md:mb-6" />
             <RuleReveal
               lines={["Let's work", 'together']}
               className="font-monument font-black uppercase text-white tracking-tight leading-[0.95] text-[clamp(2rem,4.6vw,4.5rem)]"

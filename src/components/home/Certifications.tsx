@@ -114,7 +114,6 @@ const Certifications = () => {
     <section className="relative section-space overflow-x-clip">
       <div className="shell">
         <SectionHeader
-          section="certifications"
           title={['Certifications']}
           meta={
             <div className="flex items-center gap-4">

@@ -51,7 +51,6 @@ const FeaturedProjects = () => {
 
   const header = (
     <SectionHeader
-      section="projects"
       title={['Featured work']}
       meta={
         <button

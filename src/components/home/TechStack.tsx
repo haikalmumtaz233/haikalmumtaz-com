@@ -16,7 +16,6 @@ const TechStack = () => {
     <section className="relative pt-24 md:pt-32 2xl:pt-40 pb-16 md:pb-20">
       <div className="shell">
         <SectionHeader
-          section="techstack"
           title={['Tech stack']}
           meta={
             <p className="text-sm md:text-base text-white/80">
