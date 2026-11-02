@@ -3,6 +3,7 @@ import { m, useMotionValueEvent, useScroll, useTransform } from 'motion/react';
 import { moments } from '../../data/moments';
 import { chartMarker, passedNodes, revealFraction, yearGroups } from '../../lib/momentsChart';
 import { useAnchorPoints } from '../../hooks/useAnchorPoints';
+import { useIsMobile } from '../../hooks/useMediaQuery';
 import MomentsIntro from './MomentsIntro';
 import MomentPlate from './MomentPlate';
 import MomentsConstellation from './MomentsConstellation';
@@ -19,6 +20,7 @@ const alignmentClass = {
 } as const;
 
 const MomentsChart = () => {
+  const isMobile = useIsMobile();
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [horizontalDistance, setHorizontalDistance] = useState(0);
@@ -86,33 +88,33 @@ const MomentsChart = () => {
     <section
       ref={sectionRef}
       className="relative"
-      style={{ height: `calc(100vh + ${horizontalDistance}px)` }}
+      style={{ height: `calc(100svh + ${horizontalDistance}px)` }}
     >
-      <div className="sticky top-0 flex h-screen items-center overflow-hidden">
+      <div className="sticky top-0 flex h-svh items-center overflow-hidden">
         <m.div
           ref={trackRef}
           style={{ x }}
-          className="relative flex items-stretch gap-14 pr-24 pl-5 sm:pl-8 lg:gap-24 lg:pl-12 2xl:gap-32 2xl:pr-32 min-[1320px]:pl-[calc((100vw-1320px)/2+3rem)]"
+          className="relative flex items-stretch gap-10 pr-[12vw] pl-5 sm:gap-14 sm:pr-24 sm:pl-8 lg:gap-24 lg:pl-12 2xl:gap-32 2xl:pr-32 min-[1320px]:pl-[calc((100vw-1320px)/2+3rem)]"
         >
           <MomentsConstellation points={points} reveal={reveal} activeIndex={activeIndex} />
 
-          <div className="flex h-[78vh] w-[460px] shrink-0 items-center 2xl:w-[560px]">
+          <div className="flex h-[70svh] w-[82vw] shrink-0 md:h-[78svh] items-center sm:w-[460px] 2xl:w-[560px]">
             <MomentsIntro
               showHint
-              titleClassName="font-monument font-black uppercase text-white tracking-tight leading-[0.95] text-[clamp(2rem,3.9vw,3.75rem)]"
+              titleClassName="font-monument font-black uppercase text-white tracking-tight leading-[0.95] text-[clamp(2.4rem,12vw,3.5rem)] md:text-[clamp(2rem,3.9vw,3.75rem)]"
             />
           </div>
 
           {moments.map((moment, index) => (
             <div
               key={moment.id}
-              className={`relative flex h-[78vh] shrink-0 flex-col pt-14 ${alignmentClass[moment.alignment]}`}
+              className={`relative flex h-[70svh] shrink-0 flex-col pt-14 md:h-[78svh] ${isMobile ? 'w-[78vw]' : ''} ${alignmentClass[moment.alignment]}`}
             >
               {groupStarts.has(index) && (
                 <span
                   aria-hidden="true"
                   data-decorative
-                  className="pointer-events-none absolute -top-6 left-0 font-monument text-[clamp(5rem,10vw,9rem)] leading-none font-black text-white/[0.07] select-none"
+                  className="pointer-events-none absolute -top-6 left-0 font-monument text-[clamp(4.5rem,10vw,9rem)] leading-none font-black text-white/[0.07] select-none"
                 >
                   {moment.year}
                 </span>
@@ -121,6 +123,7 @@ const MomentsChart = () => {
                 moment={moment}
                 progress={scrollYProgress}
                 speed={DRIFT_SPEEDS[index % DRIFT_SPEEDS.length]}
+                fluid={isMobile}
               />
             </div>
           ))}
